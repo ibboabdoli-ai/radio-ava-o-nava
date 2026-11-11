@@ -1,28 +1,65 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Radio AVA O NAVA</title>
-  <style>
-    body {
-      background: #101827;
-      color: white;
-      font-family: Tahoma, sans-serif;
-      text-align: center;
-      padding: 70px 20px;
-    }
-    h1 { color: #f8cc70; }
-    audio { width: 100%; max-width: 420px; margin-top: 24px; }
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0c1021">
+<meta name="description" content="رادیو آوا و نوا — همراه لحظه‌های شنیدنی، پخش زنده اینترنتی.">
+<title>رادیو آوا و نوا | Radio Ava O Nava</title>
+<link rel="icon" type="image/jpeg" href="./logo.jpeg">
+<style>
+:root{color-scheme:dark;--bg:#0b1021;--gold:#e9bc66;--muted:#b3bed0;--line:rgba(233,188,102,.22)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 8%,#243250 0%,#12182b 44%,#090d1a 100%);font-family:Tahoma,"Segoe UI",sans-serif;color:#fff}a{color:inherit}
+.wrap{max-width:1060px;padding:24px 22px 40px;margin:auto}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:18px}
+.brand{font-family:Georgia,serif;letter-spacing:1px;font-size:18px;color:var(--gold);font-weight:bold;direction:ltr}.sub{color:var(--muted);font-size:12px}
+main{text-align:center;max-width:630px;margin:36px auto 0}
+.logo{display:block;width:min(235px,60vw);height:min(235px,60vw);object-fit:contain;margin:0 auto 14px;border-radius:25px;box-shadow:0 20px 65px #0005}
+h1{font-size:clamp(29px,5vw,44px);margin:12px 0;color:#f4dbac}p{line-height:1.9}
+.tagline{color:var(--muted);margin:0 0 22px;font-size:15px}
+.panel{padding:28px 24px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,#222a42dd,#151b30e8);box-shadow:0 22px 60px #0004}
+.status{display:inline-flex;align-items:center;gap:9px;color:#e1d5bd;font-size:14px;margin-bottom:18px}
+.dot{width:9px;height:9px;background:#8490a6;border-radius:50%}.status.live .dot{background:#44d6a0;box-shadow:0 0 0 5px #44d6a020}.status.live{color:#70e6ba}
+button{cursor:pointer;font:inherit;border:0}#play{min-width:210px;border-radius:100px;padding:15px 28px;font-weight:bold;font-size:17px;color:#251b10;background:linear-gradient(130deg,#fff0ba,#dfa64c);box-shadow:0 8px 25px #d39d3d3a;transition:transform .2s}#play:hover{transform:translateY(-2px)}#play:focus-visible{outline:3px solid #fff;outline-offset:4px}
+#message{min-height:24px;color:var(--muted);font-size:13px;margin:20px 0 0}
+.wave{display:flex;justify-content:center;align-items:center;gap:5px;height:36px;margin:0 auto 20px}.wave span{height:12px;width:4px;background:var(--gold);border-radius:10px;opacity:.55}.playing .wave span{animation:pulse 1s ease-in-out infinite alternate}.wave span:nth-child(2),.wave span:nth-child(6){animation-delay:.2s;height:22px}.wave span:nth-child(3),.wave span:nth-child(5){animation-delay:.5s;height:30px}.wave span:nth-child(4){animation-delay:.1s;height:36px}@keyframes pulse{to{transform:scaleY(.25);opacity:1}}
+.note{font-size:12px;color:var(--muted);margin:20px auto;max-width:490px}
+footer{color:#8995ac;text-align:center;font-size:12px;margin:50px auto 10px}
+audio{display:none}
+@media(max-width:480px){.wrap{padding:16px}.panel{padding:26px 16px}main{margin-top:26px}header{align-items:flex-start}}
+</style>
 </head>
 <body>
-  <h1>Radio AVA O NAVA</h1>
-  <p>رادیو آوا و نوا — پخش زنده</p>
-  <audio controls preload="none">
-    <source src="https://legs-savings-circumstances-optimal.trycloudflare.com/stream" type="audio/mpeg">
-  </audio>
-  <p>اگر پخش فعال نیست، کمی بعد دوباره امتحان کنید.</p>
-</body>
-</html>
+<div class="wrap">
+<header><div class="brand">RADIO AVA O NAVA</div><div class="sub">رادیو آوا و نوا</div></header>
+<main>
+<img class="logo" src="./logo.jpeg" alt="لوگوی رادیو آوا و نوا">
+<h1>رادیو آوا و نوا</h1>
+<p class="tagline">صدایی برای شنیدن، لحظه‌ای برای همراهی</p>
+<section class="panel" aria-label="پخش زنده">
+<div class="status" id="status"><span class="dot"></span><span id="statusText">آماده پخش</span></div>
+<div class="wave" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+<div><button type="button" id="play" aria-label="شروع پخش زنده">▶ شنیدن پخش زنده</button></div>
+<p id="message" role="status" aria-live="polite">برای گوش دادن، دکمه پخش را بزنید.</p>
+<audio id="audio" preload="none"></audio>
+</section>
+<p class="note">پخش فقط زمان برگزاری برنامه فعال است. اگر رادیو خاموش بود، هنگام برنامه دوباره مراجعه کنید.</p>
+</main><footer>© Radio Ava O Nava · پخش آنلاین</footer>
+</div>
+<script>
+(() => {
+ const stream='https://legs-savings-circumstances-optimal.trycloudflare.com/stream';
+ const audio=document.getElementById('audio'),btn=document.getElementById('play'),status=document.getElementById('status'),statusText=document.getElementById('statusText'),message=document.getElementById('message'),panel=document.querySelector('.panel');
+ let wanted=false;
+ function update(playing,msg){status.classList.toggle('live',playing);panel.classList.toggle('playing',playing);statusText.textContent=playing?'در حال پخش زنده':'پخش متوقف است';btn.textContent=playing?'■ توقف پخش':'▶ شنیدن پخش زنده';btn.setAttribute('aria-label',playing?'توقف پخش':'شروع پخش زنده');message.textContent=msg}
+ btn.addEventListener('click',async()=>{
+  if(wanted){wanted=false;audio.pause();audio.removeAttribute('src');audio.load();update(false,'پخش متوقف شد.');return}
+  wanted=true;audio.src=stream;message.textContent='در حال اتصال به رادیو…';
+  try{await audio.play()}catch(e){if(!wanted)return;wanted=false;update(false,'پخش در دسترس نیست. مطمئن شوید برنامه رادیو روشن است و دوباره تلاش کنید.')}
+ });
+ audio.addEventListener('playing',()=>{if(wanted)update(true,'شما در حال شنیدن رادیو آوا و نوا هستید.')});
+ audio.addEventListener('waiting',()=>{if(wanted)message.textContent='در حال دریافت صدا…'});
+ audio.addEventListener('error',()=>{if(wanted){wanted=false;update(false,'اتصال به پخش برقرار نشد. ممکن است رادیو خاموش باشد یا لینک پخش تغییر کرده باشد.')}});
+ audio.addEventListener('ended',()=>{wanted=false;update(false,'برنامه به پایان رسید.')});
+})();
+</script>
+</body></html>
