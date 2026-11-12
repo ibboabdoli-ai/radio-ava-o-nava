@@ -67,7 +67,7 @@ audio{display:none}
 </div>
 <script>
 (() => {
- const stream='https://forth-dedicated-bill-priority.trycloudflare.com/stream';
+ const stream='https://live.ibboabdoli.com/stream';
  const audio=document.getElementById('audio'),btn=document.getElementById('play'),status=document.getElementById('status'),statusText=document.getElementById('statusText'),message=document.getElementById('message'),panel=document.querySelector('.panel');
  let wanted=false;
  function update(playing,msg){status.classList.toggle('live',playing);panel.classList.toggle('playing',playing);statusText.textContent=playing?'در حال پخش زنده':'پخش متوقف است';btn.textContent=playing?'■ توقف پخش':'▶ شنیدن پخش زنده';btn.setAttribute('aria-label',playing?'توقف پخش':'شروع پخش زنده');message.textContent=msg}
