@@ -157,6 +157,23 @@ body{line-height:1.85;letter-spacing:0;word-spacing:normal}
 #play.touch-glow{box-shadow:0 0 0 9px #df84ff50,0 0 50px #d94bff,0 0 28px #ffce87!important;filter:brightness(1.22)!important}
 @media(max-width:850px){.panel{padding:23px 17px}.controls{gap:12px}.volume-row{gap:7px 12px}.actions{grid-template-columns:repeat(2,minmax(0,1fr))}.hero h1{line-height:1.6}}
 @media(max-width:430px){.panel{padding:22px 14px}.controls{width:100%}.volume-row label{font-size:14px}.actions a,.actions button{font-size:13px;padding:12px 9px}.info-chip{font-size:12px}}
+
+/* iOS layout safety: override legacy grid positioning and avoid horizontal clipping */
+html{overflow-x:hidden}
+body{overflow-x:hidden}
+.site{width:100%;max-width:100%;overflow-x:clip}
+.panel{width:100%;max-width:100%;min-width:0;overflow:hidden}
+.player-core,.player-main{width:100%;max-width:100%;min-width:0}
+.controls{display:flex!important;flex-direction:column!important;align-items:stretch!important;width:100%!important;max-width:100%!important;min-width:0!important;padding:0 4px!important;gap:12px!important}
+.controls .volume-row{display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:center!important;width:100%!important;max-width:100%!important;min-width:0!important;gap:5px!important;direction:rtl!important}
+.controls .volume-row label{display:block!important;position:static!important;grid-column:auto!important;grid-row:auto!important;width:100%!important;max-width:100%!important;margin:0!important;text-align:center!important;white-space:normal!important;font-size:15px!important;line-height:1.8!important}
+.controls .volume-row input[type="range"]{display:block!important;position:static!important;grid-column:auto!important;grid-row:auto!important;width:100%!important;max-width:100%!important;min-width:0!important;min-height:42px!important;margin:0!important;box-sizing:border-box!important;direction:ltr!important}
+.controls .volume-row output{display:block!important;position:static!important;grid-column:auto!important;grid-row:auto!important;min-width:0!important;width:100%!important;margin:0!important;text-align:center!important;white-space:nowrap!important;direction:rtl!important}
+.controls #fullscreen{display:block!important;position:static!important;grid-column:auto!important;grid-row:auto!important;align-self:stretch!important;justify-self:stretch!important;width:100%!important;max-width:100%!important;min-width:0!important;margin:4px 0 0!important;min-height:52px!important;border-radius:15px!important}
+.player-buttons{width:100%;max-width:100%;justify-content:center}
+.actions{width:100%;max-width:100%;min-width:0}
+.actions a,.actions button{min-width:0!important;max-width:100%;overflow-wrap:anywhere;hyphens:auto}
+@media(max-width:850px){.site{padding-left:12px!important;padding-right:12px!important}.panel{padding:20px 14px!important}.actions{display:flex!important;flex-direction:column!important;gap:12px!important}.actions a,.actions button{display:flex!important;flex:0 0 auto!important;width:100%!important;min-height:55px!important;justify-content:center!important;text-align:center!important;font-size:15px!important;padding:12px 16px!important}.info-strip{display:flex;flex-direction:column;align-items:stretch;width:100%}.info-chip{width:100%;text-align:center}.hero h1{max-width:100%;font-size:clamp(27px,7vw,38px)}}
 </style>
 <body><div class="site">
 <header class="topbar"><a class="brand-wrap" href="./"><img src="./radio-neon-logo.webp" alt=""><span><span class="brand-title">رادیو آوا و نوا</span><br><span class="brand-en">Radio Ava o Nava</span></span></a>
