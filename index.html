@@ -22,64 +22,118 @@
 
 <link rel="icon" type="image/jpeg" href="./logo.jpeg">
 <style>
-:root{color-scheme:dark;--bg:#0b1021;--gold:#e9bc66;--muted:#b3bed0;--line:rgba(233,188,102,.22)}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 8%,#243250 0%,#12182b 44%,#090d1a 100%);font-family:Tahoma,"Segoe UI",sans-serif;color:#fff}a{color:inherit}
-.wrap{max-width:1060px;padding:24px 22px 40px;margin:auto}
-header{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:18px}
-.brand{font-family:Georgia,serif;letter-spacing:1px;font-size:18px;color:var(--gold);font-weight:bold;direction:ltr}.sub{color:var(--muted);font-size:12px}
-main{text-align:center;max-width:630px;margin:36px auto 0}
-.logo{display:block;width:min(235px,60vw);height:min(235px,60vw);object-fit:contain;margin:0 auto 14px;border-radius:25px;box-shadow:0 20px 65px #0005}
-h1{font-size:clamp(29px,5vw,44px);margin:12px 0;color:#f4dbac}p{line-height:1.9}
-.tagline{color:var(--muted);margin:0 0 22px;font-size:15px}
-.panel{padding:28px 24px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,#222a42dd,#151b30e8);box-shadow:0 22px 60px #0004}
-.status{display:inline-flex;align-items:center;gap:9px;color:#e1d5bd;font-size:14px;margin-bottom:18px}
-.dot{width:9px;height:9px;background:#8490a6;border-radius:50%}.status.live .dot{background:#44d6a0;box-shadow:0 0 0 5px #44d6a020}.status.live{color:#70e6ba}
-button{cursor:pointer;font:inherit;border:0}#play{min-width:210px;border-radius:100px;padding:15px 28px;font-weight:bold;font-size:17px;color:#251b10;background:linear-gradient(130deg,#fff0ba,#dfa64c);box-shadow:0 8px 25px #d39d3d3a;transition:transform .2s}#play:hover{transform:translateY(-2px)}#play:focus-visible{outline:3px solid #fff;outline-offset:4px}
-#message{min-height:24px;color:var(--muted);font-size:13px;margin:20px 0 0}
-.wave{display:flex;justify-content:center;align-items:center;gap:5px;height:36px;margin:0 auto 20px}.wave span{height:12px;width:4px;background:var(--gold);border-radius:10px;opacity:.55}.playing .wave span{animation:pulse 1s ease-in-out infinite alternate}.wave span:nth-child(2),.wave span:nth-child(6){animation-delay:.2s;height:22px}.wave span:nth-child(3),.wave span:nth-child(5){animation-delay:.5s;height:30px}.wave span:nth-child(4){animation-delay:.1s;height:36px}@keyframes pulse{to{transform:scaleY(.25);opacity:1}}
-.note{font-size:12px;color:var(--muted);margin:20px auto;max-width:490px}
-footer{color:#8995ac;text-align:center;font-size:12px;margin:50px auto 10px}
+:root{color-scheme:dark;--bg:#080a25;--gold:#efc36b;--gold-light:#ffe8ad;--cream:#faf1db;--muted:#ded9e9;--line:rgba(244,199,111,.62)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--cream);font-family:Tahoma,"Segoe UI",Arial,sans-serif;background:radial-gradient(ellipse 70% 57% at 51% 30%,#22205a 0%,#121139 52%,#090c29 100%);overflow-x:hidden}
+body:before,body:after{content:"";position:fixed;bottom:5%;width:43vw;height:190px;border-top:2px solid rgba(255,207,112,.85);border-radius:48% 50% 0 0;pointer-events:none;z-index:0;filter:drop-shadow(0 0 13px rgba(245,175,54,.83))}
+body:before{left:-11vw;transform:rotate(13deg)}body:after{right:-11vw;transform:rotate(-13deg)}
+a{color:inherit}
+.site{position:relative;z-index:1;min-height:100vh;max-width:1500px;margin:0 auto;padding:20px 40px 25px;display:flex;flex-direction:column;align-items:center}
+header{width:100%;display:flex;align-items:center;justify-content:space-between;gap:18px;position:relative;padding:0 1% 15px;border-bottom:1px solid rgba(234,185,89,.44)}
+header:after{content:"";position:absolute;bottom:-1px;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,rgba(252,214,129,.8),transparent)}
+.brand{direction:ltr;white-space:nowrap;color:var(--gold);font:700 clamp(17px,1.55vw,25px) Georgia,"Times New Roman",serif;letter-spacing:.095em;text-shadow:0 0 13px #d99f2b42}
+.station-name{font-size:15px;font-weight:700;color:var(--gold-light)}
+.station-name .signal{font-size:20px;margin:0 4px}
+.head-wave{position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);height:24px;padding:0 8px;background:#15143c;display:flex;gap:3px;align-items:center}
+.head-wave i{width:2.5px;height:12px;border-radius:4px;background:var(--gold);box-shadow:0 0 5px #ffe39780}
+.head-wave i:nth-child(2),.head-wave i:nth-child(6){height:20px}.head-wave i:nth-child(4){height:24px}
+main{width:100%;flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;padding-top:22px}
+.hero{position:relative;width:min(100%,1120px);display:flex;align-items:center;flex-direction:column}
+.hero:before{content:"";position:absolute;left:50%;top:40px;width:500px;height:250px;transform:translateX(-50%);background:radial-gradient(ellipse,rgba(44,28,115,.5),transparent 69%);pointer-events:none}
+.hero-bars{position:absolute;top:85px;display:flex;gap:8px;align-items:center;justify-content:center;height:112px;width:280px;opacity:.36;pointer-events:none}
+.hero-bars.left{right:calc(50% + 175px)}.hero-bars.right{left:calc(50% + 175px)}
+.hero-bars i{display:block;width:8px;min-width:3px;border-radius:8px;background:linear-gradient(#d39f5c,#543d78);height:calc(17px + (var(--i) * 7px));max-height:102px;opacity:calc(.3 + var(--i) * .035)}
+.hero-bars.right{transform:scaleX(-1)}
+.logo{position:relative;display:block;width:250px;max-width:55vw;height:250px;max-height:55vw;object-fit:contain;mix-blend-mode:multiply;filter:contrast(1.35) saturate(1.4) brightness(1.35);margin:0 auto -4px}
+h1{position:relative;font-weight:800;font-size:clamp(34px,4.4vw,62px);line-height:1.35;letter-spacing:.005em;color:var(--gold-light);text-shadow:0 2px 0 #bd8e3b,0 0 24px #ffc56940;margin:5px 0 6px;display:flex;gap:29px;align-items:center;justify-content:center}
+h1:before,h1:after{content:"";display:block;width:clamp(30px,8vw,135px);height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);box-shadow:0 0 8px #ffbe59b5}
+.tagline{font-size:clamp(14px,1.3vw,20px);margin:0 0 24px;line-height:1.9;color:#e8e3f1}
+.panel{position:relative;isolation:isolate;overflow:hidden;width:min(100%,850px);min-height:236px;background:linear-gradient(180deg,rgba(48,42,88,.77),rgba(17,18,55,.85));border:1.5px solid #efc36b;border-radius:34px;box-shadow:0 0 30px #eab85d16,inset 0 0 30px #f6b74e12,0 20px 55px #02030b44;padding:15px 22px 18px}
+.panel:before{content:"";position:absolute;top:-1px;left:13%;right:13%;height:3px;background:linear-gradient(90deg,transparent,#fff0bf 18%,#dba84d 33%,transparent 60%,#fff3c9 85%,transparent);filter:blur(.6px);pointer-events:none}
+.panel:after{content:"";position:absolute;bottom:-1px;left:20%;right:20%;height:3px;background:linear-gradient(90deg,transparent,#ffdc86,transparent);filter:blur(1px);pointer-events:none}
+.swoosh{position:absolute;top:64px;width:41%;height:108px;opacity:.92;pointer-events:none;z-index:-1}
+.swoosh.left{left:-7%}.swoosh.right{right:-7%;transform:scaleX(-1)}
+.status{display:inline-flex;gap:9px;align-items:center;color:#ebdfe3;font-size:15px;font-weight:bold}
+.dot{order:-1;display:inline-block;width:11px;height:11px;border-radius:50%;background:#8895aa;box-shadow:0 0 0 4px #aab1bf22}
+.status.live .dot{background:#36ed7a;box-shadow:0 0 13px #3dff8f}
+.status.live{color:#e8fbe9}
+.wave{display:flex;align-items:center;justify-content:center;gap:5px;height:44px;margin:5px auto 12px}
+.wave span{display:block;width:4px;height:15px;background:linear-gradient(#ffeaad,#ca8b37);border-radius:5px;box-shadow:0 0 8px #ffc97455}
+.wave span:nth-child(2),.wave span:nth-child(8){height:25px}.wave span:nth-child(3),.wave span:nth-child(7){height:34px}.wave span:nth-child(4),.wave span:nth-child(6){height:40px}.wave span:nth-child(5){height:44px}
+.playing .wave span{animation:equalize .78s ease-in-out infinite alternate;animation-delay:calc(var(--n) * .12s)}
+@keyframes equalize{to{transform:scaleY(.38)}}
+button{cursor:pointer;font:inherit}
+#play{display:inline-flex;align-items:center;justify-content:center;gap:16px;min-height:67px;min-width:395px;max-width:100%;padding:12px 31px;border:2px solid #fff1b9;border-radius:50px;background:linear-gradient(170deg,#ffecad 0%,#f7d17e 47%,#d49b43 100%);color:#1c1420;box-shadow:0 0 0 2px #d8a54f30,0 0 23px #eaa94d90,inset 0 2px 4px #fffcdbba;font-size:clamp(17px,2vw,23px);font-weight:800;transition:transform .2s,filter .2s}
+#play:hover{filter:brightness(1.06);transform:translateY(-2px)}
+#play:focus-visible,.social a:focus-visible{outline:3px solid white;outline-offset:5px}
+.play-icon{font-size:23px;line-height:1}.broadcast-icon{display:inline-flex;border-left:1px solid #ad7b2f;padding-left:14px}
+.play-icon,.broadcast-icon{aria-hidden:true}
+#message{position:relative;font-size:13px;color:#f2e5da;min-height:23px;margin:15px 0 0;line-height:1.8}
+.note{color:#e5e0f0;font-size:13px;margin:17px 0 19px;line-height:2}
+.social{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap}
+.social a{min-width:240px;min-height:53px;border:1.5px solid #e4b455;border-radius:50px;text-decoration:none;background:linear-gradient(180deg,#1b1b47cc,#111333cc);color:#f6d184;font-weight:bold;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:13px;box-shadow:0 0 13px #d4a84910;transition:background .2s,transform .2s}
+.social a:hover{background:#2b225a;transform:translateY(-2px)}
+.social svg{width:23px;height:23px;fill:currentColor}
+footer{width:min(100%,850px);display:flex;align-items:center;justify-content:center;gap:26px;margin-top:23px;color:#e5dfef;font:13px Georgia,Tahoma,serif}
+footer:before,footer:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+footer a{color:#f4d17c;text-decoration:underline}
 audio{display:none}
-@media(max-width:480px){.wrap{padding:16px}.panel{padding:26px 16px}main{margin-top:26px}header{align-items:flex-start}}
-.social{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;margin:24px auto 8px}.social a{display:inline-flex;gap:12px;align-items:center;justify-content:center;min-width:145px;text-decoration:none;color:#f4dbac;border:1px solid var(--line);border-radius:14px;padding:12px 17px;background:#ffffff0c;font-size:14px;transition:background .2s}.social a:hover,.social a:focus-visible{background:#ffffff20;outline-offset:3px}
+@media(max-width:760px){.site{padding:17px 16px 22px}header{padding-bottom:12px}.station-name{font-size:11px}.head-wave{display:none}.brand{font-size:16px}main{padding-top:24px}.hero-bars{display:none}.logo{width:215px;height:215px;max-width:61vw;max-height:61vw}h1{gap:9px;margin-top:0}h1:before,h1:after{width:25px}.tagline{max-width:410px;margin-bottom:24px}.panel{border-radius:25px;padding:22px 14px;min-height:237px}.swoosh{width:46%;opacity:.6}.note{max-width:360px}.social a{min-width:160px;min-height:49px;font-size:14px}footer{gap:8px;font-size:11px}}
+@media(max-width:430px){header{gap:7px}.brand{letter-spacing:0;font-size:13px}.logo{width:195px;height:195px}.status{font-size:13px}#play{min-width:0;width:100%;gap:10px;padding:12px 10px;font-size:16px}.social{width:100%;gap:10px}.social a{flex:1;min-width:0;font-size:12px;padding:7px 8px}.note{font-size:12px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
-<div class="wrap">
-<header><div class="brand">RADIO AVA O NAVA</div><div class="sub">رادیو آوا و نوا</div></header>
+<div class="site">
+<header><div class="brand">RADIO AVA O NAVA</div><div class="station-name"><span class="signal" aria-hidden="true">◉</span> رادیو آوا و نوا</div><div class="head-wave" aria-hidden="true"><i style="--i:0" aria-hidden="true"></i><i style="--i:1" aria-hidden="true"></i><i style="--i:2" aria-hidden="true"></i><i style="--i:3" aria-hidden="true"></i><i style="--i:4" aria-hidden="true"></i><i style="--i:5" aria-hidden="true"></i><i style="--i:6" aria-hidden="true"></i></div></header>
 <main>
-<img class="logo" src="./logo.jpeg" alt="لوگوی رادیو آوا و نوا">
+<div class="hero">
+<div class="hero-bars left" aria-hidden="true"><i style="--i:0" aria-hidden="true"></i><i style="--i:1" aria-hidden="true"></i><i style="--i:2" aria-hidden="true"></i><i style="--i:3" aria-hidden="true"></i><i style="--i:4" aria-hidden="true"></i><i style="--i:5" aria-hidden="true"></i><i style="--i:6" aria-hidden="true"></i><i style="--i:7" aria-hidden="true"></i><i style="--i:8" aria-hidden="true"></i><i style="--i:9" aria-hidden="true"></i><i style="--i:10" aria-hidden="true"></i><i style="--i:11" aria-hidden="true"></i><i style="--i:12" aria-hidden="true"></i><i style="--i:13" aria-hidden="true"></i><i style="--i:14" aria-hidden="true"></i><i style="--i:15" aria-hidden="true"></i><i style="--i:16" aria-hidden="true"></i></div><div class="hero-bars right" aria-hidden="true"><i style="--i:0" aria-hidden="true"></i><i style="--i:1" aria-hidden="true"></i><i style="--i:2" aria-hidden="true"></i><i style="--i:3" aria-hidden="true"></i><i style="--i:4" aria-hidden="true"></i><i style="--i:5" aria-hidden="true"></i><i style="--i:6" aria-hidden="true"></i><i style="--i:7" aria-hidden="true"></i><i style="--i:8" aria-hidden="true"></i><i style="--i:9" aria-hidden="true"></i><i style="--i:10" aria-hidden="true"></i><i style="--i:11" aria-hidden="true"></i><i style="--i:12" aria-hidden="true"></i><i style="--i:13" aria-hidden="true"></i><i style="--i:14" aria-hidden="true"></i><i style="--i:15" aria-hidden="true"></i><i style="--i:16" aria-hidden="true"></i></div>
+<img class="logo" src="./logo.jpeg" alt="نشان رادیو آوا و نوا" width="250" height="250">
 <h1>رادیو آوا و نوا</h1>
-<p class="tagline">صدایی برای شنیدن، لحظه‌ای برای همراهی</p>
-<section class="panel" aria-label="پخش زنده">
-<div class="status" id="status"><span class="dot"></span><span id="statusText">آماده پخش</span></div>
-<div class="wave" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-<div><button type="button" id="play" aria-label="شروع پخش زنده">▶ شنیدن پخش زنده</button></div>
+<p class="tagline">رادیوی آنلاین و زنده، برای شنیدن لحظه‌های ناب موسیقی و صدا</p>
+</div>
+<section class="panel" aria-label="پخش زنده"><svg viewBox="0 0 330 110" class="swoosh left" aria-hidden="true" preserveAspectRatio="none"><path d="M-25 50 C40 0 95 15 160 54 S265 102 358 40" stroke="#edc478" stroke-width="1.5" fill="none"/><path d="M-25 70 C55 25 91 45 160 67 S265 80 360 56" stroke="#ac7d9d" stroke-width="1" fill="none" opacity=".65"/></svg><svg viewBox="0 0 330 110" class="swoosh right" aria-hidden="true" preserveAspectRatio="none"><path d="M-25 50 C40 0 95 15 160 54 S265 102 358 40" stroke="#edc478" stroke-width="1.5" fill="none"/><path d="M-25 70 C55 25 91 45 160 67 S265 80 360 56" stroke="#ac7d9d" stroke-width="1" fill="none" opacity=".65"/></svg>
+<div class="status" id="status"><span class="dot"></span><span id="statusText">آماده شنیدن</span></div>
+<div class="wave" aria-hidden="true"><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span></div>
+<div><button id="play" type="button" aria-label="شروع پخش زنده"><span class="play-icon" aria-hidden="true">▶</span><span class="button-label">شنیدن پخش زنده</span><span class="broadcast-icon" aria-hidden="true">◉</span></button></div>
 <p id="message" role="status" aria-live="polite">برای گوش دادن، دکمه پخش را بزنید.</p>
-<audio id="audio" preload="none"></audio>
-</section>
+<audio id="audio" preload="none"></audio></section>
 <p class="note">پخش فقط زمان برگزاری برنامه فعال است. اگر رادیو خاموش بود، هنگام برنامه دوباره مراجعه کنید.</p>
 <nav class="social" aria-label="شبکه‌های اجتماعی">
-<a href="https://t.me/+nFR4GhHTc7Y3ZjNk" target="_blank" rel="noopener noreferrer" aria-label="عضویت در تلگرام رادیو آوا و نوا">تلگرام <span aria-hidden="true">↗</span></a>
-<a href="https://www.whatsapp.com/channel/0029VbDqKNg5vKA9OxDV4046" target="_blank" rel="noopener noreferrer" aria-label="دنبال کردن کانال واتساپ رادیو آوا و نوا">کانال واتساپ <span aria-hidden="true">↗</span></a>
+<a href="https://t.me/+nFR4GhHTc7Y3ZjNk" target="_blank" rel="noopener noreferrer" aria-label="عضویت در تلگرام رادیو آوا و نوا"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.6 3.2 2.2 10.7c-1.3.5-1.3 1.2-.2 1.5l5 1.6 1.9 6c.2.6.1.9.7.9.4 0 .6-.2.9-.5l2.6-2.5 5.4 4c1 .5 1.6.2 1.9-1L23 4.5c.3-1.4-.6-2-1.4-1.3ZM8 13.4l11.6-7.1c.6-.3 1 .1.6.5l-9.6 8.7-.4 4.3-2.2-6.4Z"/></svg><span>تلگرام</span></a>
+<a href="https://www.whatsapp.com/channel/0029VbDqKNg5vKA9OxDV4046" target="_blank" rel="noopener noreferrer" aria-label="کانال واتساپ رادیو آوا و نوا"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a9.8 9.8 0 0 0-8.5 14.7L2 22l5.5-1.4A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4-1.1l-.4-.2-3.2.8.9-3.1-.2-.5A8 8 0 1 1 12 20Zm4.4-5.8c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.2s-.6.8-.8 1c-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-3.3-2.9c-.2-.3.2-.3.5-1 .1-.2.1-.3 0-.5l-.7-1.7c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.2.3-.9.9-.9 2s.9 2.2 1 2.4a9.2 9.2 0 0 0 4 3.6c1.5.6 2.1.6 2.9.5.5-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1Z"/></svg><span>کانال واتساپ</span></a>
 </nav>
-</main><footer>© Radio Ava O Nava · پخش آنلاین · <span dir="ltr">by <a href="https://ibbo.abdoli.com" target="_blank" rel="noopener noreferrer">Ibbo.abdoli.com</a></span></footer>
+</main>
+<footer><span>© Radio Ava O Nava · پخش آنلاین · <bdi>by <a href="https://ibbo.abdoli.com" target="_blank" rel="noopener noreferrer">Ibbo.abdoli.com</a></bdi></span></footer>
 </div>
+
 <script>
 (() => {
  const stream='https://live.ibboabdoli.com/stream';
  const audio=document.getElementById('audio'),btn=document.getElementById('play'),status=document.getElementById('status'),statusText=document.getElementById('statusText'),message=document.getElementById('message'),panel=document.querySelector('.panel');
- let wanted=false;
- function update(playing,msg){status.classList.toggle('live',playing);panel.classList.toggle('playing',playing);statusText.textContent=playing?'در حال پخش زنده':'پخش متوقف است';btn.textContent=playing?'■ توقف پخش':'▶ شنیدن پخش زنده';btn.setAttribute('aria-label',playing?'توقف پخش':'شروع پخش زنده');message.textContent=msg}
+ let wanted=false,attempt=0,deadline=null;
+ function setState(mode,msg){
+   const playing=mode==='playing';
+   status.classList.toggle('live',playing);panel.classList.toggle('playing',playing);
+   statusText.textContent=playing?'در حال پخش زنده':mode==='connecting'?'در حال اتصال':'آماده شنیدن';
+   btn.querySelector('.play-icon').textContent=mode==='connecting'?'…':playing?'■':'▶';
+   btn.querySelector('.button-label').textContent=playing?'توقف پخش':'شنیدن پخش زنده';
+   btn.setAttribute('aria-label',playing?'توقف پخش':'شروع پخش زنده');
+   message.textContent=msg;
+ }
+ function stop(msg){wanted=false;attempt++;clearTimeout(deadline);audio.pause();audio.removeAttribute('src');audio.load();setState('idle',msg)}
  btn.addEventListener('click',async()=>{
-  if(wanted){wanted=false;audio.pause();audio.removeAttribute('src');audio.load();update(false,'پخش متوقف شد.');return}
-  wanted=true;audio.src=stream;message.textContent='در حال اتصال به رادیو…';
-  try{await audio.play()}catch(e){if(!wanted)return;wanted=false;update(false,'پخش در دسترس نیست. مطمئن شوید برنامه رادیو روشن است و دوباره تلاش کنید.')}
+   if(wanted){stop('پخش متوقف شد.');return}
+   wanted=true;const token=++attempt;audio.src=stream;setState('connecting','در حال اتصال به رادیو…');
+   deadline=setTimeout(()=>{if(wanted&&token===attempt&&!(!audio.paused&&audio.readyState>=2))stop('اتصال برقرار نشد. ممکن است رادیو خاموش باشد. دوباره تلاش کنید.')},15000);
+   try{await audio.play()}catch(e){if(wanted&&token===attempt)stop('پخش در دسترس نیست. وقتی رادیو روشن شد دوباره امتحان کنید.')}
  });
- audio.addEventListener('playing',()=>{if(wanted)update(true,'شما در حال شنیدن رادیو آوا و نوا هستید.')});
- audio.addEventListener('waiting',()=>{if(wanted)message.textContent='در حال دریافت صدا…'});
- audio.addEventListener('error',()=>{if(wanted){wanted=false;update(false,'اتصال به پخش برقرار نشد. ممکن است رادیو خاموش باشد یا لینک پخش تغییر کرده باشد.')}});
- audio.addEventListener('ended',()=>{wanted=false;update(false,'برنامه به پایان رسید.')});
+ audio.addEventListener('playing',()=>{if(wanted){clearTimeout(deadline);setState('playing','شما در حال شنیدن رادیو آوا و نوا هستید.')}});
+ audio.addEventListener('waiting',()=>{if(wanted){status.classList.remove('live');panel.classList.remove('playing');message.textContent='در حال دریافت صدا…'}});
+ audio.addEventListener('error',()=>{if(wanted)stop('اتصال به رادیو برقرار نشد. ممکن است پخش خاموش باشد.')});
+ audio.addEventListener('ended',()=>{if(wanted)stop('برنامه به پایان رسید.')});
 })();
 </script>
 </body></html>
