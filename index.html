@@ -3,10 +3,12 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#1b1035">
-<link rel="manifest" href="./manifest.webmanifest?v=20261113b">
-<link rel="apple-touch-icon" sizes="180x180" href="./radio-icon-180.png?v=20261113b">
+<link rel="manifest" href="./manifest.webmanifest?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=3">
+<link rel="apple-touch-icon-precomposed" href="./apple-touch-icon-precomposed.png?v=3">
+<link rel="icon" type="image/png" sizes="192x192" href="./radio-icon-192.png?v=3">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="آوا و نوا">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="رادیو آوا و نوا">
@@ -267,6 +269,14 @@ body{overflow-x:hidden}
 .install-platform strong{color:#fff2c9}
 .install-note{margin:16px 0 0}
 @media(max-width:650px){.install-steps{grid-template-columns:1fr}.install-guide{padding:18px 15px}.install-heading{align-items:flex-start}.install-heading img{width:58px;height:58px;flex-basis:58px}.install-platform{padding:16px}}
+
+/* Standalone home-screen app refinements */
+@media(display-mode:standalone){
+  body{min-height:100dvh;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);background:#100920}
+  .topbar{min-height:76px}
+  .site{min-height:100dvh}
+  a,button,input{-webkit-tap-highlight-color:transparent}
+}
 </style>
 <body><div class="site">
 <header class="topbar"><a class="brand-wrap" href="./"><img src="./radio-neon-logo.webp" alt=""><span><span class="brand-title">رادیو آوا و نوا</span><br><span class="brand-en">Radio Ava o Nava</span></span></a>
