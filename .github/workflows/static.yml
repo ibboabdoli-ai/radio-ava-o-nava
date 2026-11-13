@@ -41,6 +41,13 @@ jobs:
           for size in (180, 192, 512):
               output = source.resize((size, size), Image.Resampling.LANCZOS)
               output.save(Path(f"radio-icon-{size}.png"), "PNG", optimize=True)
+          # Safari also probes these conventional root filenames.
+          for name in ("apple-touch-icon.png", "apple-touch-icon-precomposed.png"):
+              source.resize((180, 180), Image.Resampling.LANCZOS).save(name, "PNG", optimize=True)
+          # Verify generated artifacts before publishing them.
+          for name in ("radio-icon-180.png", "radio-icon-192.png", "radio-icon-512.png", "apple-touch-icon.png"):
+              with Image.open(name) as icon:
+                  icon.verify()
           PY
       - name: Setup Pages
         uses: actions/configure-pages@v5
