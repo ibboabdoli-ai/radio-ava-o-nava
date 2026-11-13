@@ -134,21 +134,43 @@ body{font-size:16px;line-height:1.65}
 }
 @media(prefers-reduced-motion:reduce){.touch-glow{transition:none}}
 
+
+/* Final mobile readability and responsive audio controls */
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
+html,body,button,input,a,output{font-family:'Vazirmatn',Tahoma,Arial,sans-serif}
+body{line-height:1.85;letter-spacing:0;word-spacing:normal}
+.hero h1,.hero p,.status,.info-chip,.actions a,.actions button,.details,.about,.note,.control-btn,.brand-title{font-family:'Vazirmatn',Tahoma,Arial,sans-serif;letter-spacing:normal;word-spacing:normal;line-height:1.85}
+.brand-en,.hero-en{font-family:Georgia,serif}
+.panel{overflow:hidden}
+.controls{display:flex!important;flex-direction:column;align-items:stretch;justify-content:center;gap:13px;width:min(100%,510px);margin:8px auto 0;direction:rtl}
+.volume-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 14px;align-items:center;width:100%;min-width:0}
+.volume-row label{grid-column:1/-1;display:block;text-align:right;font-size:15px;white-space:normal}
+.volume-row input[type=range]{grid-column:1;grid-row:2;width:100%;min-width:0;max-width:100%;height:44px;accent-color:#c94eff;direction:ltr}
+.volume-row output{grid-column:2;grid-row:2;min-width:50px;text-align:center;white-space:nowrap;direction:rtl;font-size:14px}
+.controls .control-btn{grid-column:auto;align-self:stretch;justify-self:stretch;min-width:0;width:100%;min-height:48px;margin:0;border-radius:16px;font-size:15px}
+#message{font-size:14px;line-height:1.9;padding:0 6px}
+.info-strip{display:flex;flex-wrap:wrap;justify-content:center;gap:9px}
+.info-chip{white-space:normal;overflow-wrap:normal;word-break:normal;max-width:100%}
+.actions a,.actions button{line-height:1.9;overflow-wrap:normal;word-break:normal;min-height:58px;white-space:normal}
+#play .button-label{font-family:'Vazirmatn',Tahoma,sans-serif;line-height:1.8}
+.touch-glow,.actions a.touch-glow,.actions button.touch-glow,.control-btn.touch-glow,.menu-toggle.touch-glow,.top-social a.touch-glow,.nav-links a.touch-glow{border-color:#fff1c9!important;background:linear-gradient(135deg,#8446b5b8,#31145ee8)!important;box-shadow:0 0 0 3px #ffe3b380,0 0 34px #e257ff,0 0 55px #bb45faaa,inset 0 0 18px #ffffff35!important;filter:brightness(1.28)!important}
+#play.touch-glow{box-shadow:0 0 0 9px #df84ff50,0 0 50px #d94bff,0 0 28px #ffce87!important;filter:brightness(1.22)!important}
+@media(max-width:850px){.panel{padding:23px 17px}.controls{gap:12px}.volume-row{gap:7px 12px}.actions{grid-template-columns:repeat(2,minmax(0,1fr))}.hero h1{line-height:1.6}}
+@media(max-width:430px){.panel{padding:22px 14px}.controls{width:100%}.volume-row label{font-size:14px}.actions a,.actions button{font-size:13px;padding:12px 9px}.info-chip{font-size:12px}}
 </style>
 <body><div class="site">
 <header class="topbar"><a class="brand-wrap" href="./"><img src="./radio-neon-logo.webp" alt=""><span><span class="brand-title">رادیو آوا و نوا</span><br><span class="brand-en">Radio Ava o Nava</span></span></a>
-<nav class="nav-links" id="nav"><a class="active" href="#home">صفحه اصلی</a><a href="#schedule">برنامه‌ها</a><a href="#schedule">آرشیو برنامه‌ها</a><a href="#about">درباره ما</a><a href="#contact">تماس با ما</a></nav>
+<nav class="nav-links" id="nav"><a class="active" href="#home">صفحه اصلی</a><a href="#about">درباره ما</a><a href="#contact">تماس با ما</a></nav>
 <div class="top-social"><a href="https://t.me/+nFR4GhHTc7Y3ZjNk" target="_blank" rel="noopener noreferrer" aria-label="تلگرام">✈</a><a href="https://www.whatsapp.com/channel/0029VbDqKNg5vKA9OxDV4046" target="_blank" rel="noopener noreferrer" aria-label="واتساپ">◉</a></div><button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="منو">☰</button></header>
 <main id="home"><section class="hero"><img class="hero-logo" src="./radio-neon-logo.webp" alt="لوگوی رادیو آوا و نوا" width="160" height="160"><h1>رادیو آوا و نوا</h1><div class="hero-en">Radio Ava o Nava</div><p>موسیقی، آواز، شعر و دکلمه</p></section><div class="glow-line"></div>
-<section class="panel" id="playerShell" aria-label="پلیر پخش زنده"><div class="status-row"><div class="status" id="status"><span class="dot"></span><span id="statusText">آماده شنیدن</span></div><div class="info-strip"><span class="info-chip" id="liveStatus">وضعیت سرور: در حال بررسی</span><span class="info-chip" id="listeners">شنوندگان: نامشخص</span><span class="info-chip" id="elapsed">مدت پخش: نامشخص</span></div></div>
-<div class="player-core"><img class="album-art" src="./radio-neon-logo.webp" alt="رادیو آوا و نوا" width="160" height="160"><div class="player-main"><div class="wave" aria-hidden="true"><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span><span style="--n:9"></span><span style="--n:10"></span><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span><span style="--n:9"></span><span style="--n:10"></span><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span><span style="--n:9"></span><span style="--n:10"></span><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span><span style="--n:9"></span><span style="--n:10"></span><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span><span style="--n:9"></span><span style="--n:10"></span><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span></div><div class="player-buttons"><div class="play-wrap"><button id="play" type="button" aria-label="شروع پخش زنده"><span class="play-icon" aria-hidden="true">▶</span><span class="button-label">شنیدن پخش زنده</span></button></div></div><div class="controls"><label for="volume">صدای رادیو</label><input id="volume" type="range" min="0" max="100" value="80"><output id="volumeText" for="volume">۸۰٪</output><button class="control-btn" id="fullscreen" type="button">تمام‌صفحه</button></div></div></div>
+<section class="panel" id="playerShell" aria-label="پلیر پخش زنده"><div class="status-row"><div class="status" id="status"><span class="dot"></span><span id="statusText">آماده شنیدن</span></div><div class="info-strip"><span class="info-chip" id="liveStatus">وضعیت سرور: نامشخص</span><span class="info-chip" id="listeners">شنوندگان: نامشخص</span><span class="info-chip" id="elapsed">زمان گوش‌دادن: 00:00:00</span></div></div>
+<div class="player-core"><img class="album-art" src="./radio-neon-logo.webp" alt="رادیو آوا و نوا" width="160" height="160"><div class="player-main"><div class="wave" aria-hidden="true"><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span><span style="--n:9"></span><span style="--n:10"></span><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span><span style="--n:9"></span><span style="--n:10"></span><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span><span style="--n:9"></span><span style="--n:10"></span><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span><span style="--n:9"></span><span style="--n:10"></span><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span><span style="--n:9"></span><span style="--n:10"></span><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span></div><div class="player-buttons"><div class="play-wrap"><button id="play" type="button" aria-label="شروع پخش زنده"><span class="play-icon" aria-hidden="true">▶</span><span class="button-label">شنیدن پخش زنده</span></button></div></div><div class="controls"><div class="volume-row"><label for="volume">صدای رادیو</label><input id="volume" type="range" min="0" max="100" value="80"><output id="volumeText" for="volume">۸۰٪</output></div><button class="control-btn" id="fullscreen" type="button">تمام‌صفحه</button></div></div></div>
 <p id="message" role="status" aria-live="polite">برای گوش دادن، دکمه پخش را بزنید.</p><audio id="audio" preload="none"></audio></section>
 <p class="note">پخش فقط هنگام برگزاری برنامه فعال است. وضعیت و تعداد شنوندگان تا اتصال امن اطلاعات سرور نامشخص می‌مانند.</p>
 <div class="actions" id="contact"><a class="house" id="clubhouse" href="https://www.clubhouse.com/house/%D8%A7%D9%88%D8%A7-%D9%88-%D9%86%D9%88%D8%A7-%D9%85%D9%88%D8%B3%DB%8C%D9%82%DB%8C-%D8%B2%D9%86%D8%AF%D9%87-%D8%B4%D8%B9%D8%B1-%D9%88-%D8%A7%D9%88%D8%A7%D8%B2?chs=o78CNL9gG3%3AxWrPxdSYMSeit7zGhjYUmTDXVQFOQFETFvVa4T_EZ4o&amp;utm_medium=ch_general_house" target="_blank" rel="noopener noreferrer">ورود به هاوس کلاب‌هاوس</a><a id="requestSong" href="https://t.me/+nFR4GhHTc7Y3ZjNk" target="_blank" rel="noopener noreferrer">ارسال پیام / درخواست آهنگ</a><a class="telegram" href="https://t.me/+nFR4GhHTc7Y3ZjNk" target="_blank" rel="noopener noreferrer">اشتراک در تلگرام</a><a class="whatsapp" href="https://www.whatsapp.com/channel/0029VbDqKNg5vKA9OxDV4046" target="_blank" rel="noopener noreferrer">اشتراک در واتساپ</a><button type="button" id="copyLink">کپی لینک رادیو</button><button type="button" id="shareLink">اشتراک‌گذاری</button></div>
-<div class="cards" id="schedule"><section class="details"><h2>برنامه بعدی</h2><p id="nextProgram">برنامه بعدی: هنوز اعلام نشده</p><p class="subtle">زمان برنامه پس از اعلام نمایش داده می‌شود.</p></section><section class="details"><h2>برنامه در حال پخش</h2><p id="programName">نام برنامه: هنوز اعلام نشده</p><p class="subtle" id="roomInfo">لینک روم هر جلسه قابل تغییر است.</p></section><section class="details"><h2>جدول برنامه‌ها</h2><p class="subtle">هنوز جدول برنامه‌ها منتشر نشده است.</p><p class="subtle">برای اطلاع از برنامه‌ها کانال‌های رادیو را دنبال کنید.</p></section></div>
 <section class="about" id="about"><h2>درباره رادیو آوا و نوا</h2><p>رادیو آوا و نوا همراه شما در برنامه‌های زنده موسیقی، آواز، شعر و دکلمه است. پخش فقط هنگام برگزاری برنامه فعال می‌شود.</p></section></main>
 <footer>© Radio Ava O Nava · پخش آنلاین · by <a href="https://ibbo.abdoli.com" target="_blank" rel="noopener noreferrer">Ibbo.abdoli.com</a></footer></div>
-<script>document.querySelectorAll('.actions a,.actions button,.control-btn,.menu-toggle,.top-social a,.nav-links a,#play').forEach(el=>{let glowTimer;const glow=()=>{clearTimeout(glowTimer);el.classList.add('touch-glow');glowTimer=setTimeout(()=>el.classList.remove('touch-glow'),650)};el.addEventListener('pointerdown',glow,{passive:true});el.addEventListener('pointercancel',()=>el.classList.remove('touch-glow'),{passive:true});el.addEventListener('click',e=>{if(e.detail===0)glow()})});document.getElementById('menuToggle').addEventListener('click',function(){const nav=document.getElementById('nav');const open=nav.classList.toggle('open');this.setAttribute('aria-expanded',String(open))});document.querySelectorAll('#nav a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('nav').classList.remove('open');document.getElementById('menuToggle').setAttribute('aria-expanded','false')}));</script>
+<script>document.querySelectorAll('.actions a,.actions button,.control-btn,.menu-toggle,.top-social a,.nav-links a,#play').forEach(el=>{let glowTimer;const glow=()=>{clearTimeout(glowTimer);el.classList.add('touch-glow');glowTimer=setTimeout(()=>el.classList.remove('touch-glow'),1100)};el.addEventListener('pointerdown',glow,{passive:true});el.addEventListener('touchstart',glow,{passive:true});el.addEventListener('pointercancel',()=>el.classList.remove('touch-glow'),{passive:true});el.addEventListener('click',e=>{if(e.detail===0)glow()})});document.getElementById('menuToggle').addEventListener('click',function(){const nav=document.getElementById('nav');const open=nav.classList.toggle('open');this.setAttribute('aria-expanded',String(open))});document.querySelectorAll('#nav a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('nav').classList.remove('open');document.getElementById('menuToggle').setAttribute('aria-expanded','false')}));</script>
 <script>
 (() => {
 'use strict';
@@ -156,7 +178,7 @@ const STREAM='https://live.ibboabdoli.com/stream';
 const SITE='https://ibboabdoli-ai.github.io/radio-ava-o-nava/';
 const $=id=>document.getElementById(id);
 const audio=$('audio'),button=$('play'),panel=$('playerShell'),status=$('status'),statusText=$('statusText'),message=$('message');
-let wanted=false,seq=0,retries=0,retryTimer=null,stallTimer=null,serverLive=null,streamStarted=null,connectionAt=null;
+let wanted=false,seq=0,retries=0,retryTimer=null,stallTimer=null,serverLive=null,streamStarted=null,connectionAt=null,listenedMs=0,listeningSince=null;
 const fa=n=>new Intl.NumberFormat('fa-IR').format(n);
 function render(mode,msg){
  const playing=mode==='playing';
@@ -169,6 +191,7 @@ function render(mode,msg){
 }
 function clearTimers(){clearTimeout(retryTimer);clearTimeout(stallTimer)}
 function stop(msg){
+ if(listeningSince){listenedMs+=Date.now()-listeningSince;listeningSince=null}
  wanted=false;seq++;retries=0;clearTimers();audio.pause();audio.removeAttribute('src');audio.load();connectionAt=null;render('idle',msg);
 }
 async function connect(){
@@ -180,6 +203,7 @@ async function connect(){
 }
 function scheduleRetry(){
  if(!wanted||retryTimer)return;
+ if(listeningSince){listenedMs+=Date.now()-listeningSince;listeningSince=null}
  clearTimeout(stallTimer);audio.pause();retries++;
  if(retries>6){stop('اتصال برقرار نشد. رادیو ممکن است خاموش باشد؛ دوباره پخش را بزنید.');return}
  const delay=Math.min(2000*Math.pow(1.6,retries-1),12000);
@@ -187,8 +211,8 @@ function scheduleRetry(){
  retryTimer=setTimeout(()=>{retryTimer=null;connect()},delay);
 }
 button.addEventListener('click',()=>wanted?stop('پخش متوقف شد.'):((wanted=true),connect()));
-audio.addEventListener('playing',()=>{if(!wanted)return;clearTimers();retries=0;connectionAt=Date.now();render('playing','شما در حال شنیدن رادیو آوا و نوا هستید.')});
-audio.addEventListener('waiting',()=>{if(wanted){render('connecting','در حال دریافت صدا…');clearTimeout(stallTimer);stallTimer=setTimeout(()=>{if(wanted&&audio.readyState<3)scheduleRetry()},12000)}});
+audio.addEventListener('playing',()=>{if(!wanted)return;clearTimers();retries=0;connectionAt=Date.now();if(!listeningSince)listeningSince=Date.now();render('playing','شما در حال شنیدن رادیو آوا و نوا هستید.')});
+audio.addEventListener('waiting',()=>{if(wanted){if(listeningSince){listenedMs+=Date.now()-listeningSince;listeningSince=null}render('connecting','در حال دریافت صدا…');clearTimeout(stallTimer);stallTimer=setTimeout(()=>{if(wanted&&audio.readyState<3)scheduleRetry()},12000)}});
 audio.addEventListener('error',()=>{if(wanted)scheduleRetry()});
 audio.addEventListener('ended',()=>{if(wanted)scheduleRetry()});
 window.addEventListener('online',()=>{if(wanted&&audio.paused){clearTimeout(retryTimer);retryTimer=null;connect()}});
@@ -199,7 +223,7 @@ $('fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenEle
 $('copyLink').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(SITE);$('copyLink').textContent='لینک کپی شد';setTimeout(()=>$('copyLink').textContent='کپی لینک رادیو',2200)}catch(e){window.prompt('لینک رادیو را کپی کنید:',SITE)}});
 $('shareLink').addEventListener('click',async()=>{if(navigator.share){try{await navigator.share({title:'رادیو آوا و نوا',url:SITE})}catch(e){}}else{window.open('https://t.me/share/url?url='+encodeURIComponent(SITE)+'&text='+encodeURIComponent('رادیو آوا و نوا'),'_blank','noopener,noreferrer')}});
 function duration(sec){const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=Math.floor(sec%60);return [h,m,s].map(x=>String(x).padStart(2,'0')).join(':')}
-setInterval(()=>{$('elapsed').textContent=streamStarted?'مدت برنامه: '+duration((Date.now()-streamStarted)/1000):'مدت برنامه: نامشخص'},1000);
+setInterval(()=>{const total=listenedMs+(listeningSince?Date.now()-listeningSince:0);$('elapsed').textContent='زمان گوش‌دادن: '+duration(total/1000)},1000);
 function cleanText(v,max){return typeof v==='string'?v.trim().slice(0,max):''}
 function setHouseLink(url){
  try{const u=new URL(url);if(u.protocol==='https:'&&u.hostname==='www.clubhouse.com'&&(u.pathname.startsWith('/room/')||u.pathname.startsWith('/house/'))){$('clubhouse').href=u.href;$('clubhouse').textContent=u.pathname.startsWith('/room/')?'ورود مستقیم به روم کلاب‌هاوس':'ورود به هاوس کلاب‌هاوس';return true}}catch(e){}return false;
@@ -214,7 +238,7 @@ async function loadProgram(){
 loadProgram();setInterval(loadProgram,60000);
 // Cloudflare currently allows /stream only. Do not claim LIVE/OFFLINE or listener counts from audio playback.
 // When a secure read-only metadata endpoint is configured, this section can consume its verified data.
-$('liveStatus').textContent='وضعیت سرور: نامشخص (پخش را تست کنید)';
+$('liveStatus').textContent='وضعیت سرور: نامشخص';
 $('listeners').textContent='شنوندگان آنلاین: نامشخص';
 })();
 </script></body></html>
