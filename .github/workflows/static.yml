@@ -31,6 +31,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Generate iPhone and Android PNG app icons
+        run: |
+          python3 -m pip install --quiet --user Pillow==11.3.0
+          python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          source = Image.open("radio-neon-logo.webp").convert("RGB")
+          for size in (180, 192, 512):
+              output = source.resize((size, size), Image.Resampling.LANCZOS)
+              output.save(Path(f"radio-icon-{size}.png"), "PNG", optimize=True)
+          PY
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
