@@ -213,6 +213,7 @@ function renderQueue(){
  $('queueSubtitle').textContent=current().kind==='album'?'قطعات آلبوم را از این فهرست انتخاب کنید.':'این اثر یک قطعه مستقل است.';
  if(!sounds.length){const li=document.createElement('li');li.className='empty';li.textContent=ready?'فهرست قطعات این اثر در دسترس نیست.':'در حال دریافت فهرست قطعات…';queue.append(li);$('upNext').textContent='—';return;}
  sounds.forEach((sound,i)=>{
+  if(query&&!titleForSound(sound).toLocaleLowerCase('fa').includes(query))return;
   const row=document.createElement('li');row.className='track'+(currentSoundIndex===i?' active':'');
   const number=document.createElement('span');number.className='index';number.textContent=new Intl.NumberFormat('fa-IR').format(i+1);
   const button=document.createElement('button');button.type='button';button.textContent=titleForSound(sound);button.addEventListener('click',()=>{if(!widget||!ready)return;currentSoundIndex=i;widget.skip(i);widget.play();refreshSound();});
@@ -257,7 +258,7 @@ function jump(dir){
 }
 function applyFilter(value){filter=value;document.querySelectorAll('.filter').forEach(button=>{const active=button.dataset.filter===value;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});renderLibrary();}
 document.querySelectorAll('.filter').forEach(button=>button.addEventListener('click',()=>applyFilter(button.dataset.filter)));
-$('search').addEventListener('input',event=>{query=String(event.target.value||'').trim().toLocaleLowerCase('fa');renderLibrary();});
+$('search').addEventListener('input',event=>{query=String(event.target.value||'').trim().toLocaleLowerCase('fa');renderLibrary();renderQueue();});
 $('currentFavorite').addEventListener('click',()=>toggleFavorite(current().id));
 $('togglePlay').addEventListener('click',togglePlayback);
 $('miniPlay').addEventListener('click',togglePlayback);
