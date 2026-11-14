@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#1b1035">
-<link rel="manifest" href="./manifest.webmanifest?v=3">
-<link rel="apple-touch-icon" sizes="180x180" href="https://ibboabdoli-ai.github.io/radio-ava-o-nava/radio-ava-app-icon-2026.png">
-<link rel="icon" type="image/png" sizes="192x192" href="./radio-icon-192.png?v=3">
+<link rel="manifest" href="/manifest.webmanifest?v=4">
+<link rel="apple-touch-icon" sizes="180x180" href="/radio-ava-app-icon-2026.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/radio-icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="آوا و نوا">
@@ -19,15 +19,15 @@
 <meta property="og:site_name" content="Radio AVA O NAVA">
 <meta property="og:title" content="رادیو آوا و نوا | Radio AVA O NAVA">
 <meta property="og:description" content="رادیو آوا و نوا — پخش زنده اینترنتی؛ همراه لحظه‌های شنیدنی.">
-<meta property="og:url" content="https://ibboabdoli-ai.github.io/radio-ava-o-nava/">
-<meta property="og:image" content="https://ibboabdoli-ai.github.io/radio-ava-o-nava/radio-neon-logo.webp">
-<meta property="og:image:secure_url" content="https://ibboabdoli-ai.github.io/radio-ava-o-nava/radio-neon-logo.webp">
+<meta property="og:url" content="https://radio.ibboabdoli.com/">
+<meta property="og:image" content="https://radio.ibboabdoli.com/radio-neon-logo.webp">
+<meta property="og:image:secure_url" content="https://radio.ibboabdoli.com/radio-neon-logo.webp">
 <meta property="og:image:type" content="image/webp">
 <meta property="og:image:alt" content="لوگوی Radio AVA O NAVA">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="رادیو آوا و نوا | Radio AVA O NAVA">
 <meta name="twitter:description" content="پخش زنده اینترنتی رادیو آوا و نوا">
-<meta name="twitter:image" content="https://ibboabdoli-ai.github.io/radio-ava-o-nava/radio-neon-logo.webp">
+<meta name="twitter:image" content="https://radio.ibboabdoli.com/radio-neon-logo.webp">
 
 <link rel="icon" type="image/webp" href="./radio-neon-logo.webp">
 <style>
@@ -296,7 +296,7 @@ body{overflow-x:hidden}
 (() => {
 'use strict';
 const STREAM='https://live.ibboabdoli.com/stream';
-const SITE='https://ibboabdoli-ai.github.io/radio-ava-o-nava/';
+const SITE='https://radio.ibboabdoli.com/';
 const $=id=>document.getElementById(id);
 const audio=$('audio'),button=$('play'),panel=$('playerShell'),status=$('status'),statusText=$('statusText'),message=$('message');
 let wanted=false,seq=0,retries=0,retryTimer=null,stallTimer=null,serverLive=null,streamStarted=null,connectionAt=null,listenedMs=0,listeningSince=null;
