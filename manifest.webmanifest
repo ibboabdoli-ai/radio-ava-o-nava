@@ -1,24 +1,24 @@
 {
-  "id": "/radio-ava-o-nava/",
+  "id": "/",
   "name": "رادیو آوا و نوا | Radio Ava o Nava",
   "short_name": "آوا و نوا",
   "description": "پخش زنده موسیقی، آواز، شعر و دکلمه",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "/radio-ava-o-nava/?source=homescreen",
-  "scope": "/radio-ava-o-nava/",
+  "start_url": "/?source=homescreen",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#130c29",
   "theme_color": "#1b1035",
   "icons": [
     {
-      "src": "./radio-icon-192.png",
+      "src": "/radio-icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./radio-icon-512.png",
+      "src": "/radio-icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
