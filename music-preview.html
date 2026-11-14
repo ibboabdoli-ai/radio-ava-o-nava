@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#100d24">
 <meta name="description" content="آرشیو موسیقی اصیل ایرانی در رادیو آوا و نوا">
-<title>پیش‌نمایش آرشیو موسیقی | رادیو آوا و نوا</title>
+<title>پیش‌نمایش موسیقی با کیفیت بالا | رادیو آوا و نوا</title>
 <link rel="icon" type="image/webp" href="./radio-neon-logo.webp">
 <style>
 :root{color-scheme:dark;--bg:#0b0920;--surface:#1d1435;--surface2:#27183e;--line:#9b56bc75;--gold:#f6c87f;--cream:#fff2dc;--muted:#c9b8d1;--pink:#d363ed}
@@ -108,11 +108,11 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:27px 0}
 <nav class="navigation" aria-label="صفحات رادیو"><a href="./">پخش زنده</a><a class="selected" aria-current="page" href="./music.html">آرشیو موسیقی</a></nav>
 </header>
 <main>
-<section class="hero"><div class="hero-kicker">RADIO AVA O NAVA · PREVIEW</div><h1>آوای اصیل ایران</h1><p>پیش‌نمایش پلیر جدید آوا و نوا؛ با چند ضبط تاریخی ایرانی از آرشیو آزاد Wikimedia Commons. این صفحه جایگزین رادیوی زنده نیست.</p></section>
+<section class="hero"><div class="hero-kicker">RADIO AVA O NAVA · HI-FI PREVIEW</div><h1>آوای اصیل ایران</h1><p>۱۱ اجرای معاصر موسیقی دستگاهی ایرانی، ضبط حرفه‌ای با فایل‌های FLAC و WAV از آرشیو دانشگاه موسیقی گراتس. آلبوم کامل نیستند؛ این نسخه برای بررسی کیفیت پخش است.</p></section>
 <section class="player" id="musicPlayer" aria-label="موزیک‌پلیر">
 <div class="artwork"><img id="cover" src="./radio-neon-logo.webp" alt="کاور آلبوم فعلی" width="240" height="240"></div>
 <div class="now">
-<p class="eyebrow">نسخه آزمایشی · اکنون انتخاب شده</p><h2 id="currentTitle">بیات شیراز و راست · بخش اول</h2><p id="currentArtist" class="artist">پاولو مایسورادزه · ضبط تاریخی</p>
+<p class="eyebrow">نسخه آزمایشی · ضبط باکیفیت</p><h2 id="currentTitle">درآمد شور (۱)</h2><p id="currentArtist" class="artist">فرحناز صاحب‌قلم</p>
 <div class="progress"><time id="currentTime">0:00</time><input class="seek" type="range" id="seek" min="0" max="1000" value="0" aria-label="جابه‌جایی در آهنگ" disabled><time id="totalTime">0:00</time></div>
 <div class="controls">
 <button class="icon-btn" id="repeat" aria-label="تکرار قطعه" title="تکرار قطعه">↻</button>
@@ -121,42 +121,50 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:27px 0}
 <button class="icon-btn" id="next" aria-label="قطعه بعدی" title="قطعه بعدی">❯❯</button>
 <button class="icon-btn" id="currentFavorite" aria-label="افزودن به علاقه‌مندی‌ها" title="علاقه‌مندی">♡</button>
 </div>
-<div class="volume-row"><label>صدا <input type="range" id="volume" min="0" max="100" value="80" aria-label="میزان صدا"></label><span class="tag" id="sourceName">Wikimedia Commons · ضبط تاریخی</span></div>
+<div class="volume-row"><label>صدا <input type="range" id="volume" min="0" max="100" value="80" aria-label="میزان صدا"></label><span class="tag" id="sourceName">آرشیو دانشگاه گراتس · FLAC / WAV</span></div>
 <p class="status" id="status" role="status" aria-live="polite"></p>
 </div>
 <audio id="previewAudio" preload="metadata" playsinline></audio>
 </section>
 <section class="toolbar" aria-label="جست‌وجو و دسته‌بندی">
 <label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="جست‌وجوی خواننده، آلبوم یا قطعه" autocomplete="off" aria-label="جست‌وجوی آرشیو"></label>
-<div class="filters" role="group" aria-label="دسته‌بندی"><button class="filter active" data-filter="all" aria-pressed="true">همه</button><button class="filter" data-filter="traditional" aria-pressed="false">موسیقی سنتی</button><button class="filter" data-filter="historic" aria-pressed="false">ضبط تاریخی</button><button class="filter" data-filter="favorite" aria-pressed="false">علاقه‌مندی‌ها</button></div>
+<div class="filters" role="group" aria-label="دسته‌بندی"><button class="filter active" data-filter="all" aria-pressed="true">همه</button><button class="filter" data-filter="vocal" aria-pressed="false">آواز</button><button class="filter" data-filter="ney" aria-pressed="false">نی / آواز</button><button class="filter" data-filter="setar" aria-pressed="false">سه‌تار</button><button class="filter" data-filter="favorite" aria-pressed="false">علاقه‌مندی‌ها</button></div>
 </section>
-<div class="section-title"><h2>کتابخانه آزمایشی</h2><span id="resultCount"></span></div>
+<div class="section-title"><h2>اجراهای دستگاهی منتخب</h2><span id="resultCount"></span></div>
 <section class="grid" id="library" aria-label="کتابخانه موسیقی"></section>
 <div class="lower">
 <section class="box" aria-labelledby="queueTitle"><h2 id="queueTitle">فهرست قطعات</h2><p id="queueSubtitle">برای پخش یک قطعه، روی آن بزنید.</p><ol class="tracks" id="queue"></ol></section>
 <section class="box" aria-labelledby="upnextTitle"><h2 id="upnextTitle">در صف پخش</h2><p>قطعه فعلی و قطعه بعدی</p><div id="upNext" class="empty">پس از انتخاب یک آلبوم نمایش داده می‌شود.</div></section>
 </div>
-<p class="info" id="attribution">ضبط‌های نمونه: ۱۹۰۳ تا ۱۹۰۹ از اجراهای سنتی ثبت‌شده توسط ادموند پیرس، و ضبط سال ۱۹۰۶ از سرود تاریخی «سلام شاه». منبع: Wikimedia Commons / Gallica. این نمونه‌ها در صفحه منبع با نشان Public Domain معرفی شده‌اند. کیفیت ضبط‌ها تاریخی است؛ این بخش رادیوی زنده نیست و فایل صوتی روی سرور ما قرار ندارد.</p>
+<p class="info" id="attribution">منبع و اعتبار: KUG Dastgāhi Corpus، دانشگاه موسیقی و هنرهای نمایشی گراتس، اجراهای فرحناز صاحب‌قلم، رضا زالپور، مسعود شعاری و محمد خدادادی. مجوز آثار: <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 4.0</a> (فقط استفاده غیرتجاری، بدون تغییر در اثر و با ذکر منبع). <a href="https://phaidra.kug.ac.at/detail/o:127195" target="_blank" rel="noopener noreferrer">آرشیو اصلی</a>. این صفحه پیش‌نمایش غیرتجاری است؛ فایل‌ها روی سرور رادیو ذخیره نشده‌اند. پخش FLAC/WAV به پشتیبانی مرورگر و اتصال به سرور دانشگاه بستگی دارد.</p>
 </main>
 <footer>Radio Ava O Nava · <a href="./">بازگشت به رادیو زنده</a></footer>
 </div>
-<div class="mini" id="miniPlayer"><div class="mini-inner"><img src="./radio-neon-logo.webp" id="miniCover" alt=""><span class="mini-name" id="miniName">بیات شیراز و راست<small id="miniArtist">پاولو مایسورادزه</small></span><button type="button" id="miniTop" aria-label="نمایش پلیر">⌃</button><button type="button" id="miniPlay" aria-label="پخش">▶</button></div></div>
+<div class="mini" id="miniPlayer"><div class="mini-inner"><img src="./radio-neon-logo.webp" id="miniCover" alt=""><span class="mini-name" id="miniName">درآمد شور (۱)<small id="miniArtist">فرحناز صاحب‌قلم</small></span><button type="button" id="miniTop" aria-label="نمایش پلیر">⌃</button><button type="button" id="miniPlay" aria-label="پخش">▶</button></div></div>
 <script>(function(){
 'use strict';
 const $ = id => document.getElementById(id);
 const audio = $('previewAudio');
 const tracks = [
-  {id:'rast1',title:'بیات شیراز و راست · بخش اول',artist:'پاولو مایسورادزه',desc:'موسیقی اصیل ایرانی · ضبط ۱۹۰۳–۱۹۰۹ · ۲:۵۳',type:'traditional',source:'Wikimedia Commons / Gallica',url:'https://upload.wikimedia.org/wikipedia/commons/3/39/Baiaty_Chiraz_Rast_.ogg'},
-  {id:'rast2',title:'بیات شیراز و راست · بخش دوم',artist:'پاولو مایسورادزه',desc:'موسیقی اصیل ایرانی · ضبط ۱۹۰۳–۱۹۰۹ · ۲:۵۶',type:'traditional',source:'Wikimedia Commons / Gallica',url:'https://upload.wikimedia.org/wikipedia/commons/8/84/Baiaty_Chiraz_Rast_Pavel_2.ogg'},
-  {id:'salam1906',title:'سلام شاه · ضبط ۱۹۰۶',artist:'آلفرد لومر · اجرای تاریخی',desc:'اثر تاریخی ایران · ضبط ۱۹۰۶ · ۲:۴۸',type:'historic',source:'Wikimedia Commons',url:'https://upload.wikimedia.org/wikipedia/commons/9/9d/Salam-e_shah_1906.ogg'}
+  {id:'kug127758',title:'درآمد شور (۱)',artist:'فرحناز صاحب‌قلم',desc:'آواز · WAV · ۸٫۴ مگابایت',type:'vocal',source:'KUG Dastgāhi Corpus · WAV',url:'https://phaidra.kug.ac.at/api/object/o%3A127758/download'},
+  {id:'kug127131',title:'درآمد سه‌گاه',artist:'فرحناز صاحب‌قلم',desc:'آواز · FLAC · ۷٫۳ مگابایت',type:'vocal',source:'KUG Dastgāhi Corpus · FLAC',url:'https://phaidra.kug.ac.at/api/object/o%3A127131/download'},
+  {id:'kug127122',title:'درآمد ماهور',artist:'فرحناز صاحب‌قلم',desc:'آواز · FLAC · ۴٫۴ مگابایت',type:'vocal',source:'KUG Dastgāhi Corpus · FLAC',url:'https://phaidra.kug.ac.at/api/object/o%3A127122/download'},
+  {id:'kug127125',title:'درآمد ماهور',artist:'رضا زالپور',desc:'نی و آواز · FLAC · ۵٫۸ مگابایت',type:'ney',source:'KUG Dastgāhi Corpus · FLAC',url:'https://phaidra.kug.ac.at/api/object/o%3A127125/download'},
+  {id:'kug127128',title:'درآمد نوا (۲)',artist:'رضا زالپور',desc:'نی و آواز · FLAC · ۲ مگابایت',type:'ney',source:'KUG Dastgāhi Corpus · FLAC',url:'https://phaidra.kug.ac.at/api/object/o%3A127128/download'},
+  {id:'kug127129',title:'درآمد چهارگاه',artist:'رضا زالپور',desc:'نی و آواز · FLAC · ۲٫۷ مگابایت',type:'ney',source:'KUG Dastgāhi Corpus · FLAC',url:'https://phaidra.kug.ac.at/api/object/o%3A127129/download'},
+  {id:'kug127130',title:'درآمد نوا',artist:'رضا زالپور',desc:'نی و آواز · FLAC · ۶٫۸ مگابایت',type:'ney',source:'KUG Dastgāhi Corpus · FLAC',url:'https://phaidra.kug.ac.at/api/object/o%3A127130/download'},
+  {id:'kug127134',title:'درآمد ابوعطا',artist:'رضا زالپور',desc:'نی و آواز · FLAC · ۳٫۹ مگابایت',type:'ney',source:'KUG Dastgāhi Corpus · FLAC',url:'https://phaidra.kug.ac.at/api/object/o%3A127134/download'},
+  {id:'kug127121',title:'درآمد سه‌گاه',artist:'محمد خدادادی',desc:'نی · FLAC · ۴٫۴ مگابایت',type:'ney',source:'KUG Dastgāhi Corpus · FLAC',url:'https://phaidra.kug.ac.at/api/object/o%3A127121/download'},
+  {id:'kug127132',title:'درآمد سه‌گاه',artist:'مسعود شعاری',desc:'سه‌تار · FLAC · ۳٫۳ مگابایت',type:'setar',source:'KUG Dastgāhi Corpus · FLAC',url:'https://phaidra.kug.ac.at/api/object/o%3A127132/download'},
+  {id:'kug127133',title:'درآمد شور (۲)',artist:'مسعود شعاری',desc:'سه‌تار · FLAC · ۴٫۵ مگابایت',type:'setar',source:'KUG Dastgāhi Corpus · FLAC',url:'https://phaidra.kug.ac.at/api/object/o%3A127133/download'}
 ];
 let selected=0,filter='all',query='',loop=false;
 let favorites=new Set();
-try { const data=JSON.parse(localStorage.getItem('ava-music-demo-favorites-v1')||'[]');if(Array.isArray(data))favorites=new Set(data.filter(x=>tracks.some(i=>i.id===x)));}catch(_){}
+try { const data=JSON.parse(localStorage.getItem('ava-music-kug-favorites-v1')||'[]');if(Array.isArray(data))favorites=new Set(data.filter(x=>tracks.some(i=>i.id===x)));}catch(_){}
 const fmt=time=>{const n=Math.max(0,Math.floor(Number(time)||0));return Math.floor(n/60)+':'+String(n%60).padStart(2,'0');};
 const isPlaying=()=>!audio.paused&&!audio.ended;
 const message=text=>{$('status').textContent=text;};
-function saveFavorites(){try{localStorage.setItem('ava-music-demo-favorites-v1',JSON.stringify([...favorites]));}catch(_){}}
+function saveFavorites(){try{localStorage.setItem('ava-music-kug-favorites-v1',JSON.stringify([...favorites]));}catch(_){}}
 function syncButtons(){
   $('togglePlay').textContent=isPlaying()?'Ⅱ':'▶';
   $('miniPlay').textContent=isPlaying()?'Ⅱ':'▶';
@@ -219,7 +227,7 @@ function renderLibrary(){
     const header=document.createElement('div');header.className='album-head';
     const icon=document.createElement('span');icon.className='album-icon';icon.textContent='♫';icon.setAttribute('aria-hidden','true');
     const info=document.createElement('div');
-    const tag=document.createElement('span');tag.className='tag';tag.textContent=t.type==='traditional'?'اجرای سنتی · آرشیوی':'ضبط تاریخی';
+    const tag=document.createElement('span');tag.className='tag';tag.textContent=t.type==='vocal'?'آواز دستگاهی':t.type==='setar'?'تکنوازی سه‌تار':'نی و آواز';
     const title=document.createElement('h3');title.textContent=t.title;
     const artist=document.createElement('p');artist.textContent=t.artist;
     info.append(tag,title,artist);header.append(icon,info);
@@ -264,7 +272,7 @@ audio.addEventListener('timeupdate',syncProgress);
 audio.addEventListener('loadedmetadata',syncProgress);
 audio.addEventListener('durationchange',syncProgress);
 audio.addEventListener('ended',()=>{syncButtons();if(!loop&&selected<tracks.length-1)next(1);else message('پخش به پایان رسید.');});
-audio.addEventListener('error',()=>{syncButtons();message('فایل صوتی در این مرورگر بارگذاری نشد. اینترنت یا پشتیبانی OGG را بررسی کنید.');});
+audio.addEventListener('error',()=>{syncButtons();message('فایل FLAC/WAV بارگذاری نشد؛ ممکن است مرورگر از فرمت پشتیبانی نکند یا ارتباط با آرشیو دانشگاه قطع باشد.');});
 audio.volume=Number($('volume').value)/100;
 loadTrack(0,false);
 message('نسخه آزمایشی آماده است؛ برای شنیدن، پخش را بزنید.');
