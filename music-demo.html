@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#130d2c">
+<title>دموی پخش آواز سنتی | رادیو آوا و نوا</title>
+<meta name="description" content="دموی پخش واقعی چهار آواز سنتی از آرشیو دانشگاهی، بدون آپلود در سرور رادیو.">
+<link rel="icon" type="image/webp" href="./radio-neon-logo.webp">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
+:root{color-scheme:dark;--gold:#f2cb90;--text:#fff4ff;--muted:#cdb9d9;--purple:#ce83ff;--border:#b673e360}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(ellipse at 50% 0%,#49316a 0%,#1a1037 38%,#100b25 77%,#0a091d 100%);color:var(--text);font-family:Vazirmatn,Tahoma,Arial,sans-serif;min-height:100dvh;line-height:1.85}
+body::before{position:fixed;inset:0;content:"";pointer-events:none;opacity:.2;background:repeating-linear-gradient(125deg,transparent 0 68px,#a56eff17 69px 70px,transparent 71px 140px)}
+.container{max-width:1020px;margin:auto;padding:18px 20px 170px}
+nav{display:flex;justify-content:space-between;align-items:center;gap:15px;min-height:62px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;text-decoration:none;color:var(--text)}
+.brand img{width:45px;height:45px;border-radius:13px;object-fit:cover}
+.back{font-size:13px;color:#ffe3ae;border:1px solid #d49cff70;border-radius:12px;padding:8px 13px;text-decoration:none;background:#ffffff0e}
+.hero{text-align:center;margin:28px 0 32px}
+.label{font:bold 11px Arial,sans-serif;letter-spacing:2.3px;color:var(--purple)}
+.hero h1{font-size:clamp(26px,6vw,39px);color:#ffdfab;line-height:1.6;margin:8px 0}
+.hero p{margin:5px auto;color:#e8d7f2;max-width:600px;font-size:15px}
+.glass{border:1px solid var(--border);border-radius:25px;background:linear-gradient(135deg,#9d57ca25,#1b103bd6 48%,#542d7836);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:inset 0 1px #ffffff2b,0 18px 50px #04000c73}
+.notice{padding:14px 19px;margin-bottom:18px;font-size:13px;color:#f1dfe9;line-height:2}
+.notice strong{color:#ffe3ac}
+.list{padding:13px;display:grid;gap:11px}
+.track{min-width:0;display:flex;align-items:center;gap:17px;padding:14px;border-radius:18px;background:#ffffff0a;border:1px solid #efd3ff22;transition:border-color .18s,background .18s,box-shadow .18s}
+.track.active{border-color:#f5cf8b;box-shadow:0 0 18px #bd64ff51;background:#8f4fc923}
+.track-art{width:76px;height:76px;min-width:76px;border-radius:16px;background:radial-gradient(circle at 28% 20%,#9a5acd,#41235f 60%,#211335);display:grid;place-items:center;color:#ffdb9d;box-shadow:inset 0 1px #ffffff30}
+.track-art svg{width:46px;height:46px}
+.track-body{flex:1;min-width:0}
+.track-mode{font-size:11px;color:#e3a9ff}
+.track h3{font-size:19px;color:#fff0d5;margin:0;line-height:1.65}
+.track p{font-size:14px;color:#e6d0ee;margin:0}
+.source{display:inline-block;color:#e7b5ff;text-decoration:underline;text-underline-offset:3px;font-size:12px}
+.track-play{display:flex;align-items:center;justify-content:center;gap:8px;min-width:110px;min-height:48px;background:linear-gradient(145deg,#9955c7,#5e2f8a);color:white;border:1px solid #f2d49c;border-radius:16px;cursor:pointer;font:700 14px Vazirmatn,Tahoma,sans-serif;transition:transform .18s,box-shadow .18s;box-shadow:0 3px 14px #7e38b15e}
+.track-play:hover,.track-play:focus-visible{transform:translateY(-1px);box-shadow:0 0 24px #bf68ffad;outline:none}
+.track-play:active{transform:scale(.97)}
+.track-play .symbol{font-family:Arial,sans-serif}
+.track.active .track-play{background:linear-gradient(145deg,#8b377a,#602758)}
+.player{padding:18px 20px;margin-top:18px}
+.player-title{font-size:15px;color:#ffe0ad;font-weight:800;line-height:1.8}
+.player-artist{font-size:13px;color:var(--muted)}
+.player audio{display:block;width:100%;height:52px;margin:12px 0 5px}
+#playStatus{font-size:12px;color:#efdae8;min-height:25px;margin:0}
+.license{margin-top:20px;font-size:12px;color:#d6c6de;line-height:2}
+.license a{color:#e3b6ff}
+footer{text-align:center;padding:18px 0;font-size:12px;color:#baa7ca}
+@media(max-width:640px){.container{padding:12px 12px 120px}.hero{margin:19px 0 22px}.brand{font-size:14px}.track{gap:11px;padding:11px}.track-art{width:58px;height:58px;min-width:58px;border-radius:13px}.track-art svg{width:36px;height:36px}.track h3{font-size:16px}.track p{font-size:12px}.track-play{min-width:76px;min-height:48px;padding:5px 8px;gap:4px;font-size:12px}.track-play .btn-text{font-size:12px}.track-mode{font-size:10px}.list{padding:9px}.player{padding:13px}.back{font-size:12px;padding:7px 9px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body><main class="container">
+<nav><a href="/" class="brand"><img src="./radio-neon-logo.webp" alt="" width="45" height="45"><span>رادیو آوا و نوا</span></a><a href="/" class="back">بازگشت به رادیو ←</a></nav>
+<header class="hero"><div class="label">AVA O NAVA · MUSIC DEMO</div><h1>آوازهای اصیل ایرانی</h1><p>انتخاب کن و دکمه پخش رو بزن؛ صدا مستقیماً از آرشیو دانشگاهی پخش می‌شه، بدون ذخیره در R2.</p></header>
+<div class="notice glass"><strong>نسخه آزمایشی</strong> · این صفحه از پخش زنده رادیو جداست. فایل‌های اصلی FLAC با کیفیت بالا هستند؛ شروع صدا ممکنه چند ثانیه زمان ببره.</div>
+<section class="glass list" aria-label="چهار آواز سنتی"><article class="track" data-index="0"><div class="track-art" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 29V13L38 8v17"/><ellipse cx="9.8" cy="33" rx="5.2" ry="3.8" transform="rotate(-16 9.8 33)"/><ellipse cx="32.8" cy="29" rx="5.2" ry="3.8" transform="rotate(-16 32.8 29)"/></svg></div><div class="track-body"><span class="track-mode">ماهور · آواز ایرانی</span><h3>درآمد ماهور</h3><p>فرحناز صاحب‌قلم</p><a href="https://phaidra.kug.ac.at/detail/o:127122" target="_blank" rel="noopener noreferrer" class="source">منبع اصلی و مجوز اثر ↗</a></div><button type="button" class="track-play" data-index="0" aria-label="پخش درآمد ماهور با صدای فرحناز صاحب‌قلم"><span class="symbol" aria-hidden="true">▶</span><span class="btn-text">پخش</span></button></article>
+<article class="track" data-index="1"><div class="track-art" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 29V13L38 8v17"/><ellipse cx="9.8" cy="33" rx="5.2" ry="3.8" transform="rotate(-16 9.8 33)"/><ellipse cx="32.8" cy="29" rx="5.2" ry="3.8" transform="rotate(-16 32.8 29)"/></svg></div><div class="track-body"><span class="track-mode">سه‌گاه · آواز ایرانی</span><h3>درآمد سه‌گاه</h3><p>فرحناز صاحب‌قلم</p><a href="https://phaidra.kug.ac.at/detail/o:127131" target="_blank" rel="noopener noreferrer" class="source">منبع اصلی و مجوز اثر ↗</a></div><button type="button" class="track-play" data-index="1" aria-label="پخش درآمد سه‌گاه با صدای فرحناز صاحب‌قلم"><span class="symbol" aria-hidden="true">▶</span><span class="btn-text">پخش</span></button></article>
+<article class="track" data-index="2"><div class="track-art" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 29V13L38 8v17"/><ellipse cx="9.8" cy="33" rx="5.2" ry="3.8" transform="rotate(-16 9.8 33)"/><ellipse cx="32.8" cy="29" rx="5.2" ry="3.8" transform="rotate(-16 32.8 29)"/></svg></div><div class="track-body"><span class="track-mode">ماهور · آواز ایرانی</span><h3>درآمد ماهور</h3><p>رضا زال‌پور</p><a href="https://phaidra.kug.ac.at/detail/o:127125" target="_blank" rel="noopener noreferrer" class="source">منبع اصلی و مجوز اثر ↗</a></div><button type="button" class="track-play" data-index="2" aria-label="پخش درآمد ماهور با صدای رضا زال‌پور"><span class="symbol" aria-hidden="true">▶</span><span class="btn-text">پخش</span></button></article>
+<article class="track" data-index="3"><div class="track-art" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 29V13L38 8v17"/><ellipse cx="9.8" cy="33" rx="5.2" ry="3.8" transform="rotate(-16 9.8 33)"/><ellipse cx="32.8" cy="29" rx="5.2" ry="3.8" transform="rotate(-16 32.8 29)"/></svg></div><div class="track-body"><span class="track-mode">ابوعطا · آواز ایرانی</span><h3>درآمد ابوعطا</h3><p>رضا زال‌پور</p><a href="https://phaidra.kug.ac.at/detail/o:127134" target="_blank" rel="noopener noreferrer" class="source">منبع اصلی و مجوز اثر ↗</a></div><button type="button" class="track-play" data-index="3" aria-label="پخش درآمد ابوعطا با صدای رضا زال‌پور"><span class="symbol" aria-hidden="true">▶</span><span class="btn-text">پخش</span></button></article></section>
+<section class="glass player" aria-label="پخش‌کننده موسیقی"><div class="player-title" id="nowTitle">یک آواز انتخاب کن</div><div class="player-artist" id="nowArtist">برای شروع، دکمه «پخش» یکی از کارت‌ها رو بزن.</div><audio id="musicPlayer" controls preload="none" playsinline aria-label="پخش‌کننده آواز سنتی"></audio><p id="playStatus" role="status" aria-live="polite">آماده پخش</p></section>
+<p class="license">منبع: <a href="https://phaidra.kug.ac.at/detail/o:127195" target="_blank" rel="noopener noreferrer">KUG Dastgāhi Corpus — University of Music and Performing Arts Graz</a>. آثار با مجوز <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 4.0</a> منتشر شده‌اند. استفاده غیرتجاری و بدون تغییر، با رعایت شرایط مجوز؛ پیش از استفاده تجاری باید اجازه جداگانه گرفته شود.</p>
+<footer>دموی آزمایشی · رادیو آوا و نوا</footer>
+</main>
+<script>
+(() => {
+  'use strict';
+  const tracks = [{"title":"درآمد ماهور","artist":"فرحناز صاحب‌قلم","id":"127122","mode":"ماهور","url":"https://phaidra.kug.ac.at/api/object/o:127122/download"},{"title":"درآمد سه‌گاه","artist":"فرحناز صاحب‌قلم","id":"127131","mode":"سه‌گاه","url":"https://phaidra.kug.ac.at/api/object/o:127131/download"},{"title":"درآمد ماهور","artist":"رضا زال‌پور","id":"127125","mode":"ماهور","url":"https://phaidra.kug.ac.at/api/object/o:127125/download"},{"title":"درآمد ابوعطا","artist":"رضا زال‌پور","id":"127134","mode":"ابوعطا","url":"https://phaidra.kug.ac.at/api/object/o:127134/download"}];
+  const audio = document.getElementById('musicPlayer');
+  const title = document.getElementById('nowTitle');
+  const artist = document.getElementById('nowArtist');
+  const status = document.getElementById('playStatus');
+  const buttons = [...document.querySelectorAll('.track-play')];
+  const cards = [...document.querySelectorAll('.track')];
+  let current = -1;
+  const setStatus = value => { status.textContent = value; };
+  const render = () => {
+    cards.forEach((card, i) => card.classList.toggle('active', current === i));
+    buttons.forEach((button, i) => {
+      const playing = i === current && !audio.paused;
+      button.querySelector('.symbol').textContent = playing ? '❚❚' : '▶';
+      button.querySelector('.btn-text').textContent = playing ? 'مکث' : 'پخش';
+      button.setAttribute('aria-label', (playing ? 'مکث' : 'پخش') + ' '+tracks[i].title+' با صدای '+tracks[i].artist);
+    });
+  };
+  async function choose(index) {
+    if (!Number.isInteger(index) || index < 0 || index >= tracks.length) return;
+    if (current === index && !audio.paused) {
+      audio.pause();
+      setStatus('پخش متوقف موقتاً شده است.');
+      return;
+    }
+    if (current !== index) {
+      current = index;
+      const track = tracks[index];
+      audio.pause();
+      audio.src = track.url;
+      title.textContent = track.title;
+      artist.textContent = 'با صدای ' + track.artist;
+      setStatus('در حال اتصال به فایل صوتی...');
+      render();
+    }
+    try {
+      await audio.play();
+      setStatus('در حال پخش از آرشیو دانشگاهی');
+    } catch (error) {
+      setStatus(error.name === 'NotAllowedError' ? 'برای شروع دوباره روی پخش بزن.' : 'پخش در این مرورگر انجام نشد؛ لینک منبع اصلی را باز کن.');
+      render();
+    }
+  }
+  buttons.forEach(button => button.addEventListener('click', () => choose(Number(button.dataset.index))));
+  audio.addEventListener('play', render);
+  audio.addEventListener('pause', render);
+  audio.addEventListener('playing', () => { render(); setStatus('در حال پخش واقعی از سرور اصلی'); });
+  audio.addEventListener('waiting', () => setStatus('در حال دریافت صدا...'));
+  audio.addEventListener('error', () => {
+    if (current >= 0) setStatus('این فایل در مرورگر شما پخش نشد. لینک «منبع اصلی و مجوز اثر» را باز کن.');
+    render();
+  });
+  audio.addEventListener('ended', () => { render(); setStatus('آواز به پایان رسید.'); });
+})();
+</script>
+</body></html>
