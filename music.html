@@ -2,103 +2,284 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#1b1035">
-<title>آرشیو موسیقی سنتی | رادیو آوا و نوا</title>
-<meta name="description" content="آلبوم‌ها و قطعات برگزیده موسیقی اصیل ایرانی با پخش‌کننده رسمی SoundCloud در رادیو آوا و نوا.">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#100d24">
+<meta name="description" content="آرشیو موسیقی اصیل ایرانی در رادیو آوا و نوا">
+<title>موسیقی اصیل ایرانی | رادیو آوا و نوا</title>
 <link rel="icon" type="image/webp" href="./radio-neon-logo.webp">
 <style>
-:root{color-scheme:dark;--bg:#080920;--panel:#17112e;--purple:#c64bff;--gold:#f9c579;--cream:#fff1dd;--muted:#d4c8df}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 50% 20%,#29204b 0%,#100e29 50%,#08091c 100%);color:var(--cream);font-family:Tahoma,"Segoe UI",Arial,sans-serif;min-height:100vh}
-a{color:inherit}.site{max-width:1250px;margin:auto;padding:0 24px 35px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;min-height:76px;border-bottom:1px solid #c64bff50}.brand{display:flex;gap:12px;align-items:center;text-decoration:none;font-weight:800}.brand img{width:52px;height:52px;border-radius:50%;object-fit:cover}.brand small{display:block;font:12px Georgia,serif;letter-spacing:1.4px;color:var(--muted);direction:ltr}.topnav{display:flex;align-items:center;gap:10px}.topnav a{text-decoration:none;border:1px solid #9566ad70;padding:11px 16px;border-radius:12px;background:#291b42;font-size:14px}.topnav .active{border-color:#edb76a;color:#ffe1a1}.topnav a:hover,.link:hover{background:#382052}
-.hero{text-align:center;padding:42px 15px 24px}.eyebrow{font:14px Georgia,serif;direction:ltr;letter-spacing:3px;color:#deb3ec}.hero h1{margin:12px 0;font-size:clamp(29px,4vw,43px);color:#ffe0a3;text-shadow:0 0 24px #d974e055}.hero p{font-size:15px;line-height:2;color:#d9c5e3;margin:0 auto;max-width:780px}
-.player{max-width:950px;margin:20px auto 35px;border:1.5px solid #b552f7;border-radius:26px;background:linear-gradient(145deg,#25113de9,#0e0c2ce8);box-shadow:0 0 32px #a82cda30;padding:25px}.player-head{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.player-label{color:#f7c980;font-size:13px;margin:0 0 8px}.player h2{font-size:clamp(20px,3vw,27px);margin:0}.player p{font-size:14px;color:#d8c8e0}.soundcloud{position:absolute;top:0;left:0;width:100%;height:166px;border:0;opacity:0;pointer-events:none;z-index:-1}.player{isolation:isolate}.soundcloud.is-visible{position:relative;top:auto;left:auto;width:100%;height:166px;margin:18px 0 12px;opacity:1;pointer-events:auto;z-index:auto;border-radius:12px;background:#17102d}.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;margin:16px auto}.control{font:700 14px Tahoma,Arial,sans-serif;border:1px solid #ad63d5;color:#f6e9fb;background:#291745;border-radius:13px;padding:12px 20px;cursor:pointer}.control.primary{color:#251132;background:linear-gradient(145deg,#ffdfa5,#dfaa5c);border-color:#ffe6af}.control:focus-visible,.pick:focus-visible,.topnav a:focus-visible{outline:3px solid white;outline-offset:3px}.source{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;align-items:center;margin-top:15px;color:#c9b6d5;font-size:12px}.source a,.card a{color:#ffcf83;text-decoration:underline;text-underline-offset:4px}.source span{line-height:1.8}.status{margin:12px 0 0;min-height:21px;text-align:center;color:#d9c5e3;font-size:13px}
-.group{margin:36px 0}.group-header{margin-bottom:18px}.group h2{font-size:23px;color:#ffdfa5;margin:0 0 8px}.group-header p{color:#d1bfda;font-size:14px;margin:0;line-height:1.9}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.card{display:flex;flex-direction:column;justify-content:space-between;min-height:206px;gap:14px;padding:19px;border:1px solid #8c52a8;background:linear-gradient(150deg,#2b183f,#12102c);border-radius:20px;box-shadow:0 0 13px #a54bd01c}.card.is-active{border-color:#f9c579;box-shadow:0 0 24px #cb69fa37}.card .tag{font-size:12px;color:#eac185}.card h3{font-size:19px;color:#fff0d7;margin:10px 0 7px;line-height:1.6}.card .description{color:#d2c2da;line-height:1.9;font-size:13px;margin:0}.card-actions{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}.pick{border:1px solid #f7cc86;color:#21112e;background:#f4cd91;font:700 13px Tahoma,Arial,sans-serif;cursor:pointer;border-radius:14px;padding:11px 14px}.disclaimer{padding:17px 20px;border:1px solid #69527b;border-radius:16px;background:#151028;color:#d2c2da;line-height:2;font-size:13px}.disclaimer strong{color:#ffe1a1}footer{text-align:center;border-top:1px solid #644674;color:#c2b2d2;margin-top:28px;padding-top:25px;font-size:12px}
-@media(max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:640px){.site{padding:0 13px 24px}.topbar{min-height:68px}.brand img{width:43px;height:43px}.brand{font-size:13px}.brand small{font-size:10px}.topnav{gap:5px}.topnav a{font-size:12px;padding:10px 8px}.hero{padding-top:27px}.player{padding:17px 13px;border-radius:21px}.cards{grid-template-columns:1fr}.card{min-height:175px}.control{padding:11px 14px}.group{margin:28px 0}}
+:root{color-scheme:dark;--bg:#0b0920;--surface:#1d1435;--surface2:#27183e;--line:#9b56bc75;--gold:#f6c87f;--cream:#fff2dc;--muted:#c9b8d1;--pink:#d363ed}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--cream);font-family:Tahoma,"Segoe UI",Arial,sans-serif;background:radial-gradient(ellipse at 50% 5%,#2e1b4e 0,#140e2b 40%,#090a1e 100%);padding-bottom:120px}
+a{color:inherit}
+button,input{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid white;outline-offset:3px}
+button:disabled{cursor:not-allowed;opacity:.44}
+.site{max-width:1320px;margin:0 auto;padding:0 24px 40px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:79px;border-bottom:1px solid var(--line)}
+.brand{display:flex;gap:13px;align-items:center;text-decoration:none;font-weight:800}
+.brand img{width:51px;height:51px;object-fit:cover;border:1px solid #f6c87f70;border-radius:50%}
+.brand small{display:block;font:12px Georgia,serif;letter-spacing:1px;color:#d2b2e4;direction:ltr}
+.navigation{display:flex;gap:9px}
+.navigation a{text-decoration:none;border:1px solid #9554bb70;background:#2c1b45;padding:12px 18px;border-radius:15px;font-size:13px}
+.navigation .selected{border-color:var(--gold);color:var(--gold)}
+.hero{text-align:center;padding:44px 14px 26px}
+.hero-kicker{font:13px Georgia,serif;letter-spacing:3px;color:#e4aadf;direction:ltr}
+.hero h1{font-size:clamp(31px,4vw,48px);color:#f6d49a;text-shadow:0 0 25px #f3aecc40;margin:12px 0}
+.hero p{max-width:750px;margin:0 auto;color:var(--muted);font-size:15px;line-height:2}
+.player{display:grid;grid-template-columns:240px 1fr;gap:30px;position:relative;background:linear-gradient(130deg,#291640,#140e2f 65%,#170f31);border:1px solid #b15ad6;border-radius:30px;box-shadow:0 0 32px #a737cd35;padding:28px;overflow:hidden;isolation:isolate}
+.artwork{position:relative;width:100%;aspect-ratio:1;background:linear-gradient(145deg,#63326f,#1c123d);border-radius:24px;overflow:hidden;box-shadow:0 15px 40px #07051480}
+.artwork img{display:block;width:100%;height:100%;object-fit:cover}
+.artwork:after{content:"";position:absolute;inset:0;pointer-events:none;border:1px solid #ffffff36;border-radius:inherit}
+.eyebrow{color:var(--gold);letter-spacing:.4px;font-size:12px;margin:3px 0 10px}
+.now h2{font-size:clamp(24px,3vw,35px);line-height:1.4;margin:0 0 8px}
+.now .artist{font-size:15px;line-height:1.9;color:#d9c6e5;margin:0 0 19px}
+.progress{display:grid;grid-template-columns:auto minmax(0,1fr) auto;direction:ltr;gap:12px;align-items:center;color:#d2bedd}
+.progress time{font:13px Arial,sans-serif;font-variant-numeric:tabular-nums;min-width:33px}
+input[type=range]{width:100%;accent-color:var(--gold);cursor:pointer}
+.seek{height:22px}
+.controls{display:flex;align-items:center;gap:12px;justify-content:center;margin:15px auto 8px}
+.icon-btn{border:1px solid #aa64c2;background:#321d4b;color:#fff1dd;width:46px;height:46px;display:grid;place-items:center;border-radius:50%;font-size:19px}
+.icon-btn.main-play{width:68px;height:68px;background:linear-gradient(145deg,#ffdfad,#e4ad5e);color:#241232;border:1px solid #ffe6b7;box-shadow:0 0 22px #f0b75d4a;font-size:27px}
+.icon-btn.active{color:var(--gold);border-color:var(--gold)}
+.volume-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;margin-top:12px}
+.volume-row label{display:flex;align-items:center;gap:10px;font-size:13px;color:#d8c2df}
+.volume-row input{width:135px}
+.status{min-height:21px;color:#e4c4e7;font-size:12px;line-height:1.7;margin:10px 0 0}
+.widget{position:absolute!important;top:0;left:0;width:100%;height:166px;border:0;opacity:0;pointer-events:none;z-index:-1}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;margin:32px 0 14px}
+.search{flex:1;min-width:225px;display:flex;align-items:center;gap:12px;border:1px solid #9364aa;border-radius:16px;background:#201435;padding:0 18px;color:var(--muted)}
+.search input{border:0;outline:0;background:transparent;width:100%;color:white;min-height:52px;font-size:15px}
+.search input::placeholder{color:#b7a4c3}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.filter{border:1px solid #8b5ba9;background:#221736;color:#eadbea;border-radius:999px;padding:12px 16px;font-size:13px}
+.filter.active{background:#5d356f;border-color:var(--gold);color:#ffe8b8}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:26px 0 16px}
+.section-title h2{font-size:22px;color:#ffe0a0;margin:0}
+.section-title span{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.album{border:1px solid #8854a0;border-radius:22px;background:linear-gradient(145deg,#2a1940,#121027);padding:19px;display:flex;flex-direction:column;gap:14px;min-height:222px}
+.album.is-selected{border-color:var(--gold);box-shadow:0 0 24px #a94de230}
+.album-head{display:flex;align-items:flex-start;gap:13px}
+.album-icon{width:67px;height:67px;flex-shrink:0;display:grid;place-items:center;color:var(--gold);font-size:31px;background:linear-gradient(145deg,#60346c,#28153b);border-radius:17px;border:1px solid #ba79be55}
+.album h3{font-size:18px;margin:4px 0 6px}
+.album p{font-size:13px;color:var(--muted);line-height:1.8;margin:0}
+.tag{font-size:12px;color:var(--gold)}
+.album-actions{display:flex;align-items:center;gap:9px;margin-top:auto}
+.choose{flex:1;background:#f3cb91;border:0;border-radius:13px;color:#241332;font-weight:800;padding:12px 14px}
+.favorite{min-width:45px;height:43px;background:#2e1b44;color:#f2c6e0;border:1px solid #a36bb8;border-radius:13px;font-size:22px}
+.favorite.active{color:#ffbbcb;border-color:#ffbbcb}
+.lower{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:18px;margin:22px 0}
+.box{padding:19px;background:#1b1433e8;border:1px solid #8351a1;border-radius:22px;min-width:0}
+.box h2{font-size:20px;color:var(--gold);margin:0 0 8px}
+.box p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.8}
+.tracks{margin:0;padding:0;list-style:none;max-height:375px;overflow:auto}
+.track{display:flex;align-items:center;gap:10px;padding:10px 8px;border-bottom:1px solid #6f477b66}
+.track:last-child{border-bottom:0}
+.track button{flex:1;min-width:0;background:transparent;border:0;color:#f8e6ee;text-align:right;padding:5px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+.track button:focus-visible{outline-offset:0}
+.track.active{background:#52306466}
+.track .index{min-width:26px;text-align:center;color:#e4c77f;font-size:12px}
+.track .duration{font:12px Arial,sans-serif;color:#c8b5d4}
+.empty{color:#d7c0db;font-size:14px;line-height:2;padding:14px}
+.info{border:1px solid #655078;border-radius:18px;padding:18px;margin-top:25px;color:#cbbad7;line-height:2;font-size:12px}
+.info a{color:#ffcd86}
+.mini{position:fixed;bottom:0;right:0;left:0;z-index:20;border-top:1px solid #a756cf;background:#1d1237f5;box-shadow:0 -5px 24px #05041280;display:none;padding:10px max(16px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom))}
+.mini-inner{max-width:1250px;margin:auto;display:flex;align-items:center;gap:12px}
+.mini img{width:44px;height:44px;border-radius:10px;object-fit:cover}
+.mini-name{flex:1;min-width:0;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;font-size:13px}
+.mini-name small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.mini button{background:#51305e;border:1px solid #b070cc;border-radius:50%;width:39px;height:39px;color:white;font-size:18px}
+.mini #miniPlay{background:#f0bf7a;color:#271232}
+.no-results{grid-column:1/-1;padding:25px;border:1px dashed #87599b;border-radius:18px;color:var(--muted);text-align:center}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:27px 0}
+@media(min-width:961px){.mini{display:block}}
+@media(max-width:960px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.player{grid-template-columns:180px 1fr;gap:18px}.mini{display:block}}
+@media(max-width:650px){.site{padding:0 13px 36px}.topbar{min-height:66px}.brand{font-size:13px}.brand small{font-size:10px}.brand img{width:42px;height:42px}.navigation{gap:5px}.navigation a{padding:10px 9px;font-size:12px}.hero{padding:29px 4px 24px}.hero p{font-size:13px}.player{display:flex;flex-direction:column;align-items:center;text-align:center;padding:20px 15px;border-radius:25px}.artwork{width:min(210px,70%)}.now{width:100%}.controls{gap:9px}.volume-row{justify-content:center}.toolbar{margin:24px 0 14px}.search{width:100%}.filters{gap:7px}.filter{padding:10px 13px}.grid,.lower{grid-template-columns:1fr}.album{min-height:170px}.album-icon{width:59px;height:59px}.section-title h2{font-size:20px}.mini-name{max-width:50vw}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
 <div class="site">
 <header class="topbar">
-<a class="brand" href="./"><img src="./radio-neon-logo.webp" alt=""><span>رادیو آوا و نوا<small>RADIO AVA O NAVA</small></span></a>
-<nav class="topnav" aria-label="منوی آرشیو"><a href="./">پخش زنده</a><a class="active" aria-current="page" href="./music.html">آرشیو موسیقی</a></nav>
+<a class="brand" href="./" aria-label="صفحه اصلی رادیو"><img src="./radio-neon-logo.webp" alt=""><span>رادیو آوا و نوا<small>RADIO AVA O NAVA</small></span></a>
+<nav class="navigation" aria-label="صفحات رادیو"><a href="./">پخش زنده</a><a class="selected" aria-current="page" href="./music.html">آرشیو موسیقی</a></nav>
 </header>
 <main>
-<section class="hero"><div class="eyebrow">PERSIAN CLASSICAL MUSIC</div><h1>آرشیو موسیقی سنتی ایرانی</h1><p>منتخبی از آلبوم‌ها و آثار موسیقی اصیل ایرانی. پخش مستقیم از SoundCloud، با طراحی هماهنگ با رادیو آوا و نوا.</p></section>
-<section class="player" id="musicPlayer" aria-labelledby="current-title">
- <div class="player-head"><div><div class="player-label">اکنون انتخاب شده</div><h2 id="current-title">مثنوی همایون</h2><p id="current-artist">محمدرضا شجریان · آلبوم ۷ قطعه‌ای</p></div></div>
- <iframe class="soundcloud" id="scWidget" title="پخش‌کننده رسمی SoundCloud" loading="eager" allow="autoplay" referrerpolicy="strict-origin-when-cross-origin" src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fmohammadrezashajarian-sc%2Fsets%2Fhomayoun-masnavi&amp;color=%23f9c579&amp;auto_play=false&amp;show_artwork=true&amp;show_user=true&amp;sharing=true"></iframe>
- <div class="controls" aria-label="کنترل‌های پخش"><button type="button" class="control" id="previous">قبلی</button><button type="button" class="control primary" id="togglePlay">پخش</button><button type="button" class="control" id="next">بعدی</button></div>
- <div class="status"><button type="button" class="control" id="showOfficial" aria-expanded="false" aria-controls="scWidget" style="font-size:12px;padding:7px 11px">نمایش پلیر اصلی (در صورت مشکل پخش)</button></div>
- <div class="status" id="playerStatus" role="status" aria-live="polite">برای شروع، دکمه پخش را بزنید.</div>
- <div class="source"><span>منبع صدا: SoundCloud · نام هنرمند و منتشرکننده در پخش‌کننده نمایش داده می‌شود.</span><a id="sourceLink" target="_blank" rel="noopener noreferrer" href="https://soundcloud.com/mohammadrezashajarian-sc/sets/homayoun-masnavi">مشاهده اثر در SoundCloud</a></div>
-</section>
-<section class="group" aria-labelledby="albumsTitle">
- <div class="group-header"><h2 id="albumsTitle">آلبوم‌های کامل</h2><p>با انتخاب هر آلبوم، قطعات آن در پخش‌کننده رسمی SoundCloud در دسترس است.</p></div>
- <div class="cards">
-  <article class="card is-active" data-title="مثنوی همایون" data-artist="محمدرضا شجریان · ۷ قطعه · ۵۳ دقیقه" data-url="https://soundcloud.com/mohammadrezashajarian-sc/sets/homayoun-masnavi" data-kind="album"><div><span class="tag">آلبوم · آواز و ساز</span><h3>مثنوی همایون</h3><p class="description">محمدرضا شجریان · ۷ قطعه · ۵۳ دقیقه</p></div><div class="card-actions"><button class="pick" type="button">انتخاب و پخش</button><a href="https://soundcloud.com/mohammadrezashajarian-sc/sets/homayoun-masnavi" target="_blank" rel="noopener noreferrer">صفحه آلبوم</a></div></article>
-  <article class="card" data-title="شب عاشق" data-artist="غلامحسین بنان · ۹ قطعه · ۲۲ دقیقه" data-url="https://soundcloud.com/banan79877/sets/masterpieces-of-ostad-banan-1" data-kind="album"><div><span class="tag">آلبوم · آواز ایرانی</span><h3>شب عاشق</h3><p class="description">غلامحسین بنان · ۹ قطعه · ۲۲ دقیقه</p></div><div class="card-actions"><button class="pick" type="button">انتخاب و پخش</button><a href="https://soundcloud.com/banan79877/sets/masterpieces-of-ostad-banan-1" target="_blank" rel="noopener noreferrer">صفحه آلبوم</a></div></article>
- </div>
-</section>
-<section class="group" aria-labelledby="selectionsTitle">
- <div class="group-header"><h2 id="selectionsTitle">آثار منتخب از مؤسسه ماهور</h2><p>این موارد تک‌قطعه‌هایی از آلبوم‌های منتشرشده هستند، نه نسخه کامل آن آلبوم‌ها.</p></div>
- <div class="cards">
-  <article class="card" data-title="بیا ساقی" data-artist="شهرام ناظری · حسین علیزاده · آلبوم شورانگیز" data-url="https://soundcloud.com/mahoor-institute/biya-saqi-tasnif" data-kind="track"><div><span class="tag">تصنیف · آواز</span><h3>بیا ساقی</h3><p class="description">شهرام ناظری و حسین علیزاده · از آلبوم شورانگیز</p></div><div class="card-actions"><button class="pick" type="button">انتخاب و پخش</button><a href="https://soundcloud.com/mahoor-institute/biya-saqi-tasnif" target="_blank" rel="noopener noreferrer">منبع</a></div></article>
-  <article class="card" data-title="رؤیای هستی" data-artist="غلامحسین بنان · مجموعه رؤیای هستی" data-url="https://soundcloud.com/mahoor-institute/tasnif-roya-hasti-roya-ye-hastigholam-hosein-banan" data-kind="track"><div><span class="tag">تصنیف · آواز</span><h3>رؤیای هستی</h3><p class="description">غلامحسین بنان · از مجموعه رؤیای هستی</p></div><div class="card-actions"><button class="pick" type="button">انتخاب و پخش</button><a href="https://soundcloud.com/mahoor-institute/tasnif-roya-hasti-roya-ye-hastigholam-hosein-banan" target="_blank" rel="noopener noreferrer">منبع</a></div></article>
-  <article class="card" data-title="چندضربی همایون" data-artist="محمدرضا ابراهیمی · تکنوازی عود · آلبوم ثنا" data-url="https://soundcloud.com/mahoor-institute/chand-zarbi-e-homayoun-sana" data-kind="track"><div><span class="tag">بی‌کلام · عود</span><h3>چندضربی همایون</h3><p class="description">محمدرضا ابراهیمی · از آلبوم ثنا</p></div><div class="card-actions"><button class="pick" type="button">انتخاب و پخش</button><a href="https://soundcloud.com/mahoor-institute/chand-zarbi-e-homayoun-sana" target="_blank" rel="noopener noreferrer">منبع</a></div></article>
-  <article class="card" data-title="هفت‌پیکر" data-artist="فرامرز پایور · گروه سازهای ملی" data-url="https://soundcloud.com/mahoor-institute/mikharam-barat-titishhaft-peykarfaramarz-payvar" data-kind="track"><div><span class="tag">بی‌کلام · موسیقی دستگاهی</span><h3>هفت‌پیکر</h3><p class="description">فرامرز پایور · رنگ‌های سنتی با گروه سازهای ملی</p></div><div class="card-actions"><button class="pick" type="button">انتخاب و پخش</button><a href="https://soundcloud.com/mahoor-institute/mikharam-barat-titishhaft-peykarfaramarz-payvar" target="_blank" rel="noopener noreferrer">منبع</a></div></article>
- </div>
-</section>
-<p class="disclaimer"><strong>درباره پخش:</strong> فایل صوتی روی سرور رادیو ذخیره نمی‌شود؛ پخش از پخش‌کننده رسمی SoundCloud است. کیفیت صدا به منبع و شرایط SoundCloud بستگی دارد و ۳۲۰kbps تضمین نمی‌شود. آثار ممکن است به انتخاب صاحب اثر محدود یا حذف شوند. این بخش به جریان پخش زنده Icecast وصل نیست و مجوز بازپخش رادیویی جداگانه لازم است.</p>
-</main>
-<footer>© Radio Ava O Nava · <a href="./">بازگشت به رادیو زنده</a></footer>
+<section class="hero"><div class="hero-kicker">PERSIAN CLASSICAL MUSIC</div><h1>آوای اصیل ایران</h1><p>آلبوم‌ها، آوازها و تصنیف‌های منتخب؛ با موزیک‌پلیر اختصاصی آوا و نوا. فایل‌های صوتی روی سرور ما ذخیره نمی‌شوند.</p></section>
+<section class="player" id="musicPlayer" aria-label="موزیک‌پلیر">
+<div class="artwork"><img id="cover" src="./radio-neon-logo.webp" alt="کاور آلبوم فعلی" width="240" height="240"></div>
+<div class="now">
+<p class="eyebrow">اکنون انتخاب شده</p><h2 id="currentTitle">مثنوی همایون</h2><p id="currentArtist" class="artist">محمدرضا شجریان</p>
+<div class="progress"><time id="currentTime">0:00</time><input class="seek" type="range" id="seek" min="0" max="1000" value="0" aria-label="جابه‌جایی در آهنگ" disabled><time id="totalTime">0:00</time></div>
+<div class="controls">
+<button class="icon-btn" id="repeat" aria-label="تکرار قطعه" title="تکرار قطعه">↻</button>
+<button class="icon-btn" id="previous" aria-label="قطعه قبلی" title="قطعه قبلی">❮❮</button>
+<button class="icon-btn main-play" id="togglePlay" aria-label="پخش" title="پخش">▶</button>
+<button class="icon-btn" id="next" aria-label="قطعه بعدی" title="قطعه بعدی">❯❯</button>
+<button class="icon-btn" id="currentFavorite" aria-label="افزودن به علاقه‌مندی‌ها" title="علاقه‌مندی">♡</button>
 </div>
+<div class="volume-row"><label>صدا <input type="range" id="volume" min="0" max="100" value="80" aria-label="میزان صدا"></label><span class="tag" id="sourceName">SoundCloud · پخش آنلاین</span></div>
+<p class="status" id="status" role="status" aria-live="polite"></p>
+</div>
+<iframe class="widget" id="scWidget" title="پخش‌کننده صوتی SoundCloud" loading="eager" allow="autoplay" referrerpolicy="strict-origin-when-cross-origin" src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fmohammadrezashajarian-sc%2Fsets%2Fhomayoun-masnavi&amp;auto_play=false&amp;show_artwork=true"></iframe>
+</section>
+<section class="toolbar" aria-label="جست‌وجو و دسته‌بندی">
+<label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="جست‌وجوی خواننده، آلبوم یا قطعه" autocomplete="off" aria-label="جست‌وجوی آرشیو"></label>
+<div class="filters" role="group" aria-label="دسته‌بندی"><button class="filter active" data-filter="all" aria-pressed="true">همه</button><button class="filter" data-filter="vocal" aria-pressed="false">آواز و تصنیف</button><button class="filter" data-filter="instrumental" aria-pressed="false">بی‌کلام</button><button class="filter" data-filter="favorite" aria-pressed="false">علاقه‌مندی‌ها</button></div>
+</section>
+<div class="section-title"><h2>کتابخانه موسیقی</h2><span id="resultCount"></span></div>
+<section class="grid" id="library" aria-label="کتابخانه موسیقی"></section>
+<div class="lower">
+<section class="box" aria-labelledby="queueTitle"><h2 id="queueTitle">فهرست قطعات آلبوم</h2><p id="queueSubtitle">برای نمایش قطعات، آلبوم را انتخاب کنید.</p><ol class="tracks" id="queue"></ol></section>
+<section class="box" aria-labelledby="upnextTitle"><h2 id="upnextTitle">در صف پخش</h2><p>قطعه فعلی و قطعه بعدی</p><div id="upNext" class="empty">پس از انتخاب یک آلبوم نمایش داده می‌شود.</div></section>
+</div>
+<p class="info">منبع پخش: SoundCloud. حقوق آثار متعلق به صاحبان آن‌هاست و کیفیت صدا به فایل اصلی و SoundCloud بستگی دارد. <a id="attribution" href="https://soundcloud.com/mohammadrezashajarian-sc/sets/homayoun-masnavi" target="_blank" rel="noopener noreferrer">مشاهده اعتبار هنرمند و اثر در SoundCloud</a>. پخش آلبوم‌ها در این صفحه، پخش زنده رادیو نیست.</p>
+</main>
+<footer>Radio Ava O Nava · <a href="./">بازگشت به رادیو زنده</a></footer>
+</div>
+<div class="mini" id="miniPlayer"><div class="mini-inner"><img src="./radio-neon-logo.webp" id="miniCover" alt=""><span class="mini-name" id="miniName">مثنوی همایون<small id="miniArtist">محمدرضا شجریان</small></span><button type="button" id="miniTop" aria-label="نمایش پلیر">⌃</button><button type="button" id="miniPlay" aria-label="پخش">▶</button></div></div>
 <script src="https://w.soundcloud.com/player/api.js"></script>
 <script>
 (function(){
 'use strict';
-const frame=document.getElementById('scWidget');
-const status=document.getElementById('playerStatus');
-const cards=Array.from(document.querySelectorAll('.card[data-url]'));
-const play=document.getElementById('togglePlay');
-const next=document.getElementById('next');
-const previous=document.getElementById('previous');
-const source=document.getElementById('sourceLink');
-const showOfficial=document.getElementById('showOfficial');
-const title=document.getElementById('current-title');
-const artist=document.getElementById('current-artist');
-let current=0,ready=false,playing=false;
-const widget=(window.SC&&window.SC.Widget)?window.SC.Widget(frame):null;
-const say=(message)=>{status.textContent=message};
-function sync(){cards.forEach((c,i)=>c.classList.toggle('is-active',i===current));title.textContent=cards[current].dataset.title;artist.textContent=cards[current].dataset.artist;source.href=cards[current].dataset.url}
-function syncPlayback(isPlaying){playing=isPlaying;play.textContent=isPlaying?'توقف':'پخش';play.setAttribute('aria-label',isPlaying?'توقف موسیقی':'پخش موسیقی')}
-if(widget){
- widget.bind(window.SC.Widget.Events.READY,()=>{ready=true;say('آماده پخش از SoundCloud')});
- widget.bind(window.SC.Widget.Events.PLAY,()=>{syncPlayback(true);say('در حال پخش از SoundCloud')});
- widget.bind(window.SC.Widget.Events.PAUSE,()=>{syncPlayback(false);say('پخش متوقف شد')});
- widget.bind(window.SC.Widget.Events.FINISH,()=>{syncPlayback(false);say('پخش این قطعه به پایان رسید')});
- widget.bind(window.SC.Widget.Events.ERROR,()=>{syncPlayback(false);say('این اثر فعلاً در دسترس نیست؛ از لینک SoundCloud استفاده کنید.')});
+const $=id=>document.getElementById(id);
+const items=[
+{id:'homayoun',title:'مثنوی همایون',artist:'محمدرضا شجریان',desc:'مجموعه آواز ایرانی · قطعات قابل پخش',type:'vocal',kind:'album',url:'https://soundcloud.com/mohammadrezashajarian-sc/sets/homayoun-masnavi'},
+{id:'banan',title:'شب عاشق',artist:'غلامحسین بنان',desc:'آلبوم آواز ایرانی · ۹ قطعه',type:'vocal',kind:'album',url:'https://soundcloud.com/banan79877/sets/masterpieces-of-ostad-banan-1'},
+{id:'saqi',title:'بیا ساقی',artist:'شهرام ناظری و حسین علیزاده',desc:'تصنیف · آلبوم شورانگیز',type:'vocal',kind:'track',url:'https://soundcloud.com/mahoor-institute/biya-saqi-tasnif'},
+{id:'roya',title:'رؤیای هستی',artist:'غلامحسین بنان',desc:'تصنیف · آواز ایرانی',type:'vocal',kind:'track',url:'https://soundcloud.com/mahoor-institute/tasnif-roya-hasti-roya-ye-hastigholam-hosein-banan'},
+{id:'homayoun-instrumental',title:'چندضربی همایون',artist:'محمدرضا ابراهیمی',desc:'بی‌کلام · عود',type:'instrumental',kind:'track',url:'https://soundcloud.com/mahoor-institute/chand-zarbi-e-homayoun-sana'},
+{id:'haft',title:'هفت‌پیکر',artist:'فرامرز پایور',desc:'بی‌کلام · گروه سازهای ملی',type:'instrumental',kind:'track',url:'https://soundcloud.com/mahoor-institute/mikharam-barat-titishhaft-peykarfaramarz-payvar'}
+];
+const frame=$('scWidget'),status=$('status'),play=$('togglePlay'),seek=$('seek');
+const widget=window.SC&&window.SC.Widget?window.SC.Widget(frame):null;
+const defaultCover='./radio-neon-logo.webp';
+let selected=0,filter='all',query='',ready=false,playing=false,loop=false,duration=0,position=0,sounds=[],currentSoundIndex=0,token=0;
+let favorites=new Set();
+try{const v=JSON.parse(localStorage.getItem('ava-music-favorites-v1')||'[]');if(Array.isArray(v))favorites=new Set(v.filter(x=>items.some(i=>i.id===x)));}catch(e){}
+function storeFavorites(){try{localStorage.setItem('ava-music-favorites-v1',JSON.stringify([...favorites]));}catch(e){}}
+function message(text){status.textContent=text;}
+function format(ms){let n=Math.max(0,Math.floor((Number(ms)||0)/1000));return Math.floor(n/60)+':'+String(n%60).padStart(2,'0');}
+function current(){return items[selected];}
+function artUrl(sound){const url=sound&&(sound.artwork_url||sound.user&&sound.user.avatar_url);if(typeof url!=='string')return defaultCover;try{const u=new URL(url);return u.protocol==='https:'&&u.hostname.endsWith('sndcdn.com')?u.href.replace('-large.','-t500x500.'):defaultCover;}catch(e){return defaultCover;}}
+function showCover(url){$('cover').src=url;$('miniCover').src=url;}
+$('cover').addEventListener('error',()=>{if($('cover').getAttribute('src')!==defaultCover)showCover(defaultCover);});
+function titleForSound(sound){return sound&&sound.title?String(sound.title):current().title;}
+function setCurrentDisplay(sound){
+ const title=titleForSound(sound);
+ $('currentTitle').textContent=title;$('miniName').firstChild.textContent=title;
+ $('currentArtist').textContent=current().artist;$('miniArtist').textContent=current().artist;
+ showCover(artUrl(sound));$('attribution').href=current().url;
+ $('currentFavorite').textContent=favorites.has(current().id)?'♥':'♡';
+ $('currentFavorite').classList.toggle('active',favorites.has(current().id));
 }
-function select(index){
- current=index;sync();syncPlayback(false);
- say('در حال بارگذاری؛ اگر صدا شروع نشد، دکمه پخش را بزنید.');
- const url=cards[current].dataset.url;
- if(widget){ready=false;widget.load(url,{auto_play:true,color:'#f9c579',show_artwork:true,show_user:true,sharing:true,callback:()=>{ready=true;}})}
- else{frame.src='https://w.soundcloud.com/player/?url='+encodeURIComponent(url)+'&color=%23f9c579&auto_play=false&show_user=true';say('آهنگ را با دکمه داخل پخش‌کننده SoundCloud اجرا کنید.')}
+function playback(active){playing=active;play.textContent=active?'Ⅱ':'▶';$('miniPlay').textContent=play.textContent;play.setAttribute('aria-label',active?'توقف':'پخش');$('miniPlay').setAttribute('aria-label',active?'توقف':'پخش');}
+function progress(p,d){
+ position=Math.max(0,Number(p)||0);duration=Math.max(0,Number(d)||0);
+ $('currentTime').textContent=format(position);$('totalTime').textContent=format(duration);
+ seek.value=duration?String(Math.min(1000,Math.max(0,Math.round(position/duration*1000)))):'0';
+ seek.disabled=!ready||!duration;
+}
+function renderLibrary(){
+ const root=$('library');root.replaceChildren();
+ const visible=items.filter(item=>(filter==='all'||filter==='favorite'&&favorites.has(item.id)||filter===item.type)&&(!query||[item.title,item.artist,item.desc].join(' ').toLocaleLowerCase('fa').includes(query)));
+ $('resultCount').textContent=new Intl.NumberFormat('fa-IR').format(visible.length)+' اثر';
+ if(!visible.length){const p=document.createElement('p');p.className='no-results';p.textContent='اثری با این مشخصات پیدا نشد.';root.append(p);return;}
+ visible.forEach(item=>{
+  const card=document.createElement('article');card.className='album'+(current().id===item.id?' is-selected':'');
+  const head=document.createElement('div');head.className='album-head';
+  const image=document.createElement('span');image.className='album-icon';image.setAttribute('aria-hidden','true');image.textContent=item.kind==='album'?'♫':'♪';
+  const info=document.createElement('div');
+  const tag=document.createElement('span');tag.className='tag';tag.textContent=item.kind==='album'?'آلبوم کامل':item.type==='instrumental'?'بی‌کلام':'آواز و تصنیف';
+  const h=document.createElement('h3');h.textContent=item.title;const desc=document.createElement('p');desc.textContent=item.artist;
+  info.append(tag,h,desc);head.append(image,info);
+  const sub=document.createElement('p');sub.textContent=item.desc;
+  const actions=document.createElement('div');actions.className='album-actions';
+  const choose=document.createElement('button');choose.type='button';choose.className='choose';choose.textContent='انتخاب و پخش';choose.addEventListener('click',()=>selectItem(items.indexOf(item)));
+  const favorite=document.createElement('button');favorite.type='button';favorite.className='favorite'+(favorites.has(item.id)?' active':'');favorite.textContent=favorites.has(item.id)?'♥':'♡';favorite.setAttribute('aria-label',favorites.has(item.id)?'حذف از علاقه‌مندی‌ها':'افزودن به علاقه‌مندی‌ها');
+  favorite.addEventListener('click',()=>toggleFavorite(item.id));
+  actions.append(choose,favorite);card.append(head,sub,actions);root.append(card);
+ });
+}
+function toggleFavorite(id){
+ if(favorites.has(id))favorites.delete(id);else favorites.add(id);
+ storeFavorites();renderLibrary();setCurrentDisplay(sounds[currentSoundIndex]);
+}
+function renderQueue(){
+ const queue=$('queue');queue.replaceChildren();
+ $('queueSubtitle').textContent=current().kind==='album'?'قطعات آلبوم را از این فهرست انتخاب کنید.':'این اثر یک قطعه مستقل است.';
+ if(!sounds.length){const li=document.createElement('li');li.className='empty';li.textContent=ready?'فهرست قطعات این اثر در دسترس نیست.':'در حال دریافت فهرست قطعات…';queue.append(li);$('upNext').textContent='—';return;}
+ sounds.forEach((sound,i)=>{
+  if(query&&!titleForSound(sound).toLocaleLowerCase('fa').includes(query))return;
+  const row=document.createElement('li');row.className='track'+(currentSoundIndex===i?' active':'');
+  const number=document.createElement('span');number.className='index';number.textContent=new Intl.NumberFormat('fa-IR').format(i+1);
+  const button=document.createElement('button');button.type='button';button.textContent=titleForSound(sound);button.addEventListener('click',()=>{if(!widget||!ready)return;currentSoundIndex=i;widget.skip(i);widget.play();refreshSound();});
+  const time=document.createElement('span');time.className='duration';time.textContent=format(sound.duration);
+  row.append(number,button,time);queue.append(row);
+ });
+ const nextSound=sounds[currentSoundIndex+1];
+ $('upNext').replaceChildren();
+ const now=document.createElement('p');now.textContent='در حال پخش: '+titleForSound(sounds[currentSoundIndex]);$('upNext').append(now);
+ const n=document.createElement('p');n.textContent=nextSound?'بعدی: '+titleForSound(nextSound):'آخرین قطعه آلبوم';$('upNext').append(n);
+}
+function refreshSound(){
+ if(!widget||!ready)return;
+ const expected=token;
+ widget.getCurrentSoundIndex(i=>{if(expected!==token)return;currentSoundIndex=Number(i)||0;});
+ widget.getCurrentSound(sound=>{
+  if(expected!==token)return;setCurrentDisplay(sound);
+  if(sound&&sound.duration)progress(position,sound.duration);
+  renderQueue();
+ });
+}
+function loadSounds(){
+ if(!widget||!ready)return;const expected=token;
+ widget.getSounds(list=>{if(expected!==token)return;sounds=Array.isArray(list)?list:[];renderQueue();refreshSound();});
+}
+function selectItem(index){
+ if(!widget){message('SoundCloud در این مرورگر بارگذاری نشده است.');return;}
+ selected=index;token++;ready=false;playing=false;sounds=[];currentSoundIndex=0;progress(0,0);playback(false);
+ setCurrentDisplay(null);renderLibrary();renderQueue();message('در حال آماده‌سازی آهنگ…');
+ const expected=token;
+ widget.load(current().url,{auto_play:false,color:'#f6c87f',show_artwork:true,show_user:true,sharing:false,callback:()=>{
+  if(expected!==token)return;ready=true;widget.setVolume(Number($('volume').value));loadSounds();widget.play();message('در حال درخواست پخش… اگر صدا شروع نشد دوباره پخش را بزنید.');
+ }});
  document.getElementById('musicPlayer').scrollIntoView({behavior:'smooth',block:'start'});
 }
-showOfficial.addEventListener('click',()=>{const visible=frame.classList.toggle('is-visible');showOfficial.setAttribute('aria-expanded',String(visible));showOfficial.textContent=visible?'مخفی کردن پلیر اصلی':'نمایش پلیر اصلی (در صورت مشکل پخش)';});
-cards.forEach((card,i)=>card.querySelector('.pick').addEventListener('click',()=>select(i)));
-play.addEventListener('click',()=>{
- if(!widget){say('برای پخش، از دکمه داخل SoundCloud استفاده کنید.');return;}
- if(!ready){say('پخش‌کننده هنوز آماده نیست؛ لحظه‌ای بعد دوباره بزنید.');return}
- if(playing){widget.pause()}else{widget.play()}
-});
-previous.addEventListener('click',()=>{if(!widget||!ready){say('پخش‌کننده آماده نیست.');return}if(cards[current].dataset.kind==='album'){widget.prev()}else if(current>0){select(current-1)}else{say('این نخستین اثر است.')}});
-next.addEventListener('click',()=>{if(!widget||!ready){say('پخش‌کننده آماده نیست.');return}if(cards[current].dataset.kind==='album'){widget.next()}else if(current<cards.length-1){select(current+1)}else{say('این آخرین اثر است.')}});
-sync();
+function togglePlayback(){if(!widget||!ready){message('پخش‌کننده هنوز آماده نیست.');return;}if(playing)widget.pause();else{widget.play();message('در حال درخواست پخش…');}}
+function jump(dir){
+ if(!widget||!ready){message('پخش‌کننده هنوز آماده نیست.');return;}
+ if(current().kind==='album'){dir>0?widget.next():widget.prev();}
+ else if(selected+dir>=0&&selected+dir<items.length)selectItem(selected+dir);
+ else message('اثر دیگری در این سمت وجود ندارد.');
+}
+function applyFilter(value){filter=value;document.querySelectorAll('.filter').forEach(button=>{const active=button.dataset.filter===value;button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});renderLibrary();}
+document.querySelectorAll('.filter').forEach(button=>button.addEventListener('click',()=>applyFilter(button.dataset.filter)));
+$('search').addEventListener('input',event=>{query=String(event.target.value||'').trim().toLocaleLowerCase('fa');renderLibrary();renderQueue();});
+$('currentFavorite').addEventListener('click',()=>toggleFavorite(current().id));
+$('togglePlay').addEventListener('click',togglePlayback);
+$('miniPlay').addEventListener('click',togglePlayback);
+$('miniTop').addEventListener('click',()=>$('musicPlayer').scrollIntoView({behavior:'smooth',block:'start'}));
+$('next').addEventListener('click',()=>jump(1));
+$('previous').addEventListener('click',()=>jump(-1));
+$('repeat').addEventListener('click',()=>{$('repeat').classList.toggle('active');loop=$('repeat').classList.contains('active');$('repeat').setAttribute('aria-pressed',String(loop));});
+$('volume').addEventListener('input',e=>{if(widget&&ready)widget.setVolume(Number(e.target.value));});
+seek.addEventListener('change',e=>{if(widget&&ready&&duration)widget.seekTo(duration*Number(e.target.value)/1000);});
+if(widget){
+ const E=window.SC.Widget.Events;
+ widget.bind(E.READY,()=>{ready=true;widget.setVolume(Number($('volume').value));loadSounds();message('آماده پخش');});
+ widget.bind(E.PLAY,()=>{playback(true);refreshSound();message('در حال پخش');});
+ widget.bind(E.PAUSE,()=>{playback(false);message('پخش متوقف شد');});
+ widget.bind(E.PLAY_PROGRESS,data=>{if(data)progress(data.currentPosition,duration);});
+ widget.bind(E.SEEK,data=>{if(data)progress(data.currentPosition,duration);});
+ widget.bind(E.FINISH,()=>{playback(false);if(loop&&ready){widget.seekTo(0);widget.play();}else{message('قطعه به پایان رسید.');}});
+ widget.bind(E.ERROR,()=>{playback(false);message('خطا در پخش این اثر. ممکن است این قطعه در دسترس نباشد.');});
+ widget.bind(E.LOAD_PROGRESS,()=>{if(duration===0&&ready){widget.getDuration(ms=>{if(ms)progress(position,ms);});}});
+}else{message('سرویس پخش در دسترس نیست. اتصال اینترنت را بررسی کنید.');}
+renderLibrary();renderQueue();setCurrentDisplay(null);
 })();
 </script>
 </body>
