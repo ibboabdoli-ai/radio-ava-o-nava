@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#100d24">
+<meta name="description" content="آرشیو موسیقی اصیل ایرانی در رادیو آوا و نوا">
+<title>پیش‌نمایش آرشیو موسیقی | رادیو آوا و نوا</title>
+<link rel="icon" type="image/webp" href="./radio-neon-logo.webp">
+<style>
+:root{color-scheme:dark;--bg:#0b0920;--surface:#1d1435;--surface2:#27183e;--line:#9b56bc75;--gold:#f6c87f;--cream:#fff2dc;--muted:#c9b8d1;--pink:#d363ed}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--cream);font-family:Tahoma,"Segoe UI",Arial,sans-serif;background:radial-gradient(ellipse at 50% 5%,#2e1b4e 0,#140e2b 40%,#090a1e 100%);padding-bottom:120px}
+a{color:inherit}
+button,input{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid white;outline-offset:3px}
+button:disabled{cursor:not-allowed;opacity:.44}
+.site{max-width:1320px;margin:0 auto;padding:0 24px 40px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:79px;border-bottom:1px solid var(--line)}
+.brand{display:flex;gap:13px;align-items:center;text-decoration:none;font-weight:800}
+.brand img{width:51px;height:51px;object-fit:cover;border:1px solid #f6c87f70;border-radius:50%}
+.brand small{display:block;font:12px Georgia,serif;letter-spacing:1px;color:#d2b2e4;direction:ltr}
+.navigation{display:flex;gap:9px}
+.navigation a{text-decoration:none;border:1px solid #9554bb70;background:#2c1b45;padding:12px 18px;border-radius:15px;font-size:13px}
+.navigation .selected{border-color:var(--gold);color:var(--gold)}
+.hero{text-align:center;padding:44px 14px 26px}
+.hero-kicker{font:13px Georgia,serif;letter-spacing:3px;color:#e4aadf;direction:ltr}
+.hero h1{font-size:clamp(31px,4vw,48px);color:#f6d49a;text-shadow:0 0 25px #f3aecc40;margin:12px 0}
+.hero p{max-width:750px;margin:0 auto;color:var(--muted);font-size:15px;line-height:2}
+.player{display:grid;grid-template-columns:240px 1fr;gap:30px;position:relative;background:linear-gradient(130deg,#291640,#140e2f 65%,#170f31);border:1px solid #b15ad6;border-radius:30px;box-shadow:0 0 32px #a737cd35;padding:28px;overflow:hidden;isolation:isolate}
+.artwork{position:relative;width:100%;aspect-ratio:1;background:linear-gradient(145deg,#63326f,#1c123d);border-radius:24px;overflow:hidden;box-shadow:0 15px 40px #07051480}
+.artwork img{display:block;width:100%;height:100%;object-fit:cover}
+.artwork:after{content:"";position:absolute;inset:0;pointer-events:none;border:1px solid #ffffff36;border-radius:inherit}
+.eyebrow{color:var(--gold);letter-spacing:.4px;font-size:12px;margin:3px 0 10px}
+.now h2{font-size:clamp(24px,3vw,35px);line-height:1.4;margin:0 0 8px}
+.now .artist{font-size:15px;line-height:1.9;color:#d9c6e5;margin:0 0 19px}
+.progress{display:grid;grid-template-columns:auto minmax(0,1fr) auto;direction:ltr;gap:12px;align-items:center;color:#d2bedd}
+.progress time{font:13px Arial,sans-serif;font-variant-numeric:tabular-nums;min-width:33px}
+input[type=range]{width:100%;accent-color:var(--gold);cursor:pointer}
+.seek{height:22px}
+.controls{display:flex;align-items:center;gap:12px;justify-content:center;margin:15px auto 8px}
+.icon-btn{border:1px solid #aa64c2;background:#321d4b;color:#fff1dd;width:46px;height:46px;display:grid;place-items:center;border-radius:50%;font-size:19px}
+.icon-btn.main-play{width:68px;height:68px;background:linear-gradient(145deg,#ffdfad,#e4ad5e);color:#241232;border:1px solid #ffe6b7;box-shadow:0 0 22px #f0b75d4a;font-size:27px}
+.icon-btn.active{color:var(--gold);border-color:var(--gold)}
+.volume-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;margin-top:12px}
+.volume-row label{display:flex;align-items:center;gap:10px;font-size:13px;color:#d8c2df}
+.volume-row input{width:135px}
+.status{min-height:21px;color:#e4c4e7;font-size:12px;line-height:1.7;margin:10px 0 0}
+.widget{position:absolute!important;top:0;left:0;width:100%;height:166px;border:0;opacity:0;pointer-events:none;z-index:-1}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;margin:32px 0 14px}
+.search{flex:1;min-width:225px;display:flex;align-items:center;gap:12px;border:1px solid #9364aa;border-radius:16px;background:#201435;padding:0 18px;color:var(--muted)}
+.search input{border:0;outline:0;background:transparent;width:100%;color:white;min-height:52px;font-size:15px}
+.search input::placeholder{color:#b7a4c3}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.filter{border:1px solid #8b5ba9;background:#221736;color:#eadbea;border-radius:999px;padding:12px 16px;font-size:13px}
+.filter.active{background:#5d356f;border-color:var(--gold);color:#ffe8b8}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:26px 0 16px}
+.section-title h2{font-size:22px;color:#ffe0a0;margin:0}
+.section-title span{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.album{border:1px solid #8854a0;border-radius:22px;background:linear-gradient(145deg,#2a1940,#121027);padding:19px;display:flex;flex-direction:column;gap:14px;min-height:222px}
+.album.is-selected{border-color:var(--gold);box-shadow:0 0 24px #a94de230}
+.album-head{display:flex;align-items:flex-start;gap:13px}
+.album-icon{width:67px;height:67px;flex-shrink:0;display:grid;place-items:center;color:var(--gold);font-size:31px;background:linear-gradient(145deg,#60346c,#28153b);border-radius:17px;border:1px solid #ba79be55}
+.album h3{font-size:18px;margin:4px 0 6px}
+.album p{font-size:13px;color:var(--muted);line-height:1.8;margin:0}
+.tag{font-size:12px;color:var(--gold)}
+.album-actions{display:flex;align-items:center;gap:9px;margin-top:auto}
+.choose{flex:1;background:#f3cb91;border:0;border-radius:13px;color:#241332;font-weight:800;padding:12px 14px}
+.favorite{min-width:45px;height:43px;background:#2e1b44;color:#f2c6e0;border:1px solid #a36bb8;border-radius:13px;font-size:22px}
+.favorite.active{color:#ffbbcb;border-color:#ffbbcb}
+.lower{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:18px;margin:22px 0}
+.box{padding:19px;background:#1b1433e8;border:1px solid #8351a1;border-radius:22px;min-width:0}
+.box h2{font-size:20px;color:var(--gold);margin:0 0 8px}
+.box p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.8}
+.tracks{margin:0;padding:0;list-style:none;max-height:375px;overflow:auto}
+.track{display:flex;align-items:center;gap:10px;padding:10px 8px;border-bottom:1px solid #6f477b66}
+.track:last-child{border-bottom:0}
+.track button{flex:1;min-width:0;background:transparent;border:0;color:#f8e6ee;text-align:right;padding:5px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+.track button:focus-visible{outline-offset:0}
+.track.active{background:#52306466}
+.track .index{min-width:26px;text-align:center;color:#e4c77f;font-size:12px}
+.track .duration{font:12px Arial,sans-serif;color:#c8b5d4}
+.empty{color:#d7c0db;font-size:14px;line-height:2;padding:14px}
+.info{border:1px solid #655078;border-radius:18px;padding:18px;margin-top:25px;color:#cbbad7;line-height:2;font-size:12px}
+.info a{color:#ffcd86}
+.mini{position:fixed;bottom:0;right:0;left:0;z-index:20;border-top:1px solid #a756cf;background:#1d1237f5;box-shadow:0 -5px 24px #05041280;display:none;padding:10px max(16px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom))}
+.mini-inner{max-width:1250px;margin:auto;display:flex;align-items:center;gap:12px}
+.mini img{width:44px;height:44px;border-radius:10px;object-fit:cover}
+.mini-name{flex:1;min-width:0;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;font-size:13px}
+.mini-name small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.mini button{background:#51305e;border:1px solid #b070cc;border-radius:50%;width:39px;height:39px;color:white;font-size:18px}
+.mini #miniPlay{background:#f0bf7a;color:#271232}
+.no-results{grid-column:1/-1;padding:25px;border:1px dashed #87599b;border-radius:18px;color:var(--muted);text-align:center}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:27px 0}
+@media(min-width:961px){.mini{display:block}}
+@media(max-width:960px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.player{grid-template-columns:180px 1fr;gap:18px}.mini{display:block}}
+@media(max-width:650px){.site{padding:0 13px 36px}.topbar{min-height:66px}.brand{font-size:13px}.brand small{font-size:10px}.brand img{width:42px;height:42px}.navigation{gap:5px}.navigation a{padding:10px 9px;font-size:12px}.hero{padding:29px 4px 24px}.hero p{font-size:13px}.player{display:flex;flex-direction:column;align-items:center;text-align:center;padding:20px 15px;border-radius:25px}.artwork{width:min(210px,70%)}.now{width:100%}.controls{gap:9px}.volume-row{justify-content:center}.toolbar{margin:24px 0 14px}.search{width:100%}.filters{gap:7px}.filter{padding:10px 13px}.grid,.lower{grid-template-columns:1fr}.album{min-height:170px}.album-icon{width:59px;height:59px}.section-title h2{font-size:20px}.mini-name{max-width:50vw}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="site">
+<header class="topbar">
+<a class="brand" href="./" aria-label="صفحه اصلی رادیو"><img src="./radio-neon-logo.webp" alt=""><span>رادیو آوا و نوا<small>RADIO AVA O NAVA</small></span></a>
+<nav class="navigation" aria-label="صفحات رادیو"><a href="./">پخش زنده</a><a class="selected" aria-current="page" href="./music.html">آرشیو موسیقی</a></nav>
+</header>
+<main>
+<section class="hero"><div class="hero-kicker">RADIO AVA O NAVA · PREVIEW</div><h1>آوای اصیل ایران</h1><p>پیش‌نمایش پلیر جدید آوا و نوا؛ با چند ضبط تاریخی ایرانی از آرشیو آزاد Wikimedia Commons. این صفحه جایگزین رادیوی زنده نیست.</p></section>
+<section class="player" id="musicPlayer" aria-label="موزیک‌پلیر">
+<div class="artwork"><img id="cover" src="./radio-neon-logo.webp" alt="کاور آلبوم فعلی" width="240" height="240"></div>
+<div class="now">
+<p class="eyebrow">نسخه آزمایشی · اکنون انتخاب شده</p><h2 id="currentTitle">بیات شیراز و راست · بخش اول</h2><p id="currentArtist" class="artist">پاولو مایسورادزه · ضبط تاریخی</p>
+<div class="progress"><time id="currentTime">0:00</time><input class="seek" type="range" id="seek" min="0" max="1000" value="0" aria-label="جابه‌جایی در آهنگ" disabled><time id="totalTime">0:00</time></div>
+<div class="controls">
+<button class="icon-btn" id="repeat" aria-label="تکرار قطعه" title="تکرار قطعه">↻</button>
+<button class="icon-btn" id="previous" aria-label="قطعه قبلی" title="قطعه قبلی">❮❮</button>
+<button class="icon-btn main-play" id="togglePlay" aria-label="پخش" title="پخش">▶</button>
+<button class="icon-btn" id="next" aria-label="قطعه بعدی" title="قطعه بعدی">❯❯</button>
+<button class="icon-btn" id="currentFavorite" aria-label="افزودن به علاقه‌مندی‌ها" title="علاقه‌مندی">♡</button>
+</div>
+<div class="volume-row"><label>صدا <input type="range" id="volume" min="0" max="100" value="80" aria-label="میزان صدا"></label><span class="tag" id="sourceName">Wikimedia Commons · ضبط تاریخی</span></div>
+<p class="status" id="status" role="status" aria-live="polite"></p>
+</div>
+<audio id="previewAudio" preload="metadata" playsinline></audio>
+</section>
+<section class="toolbar" aria-label="جست‌وجو و دسته‌بندی">
+<label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="جست‌وجوی خواننده، آلبوم یا قطعه" autocomplete="off" aria-label="جست‌وجوی آرشیو"></label>
+<div class="filters" role="group" aria-label="دسته‌بندی"><button class="filter active" data-filter="all" aria-pressed="true">همه</button><button class="filter" data-filter="traditional" aria-pressed="false">موسیقی سنتی</button><button class="filter" data-filter="historic" aria-pressed="false">ضبط تاریخی</button><button class="filter" data-filter="favorite" aria-pressed="false">علاقه‌مندی‌ها</button></div>
+</section>
+<div class="section-title"><h2>کتابخانه آزمایشی</h2><span id="resultCount"></span></div>
+<section class="grid" id="library" aria-label="کتابخانه موسیقی"></section>
+<div class="lower">
+<section class="box" aria-labelledby="queueTitle"><h2 id="queueTitle">فهرست قطعات</h2><p id="queueSubtitle">برای پخش یک قطعه، روی آن بزنید.</p><ol class="tracks" id="queue"></ol></section>
+<section class="box" aria-labelledby="upnextTitle"><h2 id="upnextTitle">در صف پخش</h2><p>قطعه فعلی و قطعه بعدی</p><div id="upNext" class="empty">پس از انتخاب یک آلبوم نمایش داده می‌شود.</div></section>
+</div>
+<p class="info" id="attribution">ضبط‌های نمونه: ۱۹۰۳ تا ۱۹۰۹ از اجراهای سنتی ثبت‌شده توسط ادموند پیرس، و ضبط سال ۱۹۰۶ از سرود تاریخی «سلام شاه». منبع: Wikimedia Commons / Gallica. این نمونه‌ها در صفحه منبع با نشان Public Domain معرفی شده‌اند. کیفیت ضبط‌ها تاریخی است؛ این بخش رادیوی زنده نیست و فایل صوتی روی سرور ما قرار ندارد.</p>
+</main>
+<footer>Radio Ava O Nava · <a href="./">بازگشت به رادیو زنده</a></footer>
+</div>
+<div class="mini" id="miniPlayer"><div class="mini-inner"><img src="./radio-neon-logo.webp" id="miniCover" alt=""><span class="mini-name" id="miniName">بیات شیراز و راست<small id="miniArtist">پاولو مایسورادزه</small></span><button type="button" id="miniTop" aria-label="نمایش پلیر">⌃</button><button type="button" id="miniPlay" aria-label="پخش">▶</button></div></div>
+<script>(function(){
+'use strict';
+const $ = id => document.getElementById(id);
+const audio = $('previewAudio');
+const tracks = [
+  {id:'rast1',title:'بیات شیراز و راست · بخش اول',artist:'پاولو مایسورادزه',desc:'موسیقی اصیل ایرانی · ضبط ۱۹۰۳–۱۹۰۹ · ۲:۵۳',type:'traditional',source:'Wikimedia Commons / Gallica',url:'https://upload.wikimedia.org/wikipedia/commons/3/39/Baiaty_Chiraz_Rast_.ogg'},
+  {id:'rast2',title:'بیات شیراز و راست · بخش دوم',artist:'پاولو مایسورادزه',desc:'موسیقی اصیل ایرانی · ضبط ۱۹۰۳–۱۹۰۹ · ۲:۵۶',type:'traditional',source:'Wikimedia Commons / Gallica',url:'https://upload.wikimedia.org/wikipedia/commons/8/84/Baiaty_Chiraz_Rast_Pavel_2.ogg'},
+  {id:'salam1906',title:'سلام شاه · ضبط ۱۹۰۶',artist:'آلفرد لومر · اجرای تاریخی',desc:'اثر تاریخی ایران · ضبط ۱۹۰۶ · ۲:۴۸',type:'historic',source:'Wikimedia Commons',url:'https://upload.wikimedia.org/wikipedia/commons/9/9d/Salam-e_shah_1906.ogg'}
+];
+let selected=0,filter='all',query='',loop=false;
+let favorites=new Set();
+try { const data=JSON.parse(localStorage.getItem('ava-music-demo-favorites-v1')||'[]');if(Array.isArray(data))favorites=new Set(data.filter(x=>tracks.some(i=>i.id===x)));}catch(_){}
+const fmt=time=>{const n=Math.max(0,Math.floor(Number(time)||0));return Math.floor(n/60)+':'+String(n%60).padStart(2,'0');};
+const isPlaying=()=>!audio.paused&&!audio.ended;
+const message=text=>{$('status').textContent=text;};
+function saveFavorites(){try{localStorage.setItem('ava-music-demo-favorites-v1',JSON.stringify([...favorites]));}catch(_){}}
+function syncButtons(){
+  $('togglePlay').textContent=isPlaying()?'Ⅱ':'▶';
+  $('miniPlay').textContent=isPlaying()?'Ⅱ':'▶';
+  $('togglePlay').setAttribute('aria-label',isPlaying()?'توقف پخش':'پخش');
+  $('miniPlay').setAttribute('aria-label',isPlaying()?'توقف پخش':'پخش');
+}
+function syncProgress(){
+  const duration=Number.isFinite(audio.duration)?audio.duration:0;
+  $('currentTime').textContent=fmt(audio.currentTime);
+  $('totalTime').textContent=fmt(duration);
+  $('seek').disabled=!duration;
+  $('seek').value=duration?String(Math.round(audio.currentTime/duration*1000)):'0';
+}
+function syncTrack(){
+  const t=tracks[selected];
+  $('currentTitle').textContent=t.title;
+  $('currentArtist').textContent=t.artist;
+  $('miniName').firstChild.textContent=t.title;
+  $('miniArtist').textContent=t.artist;
+  $('sourceName').textContent=t.source+' · پخش آنلاین';
+  const favorited=favorites.has(t.id);
+  $('currentFavorite').textContent=favorited?'♥':'♡';
+  $('currentFavorite').classList.toggle('active',favorited);
+  $('currentFavorite').setAttribute('aria-label',favorited?'حذف از علاقه‌مندی‌ها':'افزودن به علاقه‌مندی‌ها');
+  syncQueue();renderLibrary();
+}
+function play(){
+  if(!audio.src){loadTrack(selected,false);}
+  const pending=audio.play();
+  if(pending&&typeof pending.catch==='function')pending.catch(()=>message('پخش انجام نشد. دوباره دکمه پخش را بزنید یا اتصال اینترنت را بررسی کنید.'));
+}
+function loadTrack(index,autoplay){
+  if(index<0||index>=tracks.length)return;
+  selected=index;
+  audio.pause();
+  audio.src=tracks[index].url;
+  audio.load();
+  $('seek').value='0';
+  $('currentTime').textContent='0:00';
+  $('totalTime').textContent='0:00';
+  message('در حال آماده‌سازی ضبط تاریخی…');
+  syncTrack();syncButtons();syncProgress();
+  if(autoplay)play();
+}
+function next(dir=1){
+  if(selected+dir<0||selected+dir>=tracks.length){message(dir>0?'این آخرین قطعه است.':'این اولین قطعه است.');return;}
+  loadTrack(selected+dir,true);
+}
+function toggleFavorite(id){
+  if(favorites.has(id))favorites.delete(id);else favorites.add(id);
+  saveFavorites();syncTrack();
+}
+function renderLibrary(){
+  const root=$('library');root.replaceChildren();
+  const visible=tracks.filter(t=>(filter==='all'||filter==='favorite'&&favorites.has(t.id)||filter===t.type)&&(!query||[t.title,t.artist,t.desc].join(' ').toLocaleLowerCase('fa').includes(query)));
+  $('resultCount').textContent=new Intl.NumberFormat('fa-IR').format(visible.length)+' اثر';
+  if(!visible.length){const p=document.createElement('p');p.className='no-results';p.textContent='اثری پیدا نشد.';root.appendChild(p);return;}
+  visible.forEach(t=>{
+    const card=document.createElement('article');card.className='album'+(tracks[selected].id===t.id?' is-selected':'');
+    const header=document.createElement('div');header.className='album-head';
+    const icon=document.createElement('span');icon.className='album-icon';icon.textContent='♫';icon.setAttribute('aria-hidden','true');
+    const info=document.createElement('div');
+    const tag=document.createElement('span');tag.className='tag';tag.textContent=t.type==='traditional'?'اجرای سنتی · آرشیوی':'ضبط تاریخی';
+    const title=document.createElement('h3');title.textContent=t.title;
+    const artist=document.createElement('p');artist.textContent=t.artist;
+    info.append(tag,title,artist);header.append(icon,info);
+    const desc=document.createElement('p');desc.textContent=t.desc;
+    const actions=document.createElement('div');actions.className='album-actions';
+    const choose=document.createElement('button');choose.type='button';choose.className='choose';choose.textContent='انتخاب و پخش';choose.addEventListener('click',()=>{loadTrack(tracks.indexOf(t),true);$('musicPlayer').scrollIntoView({behavior:'smooth',block:'start'});});
+    const favorite=document.createElement('button');favorite.type='button';favorite.className='favorite'+(favorites.has(t.id)?' active':'');favorite.textContent=favorites.has(t.id)?'♥':'♡';favorite.setAttribute('aria-label',favorites.has(t.id)?'حذف از علاقه‌مندی‌ها':'افزودن به علاقه‌مندی‌ها');favorite.addEventListener('click',()=>toggleFavorite(t.id));
+    actions.append(choose,favorite);card.append(header,desc,actions);root.append(card);
+  });
+}
+function syncQueue(){
+  $('queueSubtitle').textContent='برای انتخاب هر ضبط، روی نام آن بزنید.';
+  const root=$('queue');root.replaceChildren();
+  tracks.forEach((t,i)=>{
+    if(query&&!([t.title,t.artist].join(' ').toLocaleLowerCase('fa').includes(query)))return;
+    const row=document.createElement('li');row.className='track'+(i===selected?' active':'');
+    const num=document.createElement('span');num.className='index';num.textContent=new Intl.NumberFormat('fa-IR').format(i+1);
+    const name=document.createElement('button');name.type='button';name.textContent=t.title;name.addEventListener('click',()=>loadTrack(i,true));
+    const dur=document.createElement('span');dur.className='duration';dur.textContent=t.desc.split(' · ').at(-1);
+    row.append(num,name,dur);root.append(row);
+  });
+  const nextTrack=tracks[selected+1];
+  $('upNext').replaceChildren();
+  const now=document.createElement('p');now.textContent='انتخاب‌شده: '+tracks[selected].title;
+  const n=document.createElement('p');n.textContent=nextTrack?'بعدی: '+nextTrack.title:'آخر فهرست';
+  $('upNext').append(now,n);
+}
+$('togglePlay').addEventListener('click',()=>isPlaying()?audio.pause():play());
+$('miniPlay').addEventListener('click',()=>isPlaying()?audio.pause():play());
+$('miniTop').addEventListener('click',()=>$('musicPlayer').scrollIntoView({behavior:'smooth',block:'start'}));
+$('previous').addEventListener('click',()=>next(-1));
+$('next').addEventListener('click',()=>next(1));
+$('repeat').addEventListener('click',()=>{loop=!loop;audio.loop=loop;$('repeat').classList.toggle('active',loop);$('repeat').setAttribute('aria-pressed',String(loop));});
+$('currentFavorite').addEventListener('click',()=>toggleFavorite(tracks[selected].id));
+$('volume').addEventListener('input',e=>{audio.volume=Number(e.target.value)/100;});
+$('seek').addEventListener('input',e=>{if(Number.isFinite(audio.duration)&&audio.duration)audio.currentTime=audio.duration*Number(e.target.value)/1000;});
+$('search').addEventListener('input',e=>{query=String(e.target.value||'').trim().toLocaleLowerCase('fa');renderLibrary();syncQueue();});
+document.querySelectorAll('.filter').forEach(button=>button.addEventListener('click',()=>{filter=button.dataset.filter;document.querySelectorAll('.filter').forEach(b=>{const active=b===button;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});renderLibrary();}));
+audio.addEventListener('playing',()=>{syncButtons();message('در حال پخش ضبط تاریخی');});
+audio.addEventListener('pause',()=>{syncButtons();if(!audio.ended)message('پخش متوقف شد');});
+audio.addEventListener('timeupdate',syncProgress);
+audio.addEventListener('loadedmetadata',syncProgress);
+audio.addEventListener('durationchange',syncProgress);
+audio.addEventListener('ended',()=>{syncButtons();if(!loop&&selected<tracks.length-1)next(1);else message('پخش به پایان رسید.');});
+audio.addEventListener('error',()=>{syncButtons();message('فایل صوتی در این مرورگر بارگذاری نشد. اینترنت یا پشتیبانی OGG را بررسی کنید.');});
+audio.volume=Number($('volume').value)/100;
+loadTrack(0,false);
+message('نسخه آزمایشی آماده است؛ برای شنیدن، پخش را بزنید.');
+})();</script>
+</body>
+</html>
