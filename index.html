@@ -317,6 +317,18 @@ body{overflow-x:hidden}
 .spotify-embed-wrap{display:block;width:100%;min-width:0;overflow:hidden;border-radius:14px;background:#241b35;isolation:isolate}
 .spotify-embed-wrap iframe{display:block;border:0;width:100%;min-height:352px;max-width:100%;background:transparent}
 @media(max-width:480px){.spotify-album-card{padding:11px}.album-card-top{gap:12px}.spotify-album-card .album-art{flex-basis:74px;width:74px;height:90px}.spotify-album-card .album-art svg{width:34px;height:34px}.spotify-album-card .album-copy h3{font-size:18px}.spotify-embed-wrap iframe{height:352px}}
+
+.vocal-card{display:flex;flex-direction:column;align-items:stretch;gap:12px;padding:16px;min-width:0}
+.vocal-card .album-card-top{display:flex;align-items:center;gap:15px;min-width:0}
+.vocal-card .album-art{flex:0 0 100px;width:100px;height:105px}
+.vocal-card .album-art svg{width:45px;height:45px}
+.vocal-card .album-copy{min-width:0;flex:1}
+.vocal-card .album-pill{line-height:1.7;white-space:normal}
+.vocal-audio{display:block;width:100%;height:52px;max-width:100%;min-width:0;accent-color:#bd78e3;direction:ltr}
+.vocal-license,.vocal-error{font-size:12px!important;line-height:1.9!important;margin:0!important;color:#e3cee9!important;overflow-wrap:break-word}
+.vocal-error:not(:empty){color:#ffd29c!important}
+.vocal-source{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#ecd2ff;line-height:1.7;text-decoration:underline;text-underline-offset:4px}
+@media(max-width:450px){.vocal-card{padding:11px;gap:10px}.vocal-card .album-art{flex-basis:79px;width:79px;height:93px}.vocal-card .album-art svg{width:35px;height:35px}.vocal-card .album-copy h3{font-size:17px}.vocal-card .album-copy p{font-size:12px}}
 </style>
 <body><div class="site">
 <header class="topbar"><a class="brand-wrap" href="./"><img src="./radio-neon-logo.webp" alt=""><span><span class="brand-title">رادیو آوا و نوا</span><br><span class="brand-en">Radio Ava o Nava</span></span></a>
@@ -330,23 +342,41 @@ body{overflow-x:hidden}
 <div class="actions" id="contact"><a class="house" id="clubhouse" href="https://www.clubhouse.com/house/%D8%A7%D9%88%D8%A7-%D9%88-%D9%86%D9%88%D8%A7-%D9%85%D9%88%D8%B3%DB%8C%D9%82%DB%8C-%D8%B2%D9%86%D8%AF%D9%87-%D8%B4%D8%B9%D8%B1-%D9%88-%D8%A7%D9%88%D8%A7%D8%B2?chs=o78CNL9gG3%3AxWrPxdSYMSeit7zGhjYUmTDXVQFOQFETFvVa4T_EZ4o&amp;utm_medium=ch_general_house" target="_blank" rel="noopener noreferrer">ورود به هاوس کلاب‌هاوس</a><a id="requestSong" href="https://t.me/+bSKXuElY13I3NWY0" target="_blank" rel="noopener noreferrer">ارسال پیام / درخواست آهنگ</a><a class="telegram" href="https://t.me/+nFR4GhHTc7Y3ZjNk" target="_blank" rel="noopener noreferrer">اشتراک در تلگرام</a><a class="whatsapp" href="https://www.whatsapp.com/channel/0029VbDqKNg5vKA9OxDV4046" target="_blank" rel="noopener noreferrer">اشتراک در واتساپ</a><button type="button" id="copyLink">کپی لینک رادیو</button><button type="button" id="shareLink">اشتراک‌گذاری</button></div>
 <section class="weekly" id="schedule" aria-labelledby="weekly-title"><div class="weekly-head"><div><p class="weekly-eyebrow">RADIO AVA O NAVA</p><h2 id="weekly-title">برنامه هفتگی</h2><p>موسیقی، آواز، شعر و دکلمه · شنبه تا چهارشنبه، ساعت ۲۱ به وقت ایران</p></div><div class="weekly-clock-pair"><div class="weekly-clock"><span>ساعت ایران</span><strong id="weekly-iran-clock" dir="ltr">--:--</strong></div><div class="weekly-clock"><span>ساعت اروپا (سوئد)</span><strong id="weekly-local-clock" dir="ltr">--:--</strong></div></div></div><div class="weekly-next"><div><span class="weekly-eyebrow">برنامه بعدی</span><strong id="weekly-next-name">در حال محاسبه…</strong><span id="weekly-next-local">زمان محلی: —</span></div><div class="weekly-count"><span>تا شروع برنامه</span><strong id="weekly-countdown" dir="ltr" aria-live="off">--:--:--</strong></div></div><div class="weekly-days" id="weekly-days" aria-label="روزهای برنامه"></div><p class="weekly-foot">زمان‌ها بر اساس ساعت ایران تنظیم شده‌اند. ساعت محلی و شمارش معکوس به‌صورت خودکار محاسبه می‌شوند. زمان برنامه ممکن است تغییر کند.</p></section>
 <section class="traditional-albums" id="traditional-albums" aria-labelledby="albums-title">
- <div class="albums-heading"><div><p class="albums-eyebrow">AVA O NAVA · TRADITIONAL MUSIC</p><h2 id="albums-title">آلبوم‌های موسیقی سنتی</h2><p>دکمه پخش رو داخل کارت آلبوم بزن؛ فهرست قطعه‌ها همین‌جا نمایش داده می‌شه.</p></div></div>
- <div class="albums-grid"><article class="album-card spotify-album-card" aria-label="آلبوم طریق عشق">
+ <div class="albums-heading"><div><p class="albums-eyebrow">AVA O NAVA · TRADITIONAL VOCALS</p><h2 id="albums-title">آوازهای سنتی ایرانی</h2><p>آثار منتخب با خواننده، از آرشیوهای دانشگاهی و تاریخی. برای شنیدن قطعات دارای مجوز، دکمه پخش را همین‌جا بزن.</p></div></div>
+ <div class="albums-grid"><article class="album-card vocal-card" aria-label="درآمد شور">
  <div class="album-card-top">
   <div class="album-art album-art-one" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 43V17L48 11v26"/><ellipse cx="14" cy="47" rx="7" ry="5" transform="rotate(-18 14 47)"/><ellipse cx="41" cy="41" rx="7" ry="5" transform="rotate(-18 41 41)"/></svg><span>آواز ایرانی</span></div>
-  <div class="album-copy"><span class="album-pill">۱۰ قطعه · سنتی</span><h3>طریق عشق</h3><p>محمدرضا شجریان</p><p class="album-play-label">پخش آلبوم داخل همین صفحه</p></div>
+  <div class="album-copy"><span class="album-pill">ضبط دانشگاهی · WAV باکیفیت</span><h3>درآمد شور</h3><p>فرحناز صاحب‌قلم</p></div>
  </div>
- <div class="spotify-embed-wrap"><iframe title="پلیر آلبوم طریق عشق – محمدرضا شجریان" src="https://open.spotify.com/embed/album/6J6cXtSPUUYT2La8R1DkAN" width="100%" height="352" loading="lazy" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+ <audio class="vocal-audio" controls preload="none" playsinline aria-label="پخش درآمد شور"><source src="https://phaidra.kug.ac.at/api/object/o:127758/download" type="audio/wav">مرورگر شما این فرمت صدا را پشتیبانی نمی‌کند.</audio><p class="vocal-license">CC BY-NC-ND 4.0 — فقط استفاده غیرتجاری، با ذکر منبع</p><p class="vocal-error" role="status" aria-live="polite"></p>
+ <a class="vocal-source" href="https://phaidra.kug.ac.at/detail/o:127758" target="_blank" rel="noopener noreferrer">صفحه اصلی اثر و اطلاعات حقوقی <span aria-hidden="true">↗</span></a>
 </article>
-<article class="album-card spotify-album-card" aria-label="آلبوم زمستان است">
+<article class="album-card vocal-card" aria-label="آواز سنتی ایرانی (۱۹۳۱)">
  <div class="album-card-top">
   <div class="album-art album-art-two" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 43V17L48 11v26"/><ellipse cx="14" cy="47" rx="7" ry="5" transform="rotate(-18 14 47)"/><ellipse cx="41" cy="41" rx="7" ry="5" transform="rotate(-18 41 41)"/></svg><span>آواز ایرانی</span></div>
-  <div class="album-copy"><span class="album-pill">۸ قطعه · سنتی</span><h3>زمستان است</h3><p>محمدرضا شجریان</p><p class="album-play-label">پخش آلبوم داخل همین صفحه</p></div>
+  <div class="album-copy"><span class="album-pill">ضبط تاریخی · ۳:۳۷</span><h3>آواز سنتی ایرانی (۱۹۳۱)</h3><p>اجرای تاریخی ایرانی</p></div>
  </div>
- <div class="spotify-embed-wrap"><iframe title="پلیر آلبوم زمستان است – محمدرضا شجریان" src="https://open.spotify.com/embed/album/14LuQ3CTKZDV3LwWIScVSY" width="100%" height="352" loading="lazy" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+ <audio class="vocal-audio" controls preload="none" playsinline aria-label="پخش آواز سنتی ایرانی (۱۹۳۱)"><source src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Popular_song_%281931%29.ogg" type="audio/ogg">مرورگر شما این فرمت صدا را پشتیبانی نمی‌کند.</audio><p class="vocal-license">با برچسب مالکیت عمومی در Wikimedia Commons</p><p class="vocal-error" role="status" aria-live="polite"></p>
+ <a class="vocal-source" href="https://commons.wikimedia.org/wiki/File:Popular_song_(1931).ogg" target="_blank" rel="noopener noreferrer">صفحه اصلی اثر و اطلاعات حقوقی <span aria-hidden="true">↗</span></a>
+</article>
+<article class="album-card vocal-card" aria-label="آواز ماهور">
+ <div class="album-card-top">
+  <div class="album-art album-art-one" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 43V17L48 11v26"/><ellipse cx="14" cy="47" rx="7" ry="5" transform="rotate(-18 14 47)"/><ellipse cx="41" cy="41" rx="7" ry="5" transform="rotate(-18 41 41)"/></svg><span>آواز ایرانی</span></div>
+  <div class="album-copy"><span class="album-pill">ضبط تاریخی · ۳:۴۵</span><h3>آواز ماهور</h3><p>پروانه، همراه سنتور حبیب سماعی</p></div>
+ </div>
+ <p class="vocal-license">مجوز بازپخش هنوز نامشخص است؛ پخش داخل سایت تا تأیید حقوق اثر غیرفعال است.</p>
+ <a class="vocal-source" href="https://commons.wikimedia.org/wiki/File:Mahoor_Paravaneh.ogg" target="_blank" rel="noopener noreferrer">صفحه اصلی اثر و اطلاعات حقوقی <span aria-hidden="true">↗</span></a>
+</article>
+<article class="album-card vocal-card" aria-label="آواز ابوالچپ">
+ <div class="album-card-top">
+  <div class="album-art album-art-two" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 43V17L48 11v26"/><ellipse cx="14" cy="47" rx="7" ry="5" transform="rotate(-18 14 47)"/><ellipse cx="41" cy="41" rx="7" ry="5" transform="rotate(-18 41 41)"/></svg><span>آواز ایرانی</span></div>
+  <div class="album-copy"><span class="album-pill">ضبط تاریخی · ۳:۴۹</span><h3>آواز ابوالچپ</h3><p>پروانه، همراه سنتور حبیب سماعی</p></div>
+ </div>
+ <p class="vocal-license">مجوز بازپخش هنوز نامشخص است؛ پخش داخل سایت تا تأیید حقوق اثر غیرفعال است.</p>
+ <a class="vocal-source" href="https://commons.wikimedia.org/wiki/File:Abul_Chap_Paravaneh.ogg" target="_blank" rel="noopener noreferrer">صفحه اصلی اثر و اطلاعات حقوقی <span aria-hidden="true">↗</span></a>
 </article></div>
- <p class="albums-note">پخش از طریق پلیر رسمی Spotify انجام می‌شه، بدون آپلود فایل در R2. برای شنیدن کامل، بسته به شرایط Spotify و حساب کاربری ممکنه ورود لازم باشه؛ کاربران بدون ورود ممکنه فقط پیش‌نمایش بشنون.</p>
- <div class="album-demo"><div><strong>آوازهای سنتی با پخش مستقل داخل سایت</strong><p>چهار اجرای آزمایشی از آرشیو دانشگاهی، بدون آپلود فایل.</p></div><a href="./music-demo.html">باز کردن پلیر آوازها <span aria-hidden="true">↗</span></a></div>
+ <p class="albums-note">فایل‌ها روی سرور اصلی منابع هستند و فضای Cloudflare R2 مصرف نمی‌شود. مجوز دو ضبط پروانه نیازمند بررسی است؛ برای فایل‌های مجاز نیز شرایط حق نشر و استفاده تجاری باید رعایت شود.</p>
+ <div class="album-demo"><div><strong>آوازهای دانشگاهی بیشتر</strong><p>دموی جداگانه با چهار اجرای دیگر از آرشیو دانشگاهی.</p></div><a href="./music-demo.html">باز کردن پلیر آوازها <span aria-hidden="true">↗</span></a></div>
 </section>
 <section class="install-guide" id="install" aria-labelledby="install-title"><div class="install-heading"><img src="./radio-neon-logo.webp" alt="لوگوی اپ رادیو آوا و نوا" width="68" height="68" loading="lazy"><div><h2 id="install-title">رادیو رو به صفحه اصلی گوشی اضافه کن</h2><p>با لوگوی آوا و نوا، مثل یک اپ بازش کن؛ بدون نیاز به فروشگاه برنامه‌ها.</p></div></div><div class="install-steps"><div class="install-platform"><h3>آیفون (Safari)</h3><p>۱. سایت رو در Safari باز کن.</p><p>۲. روی <strong>Share</strong> بزن.</p><p>۳. <strong>Add to Home Screen</strong> و بعد <strong>Add</strong> رو انتخاب کن.</p></div><div class="install-platform"><h3>اندروید (Chrome)</h3><p>۱. سایت رو در Chrome باز کن.</p><p>۲. منوی سه‌نقطه رو بزن.</p><p>۳. <strong>Add to Home Screen</strong> یا <strong>Install app</strong> رو انتخاب کن.</p></div></div><p class="install-note">برای شنیدن پخش زنده به اینترنت نیاز داری. اگر گزینه نصب رو نمی‌بینی، لینک رو مستقیماً در Safari یا Chrome باز کن.</p></section>
 <section class="about" id="about"><h2>درباره رادیو آوا و نوا</h2><p>رادیو آوا و نوا همراه شما در برنامه‌های زنده موسیقی، آواز، شعر و دکلمه است. پخش فقط هنگام برگزاری برنامه فعال می‌شود.</p></section></main>
@@ -421,5 +451,22 @@ loadProgram();setInterval(loadProgram,60000);
 // Public stats are read from radio-stats.xsl by radio-stats.js; blocked access remains unknown.
 $('liveStatus').textContent='وضعیت سرور: نامشخص';
 $('listeners').textContent='شنوندگان آنلاین: نامشخص';
+})();
+</script><script>
+(()=>{const audioNodes=[...document.querySelectorAll('.vocal-audio')];
+audioNodes.forEach(audio=>{
+ const card=audio.closest('.vocal-card');
+ const message=card?.querySelector('.vocal-error');
+ audio.addEventListener('play',()=>{
+  audioNodes.forEach(other=>{if(other!==audio)other.pause()});
+  const live=document.getElementById('audio');
+  const liveButton=document.getElementById('play');
+  if(live&&!live.paused&&liveButton)liveButton.click();
+ });
+ audio.addEventListener('error',()=>{
+  if(message)message.textContent='پخش فایل از این منبع در مرورگر شما ممکن نشد. صفحه اصلی اثر را باز کنید.';
+ });
+ audio.addEventListener('playing',()=>{if(message)message.textContent=''});
+});
 })();
 </script><script src="./radio-stats.js" defer></script><script src="./weekly-schedule.js" defer></script></body></html>
