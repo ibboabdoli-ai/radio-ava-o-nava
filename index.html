@@ -276,10 +276,40 @@ body{overflow-x:hidden}
   .site{min-height:100dvh}
   a,button,input{-webkit-tap-highlight-color:transparent}
 }
+
+/* Traditional albums — responsive, no false inline-play affordances */
+.traditional-albums{margin:28px auto 32px;padding:clamp(18px,3vw,29px);border:1px solid #c478e287;border-radius:27px;background:linear-gradient(135deg,#79399a36,#150d32de 60%,#4c28714a);backdrop-filter:blur(17px);-webkit-backdrop-filter:blur(17px);box-shadow:inset 0 1px #ffffff28,0 12px 34px #08001483;color:#fff;min-width:0}
+.albums-heading{display:flex;align-items:center;justify-content:space-between;gap:17px;flex-wrap:wrap;margin-bottom:20px}
+.albums-heading h2{font-size:clamp(22px,4.8vw,29px);line-height:1.65;color:#ffe1aa;margin:4px 0}
+.albums-heading p{font-size:14px;line-height:1.9;color:#e9dbf3;margin:4px 0 0}
+.albums-heading .albums-eyebrow{font-family:Arial,sans-serif;letter-spacing:1.6px;font-size:11px;color:#e8a6ff;font-weight:700}
+.albums-browse{display:inline-flex;align-items:center;justify-content:center;padding:10px 15px;min-height:45px;color:#ffe6b5;background:#ffffff0c;border:1px solid #c68ce889;border-radius:13px;text-decoration:none;font-size:13px;font-weight:700}
+.albums-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.album-card{display:flex;gap:17px;align-items:center;min-width:0;border:1px solid #ebbbff45;background:linear-gradient(140deg,#ffffff16,#1b0d358a);border-radius:20px;padding:16px}
+.album-art{position:relative;flex:0 0 132px;width:132px;height:148px;border-radius:15px;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#ffe4b3;box-shadow:inset 0 1px #ffffff45,0 7px 23px #07000d8f}
+.album-art-one{background:radial-gradient(circle at 30% 24%,#d08c8d,#5a2f7a 48%,#1a1638)}
+.album-art-two{background:radial-gradient(circle at 34% 25%,#7893c4,#44306e 48%,#171332)}
+.album-art svg{width:58px;height:58px;opacity:.83;filter:drop-shadow(0 0 13px #ffc78c6e)}
+.album-art>span{position:absolute;bottom:9px;right:7px;left:7px;text-align:center;font-size:10px;color:#fff2d7}
+.album-copy{display:flex;flex-direction:column;gap:8px;align-items:flex-start;min-width:0}
+.album-pill{font-size:11px;color:#e8bbfc;background:#9a59bd22;border:1px solid #c37fea60;border-radius:9px;padding:3px 8px}
+.album-copy h3{font-size:clamp(18px,3vw,23px);line-height:1.6;color:#fff0d7;margin:0}
+.album-copy p{color:#e3d2ec;font-size:14px;margin:0}
+.album-link,.album-demo>a{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#a04cc5,#5b287d);border:1px solid #f1d29c;border-radius:13px;color:white;text-decoration:none;font-size:13px;font-weight:700;padding:10px 15px;min-height:45px;line-height:1.6;transition:transform .2s,box-shadow .2s}
+.album-link:hover,.album-demo>a:hover,.albums-browse:hover{box-shadow:0 0 18px #d88bffad;transform:translateY(-1px)}
+.album-link:focus-visible,.album-demo>a:focus-visible,.albums-browse:focus-visible{outline:2px solid #ffe0aa;outline-offset:3px}
+.album-demo{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-top:15px;padding:17px 19px;border:1px solid #ebc4a34e;border-radius:17px;background:#ffffff0c}
+.album-demo strong{font-size:15px;color:#ffe3b4}
+.album-demo p{font-size:12px;color:#decde8;line-height:1.9;margin:4px 0}
+.albums-note{font-size:12px;line-height:2;color:#d8c3e4;margin:15px 2px 0}
+@media(max-width:800px){.albums-grid{grid-template-columns:1fr}.traditional-albums{padding:18px 13px}.album-card{padding:12px}.album-art{flex-basis:107px;width:107px;height:129px}.album-art svg{width:46px;height:46px}.album-copy{gap:6px}.album-link{font-size:12px;padding:9px 12px}}
+@media(max-width:365px){.album-art{flex-basis:84px;width:84px;height:120px}.album-copy h3{font-size:17px}.album-pill{font-size:10px}.album-card{gap:10px}}
+@media(prefers-reduced-motion:reduce){.album-link,.album-demo>a,.albums-browse{transition:none}}
+
 </style>
 <body><div class="site">
 <header class="topbar"><a class="brand-wrap" href="./"><img src="./radio-neon-logo.webp" alt=""><span><span class="brand-title">رادیو آوا و نوا</span><br><span class="brand-en">Radio Ava o Nava</span></span></a>
-<nav class="nav-links" id="nav"><a class="active" href="#home">صفحه اصلی</a><a href="#schedule">برنامه هفتگی</a><a href="#install">نصب اپ</a><a href="#about">درباره ما</a><a href="#contact">تماس با ما</a></nav>
+<nav class="nav-links" id="nav"><a class="active" href="#home">صفحه اصلی</a><a href="#schedule">برنامه هفتگی</a><a href="#traditional-albums">آلبوم‌های سنتی</a><a href="#install">نصب اپ</a><a href="#about">درباره ما</a><a href="#contact">تماس با ما</a></nav>
 <div class="top-social"><a href="https://t.me/+nFR4GhHTc7Y3ZjNk" target="_blank" rel="noopener noreferrer" aria-label="تلگرام"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M21.5 3.5 2.7 10.8c-1.2.5-1.2 1.2-.2 1.5l4.8 1.5 1.8 5.6c.2.7.1 1 1 .9.7 0 1-.3 1.4-.7l2.4-2.4 5 3.7c.9.5 1.6.2 1.8-.9L23 4.9c.3-1.4-.5-2-1.5-1.4ZM8 13.4l10.5-6.6c.5-.3 1-.1.6.3l-8.6 7.8-.3 3.3-2.2-4.8Z"/></svg></a><a href="https://www.whatsapp.com/channel/0029VbDqKNg5vKA9OxDV4046" target="_blank" rel="noopener noreferrer" aria-label="واتساپ"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1 10 10 0 0 0-1.1 8.4L2 22l5.8-1.5A10 10 0 1 0 12 2Zm0 18.1a8.1 8.1 0 0 1-4.1-1.1l-.3-.2-3.4.9.9-3.3-.2-.3A8.1 8.1 0 1 1 12 20.1Zm4.5-6.1c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.2l-.7.8c-.2.2-.3.2-.5.1a6.5 6.5 0 0 1-3.3-2.9c-.2-.3.2-.4.6-.9.1-.2.1-.3 0-.5l-.7-1.7c-.2-.4-.4-.3-.5-.3h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.1s.9 2.4 1 2.6c.1.2 1.8 2.8 4.3 3.8 1.6.7 2.3.7 3.1.6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.6-.3Z"/></svg></a></div><button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="منو">☰</button></header>
 <main id="home"><section class="hero"><img class="hero-logo" src="./radio-neon-logo.webp" alt="لوگوی رادیو آوا و نوا" width="160" height="160"><h1>رادیو آوا و نوا</h1><div class="hero-en">Radio Ava o Nava</div><p>موسیقی، آواز، شعر و دکلمه</p></section><div class="glow-line"></div>
 <section class="panel" id="playerShell" aria-label="پلیر پخش زنده"><div class="status-row"><div class="status" id="status"><span class="dot"></span><span id="statusText">آماده شنیدن</span></div><div class="info-strip"><span class="info-chip" id="liveStatus">وضعیت سرور: نامشخص</span><span class="info-chip" id="listeners">شنوندگان: نامشخص</span><span class="info-chip" id="elapsed">زمان پخش زنده: --:--:--</span></div></div>
@@ -288,6 +318,32 @@ body{overflow-x:hidden}
 <p class="note">پخش هنگام اجرای برنامه فعال است. وضعیت رادیو و تعداد شنوندگان به‌صورت خودکار هر ۱۰ ثانیه به‌روز می‌شوند.</p>
 <div class="actions" id="contact"><a class="house" id="clubhouse" href="https://www.clubhouse.com/house/%D8%A7%D9%88%D8%A7-%D9%88-%D9%86%D9%88%D8%A7-%D9%85%D9%88%D8%B3%DB%8C%D9%82%DB%8C-%D8%B2%D9%86%D8%AF%D9%87-%D8%B4%D8%B9%D8%B1-%D9%88-%D8%A7%D9%88%D8%A7%D8%B2?chs=o78CNL9gG3%3AxWrPxdSYMSeit7zGhjYUmTDXVQFOQFETFvVa4T_EZ4o&amp;utm_medium=ch_general_house" target="_blank" rel="noopener noreferrer">ورود به هاوس کلاب‌هاوس</a><a id="requestSong" href="https://t.me/+bSKXuElY13I3NWY0" target="_blank" rel="noopener noreferrer">ارسال پیام / درخواست آهنگ</a><a class="telegram" href="https://t.me/+nFR4GhHTc7Y3ZjNk" target="_blank" rel="noopener noreferrer">اشتراک در تلگرام</a><a class="whatsapp" href="https://www.whatsapp.com/channel/0029VbDqKNg5vKA9OxDV4046" target="_blank" rel="noopener noreferrer">اشتراک در واتساپ</a><button type="button" id="copyLink">کپی لینک رادیو</button><button type="button" id="shareLink">اشتراک‌گذاری</button></div>
 <section class="weekly" id="schedule" aria-labelledby="weekly-title"><div class="weekly-head"><div><p class="weekly-eyebrow">RADIO AVA O NAVA</p><h2 id="weekly-title">برنامه هفتگی</h2><p>موسیقی، آواز، شعر و دکلمه · شنبه تا چهارشنبه، ساعت ۲۱ به وقت ایران</p></div><div class="weekly-clock-pair"><div class="weekly-clock"><span>ساعت ایران</span><strong id="weekly-iran-clock" dir="ltr">--:--</strong></div><div class="weekly-clock"><span>ساعت اروپا (سوئد)</span><strong id="weekly-local-clock" dir="ltr">--:--</strong></div></div></div><div class="weekly-next"><div><span class="weekly-eyebrow">برنامه بعدی</span><strong id="weekly-next-name">در حال محاسبه…</strong><span id="weekly-next-local">زمان محلی: —</span></div><div class="weekly-count"><span>تا شروع برنامه</span><strong id="weekly-countdown" dir="ltr" aria-live="off">--:--:--</strong></div></div><div class="weekly-days" id="weekly-days" aria-label="روزهای برنامه"></div><p class="weekly-foot">زمان‌ها بر اساس ساعت ایران تنظیم شده‌اند. ساعت محلی و شمارش معکوس به‌صورت خودکار محاسبه می‌شوند. زمان برنامه ممکن است تغییر کند.</p></section>
+<section class="traditional-albums" id="traditional-albums" aria-labelledby="albums-title">
+  <div class="albums-heading">
+    <div>
+      <p class="albums-eyebrow">AVA O NAVA · TRADITIONAL MUSIC</p>
+      <h2 id="albums-title">آلبوم‌های موسیقی سنتی</h2>
+      <p>آثار منتخب آواز ایرانی؛ با دسترسی به صفحه پخش در سایت منبع.</p>
+    </div>
+    <a class="albums-browse" href="https://www.mybia2music.com/genre/traditional" target="_blank" rel="noopener noreferrer">آثار سنتی بیشتر ↗</a>
+  </div>
+  <div class="albums-grid">
+    <article class="album-card">
+      <div class="album-art album-art-one" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 43V17L48 11v26"/><ellipse cx="14" cy="47" rx="7" ry="5" transform="rotate(-18 14 47)"/><ellipse cx="41" cy="41" rx="7" ry="5" transform="rotate(-18 41 41)"/></svg><span>آواز ایرانی</span></div>
+      <div class="album-copy"><span class="album-pill">۹ قطعه · سنتی</span><h3>طریق عشق</h3><p>محمدرضا شجریان</p>
+        <a class="album-link" href="https://www.mybia2music.com/113847162/mohammadreza-shajarian-tarighe-eshgh" target="_blank" rel="noopener noreferrer" aria-label="باز کردن صفحه پخش آلبوم طریق عشق در بیاتو موزیک">شنیدن در سایت منبع <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <article class="album-card">
+      <div class="album-art album-art-two" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 43V17L48 11v26"/><ellipse cx="14" cy="47" rx="7" ry="5" transform="rotate(-18 14 47)"/><ellipse cx="41" cy="41" rx="7" ry="5" transform="rotate(-18 41 41)"/></svg><span>آواز ایرانی</span></div>
+      <div class="album-copy"><span class="album-pill">۸ قطعه · سنتی</span><h3>زمستان است</h3><p>محمدرضا شجریان</p>
+        <a class="album-link" href="https://www.mybia2music.com/113954038/mohammadreza-shajarian-zemestan-ast" target="_blank" rel="noopener noreferrer" aria-label="باز کردن صفحه پخش آلبوم زمستان است در بیاتو موزیک">شنیدن در سایت منبع <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+  </div>
+  <div class="album-demo"><div><strong>آوازهای سنتی با پخش داخل سایت</strong><p>چهار اجرای مجاز آزمایشی با پخش مستقیم از آرشیو دانشگاهی، بدون آپلود فایل.</p></div><a href="./music-demo.html">باز کردن پلیر آوازها <span aria-hidden="true">↗</span></a></div>
+  <p class="albums-note">آلبوم‌های شجریان در سایت منبع باز می‌شوند و به رادیو منتقل یا دوباره میزبانی نشده‌اند. حق پخش متعلق به صاحبان آثار است.</p>
+</section>
 <section class="install-guide" id="install" aria-labelledby="install-title"><div class="install-heading"><img src="./radio-neon-logo.webp" alt="لوگوی اپ رادیو آوا و نوا" width="68" height="68" loading="lazy"><div><h2 id="install-title">رادیو رو به صفحه اصلی گوشی اضافه کن</h2><p>با لوگوی آوا و نوا، مثل یک اپ بازش کن؛ بدون نیاز به فروشگاه برنامه‌ها.</p></div></div><div class="install-steps"><div class="install-platform"><h3>آیفون (Safari)</h3><p>۱. سایت رو در Safari باز کن.</p><p>۲. روی <strong>Share</strong> بزن.</p><p>۳. <strong>Add to Home Screen</strong> و بعد <strong>Add</strong> رو انتخاب کن.</p></div><div class="install-platform"><h3>اندروید (Chrome)</h3><p>۱. سایت رو در Chrome باز کن.</p><p>۲. منوی سه‌نقطه رو بزن.</p><p>۳. <strong>Add to Home Screen</strong> یا <strong>Install app</strong> رو انتخاب کن.</p></div></div><p class="install-note">برای شنیدن پخش زنده به اینترنت نیاز داری. اگر گزینه نصب رو نمی‌بینی، لینک رو مستقیماً در Safari یا Chrome باز کن.</p></section>
 <section class="about" id="about"><h2>درباره رادیو آوا و نوا</h2><p>رادیو آوا و نوا همراه شما در برنامه‌های زنده موسیقی، آواز، شعر و دکلمه است. پخش فقط هنگام برگزاری برنامه فعال می‌شود.</p></section></main>
 <footer>© Radio Ava O Nava · پخش آنلاین · by <a href="https://ibbo.abdoli.com" target="_blank" rel="noopener noreferrer">Ibbo.abdoli.com</a></footer></div>
