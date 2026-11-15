@@ -17,6 +17,59 @@ a{color:inherit}.site{max-width:1250px;margin:auto;padding:0 24px 35px}.topbar{d
 @media(max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){.site{padding:0 13px 24px}.topbar{min-height:68px}.brand img{width:43px;height:43px}.brand{font-size:13px}.brand small{font-size:10px}.topnav{gap:5px}.topnav a{font-size:12px;padding:10px 8px}.hero{padding-top:27px}.player{padding:17px 13px;border-radius:21px}.cards{grid-template-columns:1fr}.card{min-height:175px}.control{padding:11px 14px}.group{margin:28px 0}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Music player refresh: clear mobile hierarchy and touch-friendly controls. */
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
+html{-webkit-text-size-adjust:100%}
+body,button{font-family:Vazirmatn,Tahoma,Arial,sans-serif;letter-spacing:normal;word-spacing:normal}
+body{overflow-x:hidden}
+.site{min-width:0}
+.hero{padding:25px 12px 14px}
+.hero h1{line-height:1.55}
+.player{position:relative;overflow:hidden;max-width:780px;margin:18px auto 32px;padding:26px;border:1px solid #d58cffba;border-radius:30px;background:linear-gradient(135deg,#5d2c82a9,#1c103bbf 47%,#1c0d32df);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:inset 0 1px 0 #fff3,0 0 35px #b44ee337,0 14px 36px #080015b8}
+.player::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 55% 12%,#d776fa23,transparent 44%)}
+.player-head{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center}
+.record-art{position:relative;display:grid;place-items:center;width:clamp(155px,35vw,225px);height:clamp(155px,35vw,225px);border-radius:24px;border:1px solid #ffc98878;overflow:hidden;box-shadow:0 10px 45px #bc64d460,0 0 28px #eeb5682a;background:#170d33}
+.record-art img{width:100%;height:100%;object-fit:cover;display:block}
+.now-content{min-width:0;width:100%}
+.player-label{font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;color:#f9d19a}
+.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#d4a5ff;box-shadow:0 0 12px #d4a5ff}
+.player h2{font-size:clamp(23px,5vw,32px);line-height:1.6;margin:5px 0;color:#ffe5b0;overflow-wrap:break-word}
+.player-head p{font-size:14px;line-height:1.85;color:#dfcce9;margin:5px 0}
+.sound-bars{display:flex;align-items:center;justify-content:center;height:32px;gap:5px;margin:13px 0 0}
+.sound-bars i{width:4px;height:18px;border-radius:9px;background:linear-gradient(#ffb3e3,#aa4ddd);box-shadow:0 0 7px #db6aff88;opacity:.45;transform:scaleY(.3)}
+.sound-bars i:nth-child(2n){height:26px}
+.sound-bars i:nth-child(3n){height:13px}
+.player.is-playing .sound-bars i{opacity:1;animation:radioEqualizer 650ms ease-in-out infinite alternate}
+.player.is-playing .sound-bars i:nth-child(2n){animation-duration:890ms;animation-delay:-250ms}
+.player.is-playing .sound-bars i:nth-child(3n){animation-duration:460ms;animation-delay:-120ms}
+@keyframes radioEqualizer{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
+.transport{position:relative;display:flex;align-items:center;justify-content:center;gap:clamp(30px,8vw,58px);margin:9px auto 18px;direction:ltr}
+.transport button{display:grid;place-items:center;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .18s,box-shadow .2s;border-radius:50%}
+.transport-skip{border:1px solid #c18be470;color:#fff0f8;width:52px;height:52px;background:#ffffff12;box-shadow:inset 0 1px #fff2}
+.transport-skip svg{width:23px;height:23px}
+.transport-play{width:90px;height:90px;border:3px solid #ffe3ae;background:radial-gradient(circle at 30% 18%,#8d4bb2,#552679 70%);box-shadow:0 0 0 6px #d56bff23,0 0 30px #ca69f6b8,inset 0 2px 9px #ffffff38;color:#fff9ee}
+.transport-play svg{width:35px;height:35px}
+.transport-play .pause-glyph{display:none}
+.transport-play.is-playing .play-glyph{display:none}
+.transport-play.is-playing .pause-glyph{display:block}
+.transport button:hover,.transport button:focus-visible{box-shadow:0 0 26px #d989ffba;outline:none}
+.transport button:active{transform:scale(.95)}
+.music-progress{display:flex;align-items:center;gap:12px;width:min(100%,570px);margin:0 auto 17px;direction:ltr;font:13px Arial,sans-serif;color:#e6d0ed}
+.progress-track{position:relative;overflow:hidden;flex:1;height:7px;border-radius:10px;background:#e1c5f32b}
+.progress-track span{display:block;width:0%;height:100%;border-radius:10px;background:linear-gradient(90deg,#b266ff,#ffe0a4);transition:width .25s linear}
+.player .status{line-height:1.9}
+.official-toggle{margin:14px 0 8px}
+.official-toggle button{min-height:42px;max-width:100%;white-space:normal;line-height:1.7;background:#ffffff12}
+.player .source{position:relative;margin-top:12px;padding-top:12px;border-top:1px solid #b672d35c}
+.group{margin:34px 0}
+.group-header h2{line-height:1.65}
+.card{min-width:0}
+.card h3,.card p{overflow-wrap:break-word}
+.pick{min-height:45px;font-family:Vazirmatn,Tahoma,sans-serif}
+@media(max-width:640px){.site{padding:0 12px 25px}.hero{padding:20px 8px 10px}.hero h1{font-size:clamp(25px,7vw,33px)}.hero p{font-size:13px}.player{padding:20px 14px;border-radius:24px}.player-head{gap:12px}.record-art{width:clamp(150px,48vw,210px);height:clamp(150px,48vw,210px)}.transport{gap:clamp(24px,8vw,47px)}.transport-play{width:84px;height:84px}.transport-skip{width:49px;height:49px}.cards{grid-template-columns:1fr}.card{padding:17px;min-height:155px}.card-actions{gap:8px}.card-actions a{font-size:12px}.source{font-size:11px}.source span,.source a{overflow-wrap:anywhere}.topnav a{font-size:11px;padding:10px 8px}.brand img{width:40px;height:40px}.brand{font-size:12px}.brand small{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.player.is-playing .sound-bars i{animation:none;transform:scaleY(.6)}.progress-track span,.transport button{transition:none}}
+
 </style>
 </head>
 <body>
@@ -28,10 +81,15 @@ a{color:inherit}.site{max-width:1250px;margin:auto;padding:0 24px 35px}.topbar{d
 <main>
 <section class="hero"><div class="eyebrow">PERSIAN CLASSICAL MUSIC</div><h1>آرشیو موسیقی سنتی ایرانی</h1><p>منتخبی از آلبوم‌ها و آثار موسیقی اصیل ایرانی. پخش مستقیم از SoundCloud، با طراحی هماهنگ با رادیو آوا و نوا.</p></section>
 <section class="player" id="musicPlayer" aria-labelledby="current-title">
- <div class="player-head"><div><div class="player-label">اکنون انتخاب شده</div><h2 id="current-title">مثنوی همایون</h2><p id="current-artist">محمدرضا شجریان · آلبوم ۷ قطعه‌ای</p></div></div>
+ <div class="player-head"><div class="record-art" aria-hidden="true"><img src="./radio-neon-logo.webp" alt=""></div><div class="now-content"><div class="player-label"><span class="live-dot"></span> اکنون انتخاب شده</div><h2 id="current-title">مثنوی همایون</h2><p id="current-artist">محمدرضا شجریان · آلبوم ۷ قطعه‌ای</p><div class="sound-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div>
  <iframe class="soundcloud" id="scWidget" title="پخش‌کننده رسمی SoundCloud" loading="eager" allow="autoplay" referrerpolicy="strict-origin-when-cross-origin" src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fmohammadrezashajarian-sc%2Fsets%2Fhomayoun-masnavi&amp;color=%23f9c579&amp;auto_play=false&amp;show_artwork=true&amp;show_user=true&amp;sharing=true"></iframe>
- <div class="controls" aria-label="کنترل‌های پخش"><button type="button" class="control" id="previous">قبلی</button><button type="button" class="control primary" id="togglePlay">پخش</button><button type="button" class="control" id="next">بعدی</button></div>
- <div class="status"><button type="button" class="control" id="showOfficial" aria-expanded="false" aria-controls="scWidget" style="font-size:12px;padding:7px 11px">نمایش پلیر اصلی (در صورت مشکل پخش)</button></div>
+ <div class="transport" aria-label="کنترل‌های پخش">
+<button type="button" class="transport-skip" id="previous" aria-label="آهنگ قبلی" title="قبلی"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h2v14H6zm3 7 10-7v14z"/></svg></button>
+<button type="button" class="transport-play" id="togglePlay" aria-label="پخش موسیقی"><svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path class="play-glyph" d="M11 6.5a2 2 0 0 1 3-1.7l15 9.5a2 2 0 0 1 0 3.4l-15 9.5a2 2 0 0 1-3-1.7z"/><g class="pause-glyph"><rect x="9" y="7" width="5" height="18" rx="1.5"/><rect x="19" y="7" width="5" height="18" rx="1.5"/></g></svg></button>
+<button type="button" class="transport-skip" id="next" aria-label="آهنگ بعدی" title="بعدی"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 5h2v14h-2zm-11 0 10 7-10 7z"/></svg></button>
+</div>
+<div class="music-progress" aria-label="میزان پخش"><span id="playedTime" dir="ltr">00:00</span><div class="progress-track" role="progressbar" aria-label="زمان سپری‌شده" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack"><span id="progressFill"></span></div><span id="durationTime" dir="ltr">--:--</span></div>
+ <div class="status official-toggle"><button type="button" class="control" id="showOfficial" aria-expanded="false" aria-controls="scWidget" style="font-size:12px;padding:7px 11px">نمایش پلیر اصلی (در صورت مشکل پخش)</button></div>
  <div class="status" id="playerStatus" role="status" aria-live="polite">برای شروع، دکمه پخش را بزنید.</div>
  <div class="source"><span>منبع صدا: SoundCloud · نام هنرمند و منتشرکننده در پخش‌کننده نمایش داده می‌شود.</span><a id="sourceLink" target="_blank" rel="noopener noreferrer" href="https://soundcloud.com/mohammadrezashajarian-sc/sets/homayoun-masnavi">مشاهده اثر در SoundCloud</a></div>
 </section>
@@ -73,7 +131,14 @@ let current=0,ready=false,playing=false;
 const widget=(window.SC&&window.SC.Widget)?window.SC.Widget(frame):null;
 const say=(message)=>{status.textContent=message};
 function sync(){cards.forEach((c,i)=>c.classList.toggle('is-active',i===current));title.textContent=cards[current].dataset.title;artist.textContent=cards[current].dataset.artist;source.href=cards[current].dataset.url}
-function syncPlayback(isPlaying){playing=isPlaying;play.textContent=isPlaying?'توقف':'پخش';play.setAttribute('aria-label',isPlaying?'توقف موسیقی':'پخش موسیقی')}
+function syncPlayback(isPlaying){playing=isPlaying;play.classList.toggle('is-playing',isPlaying);document.getElementById('musicPlayer').classList.toggle('is-playing',isPlaying);play.setAttribute('aria-label',isPlaying?'مکث موسیقی':'پخش موسیقی')}
+const elapsedLabel=document.getElementById('playedTime');
+const durationLabel=document.getElementById('durationTime');
+const progressFill=document.getElementById('progressFill');
+const progressTrack=document.getElementById('progressTrack');
+const fmt=ms=>{const sec=Math.max(0,Math.floor(ms/1000));return Math.floor(sec/60).toString().padStart(2,'0')+':'+(sec%60).toString().padStart(2,'0')};
+function refreshProgress(){if(!widget||!ready)return;widget.getDuration(duration=>{if(!Number.isFinite(duration)||duration<=0)return;durationLabel.textContent=fmt(duration);widget.getPosition(position=>{if(!Number.isFinite(position))return;elapsedLabel.textContent=fmt(position);const percent=Math.max(0,Math.min(100,Math.round(position/duration*100)));progressFill.style.width=percent+'%';progressTrack.setAttribute('aria-valuenow',String(percent));})})}
+setInterval(refreshProgress,1000);
 if(widget){
  widget.bind(window.SC.Widget.Events.READY,()=>{ready=true;say('آماده پخش از SoundCloud')});
  widget.bind(window.SC.Widget.Events.PLAY,()=>{syncPlayback(true);say('در حال پخش از SoundCloud')});
@@ -82,7 +147,7 @@ if(widget){
  widget.bind(window.SC.Widget.Events.ERROR,()=>{syncPlayback(false);say('این اثر فعلاً در دسترس نیست؛ از لینک SoundCloud استفاده کنید.')});
 }
 function select(index){
- current=index;sync();syncPlayback(false);
+ current=index;sync();syncPlayback(false);elapsedLabel.textContent='00:00';durationLabel.textContent='--:--';progressFill.style.width='0%';progressTrack.setAttribute('aria-valuenow','0');
  say('در حال بارگذاری؛ اگر صدا شروع نشد، دکمه پخش را بزنید.');
  const url=cards[current].dataset.url;
  if(widget){ready=false;widget.load(url,{auto_play:true,color:'#f9c579',show_artwork:true,show_user:true,sharing:true,callback:()=>{ready=true;}})}
