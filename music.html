@@ -261,20 +261,39 @@ function syncPlayback(isPlaying){
  document.getElementById('musicPlayer').classList.toggle('is-playing',isPlaying);
  play.setAttribute('aria-label',isPlaying?'مکث موسیقی':'پخش موسیقی');
 }
+let loadTimer=null,playTimer=null,loadSequence=0;
+function revealOfficial(message){
+ frame.classList.add('is-visible');
+ showOfficial.setAttribute('aria-expanded','true');
+ showOfficial.textContent='مخفی کردن پلیر اصلی';
+ say(message||'برای ادامه، دکمه پخش را داخل پلیر اصلی SoundCloud بزن.');
+}
+function clearPlayerTimers(){if(loadTimer){clearTimeout(loadTimer);loadTimer=null}if(playTimer){clearTimeout(playTimer);playTimer=null}}
 function selectCard(card,autoplay=true){
  if(!card)return;
+ clearPlayerTimers();
  if(!filteredCards.includes(card)){
   activeGenre=(card.dataset.genres||'').split(',')[0]||'all';activeArtist=card.dataset.artist;updateFilters();
  }
  currentCard=card;sync();syncPlayback(false);
  elapsedLabel.textContent='00:00';durationLabel.textContent='--:--';progressFill.style.width='0%';progressTrack.setAttribute('aria-valuenow','0');
- say('در حال بارگذاری '+card.dataset.title+' از SoundCloud...');
+ say('در حال بررسی و بارگذاری «'+card.dataset.title+'»...');
+ const sequence=++loadSequence;
  if(widget){
   ready=false;
-  widget.load(card.dataset.url,{auto_play:autoplay,color:'#f9c579',show_artwork:true,show_user:true,sharing:true,visual:true,callback:()=>{ready=true;say('آماده پخش · '+card.dataset.artistName)}});
+  widget.load(card.dataset.url,{auto_play:autoplay,color:'#f9c579',show_artwork:true,show_user:true,sharing:true,visual:true,callback:()=>{
+   if(sequence!==loadSequence)return;
+   ready=true;
+   say('پلیر آماده است؛ در صورت شروع‌نشدن صدا، Play را داخل پلیر بزن.');
+  }});
+  loadTimer=setTimeout(()=>{
+   if(sequence===loadSequence&&!playing){
+    revealOfficial('شروع خودکار انجام نشد؛ پلیر اصلی باز شد. داخل آن روی Play بزن.');
+   }
+  },10000);
  }else{
   frame.src='https://w.soundcloud.com/player/?url='+encodeURIComponent(card.dataset.url)+'&color=%23f9c579&auto_play=false&show_user=true';
-  say('پلیر رسمی در حال بارگذاری است.');
+  revealOfficial('پلیر رسمی باز شد؛ برای پخش روی Play بزن.');
  }
  document.getElementById('musicPlayer').scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -285,10 +304,10 @@ function refreshProgress(){if(!widget||!ready)return;widget.getDuration(d=>{if(!
 setInterval(refreshProgress,1000);
 if(widget){
  widget.bind(window.SC.Widget.Events.READY,()=>{ready=true;say('پلیر SoundCloud آماده است.')});
- widget.bind(window.SC.Widget.Events.PLAY,()=>{syncPlayback(true);say('در حال پخش: '+(currentCard?.dataset.title||''))});
- widget.bind(window.SC.Widget.Events.PAUSE,()=>{syncPlayback(false);say('پخش متوقف شد.')});
+ widget.bind(window.SC.Widget.Events.PLAY,()=>{clearPlayerTimers();syncPlayback(true);say('در حال پخش: '+(currentCard?.dataset.title||''))});
+ widget.bind(window.SC.Widget.Events.PAUSE,()=>{if(playTimer){clearTimeout(playTimer);playTimer=null}syncPlayback(false);say('پخش متوقف شد.')});
  widget.bind(window.SC.Widget.Events.FINISH,()=>{syncPlayback(false);say('این آلبوم یا قطعه به پایان رسید.')});
- widget.bind(window.SC.Widget.Events.ERROR,()=>{syncPlayback(false);say('این اثر در SoundCloud در دسترس نیست.')});
+ widget.bind(window.SC.Widget.Events.ERROR,()=>{clearPlayerTimers();ready=false;syncPlayback(false);revealOfficial('پلیر مخفی نتوانست این قطعه را پخش کند؛ پلیر اصلی نمایش داده شد. اگر آنجا هم خطا دیدی، منبع آهنگ محدود یا حذف شده است.')});
 }
 genreButtons.forEach(b=>b.addEventListener('click',()=>{
  activeGenre=b.dataset.genre;activeArtist='all';updateFilters();
@@ -309,11 +328,16 @@ allCards.forEach(card=>card.querySelector('.play-card').addEventListener('click'
 showOfficial.addEventListener('click',()=>{
  const v=frame.classList.toggle('is-visible');showOfficial.setAttribute('aria-expanded',String(v));
  showOfficial.textContent=v?'مخفی کردن پلیر اصلی':'نمایش پلیر اصلی SoundCloud';
+ if(v)say('از دکمه پخش داخل پلیر رسمی SoundCloud هم می‌توانی استفاده کنی.');
 });
 play.addEventListener('click',()=>{
- if(!widget){say('از دکمه پخش داخل SoundCloud استفاده کن.');return}
- if(!ready){say('پلیر هنوز آماده نیست؛ لحظه‌ای بعد دوباره بزن.');return}
- if(playing)widget.pause();else widget.play();
+ if(!widget){revealOfficial('برای پخش از دکمه داخل پلیر رسمی استفاده کن.');return}
+ if(!ready){say('پلیر هنوز آماده نیست؛ چند ثانیه صبر کن.');return}
+ if(playing){widget.pause();return}
+ say('درخواست پخش ارسال شد...');
+ widget.play();
+ if(playTimer)clearTimeout(playTimer);
+ playTimer=setTimeout(()=>{if(!playing)revealOfficial('شروع پخش از کنترل اصلی انجام نشد؛ دکمه Play داخل پلیر SoundCloud را بزن.')},8000);
 });
 function move(delta){
  if(!currentCard)return;
