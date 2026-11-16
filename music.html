@@ -238,8 +238,7 @@ function updateFilters(){
  artistLabel.textContent=activeArtist==='all'?'همه هنرمندان':artistName(activeArtist);
  visibleArtists();visibleCards();
  if(currentCard&&!filteredCards.includes(currentCard)){
-  if(widget&&ready)widget.pause();
-  syncPlayback(false);currentCard=null;
+  cancelPendingPlayback();pauseOldStream();ready=false;currentCard=null;
   title.textContent=activeArtist==='all'?(genreNames[activeGenre]||'آرشیو موسیقی'):artistName(activeArtist);
   artist.textContent='برای پخش، یکی از آلبوم‌ها یا قطعات همین فهرست را انتخاب کن.';
   source.removeAttribute('href');
@@ -261,7 +260,9 @@ function syncPlayback(isPlaying){
  document.getElementById('musicPlayer').classList.toggle('is-playing',isPlaying);
  play.setAttribute('aria-label',isPlaying?'مکث موسیقی':'پخش موسیقی');
 }
-let loadTimer=null,playTimer=null,loadSequence=0;
+let loadTimer=null,playTimer=null,loadSequence=0,playRequestSequence=0;
+function cancelPendingPlayback(){playRequestSequence++;clearPlayerTimers();}
+function pauseOldStream(){if(widget){try{widget.pause()}catch(_){}}syncPlayback(false);}
 function revealOfficial(message){
  frame.classList.add('is-visible');
  showOfficial.setAttribute('aria-expanded','true');
@@ -271,7 +272,7 @@ function revealOfficial(message){
 function clearPlayerTimers(){if(loadTimer){clearTimeout(loadTimer);loadTimer=null}if(playTimer){clearTimeout(playTimer);playTimer=null}}
 function selectCard(card,autoplay=true){
  if(!card)return;
- clearPlayerTimers();
+ cancelPendingPlayback();pauseOldStream();
  if(!filteredCards.includes(card)){
   activeGenre=(card.dataset.genres||'').split(',')[0]||'all';activeArtist=card.dataset.artist;updateFilters();
  }
@@ -281,14 +282,14 @@ function selectCard(card,autoplay=true){
  const sequence=++loadSequence;
  if(widget){
   ready=false;
-  widget.load(card.dataset.url,{auto_play:autoplay,color:'#f9c579',show_artwork:true,show_user:true,sharing:true,visual:true,callback:()=>{
+  widget.load(card.dataset.url,{auto_play:false,color:'#f9c579',show_artwork:true,show_user:true,sharing:true,visual:true,callback:()=>{
    if(sequence!==loadSequence)return;
    ready=true;
-   say('پلیر آماده است؛ در صورت شروع‌نشدن صدا، Play را داخل پلیر بزن.');
+   say('پلیر آماده است؛ برای پخش دکمه Play را بزن.');
   }});
   loadTimer=setTimeout(()=>{
-   if(sequence===loadSequence&&!playing){
-    revealOfficial('شروع خودکار انجام نشد؛ پلیر اصلی باز شد. داخل آن روی Play بزن.');
+   if(sequence===loadSequence&&!ready){
+    revealOfficial('SoundCloud بارگذاری نشد. پلیر رسمی را امتحان کن؛ اگر خطا داشت، این منبع قابل‌پخش نیست.');
    }
   },10000);
  }else{
@@ -306,8 +307,8 @@ if(widget){
  widget.bind(window.SC.Widget.Events.READY,()=>{ready=true;say('پلیر SoundCloud آماده است.')});
  widget.bind(window.SC.Widget.Events.PLAY,()=>{clearPlayerTimers();syncPlayback(true);say('در حال پخش: '+(currentCard?.dataset.title||''))});
  widget.bind(window.SC.Widget.Events.PAUSE,()=>{if(playTimer){clearTimeout(playTimer);playTimer=null}syncPlayback(false);say('پخش متوقف شد.')});
- widget.bind(window.SC.Widget.Events.FINISH,()=>{syncPlayback(false);say('این آلبوم یا قطعه به پایان رسید.')});
- widget.bind(window.SC.Widget.Events.ERROR,()=>{clearPlayerTimers();ready=false;syncPlayback(false);revealOfficial('پلیر مخفی نتوانست این قطعه را پخش کند؛ پلیر اصلی نمایش داده شد. اگر آنجا هم خطا دیدی، منبع آهنگ محدود یا حذف شده است.')});
+ widget.bind(window.SC.Widget.Events.FINISH,()=>{syncPlayback(false);say('این آلبوم یا قطعه به پایان رسید.');});
+ widget.bind(window.SC.Widget.Events.ERROR,()=>{cancelPendingPlayback();ready=false;syncPlayback(false);revealOfficial('پخش این منبع در SoundCloud ممکن نیست. در صورت خطا در پلیر رسمی، آهنگ دیگری انتخاب کن.')});
 }
 genreButtons.forEach(b=>b.addEventListener('click',()=>{
  activeGenre=b.dataset.genre;activeArtist='all';updateFilters();
@@ -324,7 +325,7 @@ search.addEventListener('input',visibleArtists);
 document.getElementById('clearFilters').addEventListener('click',()=>{
  activeGenre='all';activeArtist='all';search.value='';updateFilters();
 });
-allCards.forEach(card=>card.querySelector('.play-card').addEventListener('click',()=>selectCard(card,true)));
+allCards.forEach(card=>card.querySelector('.play-card').addEventListener('click',()=>selectCard(card,false)));
 showOfficial.addEventListener('click',()=>{
  const v=frame.classList.toggle('is-visible');showOfficial.setAttribute('aria-expanded',String(v));
  showOfficial.textContent=v?'مخفی کردن پلیر اصلی':'نمایش پلیر اصلی SoundCloud';
@@ -332,21 +333,18 @@ showOfficial.addEventListener('click',()=>{
 });
 play.addEventListener('click',()=>{
  if(!widget){revealOfficial('برای پخش از دکمه داخل پلیر رسمی استفاده کن.');return}
- if(!ready){say('پلیر هنوز آماده نیست؛ چند ثانیه صبر کن.');return}
+ if(!ready){revealOfficial('پلیر هنوز آماده نیست. پخش را داخل SoundCloud امتحان کن.');return}
  if(playing){widget.pause();return}
  say('درخواست پخش ارسال شد...');
+ const request=++playRequestSequence;
  widget.play();
  if(playTimer)clearTimeout(playTimer);
- playTimer=setTimeout(()=>{if(!playing)revealOfficial('شروع پخش از کنترل اصلی انجام نشد؛ دکمه Play داخل پلیر SoundCloud را بزن.')},8000);
+ playTimer=setTimeout(()=>{if(request===playRequestSequence&&!playing)revealOfficial('پخش شروع نشد. دکمه Play داخل SoundCloud را امتحان کن یا آهنگ بعدی را انتخاب کن.')},8000);
 });
 function move(delta){
  if(!currentCard)return;
- if(currentCard.dataset.kind==='album'&&widget&&ready){
-  if(delta<0)widget.prev();else widget.next();
-  return;
- }
  const pos=filteredCards.indexOf(currentCard),target=filteredCards[pos+delta];
- if(target)selectCard(target,true);else say('در این فهرست قطعه دیگری وجود ندارد.');
+ if(target)selectCard(target,false);else say('در این فهرست قطعه دیگری وجود ندارد.');
 }
 previous.addEventListener('click',()=>move(-1));next.addEventListener('click',()=>move(1));
 updateFilters();sync();
