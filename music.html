@@ -70,6 +70,54 @@ body{overflow-x:hidden}
 @media(max-width:640px){.site{padding:0 12px 25px}.hero{padding:20px 8px 10px}.hero h1{font-size:clamp(25px,7vw,33px)}.hero p{font-size:13px}.player{padding:20px 14px;border-radius:24px}.player-head{gap:12px}.record-art{width:clamp(150px,48vw,210px);height:clamp(150px,48vw,210px)}.transport{gap:clamp(24px,8vw,47px)}.transport-play{width:84px;height:84px}.transport-skip{width:49px;height:49px}.cards{grid-template-columns:1fr}.card{padding:17px;min-height:155px}.card-actions{gap:8px}.card-actions a{font-size:12px}.source{font-size:11px}.source span,.source a{overflow-wrap:anywhere}.topnav a{font-size:11px;padding:10px 8px}.brand img{width:40px;height:40px}.brand{font-size:12px}.brand small{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.player.is-playing .sound-bars i{animation:none;transform:scaleY(.6)}.progress-track span,.transport button{transition:none}}
 
+
+/* Categorized music library */
+.library-shell{max-width:1120px;margin:12px auto 35px;padding:clamp(17px,3vw,28px);border:1px solid #a95fdc85;border-radius:26px;background:linear-gradient(145deg,#2a1746e8,#100d29ed);box-shadow:inset 0 1px #ffffff20,0 12px 35px #05001477}
+.section-kicker{font:700 10px Arial,sans-serif;letter-spacing:2px;color:#dba8f1;direction:ltr}
+.library-title{color:#ffe0a7;font-size:clamp(19px,3vw,25px);line-height:1.6;margin:4px 0 14px}
+.genre-tabs{display:flex;gap:9px;flex-wrap:wrap;margin:10px 0 27px}
+.genre-tab,.artist-chip{border:1px solid #9665ac9c;border-radius:999px;background:#ffffff0b;color:#f4e5fb;padding:10px 15px;min-height:42px;font:600 13px Tahoma,Arial,sans-serif;cursor:pointer;transition:.18s}
+.genre-tab.active{background:linear-gradient(135deg,#ffdfa5,#daa0f0);border-color:#ffe4ac;color:#251332;font-weight:800;box-shadow:0 0 16px #bd75d74b}
+.directory-head{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin:8px 0 11px}
+.directory-head .library-title{margin-bottom:0}
+.artist-search{display:flex;align-items:center;gap:7px;min-width:min(100%,230px);padding:7px 11px;border:1px solid #ab70c28b;border-radius:13px;background:#09091d9c;color:#f9dda6}
+.artist-search span{font-size:20px}
+.artist-search input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#fff;font:13px Tahoma,Arial,sans-serif}
+.artist-search input::placeholder{color:#bba9c9}
+.artist-list{display:flex;gap:8px;flex-wrap:wrap;padding:9px 0 18px}
+.artist-chip{font-size:12px;padding:8px 12px;min-height:37px}
+.artist-chip.active{color:#21112e;background:#f7d39b;border-color:#fff0c7;font-weight:800}
+.artist-chip.pending::after{content:" · به‌زودی";font-size:9px;color:#e4b9fa;font-weight:400}
+.artist-chip.active.pending::after{color:#5c3b6c}
+.selected-artist-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:11px 13px;border-radius:12px;background:#ffffff0a;color:#dac5e8;font-size:12px;margin:0 0 22px}
+.selected-artist-line strong{color:#ffe3ad}
+.selected-artist-line button{margin-inline-start:auto;border:0;background:transparent;color:#e8b8ff;text-decoration:underline;text-underline-offset:3px;font:12px Tahoma,Arial,sans-serif;cursor:pointer}
+.album-heading{margin-bottom:14px}
+.result-count{font-size:12px;color:#cfb8df}
+.music-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.music-card{display:flex;gap:13px;align-items:flex-start;padding:13px;min-width:0;min-height:145px;border:1px solid #9763b780;border-radius:18px;background:linear-gradient(145deg,#ffffff0d,#120d2a);transition:border-color .18s,box-shadow .18s}
+.music-card.selected{border-color:#f4d093;box-shadow:0 0 18px #b85be44b}
+.cover{display:flex;flex-direction:column;justify-content:space-between;align-items:center;flex:0 0 86px;width:86px;height:112px;padding:9px 5px;border-radius:12px;color:#ffe3ae;background:radial-gradient(circle at 30% 20%,#b77ab7,#4a2a6f 55%,#171333);box-shadow:inset 0 1px #fff4,0 4px 14px #0006}
+.cover-1{background:radial-gradient(circle at 30% 20%,#d1a27e,#6e3b55 55%,#181330)}
+.cover-2{background:radial-gradient(circle at 30% 20%,#d3a4b5,#55345c 55%,#16122d)}
+.cover-3{background:radial-gradient(circle at 30% 20%,#779dc0,#36446f 55%,#13132e)}
+.cover-4{background:radial-gradient(circle at 30% 20%,#d0b17e,#74533d 55%,#18142c)}
+.cover-5{background:radial-gradient(circle at 30% 20%,#84a59a,#365b62 55%,#10182e)}
+.cover-mark{font:42px Georgia,serif;line-height:1}
+.cover small{font:8px Arial,sans-serif;letter-spacing:1.5px}
+.music-card-info{flex:1;min-width:0}
+.music-tag{font-size:10px;color:#e7bd82;line-height:1.7}
+.music-card h3{font-size:16px;color:#fff0d4;line-height:1.55;margin:5px 0}
+.music-card p{font-size:12px;color:#decce9;line-height:1.7;margin:0 0 5px}
+.music-card-desc{display:block;font-size:10px;color:#bdaacb;line-height:1.7}
+.play-card{display:inline-flex;gap:8px;align-items:center;border:1px solid #f4d29a;border-radius:11px;background:linear-gradient(140deg,#f7d39c,#cc9be6);color:#261333;font:800 11px Tahoma,Arial,sans-serif;padding:9px 12px;margin-top:10px;cursor:pointer;min-height:37px}
+.play-card span{font-size:10px}
+.empty-state{padding:23px;text-align:center;border:1px dashed #a46bc0;border-radius:17px;background:#ffffff08;color:#e8d8f0}
+.empty-state strong{display:block;color:#ffe1a8;font-size:16px}
+.empty-state p{font-size:13px;line-height:1.9}
+.transport button:focus-visible,.genre-tab:focus-visible,.artist-chip:focus-visible,.play-card:focus-visible{outline:3px solid white;outline-offset:3px}
+@media(max-width:950px){.music-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.library-shell{padding:16px 12px;border-radius:21px}.genre-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.genre-tab{padding:9px 7px;font-size:11px}.artist-list{gap:7px}.artist-chip{font-size:11px;padding:8px 10px}.directory-head{align-items:flex-start}.artist-search{width:100%}.music-grid{grid-template-columns:1fr}.music-card{min-height:130px;padding:11px}.cover{flex-basis:78px;width:78px;height:104px}.music-card h3{font-size:15px}.selected-artist-line{font-size:11px}.selected-artist-line button{margin-inline-start:0}}
 </style>
 </head>
 <body>
@@ -79,37 +127,62 @@ body{overflow-x:hidden}
 <nav class="topnav" aria-label="منوی آرشیو"><a href="./">پخش زنده</a><a class="active" aria-current="page" href="./music.html">آرشیو موسیقی</a></nav>
 </header>
 <main>
-<section class="hero"><div class="eyebrow">PERSIAN CLASSICAL MUSIC</div><h1>آرشیو موسیقی سنتی ایرانی</h1><p>منتخبی از آلبوم‌ها و آثار موسیقی اصیل ایرانی. پخش مستقیم از SoundCloud، با طراحی هماهنگ با رادیو آوا و نوا.</p></section>
+<section class="hero">
+ <div class="eyebrow">PERSIAN MUSIC LIBRARY</div>
+ <h1>آرشیو موسیقی آوا و نوا</h1>
+ <p>سبک موردعلاقه‌ات رو انتخاب کن، بعد خواننده و آلبوم خودش رو ببین. هر صف پخش فقط مربوط به همان خواننده و همان آلبومه.</p>
+</section>
+<section class="library-shell" aria-label="آرشیو دسته‌بندی‌شده موسیقی">
+ <div class="section-kicker">01 · GENRES</div><h2 class="library-title">انتخاب سبک موسیقی</h2>
+ <div class="genre-tabs" role="group" aria-label="دسته‌بندی سبک موسیقی">
+  <button type="button" class="genre-tab active" data-genre="all">همه سبک‌ها</button>
+  <button type="button" class="genre-tab" data-genre="traditional">سنتی و دستگاهی</button>
+  <button type="button" class="genre-tab" data-genre="pop">پاپ ایرانی</button>
+  <button type="button" class="genre-tab" data-genre="nostalgic">قدیمی و نوستالژیک</button>
+  <button type="button" class="genre-tab" data-genre="instrumental">بی‌کلام</button>
+  <button type="button" class="genre-tab" data-genre="modern">پاپ جدید</button>
+ </div>
+ <div class="directory-head"><div><div class="section-kicker">02 · ARTISTS</div><h2 class="library-title">خواننده‌ها و هنرمندان</h2></div><label class="artist-search"><span aria-hidden="true">⌕</span><input id="artistSearch" type="search" placeholder="جستجوی خواننده..." aria-label="جستجوی خواننده"></label></div>
+ <div class="artist-list" id="artistList"><button type="button" class="artist-chip" data-artist="shajarian" data-genres="traditional">محمدرضا شجریان</button><button type="button" class="artist-chip" data-artist="homayoun" data-genres="traditional">همایون شجریان</button><button type="button" class="artist-chip" data-artist="banan" data-genres="traditional,nostalgic">غلامحسین بنان</button><button type="button" class="artist-chip" data-artist="shahram-nazeri" data-genres="traditional">شهرام ناظری</button><button type="button" class="artist-chip" data-artist="alireza-ghorbani" data-genres="traditional">علیرضا قربانی</button><button type="button" class="artist-chip" data-artist="salar-aghili" data-genres="traditional">سالار عقیلی</button><button type="button" class="artist-chip" data-artist="alireza-eftekhari" data-genres="traditional">علیرضا افتخاری</button><button type="button" class="artist-chip" data-artist="mohammad-motamedi" data-genres="traditional">محمد معتمدی</button><button type="button" class="artist-chip" data-artist="iraj" data-genres="traditional">ایرج</button><button type="button" class="artist-chip" data-artist="ebrahimi" data-genres="instrumental,traditional">محمدرضا ابراهیمی</button><button type="button" class="artist-chip" data-artist="payvar" data-genres="instrumental,traditional">فرامرز پایور</button><button type="button" class="artist-chip" data-artist="ebi" data-genres="pop,nostalgic">ابی</button><button type="button" class="artist-chip" data-artist="dariush" data-genres="pop,nostalgic">داریوش اقبالی</button><button type="button" class="artist-chip" data-artist="googoosh" data-genres="pop,nostalgic">گوگوش</button><button type="button" class="artist-chip" data-artist="moein" data-genres="pop,nostalgic">معین</button><button type="button" class="artist-chip" data-artist="hayedeh" data-genres="pop,nostalgic">هایده</button><button type="button" class="artist-chip" data-artist="mahasti" data-genres="pop,nostalgic">مهستی</button><button type="button" class="artist-chip" data-artist="sattar" data-genres="pop,nostalgic">ستار</button><button type="button" class="artist-chip" data-artist="farhad" data-genres="pop,nostalgic">فرهاد</button><button type="button" class="artist-chip" data-artist="fereydoun" data-genres="pop,nostalgic">فریدون فروغی</button><button type="button" class="artist-chip" data-artist="faramarz-aslani" data-genres="pop,nostalgic">فرامرز اصلانی</button><button type="button" class="artist-chip" data-artist="siavash" data-genres="pop,nostalgic">سیاوش قمیشی</button><button type="button" class="artist-chip" data-artist="aref" data-genres="pop,nostalgic">عارف</button><button type="button" class="artist-chip" data-artist="vigen" data-genres="pop,nostalgic">ویگن</button><button type="button" class="artist-chip" data-artist="shadmehr" data-genres="pop,modern">شادمهر عقیلی</button><button type="button" class="artist-chip" data-artist="sirvan" data-genres="modern">سیروان خسروی</button><button type="button" class="artist-chip" data-artist="mohsen-yeganeh" data-genres="modern">محسن یگانه</button><button type="button" class="artist-chip" data-artist="mohsen-chavoshi" data-genres="modern">محسن چاوشی</button><button type="button" class="artist-chip" data-artist="ehsan-khaje-amiri" data-genres="modern">احسان خواجه‌امیری</button><button type="button" class="artist-chip" data-artist="ruzbeh" data-genres="modern">روزبه بمانی</button><button type="button" class="artist-chip" data-artist="ali-zandvakili" data-genres="modern,traditional">علی زندوکیلی</button></div>
+ <div class="selected-artist-line"><span id="selectedGenreLabel">همه سبک‌ها</span><span>•</span><strong id="selectedArtistLabel">همه هنرمندان</strong><button type="button" id="clearFilters">پاک‌کردن فیلتر</button></div>
+ <div class="directory-head album-heading"><div><div class="section-kicker">03 · ALBUMS & TRACKS</div><h2 class="library-title">آلبوم‌ها و قطعات</h2></div><span id="resultCount" class="result-count"></span></div>
+ <div class="music-grid" id="musicGrid"><article class="music-card selected" data-artist="shajarian" data-genres="traditional" data-kind="album" data-url="https://soundcloud.com/mohammadrezashajarian-sc/sets/homayoun-masnavi" data-title="مثنوی همایون" data-artist-name="محمدرضا شجریان">
+ <div class="cover cover-0" aria-hidden="true"><span class="cover-mark">♫</span><small>AVA O NAVA</small></div>
+ <div class="music-card-info"><span class="music-tag">آلبوم · آلبوم کامل</span><h3>مثنوی همایون</h3><p>محمدرضا شجریان</p><span class="music-card-desc">۷ قطعه · ۵۳ دقیقه · آلبوم کامل</span><button class="play-card" type="button">پخش در پلیر <span>▶</span></button></div>
+</article><article class="music-card " data-artist="banan" data-genres="traditional,nostalgic" data-kind="album" data-url="https://soundcloud.com/banan79877/sets/masterpieces-of-ostad-banan-1" data-title="شب عاشق" data-artist-name="غلامحسین بنان">
+ <div class="cover cover-1" aria-hidden="true"><span class="cover-mark">♫</span><small>AVA O NAVA</small></div>
+ <div class="music-card-info"><span class="music-tag">آلبوم · مجموعه آواز</span><h3>شب عاشق</h3><p>غلامحسین بنان</p><span class="music-card-desc">۹ قطعه · مجموعه آواز ایرانی</span><button class="play-card" type="button">پخش در پلیر <span>▶</span></button></div>
+</article><article class="music-card " data-artist="googoosh" data-genres="pop,nostalgic" data-kind="album" data-url="https://soundcloud.com/googooshmusic/sets/aks-khosoosi-1" data-title="Aks Khosoosi" data-artist-name="گوگوش">
+ <div class="cover cover-2" aria-hidden="true"><span class="cover-mark">♫</span><small>AVA O NAVA</small></div>
+ <div class="music-card-info"><span class="music-tag">آلبوم · آلبوم کامل</span><h3>Aks Khosoosi</h3><p>گوگوش</p><span class="music-card-desc">۱۱ قطعه · انتشار ۲۰۱۵</span><button class="play-card" type="button">پخش در پلیر <span>▶</span></button></div>
+</article><article class="music-card " data-artist="shahram-nazeri" data-genres="traditional" data-kind="track" data-url="https://soundcloud.com/mahoor-institute/biya-saqi-tasnif" data-title="بیا ساقی" data-artist-name="شهرام ناظری و حسین علیزاده">
+ <div class="cover cover-3" aria-hidden="true"><span class="cover-mark">♫</span><small>AVA O NAVA</small></div>
+ <div class="music-card-info"><span class="music-tag">قطعه منتخب · قطعه منتخب</span><h3>بیا ساقی</h3><p>شهرام ناظری و حسین علیزاده</p><span class="music-card-desc">تصنیف · از آلبوم شورانگیز</span><button class="play-card" type="button">پخش در پلیر <span>▶</span></button></div>
+</article><article class="music-card " data-artist="banan" data-genres="traditional,nostalgic" data-kind="track" data-url="https://soundcloud.com/mahoor-institute/tasnif-roya-hasti-roya-ye-hastigholam-hosein-banan" data-title="رؤیای هستی" data-artist-name="غلامحسین بنان">
+ <div class="cover cover-4" aria-hidden="true"><span class="cover-mark">♫</span><small>AVA O NAVA</small></div>
+ <div class="music-card-info"><span class="music-tag">قطعه منتخب · قطعه منتخب</span><h3>رؤیای هستی</h3><p>غلامحسین بنان</p><span class="music-card-desc">تصنیف ایرانی</span><button class="play-card" type="button">پخش در پلیر <span>▶</span></button></div>
+</article><article class="music-card " data-artist="dariush" data-genres="pop,nostalgic" data-kind="track" data-url="https://soundcloud.com/dariush-eghbali/dariush-taghvim" data-title="سراب رد پای تو" data-artist-name="داریوش اقبالی">
+ <div class="cover cover-5" aria-hidden="true"><span class="cover-mark">♫</span><small>AVA O NAVA</small></div>
+ <div class="music-card-info"><span class="music-tag">قطعه منتخب · قطعه منتخب</span><h3>سراب رد پای تو</h3><p>داریوش اقبالی</p><span class="music-card-desc">پاپ ایرانی · منتشرشده در SoundCloud هنرمند</span><button class="play-card" type="button">پخش در پلیر <span>▶</span></button></div>
+</article><article class="music-card " data-artist="payvar" data-genres="instrumental,traditional" data-kind="track" data-url="https://soundcloud.com/mahoor-institute/mikharam-barat-titishhaft-peykarfaramarz-payvar" data-title="هفت‌پیکر" data-artist-name="فرامرز پایور">
+ <div class="cover cover-0" aria-hidden="true"><span class="cover-mark">♫</span><small>AVA O NAVA</small></div>
+ <div class="music-card-info"><span class="music-tag">قطعه منتخب · بی‌کلام</span><h3>هفت‌پیکر</h3><p>فرامرز پایور</p><span class="music-card-desc">موسیقی بی‌کلام · گروه سازهای ملی</span><button class="play-card" type="button">پخش در پلیر <span>▶</span></button></div>
+</article><article class="music-card " data-artist="ebrahimi" data-genres="instrumental,traditional" data-kind="track" data-url="https://soundcloud.com/mahoor-institute/chand-zarbi-e-homayoun-sana" data-title="چندضربی همایون" data-artist-name="محمدرضا ابراهیمی">
+ <div class="cover cover-1" aria-hidden="true"><span class="cover-mark">♫</span><small>AVA O NAVA</small></div>
+ <div class="music-card-info"><span class="music-tag">قطعه منتخب · بی‌کلام</span><h3>چندضربی همایون</h3><p>محمدرضا ابراهیمی</p><span class="music-card-desc">تکنوازی عود · از آلبوم ثنا</span><button class="play-card" type="button">پخش در پلیر <span>▶</span></button></div>
+</article></div>
+ <div id="emptyState" class="empty-state" hidden><strong>محتوای این هنرمند هنوز تکمیل نشده</strong><p>نام هنرمند در فهرست آرشیو قرار دارد؛ آلبوم‌های قابل‌پخش او پس از بررسی منبع و مجوز اضافه می‌شوند.</p></div>
+</section>
 <section class="player" id="musicPlayer" aria-labelledby="current-title">
  <div class="player-head"><div class="record-art" aria-hidden="true"><img src="./radio-neon-logo.webp" alt=""></div><div class="now-content"><div class="player-label"><span class="live-dot"></span> اکنون انتخاب شده</div><h2 id="current-title">مثنوی همایون</h2><p id="current-artist">محمدرضا شجریان · آلبوم ۷ قطعه‌ای</p><div class="sound-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div>
  <iframe class="soundcloud" id="scWidget" title="پخش‌کننده رسمی SoundCloud" loading="eager" allow="autoplay" referrerpolicy="strict-origin-when-cross-origin" src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fmohammadrezashajarian-sc%2Fsets%2Fhomayoun-masnavi&amp;color=%23f9c579&amp;auto_play=false&amp;show_artwork=true&amp;show_user=true&amp;sharing=true"></iframe>
- <div class="transport" aria-label="کنترل‌های پخش">
-<button type="button" class="transport-skip" id="previous" aria-label="آهنگ قبلی" title="قبلی"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h2v14H6zm3 7 10-7v14z"/></svg></button>
-<button type="button" class="transport-play" id="togglePlay" aria-label="پخش موسیقی"><svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path class="play-glyph" d="M11 6.5a2 2 0 0 1 3-1.7l15 9.5a2 2 0 0 1 0 3.4l-15 9.5a2 2 0 0 1-3-1.7z"/><g class="pause-glyph"><rect x="9" y="7" width="5" height="18" rx="1.5"/><rect x="19" y="7" width="5" height="18" rx="1.5"/></g></svg></button>
-<button type="button" class="transport-skip" id="next" aria-label="آهنگ بعدی" title="بعدی"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 5h2v14h-2zm-11 0 10 7-10 7z"/></svg></button>
-</div>
-<div class="music-progress" aria-label="میزان پخش"><span id="playedTime" dir="ltr">00:00</span><div class="progress-track" role="progressbar" aria-label="زمان سپری‌شده" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack"><span id="progressFill"></span></div><span id="durationTime" dir="ltr">--:--</span></div>
- <div class="status official-toggle"><button type="button" class="control" id="showOfficial" aria-expanded="false" aria-controls="scWidget" style="font-size:12px;padding:7px 11px">نمایش پلیر اصلی (در صورت مشکل پخش)</button></div>
- <div class="status" id="playerStatus" role="status" aria-live="polite">برای شروع، دکمه پخش را بزنید.</div>
- <div class="source"><span>منبع صدا: SoundCloud · نام هنرمند و منتشرکننده در پخش‌کننده نمایش داده می‌شود.</span><a id="sourceLink" target="_blank" rel="noopener noreferrer" href="https://soundcloud.com/mohammadrezashajarian-sc/sets/homayoun-masnavi">مشاهده اثر در SoundCloud</a></div>
+ <div class="transport" aria-label="کنترل‌های پخش"><button type="button" class="transport-skip" id="previous" aria-label="آهنگ قبلی" title="قبلی"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zm3 7 10-7v14z"/></svg></button><button type="button" class="transport-play" id="togglePlay" aria-label="پخش موسیقی"><svg viewBox="0 0 32 32" fill="currentColor"><path class="play-glyph" d="M11 6.5a2 2 0 0 1 3-1.7l15 9.5a2 2 0 0 1 0 3.4l-15 9.5a2 2 0 0 1-3-1.7z"/><g class="pause-glyph"><rect x="9" y="7" width="5" height="18" rx="1.5"/><rect x="19" y="7" width="5" height="18" rx="1.5"/></g></svg></button><button type="button" class="transport-skip" id="next" aria-label="آهنگ بعدی" title="بعدی"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zm-11 0 10 7-10 7z"/></svg></button></div>
+ <div class="music-progress"><span id="playedTime">00:00</span><div class="progress-track" role="progressbar" aria-label="زمان سپری‌شده" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack"><span id="progressFill"></span></div><span id="durationTime">--:--</span></div>
+ <div class="status official-toggle"><button type="button" class="control" id="showOfficial" aria-expanded="false" aria-controls="scWidget">نمایش پلیر اصلی SoundCloud</button></div>
+ <div class="status" id="playerStatus" role="status" aria-live="polite">برای شروع، یکی از آلبوم‌ها یا قطعات را انتخاب کن.</div>
+ <div class="source"><span>پخش از طریق پلیر رسمی SoundCloud؛ فایل‌ها روی سرور رادیو ذخیره نمی‌شوند.</span><a id="sourceLink" target="_blank" rel="noopener noreferrer" href="https://soundcloud.com/mohammadrezashajarian-sc/sets/homayoun-masnavi">مشاهده منبع</a></div>
 </section>
-<section class="group" aria-labelledby="albumsTitle">
- <div class="group-header"><h2 id="albumsTitle">آلبوم‌های کامل</h2><p>با انتخاب هر آلبوم، قطعات آن در پخش‌کننده رسمی SoundCloud در دسترس است.</p></div>
- <div class="cards">
-  <article class="card is-active" data-title="مثنوی همایون" data-artist="محمدرضا شجریان · ۷ قطعه · ۵۳ دقیقه" data-url="https://soundcloud.com/mohammadrezashajarian-sc/sets/homayoun-masnavi" data-kind="album"><div><span class="tag">آلبوم · آواز و ساز</span><h3>مثنوی همایون</h3><p class="description">محمدرضا شجریان · ۷ قطعه · ۵۳ دقیقه</p></div><div class="card-actions"><button class="pick" type="button">انتخاب و پخش</button><a href="https://soundcloud.com/mohammadrezashajarian-sc/sets/homayoun-masnavi" target="_blank" rel="noopener noreferrer">صفحه آلبوم</a></div></article>
-  <article class="card" data-title="شب عاشق" data-artist="غلامحسین بنان · ۹ قطعه · ۲۲ دقیقه" data-url="https://soundcloud.com/banan79877/sets/masterpieces-of-ostad-banan-1" data-kind="album"><div><span class="tag">آلبوم · آواز ایرانی</span><h3>شب عاشق</h3><p class="description">غلامحسین بنان · ۹ قطعه · ۲۲ دقیقه</p></div><div class="card-actions"><button class="pick" type="button">انتخاب و پخش</button><a href="https://soundcloud.com/banan79877/sets/masterpieces-of-ostad-banan-1" target="_blank" rel="noopener noreferrer">صفحه آلبوم</a></div></article>
- </div>
-</section>
-<section class="group" aria-labelledby="selectionsTitle">
- <div class="group-header"><h2 id="selectionsTitle">آثار منتخب از مؤسسه ماهور</h2><p>این موارد تک‌قطعه‌هایی از آلبوم‌های منتشرشده هستند، نه نسخه کامل آن آلبوم‌ها.</p></div>
- <div class="cards">
-  <article class="card" data-title="بیا ساقی" data-artist="شهرام ناظری · حسین علیزاده · آلبوم شورانگیز" data-url="https://soundcloud.com/mahoor-institute/biya-saqi-tasnif" data-kind="track"><div><span class="tag">تصنیف · آواز</span><h3>بیا ساقی</h3><p class="description">شهرام ناظری و حسین علیزاده · از آلبوم شورانگیز</p></div><div class="card-actions"><button class="pick" type="button">انتخاب و پخش</button><a href="https://soundcloud.com/mahoor-institute/biya-saqi-tasnif" target="_blank" rel="noopener noreferrer">منبع</a></div></article>
-  <article class="card" data-title="رؤیای هستی" data-artist="غلامحسین بنان · مجموعه رؤیای هستی" data-url="https://soundcloud.com/mahoor-institute/tasnif-roya-hasti-roya-ye-hastigholam-hosein-banan" data-kind="track"><div><span class="tag">تصنیف · آواز</span><h3>رؤیای هستی</h3><p class="description">غلامحسین بنان · از مجموعه رؤیای هستی</p></div><div class="card-actions"><button class="pick" type="button">انتخاب و پخش</button><a href="https://soundcloud.com/mahoor-institute/tasnif-roya-hasti-roya-ye-hastigholam-hosein-banan" target="_blank" rel="noopener noreferrer">منبع</a></div></article>
-  <article class="card" data-title="چندضربی همایون" data-artist="محمدرضا ابراهیمی · تکنوازی عود · آلبوم ثنا" data-url="https://soundcloud.com/mahoor-institute/chand-zarbi-e-homayoun-sana" data-kind="track"><div><span class="tag">بی‌کلام · عود</span><h3>چندضربی همایون</h3><p class="description">محمدرضا ابراهیمی · از آلبوم ثنا</p></div><div class="card-actions"><button class="pick" type="button">انتخاب و پخش</button><a href="https://soundcloud.com/mahoor-institute/chand-zarbi-e-homayoun-sana" target="_blank" rel="noopener noreferrer">منبع</a></div></article>
-  <article class="card" data-title="هفت‌پیکر" data-artist="فرامرز پایور · گروه سازهای ملی" data-url="https://soundcloud.com/mahoor-institute/mikharam-barat-titishhaft-peykarfaramarz-payvar" data-kind="track"><div><span class="tag">بی‌کلام · موسیقی دستگاهی</span><h3>هفت‌پیکر</h3><p class="description">فرامرز پایور · رنگ‌های سنتی با گروه سازهای ملی</p></div><div class="card-actions"><button class="pick" type="button">انتخاب و پخش</button><a href="https://soundcloud.com/mahoor-institute/mikharam-barat-titishhaft-peykarfaramarz-payvar" target="_blank" rel="noopener noreferrer">منبع</a></div></article>
- </div>
-</section>
-<p class="disclaimer"><strong>درباره پخش:</strong> فایل صوتی روی سرور رادیو ذخیره نمی‌شود؛ پخش از پخش‌کننده رسمی SoundCloud است. کیفیت صدا به منبع و شرایط SoundCloud بستگی دارد و ۳۲۰kbps تضمین نمی‌شود. آثار ممکن است به انتخاب صاحب اثر محدود یا حذف شوند. این بخش به جریان پخش زنده Icecast وصل نیست و مجوز بازپخش رادیویی جداگانه لازم است.</p>
+<div class="disclaimer"><strong>درباره آرشیو:</strong> هر آلبوم و قطعه به خواننده و سبک خودش متصل است. نمایش SoundCloud به‌معنی اعطای حق بازپخش رادیویی نیست؛ آثار فقط از منبع اصلی نمایش داده می‌شوند و هر منبع ممکن است محدودیت پخش داشته باشد. هنرمندانی که هنوز منبع قابل‌تأیید ندارند در فهرست باقی می‌مانند، اما تا تأیید منبع و حقوق، پخش برایشان فعال نیست.</div>
 </main>
 <footer>© Radio Ava O Nava · <a href="./">بازگشت به رادیو زنده</a></footer>
 </div>
@@ -117,53 +190,121 @@ body{overflow-x:hidden}
 <script>
 (function(){
 'use strict';
-const frame=document.getElementById('scWidget');
-const status=document.getElementById('playerStatus');
-const cards=Array.from(document.querySelectorAll('.card[data-url]'));
-const play=document.getElementById('togglePlay');
-const next=document.getElementById('next');
-const previous=document.getElementById('previous');
-const source=document.getElementById('sourceLink');
-const showOfficial=document.getElementById('showOfficial');
-const title=document.getElementById('current-title');
-const artist=document.getElementById('current-artist');
-let current=0,ready=false,playing=false;
+const frame=document.getElementById('scWidget'),status=document.getElementById('playerStatus');
+const allCards=[...document.querySelectorAll('.music-card')],play=document.getElementById('togglePlay');
+const next=document.getElementById('next'),previous=document.getElementById('previous');
+const source=document.getElementById('sourceLink'),showOfficial=document.getElementById('showOfficial');
+const title=document.getElementById('current-title'),artist=document.getElementById('current-artist');
+const genreButtons=[...document.querySelectorAll('.genre-tab')],artistChips=[...document.querySelectorAll('.artist-chip')];
+const search=document.getElementById('artistSearch'),artistLabel=document.getElementById('selectedArtistLabel');
+const genreLabel=document.getElementById('selectedGenreLabel'),grid=document.getElementById('musicGrid');
+const empty=document.getElementById('emptyState'),resultCount=document.getElementById('resultCount');
+const genreNames={all:'همه سبک‌ها',traditional:'سنتی و دستگاهی',pop:'پاپ ایرانی',nostalgic:'قدیمی و نوستالژیک',instrumental:'بی‌کلام',modern:'پاپ جدید'};
+let activeGenre='all',activeArtist='all',currentCard=allCards[0],ready=false,playing=false,filteredCards=[];
 const widget=(window.SC&&window.SC.Widget)?window.SC.Widget(frame):null;
-const say=(message)=>{status.textContent=message};
-function sync(){cards.forEach((c,i)=>c.classList.toggle('is-active',i===current));title.textContent=cards[current].dataset.title;artist.textContent=cards[current].dataset.artist;source.href=cards[current].dataset.url}
-function syncPlayback(isPlaying){playing=isPlaying;play.classList.toggle('is-playing',isPlaying);document.getElementById('musicPlayer').classList.toggle('is-playing',isPlaying);play.setAttribute('aria-label',isPlaying?'مکث موسیقی':'پخش موسیقی')}
-const elapsedLabel=document.getElementById('playedTime');
-const durationLabel=document.getElementById('durationTime');
-const progressFill=document.getElementById('progressFill');
-const progressTrack=document.getElementById('progressTrack');
-const fmt=ms=>{const sec=Math.max(0,Math.floor(ms/1000));return Math.floor(sec/60).toString().padStart(2,'0')+':'+(sec%60).toString().padStart(2,'0')};
-function refreshProgress(){if(!widget||!ready)return;widget.getDuration(duration=>{if(!Number.isFinite(duration)||duration<=0)return;durationLabel.textContent=fmt(duration);widget.getPosition(position=>{if(!Number.isFinite(position))return;elapsedLabel.textContent=fmt(position);const percent=Math.max(0,Math.min(100,Math.round(position/duration*100)));progressFill.style.width=percent+'%';progressTrack.setAttribute('aria-valuenow',String(percent));})})}
-setInterval(refreshProgress,1000);
-if(widget){
- widget.bind(window.SC.Widget.Events.READY,()=>{ready=true;say('آماده پخش از SoundCloud')});
- widget.bind(window.SC.Widget.Events.PLAY,()=>{syncPlayback(true);say('در حال پخش از SoundCloud')});
- widget.bind(window.SC.Widget.Events.PAUSE,()=>{syncPlayback(false);say('پخش متوقف شد')});
- widget.bind(window.SC.Widget.Events.FINISH,()=>{syncPlayback(false);say('پخش این قطعه به پایان رسید')});
- widget.bind(window.SC.Widget.Events.ERROR,()=>{syncPlayback(false);say('این اثر فعلاً در دسترس نیست؛ از لینک SoundCloud استفاده کنید.')});
+const say=m=>{status.textContent=m};
+const hasGenre=(item,g)=>g==='all'||(item.dataset.genres||'').split(',').includes(g);
+const artistName=id=>artistChips.find(c=>c.dataset.artist===id)?.textContent||'همه هنرمندان';
+function visibleArtists(){
+ const q=(search.value||'').trim().toLocaleLowerCase();
+ artistChips.forEach(c=>{
+  const matchGenre=hasGenre(c,activeGenre);
+  const matchText=!q||c.textContent.toLocaleLowerCase().includes(q);
+  c.hidden=!(matchGenre&&matchText);
+ });
 }
-function select(index){
- current=index;sync();syncPlayback(false);elapsedLabel.textContent='00:00';durationLabel.textContent='--:--';progressFill.style.width='0%';progressTrack.setAttribute('aria-valuenow','0');
- say('در حال بارگذاری؛ اگر صدا شروع نشد، دکمه پخش را بزنید.');
- const url=cards[current].dataset.url;
- if(widget){ready=false;widget.load(url,{auto_play:true,color:'#f9c579',show_artwork:true,show_user:true,sharing:true,callback:()=>{ready=true;}})}
- else{frame.src='https://w.soundcloud.com/player/?url='+encodeURIComponent(url)+'&color=%23f9c579&auto_play=false&show_user=true';say('آهنگ را با دکمه داخل پخش‌کننده SoundCloud اجرا کنید.')}
+function visibleCards(){
+ filteredCards=allCards.filter(c=>hasGenre(c,activeGenre)&&(activeArtist==='all'||c.dataset.artist===activeArtist));
+ allCards.forEach(c=>{c.hidden=!filteredCards.includes(c)});
+ resultCount.textContent=filteredCards.length+' مورد';
+ empty.hidden=filteredCards.length>0;
+ grid.hidden=filteredCards.length===0;
+ if(filteredCards.length===0)say('برای این خواننده هنوز منبع پخش تأییدشده‌ای در آرشیو ثبت نشده است.');
+}
+function updateFilters(){
+ genreButtons.forEach(b=>b.classList.toggle('active',b.dataset.genre===activeGenre));
+ artistChips.forEach(c=>c.classList.toggle('active',c.dataset.artist===activeArtist));
+ genreLabel.textContent=genreNames[activeGenre]||'همه سبک‌ها';
+ artistLabel.textContent=activeArtist==='all'?'همه هنرمندان':artistName(activeArtist);
+ visibleArtists();visibleCards();
+}
+function sync(){
+ allCards.forEach(c=>c.classList.toggle('selected',c===currentCard));
+ if(!currentCard)return;
+ title.textContent=currentCard.dataset.title;
+ artist.textContent=currentCard.dataset.artistName+' · '+(currentCard.dataset.kind==='album'?'آلبوم':'قطعه');
+ source.href=currentCard.dataset.url;
+ source.textContent=currentCard.dataset.kind==='album'?'مشاهده آلبوم در SoundCloud':'مشاهده قطعه در SoundCloud';
+}
+function syncPlayback(isPlaying){
+ playing=isPlaying;play.classList.toggle('is-playing',isPlaying);
+ document.getElementById('musicPlayer').classList.toggle('is-playing',isPlaying);
+ play.setAttribute('aria-label',isPlaying?'مکث موسیقی':'پخش موسیقی');
+}
+function selectCard(card,autoplay=true){
+ if(!card)return;
+ if(!filteredCards.includes(card)){
+  activeGenre=(card.dataset.genres||'').split(',')[0]||'all';activeArtist=card.dataset.artist;updateFilters();
+ }
+ currentCard=card;sync();syncPlayback(false);
+ elapsedLabel.textContent='00:00';durationLabel.textContent='--:--';progressFill.style.width='0%';progressTrack.setAttribute('aria-valuenow','0');
+ say('در حال بارگذاری '+card.dataset.title+' از SoundCloud...');
+ if(widget){
+  ready=false;
+  widget.load(card.dataset.url,{auto_play:autoplay,color:'#f9c579',show_artwork:true,show_user:true,sharing:true,visual:true,callback:()=>{ready=true;say('آماده پخش · '+card.dataset.artistName)}});
+ }else{
+  frame.src='https://w.soundcloud.com/player/?url='+encodeURIComponent(card.dataset.url)+'&color=%23f9c579&auto_play=false&show_user=true';
+  say('پلیر رسمی در حال بارگذاری است.');
+ }
  document.getElementById('musicPlayer').scrollIntoView({behavior:'smooth',block:'start'});
 }
-showOfficial.addEventListener('click',()=>{const visible=frame.classList.toggle('is-visible');showOfficial.setAttribute('aria-expanded',String(visible));showOfficial.textContent=visible?'مخفی کردن پلیر اصلی':'نمایش پلیر اصلی (در صورت مشکل پخش)';});
-cards.forEach((card,i)=>card.querySelector('.pick').addEventListener('click',()=>select(i)));
-play.addEventListener('click',()=>{
- if(!widget){say('برای پخش، از دکمه داخل SoundCloud استفاده کنید.');return;}
- if(!ready){say('پخش‌کننده هنوز آماده نیست؛ لحظه‌ای بعد دوباره بزنید.');return}
- if(playing){widget.pause()}else{widget.play()}
+const elapsedLabel=document.getElementById('playedTime'),durationLabel=document.getElementById('durationTime');
+const progressFill=document.getElementById('progressFill'),progressTrack=document.getElementById('progressTrack');
+const fmt=ms=>{const sec=Math.max(0,Math.floor(ms/1000));return Math.floor(sec/60).toString().padStart(2,'0')+':'+(sec%60).toString().padStart(2,'0')};
+function refreshProgress(){if(!widget||!ready)return;widget.getDuration(d=>{if(!Number.isFinite(d)||d<=0)return;durationLabel.textContent=fmt(d);widget.getPosition(p=>{if(!Number.isFinite(p))return;elapsedLabel.textContent=fmt(p);const v=Math.max(0,Math.min(100,Math.round(p/d*100)));progressFill.style.width=v+'%';progressTrack.setAttribute('aria-valuenow',String(v));})})}
+setInterval(refreshProgress,1000);
+if(widget){
+ widget.bind(window.SC.Widget.Events.READY,()=>{ready=true;say('پلیر SoundCloud آماده است.')});
+ widget.bind(window.SC.Widget.Events.PLAY,()=>{syncPlayback(true);say('در حال پخش: '+(currentCard?.dataset.title||''))});
+ widget.bind(window.SC.Widget.Events.PAUSE,()=>{syncPlayback(false);say('پخش متوقف شد.')});
+ widget.bind(window.SC.Widget.Events.FINISH,()=>{syncPlayback(false);say('این آلبوم یا قطعه به پایان رسید.')});
+ widget.bind(window.SC.Widget.Events.ERROR,()=>{syncPlayback(false);say('این اثر در SoundCloud در دسترس نیست.')});
+}
+genreButtons.forEach(b=>b.addEventListener('click',()=>{
+ activeGenre=b.dataset.genre;activeArtist='all';updateFilters();
+}));
+artistChips.forEach(c=>c.addEventListener('click',()=>{
+ activeArtist=c.dataset.artist;
+ const genres=c.dataset.genres.split(',');
+ if(activeGenre!=='all'&&!genres.includes(activeGenre))activeGenre=genres[0];
+ updateFilters();
+ if(filteredCards.length&&currentCard&&!filteredCards.includes(currentCard))selectCard(filteredCards[0],false);
+}));
+search.addEventListener('input',visibleArtists);
+document.getElementById('clearFilters').addEventListener('click',()=>{
+ activeGenre='all';activeArtist='all';search.value='';updateFilters();
 });
-previous.addEventListener('click',()=>{if(!widget||!ready){say('پخش‌کننده آماده نیست.');return}if(cards[current].dataset.kind==='album'){widget.prev()}else if(current>0){select(current-1)}else{say('این نخستین اثر است.')}});
-next.addEventListener('click',()=>{if(!widget||!ready){say('پخش‌کننده آماده نیست.');return}if(cards[current].dataset.kind==='album'){widget.next()}else if(current<cards.length-1){select(current+1)}else{say('این آخرین اثر است.')}});
-sync();
+allCards.forEach(card=>card.querySelector('.play-card').addEventListener('click',()=>selectCard(card,true)));
+showOfficial.addEventListener('click',()=>{
+ const v=frame.classList.toggle('is-visible');showOfficial.setAttribute('aria-expanded',String(v));
+ showOfficial.textContent=v?'مخفی کردن پلیر اصلی':'نمایش پلیر اصلی SoundCloud';
+});
+play.addEventListener('click',()=>{
+ if(!widget){say('از دکمه پخش داخل SoundCloud استفاده کن.');return}
+ if(!ready){say('پلیر هنوز آماده نیست؛ لحظه‌ای بعد دوباره بزن.');return}
+ if(playing)widget.pause();else widget.play();
+});
+function move(delta){
+ if(!currentCard)return;
+ if(currentCard.dataset.kind==='album'&&widget&&ready){
+  if(delta<0)widget.prev();else widget.next();
+  return;
+ }
+ const pos=filteredCards.indexOf(currentCard),target=filteredCards[pos+delta];
+ if(target)selectCard(target,true);else say('در این فهرست قطعه دیگری وجود ندارد.');
+}
+previous.addEventListener('click',()=>move(-1));next.addEventListener('click',()=>move(1));
+updateFilters();sync();
 })();
 </script>
 </body>
