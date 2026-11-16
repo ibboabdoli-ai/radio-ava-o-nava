@@ -277,6 +277,81 @@ body{overflow-x:hidden}
   a,button,input{-webkit-tap-highlight-color:transparent}
 }
 
+
+/* Visual step-by-step app installation guide */
+.install-guide{margin:24px auto 32px;padding:clamp(17px,3vw,28px);border:1px solid #d07af3a1;border-radius:27px;background:linear-gradient(135deg,#5c278344,#170e32ed);box-shadow:inset 0 1px 0 #ffffff29,0 8px 32px #08001866;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);min-width:0}
+.install-heading{display:flex;align-items:center;gap:15px}
+.install-heading img{width:68px;height:68px;flex:0 0 68px;object-fit:cover;border-radius:18px;border:1px solid #ffce9c8c;box-shadow:0 0 20px #bc4bff5e}
+.install-kicker{margin:0;color:#dfadf8;font:700 10px Arial,sans-serif;letter-spacing:2px}
+.install-guide h2{font-size:clamp(19px,4vw,25px);line-height:1.7;margin:0;color:#ffe2ad}
+.install-heading p:not(.install-kicker),.install-note{font-size:13px;color:#eadcf1;line-height:2;margin:5px 0}
+.install-visual-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:22px;align-items:start}
+.install-platform{min-width:0;padding:17px;border:1px solid #e5b3ff5c;border-radius:20px;background:linear-gradient(145deg,#ffffff0e,#100c28aa)}
+.platform-title{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.platform-symbol{width:43px;height:43px;flex:0 0 43px;display:grid;place-items:center;border:1px solid #efc4ff65;border-radius:14px;background:#ffffff13;color:#ffe5b6;font-size:25px;font-weight:700}
+.platform-symbol.android-symbol{font-family:Arial,sans-serif;color:#b5f0c2}
+.platform-title h3{color:#ffe4b7;font-size:18px;line-height:1.5;margin:0}
+.platform-title p{font-size:12px;color:#d7c2e3;margin:1px 0 0}
+.visual-steps{display:grid;gap:12px}
+.visual-step{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 145px;gap:10px;align-items:center;padding:11px;border:1px solid #ffffff1b;border-radius:16px;background:#ffffff08;min-width:0}
+.step-copy{display:flex;gap:9px;align-items:flex-start;min-width:0}
+.step-number{width:27px;height:27px;flex:0 0 27px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(145deg,#f9d49a,#c887e4);color:#281335;font-weight:800;font-size:13px}
+.step-copy strong{display:block;color:#fff0d1;font-size:13px;line-height:1.8}
+.step-copy p{font-size:11px;color:#d6c5df;line-height:1.8;margin:3px 0 0}
+.phone-shot{position:relative;width:145px;height:190px;border:3px solid #8f829f;border-radius:21px;background:#f8f6fb;overflow:hidden;box-shadow:0 8px 20px #0006;direction:ltr;color:#201a2b;font-family:Arial,sans-serif}
+.phone-status{height:19px;padding:2px 10px;display:flex;justify-content:space-between;font-size:9px;font-weight:700;background:#f4f1f7;color:#26202e}
+.browser-bar,.android-browser{height:25px;display:flex;align-items:center;justify-content:space-around;gap:3px;padding:0 5px;background:#eeeaf2;color:#5d5568;font-size:10px}
+.browser-lock{font-size:8px}
+.shot-page,.android-page{height:103px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:linear-gradient(145deg,#392454,#17102b);color:#ffe9c2;text-align:center}
+.shot-page img,.android-page img{width:38px;height:38px;object-fit:cover;border-radius:9px}
+.shot-page b,.android-page b{font-size:9px}
+.shot-page small,.android-page small{font-size:7px;color:#e4d5ee}
+.shot-play{display:grid;place-items:center;width:23px;height:23px;border-radius:50%;background:#f5d19b;color:#28163b;font-size:10px}
+.browser-toolbar{height:36px;display:flex;align-items:center;justify-content:space-around;background:#f4f1f7;color:#655a71;font-size:16px}
+.browser-toolbar span{display:grid;place-items:center;width:22px;height:24px}
+.share-glyph svg{width:21px;height:21px;display:block;color:#4d3981}
+.target-ring{position:absolute;border:2px solid #c84bff;border-radius:50%;box-shadow:0 0 0 4px #c84bff38,0 0 15px #b44bffb8;pointer-events:none}
+.share-ring{width:31px;height:31px;bottom:2px;left:calc(50% - 15px)}
+.sheet-backdrop{height:168px;background:#40374c}
+.share-sheet{height:157px;position:absolute;left:4px;right:4px;bottom:0;border-radius:14px 14px 0 0;background:#fff;color:#292330;padding:6px 9px;font-size:8px}
+.sheet-grip{width:28px;height:3px;border-radius:4px;background:#c7c2cb;margin:0 auto 6px}
+.share-preview{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid #eee}
+.share-preview img,.dialog-preview img{width:25px;height:25px;object-fit:cover;border-radius:6px}
+.share-icons{display:flex;justify-content:space-around;padding:7px 0;color:#615a69}
+.share-row{display:flex;align-items:center;gap:8px;min-height:25px;border-top:1px solid #eee;font-size:8px}
+.share-row>span:last-child{margin-left:auto;color:#888}
+.row-icon{font-size:15px;color:#7452a3}
+.faded{color:#888}
+.add-ring{width:30px;height:30px;top:91px;right:14px}
+.home-wallpaper,.android-wallpaper{height:166px;background:radial-gradient(circle at 55% 40%,#4f3570,#17122c 70%);padding:19px 12px}
+.home-app,.android-app{display:flex;flex-direction:column;align-items:center;gap:5px;width:58px;color:#fff;font-size:8px}
+.home-app img,.android-app img{width:39px;height:39px;object-fit:cover;border-radius:11px}
+.home-dock{position:absolute;bottom:5px;left:19px;right:19px;height:27px;border-radius:12px;background:#ffffff2e;display:flex;justify-content:space-around;align-items:center}
+.home-dock i{width:15px;height:15px;border-radius:5px;background:#ffffffa6}
+.add-dialog,.android-confirm{position:absolute;left:9px;right:9px;top:65px;background:#fff;color:#292330;border-radius:11px;padding:10px 9px;box-shadow:0 5px 18px #0006;font-size:9px}
+.dialog-preview{display:flex;align-items:center;gap:8px;margin:13px 0;padding:7px;background:#f2eff5;border-radius:8px}
+.dialog-actions{display:flex;justify-content:space-between;align-items:center;color:#655c72;padding:4px 3px}
+.dialog-actions strong{color:#6850aa;font-size:10px}
+.android-browser{height:30px}
+.android-url{flex:1;background:#ded9e4;border-radius:15px;padding:4px 7px;overflow:hidden;white-space:nowrap}
+.dots{font-size:17px;font-weight:700}
+.android-page{height:136px}
+.dots-ring{top:20px;right:3px;width:29px;height:29px}
+.chrome-menu{position:absolute;z-index:2;top:22px;right:4px;width:106px;padding:6px 0;border-radius:10px;background:#fff;color:#292330;box-shadow:0 5px 20px #0008;font-size:8px}
+.chrome-menu div{padding:8px 8px}
+.chrome-menu .menu-highlight{margin:2px 4px;display:flex;justify-content:space-between;align-items:center;background:#efe7fa;border-radius:7px;color:#52317c;font-weight:700}
+.chrome-menu .menu-muted{color:#8e8795}
+.menu-ring{width:29px;height:29px;top:81px;right:28px}
+.android-final-shot .android-wallpaper{height:166px}
+.android-confirm{top:67px}
+.platform-tip{margin-top:13px;padding:11px 13px;border-radius:12px;background:#ffffff0b;color:#e3d0eb;font-size:11px;line-height:2}
+.platform-tip strong{color:#ffe1a7}
+.install-note{margin:16px 0 0}
+@media(max-width:850px){.install-visual-grid{grid-template-columns:1fr}.install-platform{padding:15px}.visual-step{grid-template-columns:minmax(0,1fr) 145px}}
+@media(max-width:420px){.install-guide{padding:15px 11px}.install-heading{align-items:flex-start;gap:10px}.install-heading img{width:54px;height:54px;flex-basis:54px}.install-heading p:not(.install-kicker){font-size:12px}.install-platform{padding:11px}.visual-step{grid-template-columns:minmax(0,1fr) 126px;gap:7px;padding:8px}.phone-shot{width:126px;height:174px;border-width:3px}.step-copy strong{font-size:11px}.step-copy p{font-size:10px}.sheet-backdrop{height:152px}.share-sheet{height:143px}.shot-page,.android-page{height:92px}.browser-toolbar{height:33px}.home-wallpaper,.android-wallpaper{height:152px}.android-final-shot .android-wallpaper{height:152px}.add-dialog,.android-confirm{top:61px}.chrome-menu{width:98px}}
+@media(max-width:350px){.visual-step{grid-template-columns:1fr}.phone-shot{width:145px;height:190px;justify-self:center}.step-copy strong{font-size:13px}.step-copy p{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.install-guide *{scroll-behavior:auto}}
+
 </style>
 <body><div class="site">
 <header class="topbar"><a class="brand-wrap" href="./"><img src="./radio-neon-logo.webp" alt=""><span><span class="brand-title">رادیو آوا و نوا</span><br><span class="brand-en">Radio Ava o Nava</span></span></a>
@@ -290,7 +365,51 @@ body{overflow-x:hidden}
 <div class="actions" id="contact"><a class="house" id="clubhouse" href="https://www.clubhouse.com/house/%D8%A7%D9%88%D8%A7-%D9%88-%D9%86%D9%88%D8%A7-%D9%85%D9%88%D8%B3%DB%8C%D9%82%DB%8C-%D8%B2%D9%86%D8%AF%D9%87-%D8%B4%D8%B9%D8%B1-%D9%88-%D8%A7%D9%88%D8%A7%D8%B2?chs=o78CNL9gG3%3AxWrPxdSYMSeit7zGhjYUmTDXVQFOQFETFvVa4T_EZ4o&amp;utm_medium=ch_general_house" target="_blank" rel="noopener noreferrer">ورود به هاوس کلاب‌هاوس</a><a id="requestSong" href="https://t.me/+bSKXuElY13I3NWY0" target="_blank" rel="noopener noreferrer">ارسال پیام / درخواست آهنگ</a><a class="telegram" href="https://t.me/+nFR4GhHTc7Y3ZjNk" target="_blank" rel="noopener noreferrer">اشتراک در تلگرام</a><a class="whatsapp" href="https://www.whatsapp.com/channel/0029VbDqKNg5vKA9OxDV4046" target="_blank" rel="noopener noreferrer">اشتراک در واتساپ</a><button type="button" id="copyLink">کپی لینک رادیو</button><button type="button" id="shareLink">اشتراک‌گذاری</button></div>
 <section class="weekly" id="schedule" aria-labelledby="weekly-title"><div class="weekly-head"><div><p class="weekly-eyebrow">RADIO AVA O NAVA</p><h2 id="weekly-title">برنامه هفتگی</h2><p>موسیقی، آواز، شعر و دکلمه · شنبه تا چهارشنبه، ساعت ۲۲ به وقت ایران</p></div><div class="weekly-clock-pair"><div class="weekly-clock"><span>ساعت ایران</span><strong id="weekly-iran-clock" dir="ltr">--:--</strong></div><div class="weekly-clock"><span>ساعت اروپا (سوئد)</span><strong id="weekly-local-clock" dir="ltr">--:--</strong></div><div class="weekly-clock"><span>ساعت انگلیس (لندن)</span><strong id="weekly-london-clock" dir="ltr">--:--</strong></div></div></div><div class="weekly-next"><div><span class="weekly-eyebrow">برنامه بعدی</span><strong id="weekly-next-name">در حال محاسبه…</strong><span id="weekly-next-local">زمان محلی: —</span></div><div class="weekly-count"><span>تا شروع برنامه</span><strong id="weekly-countdown" dir="ltr" aria-live="off">--:--:--</strong></div></div><div class="weekly-days" id="weekly-days" aria-label="روزهای برنامه"></div><p class="weekly-foot">زمان‌ها بر اساس ساعت ایران تنظیم شده‌اند. ساعت محلی و شمارش معکوس به‌صورت خودکار محاسبه می‌شوند. زمان برنامه ممکن است تغییر کند.</p></section>
 
-<section class="install-guide" id="install" aria-labelledby="install-title"><div class="install-heading"><img src="./radio-neon-logo.webp" alt="لوگوی اپ رادیو آوا و نوا" width="68" height="68" loading="lazy"><div><h2 id="install-title">رادیو رو به صفحه اصلی گوشی اضافه کن</h2><p>با لوگوی آوا و نوا، مثل یک اپ بازش کن؛ بدون نیاز به فروشگاه برنامه‌ها.</p></div></div><div class="install-steps"><div class="install-platform"><h3>آیفون (Safari)</h3><p>۱. سایت رو در Safari باز کن.</p><p>۲. روی <strong>Share</strong> بزن.</p><p>۳. <strong>Add to Home Screen</strong> و بعد <strong>Add</strong> رو انتخاب کن.</p></div><div class="install-platform"><h3>اندروید (Chrome)</h3><p>۱. سایت رو در Chrome باز کن.</p><p>۲. منوی سه‌نقطه رو بزن.</p><p>۳. <strong>Add to Home Screen</strong> یا <strong>Install app</strong> رو انتخاب کن.</p></div></div><p class="install-note">برای شنیدن پخش زنده به اینترنت نیاز داری. اگر گزینه نصب رو نمی‌بینی، لینک رو مستقیماً در Safari یا Chrome باز کن.</p></section>
+<section class="install-guide" id="install" aria-labelledby="install-title">
+ <div class="install-heading">
+  <img src="./radio-neon-logo.webp" alt="لوگوی رادیو آوا و نوا" width="68" height="68" loading="lazy">
+  <div><p class="install-kicker">INSTALL RADIO</p><h2 id="install-title">رادیو آوا و نوا رو به صفحه اصلی اضافه کن</h2><p>با چند لمس، هر وقت خواستی مثل یک اپ بازش کن.</p></div>
+ </div>
+ <div class="install-visual-grid">
+  <article class="install-platform install-ios">
+   <div class="platform-title"><span class="platform-symbol"></span><div><h3>آیفون و آیپد</h3><p>با Safari</p></div></div>
+   <div class="visual-steps">
+    <div class="visual-step">
+     <div class="step-copy"><span class="step-number">۱</span><div><strong>سایت رادیو رو در Safari باز کن</strong><p>آدرس رادیو رو مستقیم در Safari وارد کن.</p></div></div>
+     <div class="phone-shot ios-shot" aria-label="تصویر نمونه مرورگر Safari"><div class="phone-status"><span>9:41</span><span>●●● ▰</span></div><div class="browser-bar"><span class="browser-lock">●</span><span>radio.ibboabdoli.com</span><span>↻</span></div><div class="shot-page"><img src="./radio-neon-logo.webp" alt=""><b>رادیو آوا و نوا</b><small>موسیقی، آواز، شعر و دکلمه</small><span class="shot-play">▶</span></div><div class="browser-toolbar"><span>‹</span><span>›</span><span class="share-glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m0 0L7.5 7.5M12 3l4.5 4.5M5 12v8h14v-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>▢</span><span>☰</span></div><span class="target-ring share-ring"></span></div>
+    </div>
+    <div class="visual-step">
+     <div class="step-copy"><span class="step-number">۲</span><div><strong>دکمه Share رو بزن</strong><p>مربع با فلش رو به بالا؛ معمولاً پایین Safari است.</p></div></div>
+     <div class="phone-shot ios-sheet-shot" aria-label="تصویر نمونه منوی اشتراک‌گذاری آیفون"><div class="phone-status"><span>9:41</span><span>●●● ▰</span></div><div class="sheet-backdrop"><div class="share-sheet"><div class="sheet-grip"></div><b>radio.ibboabdoli.com</b><div class="share-preview"><img src="./radio-neon-logo.webp" alt=""><span>رادیو آوا و نوا</span></div><div class="share-icons"><span>پیام</span><span>ایمیل</span><span>کپی</span></div><div class="share-row"><span class="row-icon">＋</span><strong>Add to Home Screen</strong><span>›</span></div><div class="share-row faded"><span class="row-icon">☆</span><span>افزودن به نشانک‌ها</span><span>›</span></div></div></div><span class="target-ring add-ring"></span></div>
+    </div>
+    <div class="visual-step">
+     <div class="step-copy"><span class="step-number">۳</span><div><strong>Add to Home Screen و سپس Add</strong><p>در صورت نیاز، فهرست Share رو کمی به پایین بکش.</p></div></div>
+     <div class="phone-shot ios-final-shot" aria-label="تصویر نمونه افزودن رادیو به صفحه اصلی"><div class="phone-status"><span>9:41</span><span>●●● ▰</span></div><div class="home-wallpaper"><div class="home-app"><img src="./radio-neon-logo.webp" alt=""><small>رادیو آوا و نوا</small></div><div class="home-dock"><i></i><i></i><i></i><i></i></div></div><div class="add-dialog"><b>افزودن به صفحه اصلی</b><div class="dialog-preview"><img src="./radio-neon-logo.webp" alt=""><span>رادیو آوا و نوا</span></div><div class="dialog-actions"><span>لغو</span><strong>Add</strong></div></div></div>
+    </div>
+   </div>
+   <div class="platform-tip"><strong>نکته:</strong> اگر سایت داخل تلگرام، واتساپ یا ChatGPT باز شده، اول گزینه «Open in Safari» رو بزن. اگر Share رو نمی‌بینی، یک‌بار روی صفحه ضربه بزن تا نوار Safari ظاهر بشه.</div>
+  </article>
+  <article class="install-platform install-android">
+   <div class="platform-title"><span class="platform-symbol android-symbol">●</span><div><h3>اندروید</h3><p>با Google Chrome</p></div></div>
+   <div class="visual-steps">
+    <div class="visual-step">
+     <div class="step-copy"><span class="step-number">۱</span><div><strong>سایت رادیو رو در Chrome باز کن</strong><p>آدرس radio.ibboabdoli.com رو وارد کن.</p></div></div>
+     <div class="phone-shot android-shot"><div class="phone-status"><span>9:41</span><span>●●● ▰</span></div><div class="android-browser"><span>‹</span><span class="android-url">radio.ibboabdoli.com</span><span>▢</span><span class="dots">⋮</span></div><div class="android-page"><img src="./radio-neon-logo.webp" alt=""><b>رادیو آوا و نوا</b><small>رادیو آنلاین</small><span class="shot-play">▶</span></div><span class="target-ring dots-ring"></span></div>
+    </div>
+    <div class="visual-step">
+     <div class="step-copy"><span class="step-number">۲</span><div><strong>منوی سه‌نقطه رو باز کن</strong><p>بالای Chrome، سمت راست.</p></div></div>
+     <div class="phone-shot android-menu-shot"><div class="phone-status"><span>9:41</span><span>●●● ▰</span></div><div class="android-browser"><span>‹</span><span class="android-url">radio.ibboabdoli.com</span><span>▢</span><span>⋮</span></div><div class="android-page"><img src="./radio-neon-logo.webp" alt=""><b>رادیو آوا و نوا</b></div><div class="chrome-menu"><div>New tab</div><div>History</div><div class="menu-highlight"><b>Install app</b><span>＋</span></div><div class="menu-muted">Add to Home screen</div><div>Share…</div></div><span class="target-ring menu-ring"></span></div>
+    </div>
+    <div class="visual-step">
+     <div class="step-copy"><span class="step-number">۳</span><div><strong>Install app یا Add to Home screen</strong><p>گزینه‌ای که Chrome بهت نشون می‌ده انتخاب کن و تأیید کن.</p></div></div>
+     <div class="phone-shot android-final-shot"><div class="phone-status"><span>9:41</span><span>●●● ▰</span></div><div class="android-wallpaper"><div class="android-app"><img src="./radio-neon-logo.webp" alt=""><small>رادیو آوا و نوا</small></div></div><div class="android-confirm"><b>Install app</b><div class="dialog-preview"><img src="./radio-neon-logo.webp" alt=""><span>رادیو آوا و نوا</span></div><div class="dialog-actions"><span>Cancel</span><strong>Install</strong></div></div></div>
+    </div>
+   </div>
+   <div class="platform-tip"><strong>نکته:</strong> نام گزینه نصب ممکنه با توجه به مدل گوشی و نسخه Chrome کمی متفاوت باشه.</div>
+  </article>
+ </div>
+ <p class="install-note">برای شنیدن رادیو به اینترنت نیاز داری. بعد از اضافه‌شدن، آیکون رادیو رو از صفحه اصلی گوشی باز کن.</p>
+</section>
 <section class="about" id="about"><h2>درباره رادیو آوا و نوا</h2><p>رادیو آوا و نوا همراه شما در برنامه‌های زنده موسیقی، آواز، شعر و دکلمه است. پخش فقط هنگام برگزاری برنامه فعال می‌شود.</p></section></main>
 <footer>© Radio Ava O Nava · پخش آنلاین · by <a href="https://www.ibboabdoli.com/" target="_blank" rel="noopener noreferrer">Ibboabdoli.com</a></footer></div>
 <script>document.querySelectorAll('.actions a,.actions button,.control-btn,.menu-toggle,.top-social a,.nav-links a,#play').forEach(el=>{let glowTimer;const glow=()=>{clearTimeout(glowTimer);el.classList.add('touch-glow');glowTimer=setTimeout(()=>el.classList.remove('touch-glow'),1100)};el.addEventListener('pointerdown',glow,{passive:true});el.addEventListener('touchstart',glow,{passive:true});el.addEventListener('pointercancel',()=>el.classList.remove('touch-glow'),{passive:true});el.addEventListener('click',e=>{if(e.detail===0)glow()})});document.getElementById('menuToggle').addEventListener('click',function(){const nav=document.getElementById('nav');const open=nav.classList.toggle('open');this.setAttribute('aria-expanded',String(open))});document.querySelectorAll('#nav a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('nav').classList.remove('open');document.getElementById('menuToggle').setAttribute('aria-expanded','false')}));</script>
