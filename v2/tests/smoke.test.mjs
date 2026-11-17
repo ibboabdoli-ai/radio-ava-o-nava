@@ -58,7 +58,7 @@ test('No app secrets, hardcoded credentials or false live claims',()=>{
 test('Mobile visual polish, motion accessibility and legacy parity',()=>{
   const polish=get('polish.css'),mobile=get('mobile.css'),interaction=get('interaction.js');
   new vm.Script(interaction);
-  assert.match(html,/href="\.\/polish\.css\?v=3"/);
+  assert.match(html,/href="\.\/polish\.css\?v=6"/);
   assert.match(html,/href="\.\/mobile\.css\?v=4"/);
   assert.match(html,/src="\.\/interaction\.js\?v=5"/);
   for(const id of ['liveFullscreen','liveCopy','liveShare','requestSongLink','install','about','contact'])assert.ok(html.includes('id="'+id+'"'),id);
