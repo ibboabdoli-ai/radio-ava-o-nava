@@ -20,6 +20,12 @@
     if(docCheck?.getElementById('menuButton')&&getComputedStyle(docCheck.getElementById('menuButton')).display==='grid')break;
     await wait(450);
   }
+  if(getComputedStyle(frame.contentDocument?.getElementById('menuButton')).display!=='grid'){
+    // Reload one cold frame if the browser has not yet obtained its CSS assets.
+    frame.src='./index.html?qa=reload-'+width+'&t='+Date.now();
+    await Promise.race([new Promise(resolve=>frame.onload=()=>resolve(true)),wait(12000)]);
+    await wait(2400);
+  }
   try{
    frame.contentWindow.scrollTo(0,0);await wait(200);
    const doc=frame.contentDocument;
@@ -39,6 +45,7 @@
      menuDisplay:show('#menuButton'),navigationDisplay:show('#navigation'),
      heroHeight:Math.round(hero?.height||0),heroTop:Math.round(hero?.top||0),heroBottom:Math.round(hero?.bottom||0),heroVisualDisplay:show('.hero-visual'),headerHeight:Math.round(header?.height||0),liveSectionTop:Math.round(section?.top||0),liveHeadingTop:Math.round(heading?.top||0),liveHeadingHeight:Math.round(heading?.height||0),windowScrollY:Math.round(frame.contentWindow.scrollY),livePlayerTop:Math.round(player?.top||-1),livePlayerWidth:Math.round(player?.width||0),
      dockPosition:show('.player-dock')==='none'?null:getComputedStyle(doc.querySelector('.player-dock')).position,
+     touchGlowSupported:typeof frame.contentWindow.PointerEvent==='function'&&typeof doc.getElementById('livePlay')?.dispatchEvent==='function',
      musicCardCount:doc.querySelectorAll('.music-card').length,installGuideImageCount:doc.querySelectorAll('.install-step-card img').length,
      legacyButtonsPresent:['liveCopy','liveShare','liveFullscreen','requestSongLink'].every(id=>!!doc.getElementById(id)),
      largeOffscreenElements:elements});
