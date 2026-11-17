@@ -60,7 +60,7 @@ test('Mobile visual polish, motion accessibility and legacy parity',()=>{
   new vm.Script(interaction);
   assert.match(html,/href="\.\/polish\.css\?v=3"/);
   assert.match(html,/href="\.\/mobile\.css\?v=4"/);
-  assert.match(html,/src="\.\/interaction\.js\?v=3"/);
+  assert.match(html,/src="\.\/interaction\.js\?v=5"/);
   for(const id of ['liveFullscreen','liveCopy','liveShare','requestSongLink','install','about','contact'])assert.ok(html.includes('id="'+id+'"'),id);
   for(const system of ['ios','android'])for(let n=1;n<=4;n++)assert.ok(html.includes(system+'-install-'+n+'.svg'));
   assert.match(html,/class="install-platform-detail" open/);
