@@ -17,9 +17,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./site.css?v=3"><link rel="stylesheet" href="./polish.css?v=6"><link rel="stylesheet" href="./mobile.css?v=4"><link rel="stylesheet" href="./mobile-premium.css?v=5">
+<link rel="stylesheet" href="./site.css?v=3"><link rel="stylesheet" href="./polish.css?v=6"><link rel="stylesheet" href="./mobile.css?v=4"><link rel="stylesheet" href="./mobile-premium.css?v=5"><link rel="stylesheet" href="./audius.css?v=1">
 <script defer src="https://w.soundcloud.com/player/api.js"></script>
-<script defer src="./app.js?v=6"></script><script defer src="./interaction.js?v=5"></script><script defer src="./mobile-premium.js?v=5"></script>
+<script defer src="./app.js?v=6"></script><script defer src="./interaction.js?v=5"></script><script defer src="./mobile-premium.js?v=5"></script><script defer src="./audius.js?v=1"></script>
 </head>
 <body>
 <a class="skip" href="#main">رفتن به محتوا</a>
@@ -105,6 +105,41 @@
     <p id="musicStatus" class="help-text" role="status" aria-live="polite">برای پخش از پلیر رسمی استفاده کن.</p>
   </div>
 </div></section>
+
+<section class="container section-block audius-section" id="audius" aria-labelledby="audiusTitle">
+  <div class="section-heading">
+    <div><p class="kicker">INDEPENDENT PERSIAN MUSIC</p><h2 id="audiusTitle">موسیقی ایرانی در آدیوس</h2><p class="section-description">مجموعه منتخب سنتور، موسیقی دستگاهی، نی و آواز ایرانی؛ با پلیر اختصاصی آوا و نوا.</p></div>
+    <span class="section-count" id="audiusCount">در حال بارگذاری</span>
+  </div>
+  <div class="audius-header-actions"><div class="audius-tags"><span>پخش مستقیم</span><span>کاور هنرمندان</span><span>فهرست پخش آوا و نوا</span></div><a href="https://audius.co/" target="_blank" rel="noopener noreferrer" class="audius-provider-link">منبع موسیقی: Audius ↗</a></div>
+  <div id="audiusGrid" class="audius-grid" aria-label="آرشیو مستقل موسیقی ایرانی" aria-live="polite"></div>
+  <p id="audiusEmpty" class="empty-state" hidden>اطلاعات قطعات آدیوس دریافت نشد. اتصال اینترنت را بررسی کن.</p>
+  <div class="audius-player" id="audiusPlayer" hidden aria-label="موزیک پلیر آوا و نوا">
+    <div class="audius-playing-header">
+      <img id="audiusCover" alt="کاور قطعه" src="../radio-neon-logo.webp" width="120" height="120" loading="lazy">
+      <div class="audius-playing-text">
+        <p class="kicker">AVA O NAVA · NOW PLAYING</p>
+        <h3 id="audiusTitleNow">آماده شنیدن</h3>
+        <p id="audiusArtistNow">موسیقی ایرانی</p>
+        <a id="audiusSourceLink" href="https://audius.co/" target="_blank" rel="noopener noreferrer">نمایش قطعه در آدیوس ↗</a>
+      </div>
+    </div>
+    <div class="audius-seek-row" dir="ltr">
+      <time id="audiusElapsed">0:00</time>
+      <input id="audiusSeek" type="range" min="0" max="1000" value="0" disabled aria-label="جابه‌جایی در قطعه">
+      <time id="audiusTotal">--:--</time>
+    </div>
+    <div class="audius-controls">
+      <button type="button" id="audiusPrevious" class="audius-skip" aria-label="آهنگ قبلی" title="قبلی">❮❮</button>
+      <button type="button" id="audiusToggle" class="audius-primary" aria-label="پخش موسیقی">▶</button>
+      <button type="button" id="audiusNext" class="audius-skip" aria-label="آهنگ بعدی" title="بعدی">❯❯</button>
+      <label class="audius-volume">صدا <input type="range" id="audiusVolume" min="0" max="100" value="80" aria-label="میزان صدای موسیقی"></label>
+    </div>
+    <p class="audius-status" id="audiusStatus" role="status" aria-live="polite">برای شنیدن موسیقی یکی از قطعات را انتخاب کن.</p>
+  </div>
+  <p class="audius-note">صدا از سرویس رسمی آدیوس دریافت می‌شود. فایل موسیقی روی سرور رادیو ذخیره نمی‌شود و در صورت محدودشدن منبع، لینک اصلی قطعه در دسترس است.</p>
+  <audio id="audiusAudio" preload="none" playsinline></audio>
+</section>
 <section class="container section-block" id="episodes" aria-labelledby="episodesTitle">
   <div class="section-heading"><div><p class="kicker">RADIO REPLAYS</p><h2 id="episodesTitle">برنامه‌های ضبط‌شده</h2><p class="section-description">اگر برنامه‌ای را از دست دادی، اینجا دوباره بشنو.</p></div></div>
   <div class="recording-layout"><div id="recordingGrid" class="recording-grid"></div>
