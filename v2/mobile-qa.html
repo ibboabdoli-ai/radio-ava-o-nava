@@ -13,7 +13,13 @@
   document.body.append(frame);
   const ready=await Promise.race([new Promise(resolve=>frame.onload=()=>resolve(true)),wait(15000).then(()=>false)]);
   if(!ready){checks.push({width,error:'timeout'});frame.remove();continue}
-  await wait(1800);
+  await wait(1200);
+  // Wait for the mobile styles to be applied instead of measuring a partial page.
+  const docCheck=frame.contentDocument;
+  for(let attempt=0;attempt<12;attempt++){
+    if(docCheck?.getElementById('menuButton')&&getComputedStyle(docCheck.getElementById('menuButton')).display==='grid')break;
+    await wait(450);
+  }
   try{
    const doc=frame.contentDocument;
    const root=doc.documentElement,body=doc.body;
@@ -24,10 +30,11 @@
    const hero=box('.hero'),player=box('.live-panel'),dock=box('.player-dock');
    const elements=[...doc.querySelectorAll('body *')].filter(e=>{
       const st=getComputedStyle(e);if(st.display==='none'||st.position==='fixed')return false;
+      if(e.closest('.schedule-grid,.filter-tabs'))return false;
       const b=e.getBoundingClientRect();
       return b.width>0&&(b.left<-3||b.right>width+3)&&st.overflowX!=='auto';
    }).slice(0,6).map(e=>({tag:e.tagName.toLowerCase(),class:e.className?.baseVal||e.className||'',right:Math.round(e.getBoundingClientRect().right)}));
-   checks.push({width,viewport,scrollWidth:maxScroll,horizontalOverflow:maxScroll>viewport+2,
+   checks.push({width,viewport,scrollWidth:maxScroll,horizontalOverflow:maxScroll>viewport+2,mobileStylesActive:show('#menuButton')==='grid',bodyOverflow:getComputedStyle(body).overflowX,
      menuDisplay:show('#menuButton'),navigationDisplay:show('#navigation'),
      heroHeight:Math.round(hero?.height||0),livePlayerTop:Math.round(player?.top||-1),livePlayerWidth:Math.round(player?.width||0),
      dockPosition:show('.player-dock')==='none'?null:getComputedStyle(doc.querySelector('.player-dock')).position,
