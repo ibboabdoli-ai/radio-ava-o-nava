@@ -82,7 +82,7 @@ test('Premium mobile navigation, presentation and compatibility',()=>{
  assert.match(html,/class="mobile-station-intro container"/);
  assert.match(html,/href="\.\/mobile-premium\.css\?v=5"/);
  assert.match(html,/src="\.\/mobile-premium\.js\?v=5"/);
- assert.match(html,/src="\.\/app\.js\?v=5"/);
+ assert.match(html,/src="\.\/app\.js\?v=7"/);
  assert.equal((html.match(/data-mobile-tab="/g)||[]).length,4);
  assert.match(premium,/@media\(max-width:700px\)/);
  assert.match(premium,/prefers-reduced-motion:reduce/);
