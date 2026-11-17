@@ -535,3 +535,44 @@ input[type=range]{accent-color:var(--gold)}
  .install-image-dialog{max-width:calc(100vw - 24px);width:calc(100vw - 24px);padding:12px}
 }
 @media(prefers-reduced-motion:reduce){.install-step-grid{scroll-behavior:auto!important}}
+
+
+/* Single-step install slides (iOS + Android): only one screenshot at a time.
+   Overrides the earlier horizontal-card rail without modifying other sections. */
+.install-slider{min-width:0;margin-top:14px}
+.install-slider .install-step-grid{display:block;overflow:hidden;scroll-snap-type:none;grid-auto-flow:row;grid-template-columns:none;padding:0;margin:0;touch-action:pan-y}
+.install-slider .install-step-card{display:flex;flex-direction:column;min-width:0;width:100%;min-height:0;padding:15px 13px;border-radius:15px;background:#201b2c;scroll-snap-align:none;animation:installSlideIn .23s ease-out}
+.install-slider .install-step-card[hidden]{display:none!important}
+.install-slider .install-step-copy{min-height:0;align-items:center;gap:10px;margin-bottom:11px}
+.install-slider .install-step-copy strong{font-size:13px;line-height:1.75}
+.install-slider .install-step-copy p{font-size:11px;margin:3px 0;color:var(--muted)}
+.install-slider .install-preview{align-items:center;min-height:0;padding:10px;gap:7px;background:#151120;border-color:#a68fa960;border-radius:13px}
+.install-slider .install-preview img{display:block;width:min(100%,270px);max-width:100%;height:auto;max-height:none;aspect-ratio:360/710;object-fit:contain;object-position:center;margin:0 auto;background:#171425;border-radius:10px}
+.install-slider .install-preview-hint{font-size:11px;line-height:1.5}
+.install-slider-controls{display:grid;grid-template-columns:47px minmax(0,1fr) 47px;align-items:center;gap:9px;margin-top:13px}
+.install-slider-arrow{display:grid;place-items:center;width:47px;height:47px;border-radius:12px;border:1px solid #c6aa9477;background:#ffffff0d;color:var(--gold);font-size:30px;line-height:1;transition:background .15s,border-color .15s}
+.install-slider-arrow:not(:disabled):is(:hover,:focus-visible){background:#e8c28c25;border-color:var(--gold)}
+.install-slider-arrow:disabled{color:#918699;opacity:.4}
+.install-slider-status{text-align:center;color:var(--gold);font-size:12px;font-weight:800}
+.install-slider-dots{display:flex;justify-content:center;align-items:center;gap:5px;padding:5px 0 0;margin-top:5px}
+.install-slider-dot{width:39px;height:36px;display:grid;place-items:center;border:0;background:transparent;border-radius:8px}
+.install-slider-dot span{display:block;width:7px;height:7px;border-radius:50%;background:#7c7089;transition:background .15s,width .15s}
+.install-slider-dot.active span{width:22px;border-radius:6px;background:var(--gold)}
+.install-scroll-help{text-align:center;font-size:11px}
+@keyframes installSlideIn{from{opacity:.65;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(max-width:700px){
+ .install-slider{margin-top:13px}
+ .install-slider .install-step-grid{display:block;grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:none;overflow:hidden;padding:0;scroll-snap-type:none}
+ .install-slider .install-step-card{width:100%;min-height:0;padding:12px 10px}
+ .install-slider .install-step-copy{min-height:0;gap:9px;margin-bottom:9px}
+ .install-slider .install-step-copy strong{font-size:12px}
+ .install-slider .install-step-copy p{font-size:11px}
+ .install-slider .install-preview img{width:min(100%,270px);max-width:100%;height:auto;max-height:none;object-fit:contain;object-position:center}
+ .install-slider .install-preview[data-install-image$="-4.svg"] img{object-position:center}
+ .install-slider-controls{margin-top:11px}
+ .install-slider-status{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){
+ .install-slider .install-step-card{animation:none!important}
+ .install-slider-arrow,.install-slider-dot span{transition:none!important}
+}
