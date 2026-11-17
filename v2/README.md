@@ -1,63 +1,39 @@
-# Radio Ava o Nava — v2 candidate
+# Radio Ava o Nava — isolated v2 Audius-only release candidate
 
-Status: **work in progress / PR only**. The live station and the current GitHub Pages entrypoint are unchanged.
+**Scope:** Branch-only work; the current main website, DNS, and live radio system are unchanged.
+**Music source:** Audius public API (https://api.audius.co/v1). No SoundCloud music, script, embed or catalog is present in this v2 candidate.
 
-## Included
+## Features
+- Persian RTL responsive site with live Icecast stream, listener stats, weekly show schedule, archived show recordings, competitions, Clubhouse and social links.
+- One native Audius music player: play/pause, previous/next, seek, album artwork, iOS-compatible handling, OS media controls where supported, single-source audio coordination.
+- Seven curated Audius tracks as initial metadata (audius-catalog.json).
+- Dynamic music catalog: Audius /tracks/search with text search, suggested genres/artist queries, pagination, and source attribution.
+- Dynamic albums and playlists: Audius /playlists/search, open /playlists/{id}/tracks in the same native player.
+- No self-hosted, copied, downloaded, or re-uploaded third-party audio. Audio streams from Audius.
+- Live search returns what Audius indexes and exposes; it cannot guarantee every Persian track, availability or licensing of every uploader.
 
-- Responsive Persian RTL editorial redesign and single-page navigation.
-- Unified live and replay playback with shared bottom dock; stop competing streams.
-- Live Icecast streaming with retry/backoff, 7-second public-stats timeout, stale/unknown state and no hardcoded listener counts.
-- The 16 SoundCloud items already curated in the existing site's `music.html`, grouped by genre and artist, official embedded player, source link, local favorites and next/previous entry buttons.
-- Four existing MP3 recordings using the current archive host, with seek, next/previous and local resume position.
-- Tehran 22:00 Saturday–Wednesday program; automatic Stockholm and London clock conversion.
-- Clubhouse, Telegram, WhatsApp and existing Google contest form links.
-- Installable PWA shell with isolated service worker. No audio is cached or copied.
-- A publicly readable **management guide** (`manage.html`) linking GitHub content sources. **Not** an authenticated editing panel; no editing secrets should ever be embedded in client code.
+## Data
+- shows.json: schedule, public links, show recordings.
+- audius-catalog.json: seven initial curated tracks.
+- Search results and albums are fetched dynamically from Audius and are not persisted to GitHub.
+- audius.js: native HTML Audio playback and API catalog discovery.
+- audius.css: custom radio design and responsive discovery UI.
 
-## Content files
-
-- `shows.json`: timetable, public links, title, recordings.
-- `catalog.json`: curated music references; official SoundCloud sources only.
-- `index.html`: static, accessible RTL UI.
-- `app.js`: live audio, archive and UI state.
-- `site.css`: responsive theme.
-- `sw.js` + `manifest.webmanifest`: offline shell / install metadata.
-
-## Local smoke test
-
-Run from the repository root with Node 22 or later:
-
-```sh
+## Test commands
 node --test v2/tests/smoke.test.mjs
-```
 
-Serve the repository root with any static HTTP server, then visit `/v2/`. Avoid opening `file://`, as content fetch and service workers require HTTP(S).
+## Manual acceptance checklist before merge
+1. Preview on iPhone Safari, Android Chrome, desktop Chrome and Edge.
+2. Search Persian music by Persian and Latin artist names; verify pagination and source artwork.
+3. Search playlists/albums, open their tracks, and verify music plays through native player.
+4. Test fast switching, previous/next, seek, lock-screen and background playback, and stream errors.
+5. Confirm one audio source at a time across live, Audius and archived programs.
+6. Confirm existing contest, socials, install tutorials, program times and listener status unchanged.
+7. Check keyboard navigation, small-screen overflow and reduced-motion preference.
+8. Validate the rights and availability of individual recordings; fan uploads are not necessarily authorized.
+9. Keep main intact with a rollback plan. Never merge without final approval.
 
-## Manual acceptance tests BEFORE merge
-
-1. iPhone Safari, Android Chrome, desktop Chrome and Edge, both portrait and landscape.
-2. LIVE button, Icecast streaming, mobile background/lock screen, pause, reconnect, network drop and offline messages.
-3. Verify LIVE/OFFLINE status and listener count against a real server event. If stats route is inaccessible due CORS, keep **unknown** rather than inventing numbers.
-4. Browse all 16 music references; verify actual playable sources. Confirm each provider's usage rights and availability. The app embeds the provider and does **not** bypass restrictions.
-5. Test archive files for HTTP availability, playback and seek. Confirm audio formats and partial-content/range support.
-6. Confirm never playing live, archive and SoundCloud simultaneously.
-7. Verify timezone edge dates (Stockholm daylight-saving changes) and Clubhouse direct-room link when provided.
-8. Test Google Form submission and private response access in Google Drive; do not expose participants' data on this static website.
-9. Install to home screen on iOS and Android; verify icon appearance and update behavior.
-10. Check keyboard navigation, screen-reader announcements, reduced-motion and contrast; inspect Core Web Vitals in a real browser.
-11. Validate social/share URLs, metadata and mobile safe-area layout.
-12. Review PWA caching, content CSP approach and production rollback plan.
-
-## Not yet implemented / requires an authorized backend
-
-- Authenticated admin login and direct content editing inside the site.
-- Song requests, public chat, interactive polls and notification subscriptions (requires persistence, moderation, abuse prevention and consent).
-- Scheduled automatic recordings/uploading or a server-side audio failover.
-- Browser and server end-to-end tests: **not yet run**, so deployment is blocked pending acceptance.
-
-## Deployment guardrails
-
-- **Do not merge** until manual acceptance checks pass.
-- Do not change the `main` branch, GitHub Pages settings, domain, DNS, Icecast credentials or Cloudflare Tunnel in this PR.
-- For production launch, choose whether to promote `v2/` to `/` or retain the isolated path; update manifest scope, service-worker path, metadata and management links together.
-- Preserve a tagged backup of the current `main` and keep rollback documented.
+## Not included
+- Authenticated editing, polls, requests backend, notifications, analytics.
+- A copy of every recording on Audius: only searchable public content is accessible.
+- Complete live music and mobile QA; do not promote this branch to the main domain yet.
