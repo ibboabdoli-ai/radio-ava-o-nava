@@ -18,7 +18,7 @@
   const safeHttps=(url,hostnames)=>{try{const u=new URL(url);return u.protocol==='https:'&&(!hostnames||hostnames.some(h=>u.hostname===h||u.hostname.endsWith('.'+h)))?u.href:null;}catch{return null;}};
   function toast(message){const t=$('toast');t.textContent=message;t.hidden=false;clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.hidden=true,5500);}
   function setLink(id,url){const n=$(id),v=safeHttps(url);if(!n)return;if(v)n.href=v;else n.removeAttribute('href');}
-  function setDock(title,subtitle,playState,href){setText('dockTitle',title);setText('dockSubtitle',subtitle);setText('dockPlay',playState?'Ⅱ':'▶');$('dockDetail').href=href;let action=state.mode==='recording'?'پخش یا مکث برنامه':state.mode==='music'?'کنترل موسیقی':'پخش یا توقف زنده';$('dockPlay').setAttribute('aria-label',action);}
+  function setDock(title,subtitle,playState,href){setText('dockTitle',title);setText('dockSubtitle',subtitle);setText('dockPlay',playState?'Ⅱ':'▶');$('dockDetail').href=href;$('playerDock').classList.toggle('dock-active',state.mode!=='idle');let action=state.mode==='recording'?'پخش یا مکث برنامه':state.mode==='music'?'کنترل موسیقی':'پخش یا توقف زنده';$('dockPlay').setAttribute('aria-label',action);}
   function saveFavorites(favs){try{localStorage.setItem('ava-v2-favs',JSON.stringify([...favs].slice(0,100)))}catch{}}
   const favorites=(()=>{try{const v=JSON.parse(localStorage.getItem('ava-v2-favs')||'[]');return new Set(Array.isArray(v)?v.filter(x=>typeof x==='string').slice(0,100):[])}catch{return new Set()}})();
   const fmtTime=(date,tz)=>new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(date);
@@ -180,7 +180,7 @@
     setText('musicCount',fa(items.length)+' مورد');$('musicEmpty').hidden=items.length!==0;
     for(const t of items){
       const card=host('article');card.className='music-card';
-      const cover=host('div');cover.className='music-cover';cover.append(elText('span','♫'),elText('small','AVA O NAVA'));
+      const cover=host('div');cover.className='music-cover';cover.append(elText('span',(t.artist||'آ').trim().charAt(0)),elText('small','AVA O NAVA'));cover.setAttribute('aria-hidden','true');
       const details=host('div');details.className='music-details';
       details.append(elText('small',t.type==='album'?'آلبوم':'قطعه موسیقی','music-type'),elText('h3',t.title),elText('p',t.artist));
       const actions=host('div');actions.className='music-actions';
