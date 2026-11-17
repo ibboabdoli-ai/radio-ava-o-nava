@@ -19,6 +19,7 @@
       .map(v => String(v).padStart(2, '0')).join(':');
   };
   const unknown = () => {
+    window.dispatchEvent(new CustomEvent('radio-live-status',{detail:{live:null}}));
     liveEl.textContent = 'وضعیت رادیو: نامشخص';
     listenersEl.textContent = 'شنوندگان آنلاین: نامشخص';
     elapsedEl.textContent = 'زمان پخش زنده: --:--:--';
@@ -58,6 +59,7 @@
       }
       last = { live: data.live, listeners: count, startedAt: start };
       lastSuccess = Date.now();
+      window.dispatchEvent(new CustomEvent('radio-live-status',{detail:{live:last.live}}));
     } catch (error) {
       // A blocked route, CORS error or outage is unknown, NEVER an invented OFFLINE.
     } finally {

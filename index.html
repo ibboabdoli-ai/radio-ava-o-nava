@@ -361,6 +361,13 @@ body{overflow-x:hidden}
 <section class="panel" id="playerShell" aria-label="پلیر پخش زنده"><div class="status-row"><div class="status" id="status"><span class="dot"></span><span id="statusText">آماده شنیدن</span></div><div class="info-strip"><span class="info-chip" id="liveStatus">وضعیت سرور: نامشخص</span><span class="info-chip" id="listeners">شنوندگان: نامشخص</span><span class="info-chip" id="elapsed">زمان پخش زنده: --:--:--</span></div></div>
 <div class="player-core"><img class="album-art" src="./radio-neon-logo.webp" alt="رادیو آوا و نوا" width="160" height="160"><div class="player-main"><div class="wave" aria-hidden="true"><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span><span style="--n:9"></span><span style="--n:10"></span><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span><span style="--n:9"></span><span style="--n:10"></span><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span><span style="--n:9"></span><span style="--n:10"></span><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span><span style="--n:9"></span><span style="--n:10"></span><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span><span style="--n:3"></span><span style="--n:4"></span><span style="--n:5"></span><span style="--n:6"></span><span style="--n:7"></span><span style="--n:8"></span><span style="--n:9"></span><span style="--n:10"></span><span style="--n:0"></span><span style="--n:1"></span><span style="--n:2"></span></div><div class="player-buttons"><div class="play-wrap"><button id="play" type="button" aria-label="شروع پخش زنده"><span class="play-icon" aria-hidden="true"><svg class="play-svg" viewBox="0 0 64 64" focusable="false"><path class="icon-play" d="M24 16.5c0-2.6 2.8-4.2 5-2.9l23 14.7c2.4 1.5 2.4 5 0 6.5L29 49.5c-2.2 1.3-5-.3-5-2.9z"/><g class="icon-stop"><rect x="18" y="18" width="28" height="28" rx="5"/></g></svg></span><span class="button-label">شنیدن پخش زنده</span></button></div></div><div class="controls"><div class="volume-row"><label for="volume">صدای رادیو</label><input id="volume" type="range" min="0" max="100" value="80"><output id="volumeText" for="volume">۸۰٪</output></div><button class="control-btn" id="fullscreen" type="button">تمام‌صفحه</button></div></div></div>
 <p id="message" role="status" aria-live="polite">برای گوش دادن، دکمه پخش را بزنید.</p><audio id="audio" preload="none"></audio></section>
+<section id="recordingsPanel" class="recordings-panel" aria-label="برنامه‌های ضبط‌شده">
+<h3>برنامه ضبط‌شده</h3><p id="recordingTitle">آرشیو رادیو آوا و نوا</p><p id="recordingMeta" class="rec-meta"></p>
+<div class="rec-controls"><button type="button" id="recPrev" aria-label="برنامه قبلی">قبلی</button><button type="button" id="recPlay">پخش ضبط</button><button type="button" id="recNext" aria-label="برنامه بعدی">بعدی</button></div>
+<input id="recSeek" class="rec-progress" type="range" min="0" max="1000" value="0" aria-label="موقعیت پخش">
+<div class="rec-time"><span id="recCurrent">00:00</span> / <span id="recDuration">--:--</span></div>
+<p id="recMessage" class="rec-meta" role="status">برای شنیدن برنامه ضبط‌شده، پخش را بزنید.</p>
+<audio id="recordedAudio" preload="none"></audio></section>
 <p class="note">پخش هنگام اجرای برنامه فعال است. وضعیت رادیو و تعداد شنوندگان به‌صورت خودکار هر ۱۰ ثانیه به‌روز می‌شوند.</p>
 <div class="actions" id="contact"><a class="house" id="clubhouse" href="https://www.clubhouse.com/house/%D8%A7%D9%88%D8%A7-%D9%88-%D9%86%D9%88%D8%A7-%D9%85%D9%88%D8%B3%DB%8C%D9%82%DB%8C-%D8%B2%D9%86%D8%AF%D9%87-%D8%B4%D8%B9%D8%B1-%D9%88-%D8%A7%D9%88%D8%A7%D8%B2?chs=o78CNL9gG3%3AxWrPxdSYMSeit7zGhjYUmTDXVQFOQFETFvVa4T_EZ4o&amp;utm_medium=ch_general_house" target="_blank" rel="noopener noreferrer">ورود به هاوس کلاب‌هاوس</a><a id="requestSong" href="https://t.me/+bSKXuElY13I3NWY0" target="_blank" rel="noopener noreferrer">ارسال پیام / درخواست آهنگ</a><a class="telegram" href="https://t.me/+nFR4GhHTc7Y3ZjNk" target="_blank" rel="noopener noreferrer">اشتراک در تلگرام</a><a class="whatsapp" href="https://www.whatsapp.com/channel/0029VbDqKNg5vKA9OxDV4046" target="_blank" rel="noopener noreferrer">اشتراک در واتساپ</a><button type="button" id="copyLink">کپی لینک رادیو</button><button type="button" id="shareLink">اشتراک‌گذاری</button></div>
 <section class="weekly" id="schedule" aria-labelledby="weekly-title"><div class="weekly-head"><div><p class="weekly-eyebrow">RADIO AVA O NAVA</p><h2 id="weekly-title">برنامه هفتگی</h2><p>موسیقی، آواز، شعر و دکلمه · شنبه تا چهارشنبه، ساعت ۲۲ به وقت ایران</p></div><div class="weekly-clock-pair"><div class="weekly-clock"><span>ساعت ایران</span><strong id="weekly-iran-clock" dir="ltr">--:--</strong></div><div class="weekly-clock"><span>ساعت اروپا (سوئد)</span><strong id="weekly-local-clock" dir="ltr">--:--</strong></div><div class="weekly-clock"><span>ساعت انگلیس (لندن)</span><strong id="weekly-london-clock" dir="ltr">--:--</strong></div></div></div><div class="weekly-next"><div><span class="weekly-eyebrow">برنامه بعدی</span><strong id="weekly-next-name">در حال محاسبه…</strong><span id="weekly-next-local">زمان محلی: —</span></div><div class="weekly-count"><span>تا شروع برنامه</span><strong id="weekly-countdown" dir="ltr" aria-live="off">--:--:--</strong></div></div><div class="weekly-days" id="weekly-days" aria-label="روزهای برنامه"></div><p class="weekly-foot">زمان‌ها بر اساس ساعت ایران تنظیم شده‌اند. ساعت محلی و شمارش معکوس به‌صورت خودکار محاسبه می‌شوند. زمان برنامه ممکن است تغییر کند.</p></section>
@@ -452,7 +459,8 @@ function scheduleRetry(){
  render('retry','اتصال قطع شده؛ تلاش مجدد '+fa(retries)+' از ۶ تا چند ثانیه دیگر.');
  retryTimer=setTimeout(()=>{retryTimer=null;connect()},delay);
 }
-button.addEventListener('click',()=>wanted?stop('پخش متوقف شد.'):((wanted=true),connect()));
+button.addEventListener('click',()=>wanted?stop('پخش متوقف شد.'):((wanted=true),window.dispatchEvent(new Event('radio-live-started')),connect()));
+window.addEventListener('radio-recording-started',()=>{if(wanted)stop('پخش زنده متوقف شد؛ برنامه ضبط‌شده در حال پخش است.')});
 audio.addEventListener('playing',()=>{if(!wanted)return;clearTimers();retries=0;connectionAt=Date.now();if(!listeningSince)listeningSince=Date.now();render('playing','شما در حال شنیدن رادیو آوا و نوا هستید.')});
 audio.addEventListener('waiting',()=>{if(wanted){if(listeningSince){listenedMs+=Date.now()-listeningSince;listeningSince=null}render('connecting','در حال دریافت صدا…');clearTimeout(stallTimer);stallTimer=setTimeout(()=>{if(wanted&&audio.readyState<3)scheduleRetry()},12000)}});
 audio.addEventListener('error',()=>{if(wanted)scheduleRetry()});
@@ -482,5 +490,41 @@ loadProgram();setInterval(loadProgram,60000);
 // Public stats are read from radio-stats.xsl by radio-stats.js; blocked access remains unknown.
 $('liveStatus').textContent='وضعیت سرور: نامشخص';
 $('listeners').textContent='شنوندگان آنلاین: نامشخص';
+})();
+</script><script>
+(() => {
+'use strict';
+const base='https://archive.ibboabdoli.com/recordings/';
+const tracks=[
+['rec_20261116-182430.mp3','۱۶ نوامبر ۲۰۲۶','۱۸:۲۴'],
+['rec_20261116-075102.mp3','۱۶ نوامبر ۲۰۲۶','۰۷:۵۱'],
+['rec_20261115-185719.mp3','۱۵ نوامبر ۲۰۲۶','۱۸:۵۷'],
+['rec_20261115-090134.mp3','۱۵ نوامبر ۲۰۲۶','۰۹:۰۱']
+];
+const el=id=>document.getElementById(id),audio=el('recordedAudio');
+window.addEventListener('radio-live-started',()=>audio.pause());
+let index=0;
+const fmt=n=>Number.isFinite(n)?[Math.floor(n/3600),Math.floor(n%3600/60),Math.floor(n%60)].map((x,i)=>i?String(x).padStart(2,'0'):String(x)).join(':'):'--:--';
+function setTrack(autoplay=false){
+ audio.pause();audio.src=base+encodeURIComponent(tracks[index][0]);audio.load();
+ el('recordingTitle').textContent='برنامه '+tracks[index][1];
+ el('recordingMeta').textContent='ساعت ثبت‌شده: '+tracks[index][2]+' · برنامه '+(index+1)+' از '+tracks.length;
+ el('recSeek').value=0;el('recCurrent').textContent='00:00';el('recDuration').textContent='--:--';el('recPlay').textContent='پخش ضبط';
+ if(autoplay)audio.play().catch(()=>{el('recMessage').textContent='پخش شروع نشد؛ دوباره دکمه پخش را بزنید.'});
+}
+el('recPlay').addEventListener('click',()=>{
+ if(audio.paused)audio.play().catch(()=>{el('recMessage').textContent='پخش ممکن نشد. اتصال اینترنت را بررسی کنید.'});
+ else audio.pause();
+});
+el('recPrev').addEventListener('click',()=>{index=(index+tracks.length-1)%tracks.length;setTrack(false)});
+el('recNext').addEventListener('click',()=>{index=(index+1)%tracks.length;setTrack(false)});
+audio.addEventListener('play',()=>{window.dispatchEvent(new Event('radio-recording-started'));el('recPlay').textContent='توقف ضبط';});
+audio.addEventListener('pause',()=>el('recPlay').textContent='پخش ضبط');
+audio.addEventListener('timeupdate',()=>{el('recCurrent').textContent=fmt(audio.currentTime);if(Number.isFinite(audio.duration)&&audio.duration>0)el('recSeek').value=Math.round(audio.currentTime/audio.duration*1000)});
+audio.addEventListener('loadedmetadata',()=>el('recDuration').textContent=fmt(audio.duration));
+audio.addEventListener('ended',()=>{index=(index+1)%tracks.length;setTrack(true)});
+audio.addEventListener('error',()=>{el('recMessage').textContent='این ضبط بارگذاری نشد؛ برنامه بعدی را امتحان کنید.'});
+el('recSeek').addEventListener('change',e=>{if(Number.isFinite(audio.duration)&&audio.duration>0)audio.currentTime=audio.duration*Number(e.target.value)/1000});
+setTrack(false);
 })();
 </script><script src="./radio-stats.js" defer></script><script src="./weekly-schedule.js" defer></script></body></html>
