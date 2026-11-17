@@ -17,7 +17,7 @@
   const safeHttps=(url,hostnames)=>{try{const u=new URL(url);return u.protocol==='https:'&&(!hostnames||hostnames.some(h=>u.hostname===h||u.hostname.endsWith('.'+h)))?u.href:null;}catch{return null;}};
   function toast(message){const t=$('toast');t.textContent=message;t.hidden=false;clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.hidden=true,5500);}
   function setLink(id,url){const n=$(id),v=safeHttps(url);if(!n)return;if(v)n.href=v;else n.removeAttribute('href');}
-  function setDock(title,subtitle,playState,href){setText('dockTitle',title);setText('dockSubtitle',subtitle);setText('dockPlay',playState?'Ⅱ':'▶');$('dockDetail').href=href;$('playerDock').classList.toggle('dock-active',state.mode!=='idle');let action=state.mode==='recording'?'پخش یا مکث برنامه':state.mode==='audius'?'کنترل موسیقی آدیوس':'پخش یا توقف زنده';$('dockPlay').setAttribute('aria-label',action);}
+  function setDock(title,subtitle,playState,href){setText('dockTitle',title);setText('dockSubtitle',subtitle);setText('dockPlay',playState?'Ⅱ':'▶');$('dockPlay').classList.toggle('is-playing',!!playState);$('dockPlay').setAttribute('aria-pressed',String(!!playState));$('dockDetail').href=href;$('playerDock').classList.toggle('dock-active',state.mode!=='idle');let action=state.mode==='recording'?'پخش یا مکث برنامه':state.mode==='audius'?'کنترل موسیقی آدیوس':'پخش یا توقف زنده';$('dockPlay').setAttribute('aria-label',action);}
   const fmtTime=(date,tz)=>new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(date);
   const dayInTehran=date=>wk[new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Tehran',weekday:'short'}).format(date)];
   function showCandidates(){
@@ -69,7 +69,7 @@
     }catch{/* Unknown is not OFFLINE. */}finally{clearTimeout(timeout);polling=false;updateStatsUI();}
   }
   function clearLiveTimers(){clearTimeout(state.liveTimer);clearTimeout(state.liveWatchdog);state.liveTimer=null;state.liveWatchdog=null;}
-  function liveUI(label,details,isPlaying){setText('liveAction',label);setText('liveMessage',details);setText('livePlayIcon',isPlaying?'Ⅱ':'▶');$('waveform').classList.toggle('is-active',isPlaying);setDock('رادیو آوا و نوا',details,isPlaying,'#listen');}
+  function liveUI(label,details,isPlaying){setText('liveAction',label);setText('liveMessage',details);setText('livePlayIcon',isPlaying?'Ⅱ':'▶');$('livePlay').classList.toggle('is-playing',!!isPlaying);$('livePlay').setAttribute('aria-label',isPlaying?'توقف پخش زنده':'شروع پخش زنده');$('livePlay').setAttribute('aria-pressed',String(!!isPlaying));$('waveform').classList.toggle('is-active',isPlaying);setDock('رادیو آوا و نوا',details,isPlaying,'#listen');}
   function stopLive(message='پخش متوقف شد.',update=true){state.liveWanted=false;state.liveSequence++;clearLiveTimers();liveAudio.pause();liveAudio.removeAttribute('src');liveAudio.load();state.liveTries=0;if(state.mode==='live')state.mode='idle';if(update)liveUI('پخش زنده','برای شروع، دکمه پخش را بزنید.',false);setText('liveMessage',message);}
   function suspendOtherModes(next){
     if(next!=='live'&&state.liveWanted)stopLive('پخش زنده برای شنیدن محتوای دیگر متوقف شد.',false);
@@ -132,7 +132,7 @@
     suspendOtherModes('recording');recAudio.pause();state.recordingIndex=target;recAudio.src=url;recAudio.load();
     setText('recordingTitle',track.title);setText('recordingMeta',track.time+' · '+track.date);
     $('recordingSeek').value=0;setText('recordingCurrent','00:00');setText('recordingTotal','--:--');setText('recordingMessage','برای شنیدن برنامه دکمه پخش را بزنید.');
-    setText('recordingPlay','▶');renderRecordings();setDock(track.title,'آرشیو رادیو',false,'#episodes');
+    setText('recordingPlay','▶');$('recordingPlay').classList.remove('is-playing');renderRecordings();setDock(track.title,'آرشیو رادیو',false,'#episodes');
     try{const saved=Number(localStorage.getItem('ava-v2-position-'+track.id));if(Number.isFinite(saved)&&saved>0)recAudio.addEventListener('loadedmetadata',()=>{if(saved<recAudio.duration-10)recAudio.currentTime=saved;},{once:true});}catch{}
     if(autoplay)recAudio.play().catch(()=>setText('recordingMessage','پخش خودکار مجاز نبود؛ دکمه پخش را بزنید.'));
   }
@@ -145,8 +145,8 @@
   $('recordingPrev').addEventListener('click',()=>chooseRecording(state.recordingIndex-1,false));
   $('recordingNext').addEventListener('click',()=>chooseRecording(state.recordingIndex+1,false));
   $('recordingSeek').addEventListener('input',e=>{if(Number.isFinite(recAudio.duration)&&recAudio.duration>0)recAudio.currentTime=Number(e.target.value)/1000*recAudio.duration;});
-  recAudio.addEventListener('play',()=>{suspendOtherModes('recording');setText('recordingPlay','Ⅱ');const item=state.shows.recordings[state.recordingIndex];setDock(item.title,'در حال پخش آرشیو',true,'#episodes');setMediaSession(item.title,'آرشیو آوا و نوا',()=>recAudio.play(),()=>recAudio.pause());});
-  recAudio.addEventListener('pause',()=>{setText('recordingPlay','▶');if(state.mode==='recording'){const it=state.shows.recordings[state.recordingIndex];if(it)setDock(it.title,'مکث شده',false,'#episodes');}});
+  recAudio.addEventListener('play',()=>{suspendOtherModes('recording');setText('recordingPlay','Ⅱ');$('recordingPlay').classList.add('is-playing');const item=state.shows.recordings[state.recordingIndex];setDock(item.title,'در حال پخش آرشیو',true,'#episodes');setMediaSession(item.title,'آرشیو آوا و نوا',()=>recAudio.play(),()=>recAudio.pause());});
+  recAudio.addEventListener('pause',()=>{setText('recordingPlay','▶');$('recordingPlay').classList.remove('is-playing');if(state.mode==='recording'){const it=state.shows.recordings[state.recordingIndex];if(it)setDock(it.title,'مکث شده',false,'#episodes');}});
   let saveAt=0;
   recAudio.addEventListener('timeupdate',()=>{
     setText('recordingCurrent',fmtDuration(recAudio.currentTime));if(Number.isFinite(recAudio.duration)&&recAudio.duration>0)$('recordingSeek').value=Math.floor(1000*recAudio.currentTime/recAudio.duration);
