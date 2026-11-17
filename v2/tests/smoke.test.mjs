@@ -7,12 +7,12 @@ import vm from 'node:vm';
 const root=join(dirname(fileURLToPath(import.meta.url)),'..');
 const get=name=>readFileSync(join(root,name),'utf8');
 const html=get('index.html'),app=get('app.js'),sw=get('sw.js');
-const css=get('site.css'),audiusJs=get('audius.js'),audiusCss=get('audius.css');
+const css=get('site.css'),audiusJs=get('audius.js');
 const audius=JSON.parse(get('audius-catalog.json'));
 const shows=JSON.parse(get('shows.json')),manifest=JSON.parse(get('manifest.webmanifest'));
 
 test('All radio assets exist and executable JS parses',()=>{
- for(const f of ['index.html','app.js','site.css','mobile.css','polish.css','mobile-premium.css','interaction.js','audius.css','audius.js','mobile-premium.js','audius-catalog.json','shows.json','sw.js','manifest.webmanifest','manage.html'])
+ for(const f of ['index.html','app.js','site.css','interaction.js','audius.js','mobile-premium.js','audius-catalog.json','shows.json','sw.js','manifest.webmanifest','manage.html'])
    assert.ok(existsSync(join(root,f)),f);
  for(const j of [app,audiusJs,get('interaction.js'),get('mobile-premium.js'),sw])new vm.Script(j);
  assert.match(html,/<html lang="fa" dir="rtl">/);
@@ -28,7 +28,7 @@ test('Every JS referenced HTML ID exists and is unique',()=>{
 });
 
 test('No legacy music provider is loaded on v2',()=>{
- for(const source of [html,app,audiusJs,sw,audiusCss,css,get('mobile.css'),get('polish.css')]){
+ for(const source of [html,app,audiusJs,sw,css]){
    assert.equal(/soundcloud/i.test(source),false);
    assert.equal(/(?:\.\/|\/)catalog\.json(?=['"])/i.test(source),false);
  }
@@ -78,16 +78,24 @@ test('Timezone conversion in November 2026',()=>{
  }
 });
 
-test('Mobile layout, motion and original non-music features stay present',()=>{
- for(const file of ['polish.css','mobile.css','mobile-premium.css','audius.css'])
-   assert.ok(get(file).length>500);
- const animations=get('polish.css')+get('mobile-premium.css');
- assert.match(animations,/prefers-reduced-motion/);
- for(const id of ['mobileBottomNav','headerShare','liveFullscreen','liveShare','liveCopy','requestSongLink','install','about','contact'])
-   assert.ok(html.includes('id="'+id+'"'),id);
- for(const system of ['ios','android'])for(let i=1;i<=4;i++)assert.ok(html.includes(system+'-install-'+i+'.svg'));
- assert.match(html,/href="\.\/mobile-premium\.css/);
- assert.match(html,/src="\.\/audius\.js/);
+test('One unified accessible responsive design, no obsolete style layers',()=>{
+  for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
+    assert.equal(existsSync(join(root,oldFile)),false,oldFile);
+  assert.match(html,/href="\.\/site\.css\?v=11"/);
+  assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,1);
+  for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
+    assert.equal(sw.includes(oldFile),false,oldFile);
+  for(const text of ['.main-play::before','.rec-play::before','.audius-primary::before','.mobile-bottom-nav','@media(max-width:700px)','prefers-reduced-motion:reduce','.up-next','.audius-grid','.recording-grid','.install-step-card'])
+    assert.ok(css.includes(text),text);
+  assert.match(css,/\.up-next\{padding:/);
+  assert.equal(css.includes("radial-gradient(360px circle"),false);
+  for(const id of ['mobileBottomNav','headerShare','liveFullscreen','liveShare','liveCopy','requestSongLink','install','about','contact','recordingPlay','audiusToggle'])
+    assert.ok(html.includes('id="'+id+'"'),id);
+  for(const system of ['ios','android'])for(let i=1;i<=4;i++)assert.ok(html.includes(system+'-install-'+i+'.svg'));
+  assert.match(app,/\.classList\.toggle\('is-playing'/);
+  assert.match(audiusJs,/\.classList\.toggle\('is-playing'/);
+  assert.match(audiusJs,/function matchesSearch/);
+  assert.match(html,/src="\.\/audius\.js/);
 });
 
 test('PWA cache excludes external media endpoints and survives isolated install',()=>{
