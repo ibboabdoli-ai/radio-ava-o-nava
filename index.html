@@ -390,6 +390,11 @@ body{overflow-x:hidden}
 .recordings-panel .rec-track-text small{color:#bcb0d0;font-size:11px}
 .recordings-panel button:focus-visible,.recordings-panel input:focus-visible{outline:3px solid #ffe3a5;outline-offset:3px}
 @media(max-width:640px){.recordings-panel{padding:16px;border-radius:18px}.recordings-panel .rec-main{grid-template-columns:1fr;gap:15px;margin:17px 0}.recordings-panel .rec-art{width:138px;justify-self:center}.recordings-panel .rec-details{text-align:center}.recordings-panel .rec-playlist{grid-template-columns:1fr}.recordings-panel .rec-controls{gap:10px}.recordings-panel .rec-playlist-heading span{display:none}}
+
+.recordings-panel .rec-volume-row{display:flex;align-items:center;justify-content:center;gap:12px;margin:12px 0;color:#e6d3ed;font-size:12px}
+.recordings-panel .rec-volume-row input{width:min(190px,45%);accent-color:#f9c579;cursor:pointer}
+.recordings-panel .rec-volume-row output{min-width:40px;direction:rtl;font-variant-numeric:tabular-nums}
+.recordings-panel .rec-ios-volume-note{font-size:12px;text-align:center;color:#f0d9b7;margin:10px 0}
 </style>
 <body><div class="site">
 <header class="topbar"><a class="brand-wrap" href="./"><img src="./radio-neon-logo.webp" alt=""><span><span class="brand-title">رادیو آوا و نوا</span><br><span class="brand-en">Radio Ava o Nava</span></span></a>
@@ -405,6 +410,7 @@ body{overflow-x:hidden}
 <div class="rec-details"><p class="rec-kicker">آرشیو رادیو آوا و نوا</p><h3 id="recordingTitle">برنامه ضبط‌شده</h3><p id="recordingMeta" class="rec-meta"></p>
 <div class="rec-seek-row"><span id="recCurrent" class="rec-clock">00:00</span><input id="recSeek" class="rec-progress" type="range" min="0" max="1000" value="0" aria-label="موقعیت پخش برنامه ضبط‌شده"><span id="recDuration" class="rec-clock">--:--</span></div>
 <div class="rec-controls"><button type="button" id="recPrev" class="rec-skip" aria-label="برنامه قبلی" title="برنامه قبلی"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M6 5v14M19 5 8 12l11 7V5Z"/></svg></button><button type="button" id="recPlay" class="rec-primary" aria-label="پخش برنامه ضبط‌شده"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m8 5 12 7-12 7V5Z"/></svg><span id="recPlayLabel">پخش برنامه</span></button><button type="button" id="recNext" class="rec-skip" aria-label="برنامه بعدی" title="برنامه بعدی"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M18 5v14M5 5l11 7-11 7V5Z"/></svg></button></div>
+<div class="rec-volume-row"><label for="recVolume">صدای ضبط</label><input id="recVolume" type="range" min="0" max="100" value="80" step="1" aria-label="تنظیم صدای برنامه ضبط‌شده"><output id="recVolumeText" for="recVolume">۸۰٪</output></div><p id="recIosVolumeNote" class="rec-ios-volume-note" hidden>در آیفون، صدا را با دکمه‌های کناری گوشی تنظیم کنید.</p>
 <p id="recMessage" class="rec-message" role="status" aria-live="polite">برای شنیدن برنامه ضبط‌شده، پخش را بزنید.</p></div></div>
 <div class="rec-playlist-heading"><strong>فهرست برنامه‌ها</strong><span>برای انتخاب روی برنامه بزنید</span></div><div id="recPlaylist" class="rec-playlist" role="list"></div>
 <audio id="recordedAudio" preload="metadata"></audio></section>
@@ -544,6 +550,17 @@ const tracks=[
 const el=id=>document.getElementById(id),audio=el('recordedAudio'),playlist=el('recPlaylist');
 const icons={play:`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m8 5 12 7-12 7V5Z"/></svg>`,pause:`<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>`};
 let index=0;
+const volumeControl=el('recVolume'),volumeText=el('recVolumeText'),iosNote=el('recIosVolumeNote');
+const isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+if(isiOS){volumeControl.disabled=true;volumeControl.title='تنظیم صدا با دکمه‌های آیفون';iosNote.hidden=false;}
+else {
+ audio.volume=.8;
+ volumeControl.addEventListener('input',()=>{
+  const level=Number(volumeControl.value);
+  audio.volume=level/100;
+  volumeText.textContent=new Intl.NumberFormat('fa-IR').format(level)+'٪';
+ });
+}
 const fmt=n=>{if(!Number.isFinite(n)||n<0)return '--:--';const v=Math.floor(n),h=Math.floor(v/3600),m=String(Math.floor(v%3600/60)).padStart(2,'0'),s=String(v%60).padStart(2,'0');return h? h+':'+m+':'+s : m+':'+s};
 function updateButton(){
  const playing=!audio.paused;
