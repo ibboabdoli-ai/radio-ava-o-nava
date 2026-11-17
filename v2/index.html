@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#100e1c">
+<meta name="description" content="رادیو آوا و نوا؛ پخش زنده موسیقی، آواز، شعر و دکلمه، آرشیو برنامه‌ها و مسابقات.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fa_IR">
+<meta property="og:title" content="رادیو آوا و نوا | صدای لحظه‌های خوب">
+<meta property="og:description" content="پخش زنده و آرشیو برنامه‌های رادیو آوا و نوا">
+<meta property="og:image" content="https://radio.ibboabdoli.com/radio-neon-logo.webp">
+<title>رادیو آوا و نوا | پخش زنده و آرشیو</title>
+<link rel="icon" href="../radio-neon-logo.webp" type="image/webp">
+<link rel="apple-touch-icon" href="../radio-ava-app-icon-2026.png">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./site.css?v=1">
+<script defer src="https://w.soundcloud.com/player/api.js"></script>
+<script defer src="./app.js?v=1"></script>
+</head>
+<body>
+<a class="skip" href="#main">رفتن به محتوا</a>
+<div class="ambient ambient-one" aria-hidden="true"></div><div class="ambient ambient-two" aria-hidden="true"></div>
+<header class="site-header" id="top">
+  <div class="container header-inner">
+    <a class="brand" href="#home" aria-label="صفحه اصلی رادیو آوا و نوا">
+      <img src="../radio-neon-logo.webp" alt="" width="48" height="48">
+      <span><strong>آوا و نوا</strong><small lang="en" dir="ltr">RADIO AVA O NAVA</small></span>
+    </a>
+    <button class="menu-button" id="menuButton" type="button" aria-label="نمایش منو" aria-controls="navigation" aria-expanded="false">☰</button>
+    <nav class="main-nav" id="navigation" aria-label="منوی اصلی">
+      <a href="#home" class="current">صفحه اصلی</a><a href="#listen">پخش زنده</a>
+      <a href="#music">آرشیو موسیقی</a><a href="#episodes">برنامه‌های ضبط‌شده</a>
+      <a href="#schedule">جدول برنامه‌ها</a><a href="#community">مسابقات</a>
+    </nav>
+    <a class="header-cta" href="#listen"><span class="live-led" aria-hidden="true"></span> شنیدن رادیو</a>
+  </div>
+</header>
+<main id="main">
+<section class="hero container" id="home" aria-labelledby="heroTitle">
+  <div class="hero-copy">
+    <div class="eyebrow"><span class="eyebrow-line"></span> صدایی از دل موسیقی و شعر</div>
+    <h1 id="heroTitle">اینجا <em>آوا و نوا</em> است؛<br>جایی برای شنیدن.</h1>
+    <p class="hero-lead">موسیقی زنده، شعر، آواز و دکلمه؛ دور هم جمع می‌شویم تا لحظه‌های شنیدنی بسازیم.</p>
+    <div class="hero-actions">
+      <a class="btn btn-gold" href="#listen"><span aria-hidden="true">▶</span> گوش دادن به پخش زنده</a>
+      <a class="btn btn-outline" href="#episodes">شنیدن برنامه‌های قبلی <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="hero-feature"><span class="feature-avatar"><img src="../radio-neon-logo.webp" alt="" width="38" height="38"></span><span><strong>شنبه تا چهارشنبه</strong><small>هر شب ساعت ۲۲:۰۰ به وقت ایران</small></span></div>
+  </div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="orbit orbit-outer"></div><div class="orbit orbit-inner"></div><div class="visual-glow"></div>
+    <div class="hero-cover"><img src="../radio-neon-logo.webp" alt="" width="290" height="290"></div>
+    <div class="visual-caption"><span>ON AIR</span><strong>آوا و نوا</strong><small>صدای شما، قصه ما</small></div>
+    <div class="sound-lines"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+</section>
+<section class="container live-section" id="listen" aria-labelledby="listenTitle">
+  <div class="section-heading"><div><p class="kicker">LIVE RADIO</p><h2 id="listenTitle">پخش زنده رادیو</h2></div><span id="serverBadge" class="live-pill" role="status">در حال بررسی وضعیت</span></div>
+  <div class="live-layout">
+    <div class="live-panel">
+      <div class="live-info"><img class="station-art" src="../radio-neon-logo.webp" alt="لوگوی رادیو" width="104" height="104">
+        <div><div class="onair-label"><span class="live-led" aria-hidden="true"></span> رادیو آوا و نوا</div><h3 id="liveProgram">موسیقی، شعر و آواز</h3><p id="liveHost">هر شب کنار شما</p></div>
+      </div>
+      <div class="waveform" id="waveform" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="live-controls">
+        <button class="main-play" type="button" id="livePlay" aria-label="شروع پخش زنده"><span id="livePlayIcon" aria-hidden="true">▶</span></button>
+        <div class="control-copy"><strong id="liveAction">برای شنیدن آماده است</strong><small id="liveMessage" role="status" aria-live="polite">برای شروع، دکمه پخش را بزنید.</small></div>
+        <div class="volume-control"><label for="liveVolume">صدا</label><input id="liveVolume" type="range" min="0" max="100" value="80" aria-label="میزان صدا"><span id="liveVolumeValue">۸۰٪</span></div>
+      </div>
+      <div class="live-stats"><div><small>وضعیت رادیو</small><strong id="stationState">نامشخص</strong></div><div><small>شنوندگان آنلاین</small><strong id="listenerCount">نامشخص</strong></div><div><small>زمان پخش</small><strong id="liveDuration">--:--:--</strong></div></div>
+    </div>
+    <aside class="up-next"><div class="next-icon" aria-hidden="true">◷</div><p class="kicker">UP NEXT</p><h3>برنامه بعدی</h3><strong id="nextShowDay">در حال محاسبه...</strong><p>ساعت ۲۲:۰۰ به وقت ایران</p><div class="countdown" id="nextCountdown" aria-live="off">--:--:--</div>
+      <div class="timezone-list"><div><span>ایران</span><strong id="clockIran">--:--</strong></div><div><span>سوئد</span><strong id="clockSweden">--:--</strong></div><div><span>انگلیس</span><strong id="clockUk">--:--</strong></div></div>
+      <a class="text-link" id="clubhouseLink" href="https://www.clubhouse.com/" target="_blank" rel="noopener noreferrer">ورود به کلاب‌هاوس <span aria-hidden="true">↗</span></a>
+    </aside>
+  </div>
+</section>
+<section class="container section-block" id="schedule" aria-labelledby="scheduleTitle">
+  <div class="section-heading"><div><p class="kicker">OUR PROGRAMS</p><h2 id="scheduleTitle">جدول برنامه‌های هفتگی</h2><p class="section-description">زمان‌ها به‌صورت خودکار برای ایران، سوئد و انگلیس محاسبه می‌شوند.</p></div></div>
+  <div id="scheduleGrid" class="schedule-grid" aria-label="برنامه‌های هفتگی"></div>
+</section>
+<section class="section-tinted" id="music" aria-labelledby="musicTitle"><div class="container section-block">
+  <div class="section-heading"><div><p class="kicker">MUSIC COLLECTION</p><h2 id="musicTitle">آرشیو موسیقی</h2><p class="section-description">سبک دلخواه و خواننده مورد علاقه‌ات را انتخاب کن.</p></div><span class="section-count" id="musicCount">در حال بارگذاری</span></div>
+  <div class="library-tools"><label class="search-field"><span aria-hidden="true">⌕</span><input type="search" id="musicSearch" placeholder="جست‌وجوی آهنگ یا خواننده..." aria-label="جست‌وجوی آرشیو" autocomplete="off"></label><div class="filter-tabs" id="genreFilters" aria-label="فیلتر سبک موسیقی"></div></div>
+  <div class="library-tools secondary-tools"><label class="artist-select-label" for="artistFilter">خواننده <select id="artistFilter" aria-label="فیلتر خواننده"><option value="all">همه هنرمندان</option></select></label><button class="small-btn" id="favoritesOnly" type="button" aria-pressed="false">♡ علاقه‌مندی‌ها</button></div>
+  <div id="musicGrid" class="music-grid" aria-live="polite"></div><p id="musicEmpty" class="empty-state" hidden>در این دسته‌بندی قطعه قابل پخشی پیدا نشد.</p>
+  <div class="soundcloud-player" id="soundcloudPanel" hidden>
+    <div class="soundcloud-heading"><div><p class="kicker">NOW SELECTED</p><h3 id="selectedMusicTitle">انتخاب آهنگ</h3><p id="selectedMusicArtist"></p></div><a id="musicOfficialUrl" target="_blank" rel="noopener noreferrer" href="https://soundcloud.com/">باز کردن منبع رسمی ↗</a></div>
+    <iframe id="musicFrame" title="پلیر رسمی موسیقی SoundCloud" width="100%" height="166" loading="lazy" allow="autoplay" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <div class="music-player-actions"><button id="musicPrev" type="button" class="small-btn">قبلی</button><button id="musicToggle" type="button" class="btn btn-gold">پخش / مکث</button><button id="musicNext" type="button" class="small-btn">بعدی</button></div>
+    <p id="musicStatus" class="help-text" role="status" aria-live="polite">برای پخش از پلیر رسمی استفاده کن.</p>
+  </div>
+</div></section>
+<section class="container section-block" id="episodes" aria-labelledby="episodesTitle">
+  <div class="section-heading"><div><p class="kicker">RADIO REPLAYS</p><h2 id="episodesTitle">برنامه‌های ضبط‌شده</h2><p class="section-description">اگر برنامه‌ای را از دست دادی، اینجا دوباره بشنو.</p></div></div>
+  <div class="recording-layout"><div id="recordingGrid" class="recording-grid"></div>
+    <div class="recording-player"><div class="recording-cover"><img src="../radio-neon-logo.webp" alt="" width="112" height="112"></div><p class="kicker">در حال انتخاب</p><h3 id="recordingTitle">یک برنامه انتخاب کن</h3><p id="recordingMeta">آرشیو رادیو آوا و نوا</p><div class="seek-row"><span id="recordingCurrent">00:00</span><input id="recordingSeek" type="range" min="0" max="1000" value="0" aria-label="جابه‌جایی در برنامه"><span id="recordingTotal">--:--</span></div>
+      <div class="rec-controls"><button id="recordingPrev" type="button" aria-label="برنامه قبلی" class="icon-button">⏮</button><button id="recordingPlay" type="button" aria-label="پخش برنامه" class="rec-play">▶</button><button id="recordingNext" type="button" aria-label="برنامه بعدی" class="icon-button">⏭</button></div><p class="help-text" id="recordingMessage" aria-live="polite">از فهرست، برنامه را انتخاب کن.</p></div>
+  </div>
+</section>
+<section class="container section-block" id="community" aria-labelledby="communityTitle">
+  <div class="section-heading"><div><p class="kicker">JOIN OUR COMMUNITY</p><h2 id="communityTitle">تو هم بخشی از این صدا هستی</h2><p class="section-description">با ما همراه شو، در مسابقه شرکت کن و از برنامه‌های بعدی باخبر باش.</p></div></div>
+  <div class="community-grid"><article class="community-card feature-card"><div class="community-icon">✦</div><h3>مسابقه آوا و نوا</h3><p>در رشته‌های آواز، شعرخوانی و دکلمه شرکت کن.</p><a id="contestLink" class="btn btn-gold" target="_blank" rel="noopener noreferrer" href="#">ثبت‌نام در مسابقه ↗</a></article>
+    <article class="community-card"><div class="community-icon">♫</div><h3>خانه ما در کلاب‌هاوس</h3><p>در گفت‌وگوها و برنامه‌های زنده همراه باش.</p><a id="houseLink" class="text-link" target="_blank" rel="noopener noreferrer" href="#">ورود به کلاب‌هاوس ↗</a></article>
+    <article class="community-card"><div class="community-icon">✉</div><h3>خبرهای رادیو</h3><p>از تلگرام و کانال واتساپ، برنامه‌های آینده را دنبال کن.</p><div class="social-actions"><a id="telegramLink" target="_blank" rel="noopener noreferrer" href="#">تلگرام ↗</a><a id="whatsappLink" target="_blank" rel="noopener noreferrer" href="#">واتساپ ↗</a></div></article></div>
+</section>
+<section class="container install-section" id="install" aria-labelledby="installTitle"><div class="install-copy"><p class="kicker">RADIO IN YOUR POCKET</p><h2 id="installTitle">رادیو همیشه همراهت</h2><p>سایت را به صفحه اصلی آیفون یا اندروید اضافه کن. نصب رایگان است و نیاز به فروشگاه اپلیکیشن ندارد.</p><div class="install-steps"><div><b>آیفون</b><span>در مرورگر سافاری، اشتراک‌گذاری ← افزودن به صفحه اصلی</span></div><div><b>اندروید</b><span>در مرورگر کروم، منو ← نصب برنامه یا افزودن به صفحه اصلی</span></div></div><button id="installButton" class="btn btn-outline" type="button" hidden>نصب رادیو</button></div><img class="install-image" src="../radio-ava-app-icon-2026.png" alt="آیکون برنامه رادیو آوا و نوا" loading="lazy"></section>
+</main>
+<footer class="footer"><div class="container footer-content"><div class="brand footer-brand"><img src="../radio-neon-logo.webp" alt="" width="44" height="44"><span><strong>رادیو آوا و نوا</strong><small>موسیقی، شعر، آواز و دکلمه</small></span></div><div class="footer-links"><a href="#listen">پخش زنده</a><a href="#music">موسیقی</a><a href="#episodes">آرشیو</a><a href="#community">مسابقه</a><a href="./manage.html">مدیریت محتوا</a></div><p>© رادیو آوا و نوا · صدای شما، قصه ما</p></div></footer>
+<div class="player-dock" id="playerDock" role="region" aria-label="پلیر رادیو"><div class="dock-inner container"><img src="../radio-neon-logo.webp" alt="" width="44" height="44"><div class="dock-info"><strong id="dockTitle">رادیو آوا و نوا</strong><span id="dockSubtitle">آماده پخش</span></div><button class="dock-button" id="dockPlay" aria-label="پخش زنده" type="button">▶</button><a class="dock-link" id="dockDetail" href="#listen">مشاهده پلیر ↑</a></div></div>
+<audio id="liveAudio" preload="none" playsinline></audio>
+<audio id="recordingAudio" preload="metadata" playsinline></audio>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
