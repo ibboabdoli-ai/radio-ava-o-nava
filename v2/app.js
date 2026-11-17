@@ -40,7 +40,7 @@
     const items=showCandidates();const cfg=state.shows.schedule||FALLBACK.schedule,grid=$('scheduleGrid');grid.replaceChildren();
     for(const day of cfg.weekdays){
       const show=items.find(x=>x.day===day);const card=host('article');card.className='schedule-card'+(items[0]?.day===day?' is-next':'');
-      card.append(elText('small','برنامه هفتگی'),elText('strong',days[day]),elText('span','۲۲:۰۰ ایران','schedule-time'),elText('span',show?fmtTime(show.at,'Europe/Stockholm')+' سوئد':'—','secondary-time'),elText('span',show?fmtTime(show.at,'Europe/London')+' انگلیس':'—','secondary-time'));grid.append(card);
+      card.append(elText('small','برنامه هفتگی'),elText('strong',days[day]),elText('span',String(cfg.hour).padStart(2,'0')+':'+String(cfg.minute).padStart(2,'0')+' ایران','schedule-time'),elText('span',show?fmtTime(show.at,'Europe/Stockholm')+' سوئد':'—','secondary-time'),elText('span',show?fmtTime(show.at,'Europe/London')+' انگلیس':'—','secondary-time'));grid.append(card);
     }
   }
   function updateClocks(){
@@ -171,6 +171,12 @@
   }
   function renderMusic(){
     const grid=$('musicGrid');grid.replaceChildren();const items=state.filtered=filteredTracks();
+    // A genre/artist filter is a separate queue: stop any track outside it.
+    if(state.selectedMusic&&!items.some(t=>t.id===state.selectedMusic.id)){
+      pauseMusic();musicFrame.removeAttribute('src');state.musicWidget=null;state.musicReady=false;state.pendingMusicAutoPlay=false;state.selectedMusic=null;
+      $('soundcloudPanel').hidden=true;
+      if(state.mode==='music'){state.mode='idle';setDock('رادیو آوا و نوا','آماده پخش',false,'#listen');}
+    }
     setText('musicCount',fa(items.length)+' مورد');$('musicEmpty').hidden=items.length!==0;
     for(const t of items){
       const card=host('article');card.className='music-card';
@@ -190,7 +196,7 @@
   $('favoritesOnly').addEventListener('click',()=>{state.favoritesOnly=!state.favoritesOnly;$('favoritesOnly').classList.toggle('active',state.favoritesOnly);$('favoritesOnly').setAttribute('aria-pressed',String(state.favoritesOnly));renderMusic();});
   function chooseMusic(t,autoplay=false){
     const url=safeHttps(t.url,['soundcloud.com']);if(!url){toast('منبع موسیقی معتبر نیست.');return;}
-    suspendOtherModes('music');state.selectedMusic=t;state.musicReady=false;state.musicPlaying=false;
+    suspendOtherModes('music');if(autoplay)state.pendingMusicAutoPlay=false;state.selectedMusic=t;state.musicReady=false;state.musicPlaying=false;
     $('soundcloudPanel').hidden=false;setText('selectedMusicTitle',t.title);setText('selectedMusicArtist',t.artist);setText('musicStatus','پلیر رسمی در حال بارگذاری است…');setLink('musicOfficialUrl',url);
     if(window.SC&&window.SC.Widget){
       if(!state.musicWidget){musicFrame.src='https://w.soundcloud.com/player/?url='+encodeURIComponent(url)+'&auto_play=false&show_artwork=false';state.musicWidget=window.SC.Widget(musicFrame);
