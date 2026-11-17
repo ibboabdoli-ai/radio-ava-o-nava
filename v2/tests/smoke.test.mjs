@@ -125,7 +125,7 @@ test('Audius Persian catalog includes seven real native-stream entries',()=>{
  assert.match(html,/id="audiusSeek"/);
  assert.match(html,/id="audiusNext"/);
  assert.match(html,/href="\.\/audius\.css\?v=1"/);
- assert.match(html,/src="\.\/audius\.js\?v=1"/);
+ assert.match(html,/src="\.\/audius\.js\?v=2"/);
  assert.match(app,/radio-audius-started/);
  assert.match(app,/radio-audius-stop/);
  assert.match(js,/\/stream\?app_name=/);
