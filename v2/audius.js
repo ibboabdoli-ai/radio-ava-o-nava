@@ -52,7 +52,23 @@
     return {id:value.id,title:name,artist:value.user?.name||'کاربر آدیوس',artwork:artUrl(value.artwork?.['480x480'])||fallback,
       trackCount:Number(value.track_count)||0,source,isAlbum:!!value.is_album};
   }
-  const unique=(items)=>[...new Map(items.map(v=>[v.id,v])).values()];
+  const unique=items=>[...new Map(items.map(v=>[v.id,v])).values()];
+  // Broad searches on Audius can return unrelated global music. Keep general
+  // discovery scoped to Persian-relevant results without claiming perfect coverage.
+  function matchesSearch(value,query){
+    const needle=String(query||'').trim().toLocaleLowerCase('fa');
+    const words=String([value.title,value.playlist_name,value.user?.name,value.user?.handle,value.genre,value.description].filter(Boolean).join(' ')).toLocaleLowerCase('fa');
+    const broad=/^(persian|iranian|iran|farsi|persian rap)$/i.test(needle);
+    if(broad){
+      const iranian=/persian|iranian|\bfarsi\b|\biran\b|shajarian|googoosh|santou?r|setar|dariush|hayedeh|ebrahimi|nava\b|پارسی|ایرانی|ایران|فارسی|شجریان|گوگوش|داریوش|سنتور|سه تار|سنتی|پاپ فارسی/iu;
+      if(!iranian.test(words))return false;
+      if(needle==='persian rap'&&!/rap|hip.hop|رپ/i.test(words))return false;
+      return true;
+    }
+    // User-entered searches are governed by Audius search. Do not override
+    // provider's full-text ranking with a language inference.
+    return true;
+  }
   function updateDiscoveryStatus(message){
     set('audiusContext',message);
     const count=discovery.mode==='albums'?discovery.albums.length:discovery.results.length;
@@ -78,7 +94,7 @@
       img.width=360;img.height=300;
       const body=element('div','audius-track-body');
       body.append(element('small','',album.isAlbum?'آلبوم':'آلبوم / پلی‌لیست'),
-        element('h3','',album.title),element('p','',album.artist+' · '+tcount(album.trackCount)+' قطعه'));
+        element('h3','',album.title),element('p','','گردآورنده: '+album.artist+' · '+tcount(album.trackCount)+' قطعه'));
       const actions=element('div','audius-track-actions');
       const choose=element('button','audius-choose','♫ نمایش قطعات');
       choose.type='button';choose.addEventListener('click',()=>loadAlbumTracks(album));
@@ -110,11 +126,11 @@
           {query:term,limit:discovery.limit,offset},controller.signal);
       if(request!==discovery.requestId)return;
       if(mode==='albums'){
-        const mapped=incoming.map(normalizeAlbum).filter(Boolean);
+        const mapped=incoming.filter(v=>matchesSearch(v,term)).map(normalizeAlbum).filter(Boolean);
         discovery.albums=unique(append?[...discovery.albums,...mapped]:mapped);
         renderAlbums();
       }else{
-        const mapped=incoming.map(normalizeTrack).filter(Boolean);
+        const mapped=incoming.filter(v=>matchesSearch(v,term)).map(normalizeTrack).filter(Boolean);
         discovery.results=unique(append?[...discovery.results,...mapped]:mapped);
         // Loading more must not interrupt music already playing.
         if(!append)resetPlayerForQueue();
@@ -191,11 +207,13 @@
     const isPlaying=!audio.paused&&!audio.ended;
     player.playing=isPlaying;
     $('audiusToggle').textContent=isPlaying?'Ⅱ':'▶';
+    $('audiusToggle').classList.toggle('is-playing',isPlaying);
+    $('audiusToggle').setAttribute('aria-pressed',String(isPlaying));
     $('audiusToggle').setAttribute('aria-label',isPlaying?'مکث موسیقی':'پخش موسیقی');
     grid.querySelectorAll('[data-audius-id]').forEach(button=>{
       const track=selected();
       const isCurrent=track?.id===button.dataset.audiusId;
-      button.textContent=isCurrent&&isPlaying?'Ⅱ مکث':isCurrent?'▶ ادامه':'▶ شنیدن';
+      button.textContent=isCurrent&&isPlaying?'مکث':isCurrent?'ادامه':'شنیدن';
       button.setAttribute('aria-pressed',String(!!isCurrent&&isPlaying));
       button.closest('.audius-track')?.classList.toggle('selected',!!isCurrent);
     });
@@ -209,7 +227,7 @@
       const body=element('div','audius-track-body');
       body.append(element('small','',track.genre||'موسیقی ایرانی'),element('h3','',track.title),element('p','',track.artist));
       const actions=element('div','audius-track-actions');
-      const choose=element('button','audius-choose','▶ شنیدن');
+      const choose=element('button','audius-choose','شنیدن');
       choose.type='button';choose.dataset.audiusId=track.id;choose.setAttribute('aria-label','پخش '+track.title);choose.setAttribute('aria-pressed','false');
       choose.addEventListener('click',()=>{
         if(player.index===i&&player.playing)pause();
