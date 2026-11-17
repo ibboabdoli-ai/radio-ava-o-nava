@@ -19,7 +19,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./site.css?v=3"><link rel="stylesheet" href="./polish.css?v=6"><link rel="stylesheet" href="./mobile.css?v=4"><link rel="stylesheet" href="./mobile-premium.css?v=5"><link rel="stylesheet" href="./audius.css?v=1">
 <script defer src="https://w.soundcloud.com/player/api.js"></script>
-<script defer src="./app.js?v=7"></script><script defer src="./interaction.js?v=5"></script><script defer src="./mobile-premium.js?v=5"></script><script defer src="./audius.js?v=1"></script>
+<script defer src="./app.js?v=7"></script><script defer src="./interaction.js?v=5"></script><script defer src="./mobile-premium.js?v=5"></script><script defer src="./audius.js?v=2"></script>
 </head>
 <body>
 <a class="skip" href="#main">رفتن به محتوا</a>
@@ -94,7 +94,7 @@
   <div id="scheduleGrid" class="schedule-grid" aria-label="برنامه‌های هفتگی"></div>
 </section>
 <section class="section-tinted" id="music" aria-labelledby="musicTitle"><div class="container section-block">
-  <div class="section-heading"><div><p class="kicker">MUSIC COLLECTION</p><h2 id="musicTitle">آرشیو موسیقی</h2><p class="section-description">سبک دلخواه و خواننده مورد علاقه‌ات را انتخاب کن.</p></div><span class="section-count" id="musicCount">در حال بارگذاری</span></div>
+  <div class="section-heading"><div><p class="kicker">MUSIC COLLECTION</p><h2 id="musicTitle">آرشیو موسیقی</h2><p class="section-description">سبک دلخواه و خواننده مورد علاقه‌ات را انتخاب کن.</p></div><div class="music-quick-links"><a class="audius-jump" href="#audius">موسیقی ایرانی آدیوس ↗</a><span class="section-count" id="musicCount">در حال بارگذاری</span></div></div>
   <div class="library-tools"><label class="search-field"><span aria-hidden="true">⌕</span><input type="search" id="musicSearch" placeholder="جست‌وجوی آهنگ یا خواننده..." aria-label="جست‌وجوی آرشیو" autocomplete="off"></label><div class="filter-tabs" id="genreFilters" aria-label="فیلتر سبک موسیقی"></div></div>
   <div class="library-tools secondary-tools"><label class="artist-select-label" for="artistFilter">خواننده <select id="artistFilter" aria-label="فیلتر خواننده"><option value="all">همه هنرمندان</option></select></label><button class="small-btn" id="favoritesOnly" type="button" aria-pressed="false">♡ علاقه‌مندی‌ها</button></div>
   <div id="musicGrid" class="music-grid" aria-live="polite"></div><p id="musicEmpty" class="empty-state" hidden>در این دسته‌بندی قطعه قابل پخشی پیدا نشد.</p>
