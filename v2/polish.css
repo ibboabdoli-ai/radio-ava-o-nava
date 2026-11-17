@@ -84,3 +84,12 @@ body::after{content:"";position:fixed;inset:0;z-index:4;pointer-events:none;opac
 .motion-ready .reveal-item.is-visible{opacity:1;transform:translateY(0)}
 /* Prefer legibility over motion and use user's OS preference. */
 @media(prefers-reduced-motion:reduce){.hero-visual .hero-cover,.hero-visual .orbit,.hero-visual .visual-caption,.hero-visual .visual-glow,.hero-visual .sound-lines i,.live-pill.is-on,.live-info .live-led{animation:none!important}.motion-ready .reveal-item{opacity:1!important;transform:none!important;transition:none!important}body::after{display:none!important}*{scroll-behavior:auto!important}}
+
+/* Native, keyboard-accessible install platform accordions. */
+.install-platform-detail>summary{cursor:pointer;list-style:none}
+.install-platform-detail>summary::-webkit-details-marker{display:none}
+.install-platform-detail>summary::after{content:"⌄";margin-inline-start:auto;color:#f1c78e;font-size:24px;line-height:1;transition:transform .2s}
+.install-platform-detail[open]>summary::after{transform:rotate(180deg)}
+.install-platform-detail:not([open])>summary{margin-bottom:0;padding-bottom:0;border-bottom:0}
+@media(max-width:700px){.hero::before{animation:mobileAura 7s ease-in-out infinite alternate}@keyframes mobileAura{from{transform:scale(.93) rotate(-3deg);opacity:.10}to{transform:scale(1.1) rotate(3deg);opacity:.21}}}
+@media(prefers-reduced-motion:reduce){.hero::before{animation:none!important}.install-platform-detail>summary::after{transition:none}}
