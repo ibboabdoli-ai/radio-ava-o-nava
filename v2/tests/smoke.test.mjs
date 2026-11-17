@@ -92,3 +92,15 @@ test('Premium mobile navigation, presentation and compatibility',()=>{
  assert.match(app,/classList.toggle\('dock-active'/);
  assert.match(get('interaction.js'),/mobile-tab/);
 });
+
+test('Only four pictured featured music cards gain sourced photographs',()=>{
+ const withArtwork=catalog.tracks.filter(t=>t.artwork);
+ assert.deepEqual(withArtwork.map(t=>t.id),['music-1','music-2','music-3','music-4']);
+ for(const t of withArtwork){
+   assert.match(t.artwork.url,/^https:\/\//);
+   assert.ok(t.artwork.alt.length>8);
+   assert.match(t.artwork.source,/^https:\/\//);
+ }
+ assert.match(app,/cover\.classList\.add\('has-image'\)/);
+ assert.match(get('polish.css'),/\.music-cover\.has-image>img/);
+});
