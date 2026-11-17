@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="آوا و نوا">
+<defs><radialGradient id="g"><stop stop-color="#3d284b"/><stop offset="1" stop-color="#12101f"/></radialGradient><linearGradient id="a" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8e2b9"/><stop offset=".6" stop-color="#e5b36e"/><stop offset="1" stop-color="#af7bd7"/></linearGradient></defs>
+<rect width="512" height="512" rx="108" fill="url(#g)"/>
+<circle cx="256" cy="241" r="177" fill="none" stroke="#e4b579" stroke-width="6" opacity=".8"/>
+<circle cx="256" cy="241" r="151" fill="#291b38" stroke="#d7a973" stroke-width="2" opacity=".9"/>
+<g stroke="url(#a)" stroke-linecap="round" stroke-width="16" fill="none">
+<path d="M150 235v27M184 204v89M218 173v151M256 143v211M294 173v151M328 204v89M362 235v27"/>
+</g><path d="M163 393h186" stroke="#dbb784" stroke-linecap="round" stroke-width="5"/>
+<text x="256" y="428" font-size="24" letter-spacing="5" fill="#ecd8b7" text-anchor="middle" font-family="sans-serif">AVA O NAVA</text>
+</svg>
