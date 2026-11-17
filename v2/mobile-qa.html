@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>آزمون اندازه موبایل — آوا و نوا</title>
+<style>body{margin:0;background:#11121c;color:#fff;font:14px/1.8 Tahoma,sans-serif;padding:20px}h1{font-size:22px}p{color:#c5bcc9}pre{padding:15px;background:#222638;border-radius:12px;white-space:pre-wrap;direction:ltr;text-align:left;color:#e9d9c2}iframe{position:absolute;left:-10000px;top:0;border:0;opacity:0}section{max-width:800px;margin:auto}.success{color:#9cdeb9}.failure{color:#f4b6ac}</style>
+</head><body><section><h1>آزمون واکنش‌گرایی موبایل</h1><p>این صفحه آزمایشی، سایت را در قاب‌هایی با عرض ۳۲۰، ۳۹۰ و ۴۳۰ پیکسل اجرا و ابعاد عناصر واقعی را از مرورگر می‌خواند.</p><pre id="output">در حال آماده‌سازی آزمون…</pre></section>
+<script>
+(async()=>{
+ const output=document.getElementById('output'), widths=[320,390,430];
+ const checks=[];
+ function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
+ for(const width of widths){
+  const frame=document.createElement('iframe');frame.width=String(width);frame.height='844';frame.title='Mobile '+width;frame.src='./index.html?qa='+width+'&t='+Date.now();
+  document.body.append(frame);
+  const ready=await Promise.race([new Promise(resolve=>frame.onload=()=>resolve(true)),wait(15000).then(()=>false)]);
+  if(!ready){checks.push({width,error:'timeout'});frame.remove();continue}
+  await wait(1800);
+  try{
+   const doc=frame.contentDocument;
+   const root=doc.documentElement,body=doc.body;
+   const box=selector=>doc.querySelector(selector)?.getBoundingClientRect();
+   const show=selector=>{const el=doc.querySelector(selector);return el?getComputedStyle(el).display:null};
+   const viewport=root.clientWidth;
+   const maxScroll=Math.max(root.scrollWidth,body.scrollWidth);
+   const hero=box('.hero'),player=box('.live-panel'),dock=box('.player-dock');
+   const elements=[...doc.querySelectorAll('body *')].filter(e=>{
+      const st=getComputedStyle(e);if(st.display==='none'||st.position==='fixed')return false;
+      const b=e.getBoundingClientRect();
+      return b.width>0&&(b.left<-3||b.right>width+3)&&st.overflowX!=='auto';
+   }).slice(0,6).map(e=>({tag:e.tagName.toLowerCase(),class:e.className?.baseVal||e.className||'',right:Math.round(e.getBoundingClientRect().right)}));
+   checks.push({width,viewport,scrollWidth:maxScroll,horizontalOverflow:maxScroll>viewport+2,
+     menuDisplay:show('#menuButton'),navigationDisplay:show('#navigation'),
+     heroHeight:Math.round(hero?.height||0),livePlayerTop:Math.round(player?.top||-1),livePlayerWidth:Math.round(player?.width||0),
+     dockPosition:show('.player-dock')==='none'?null:getComputedStyle(doc.querySelector('.player-dock')).position,
+     musicCardCount:doc.querySelectorAll('.music-card').length,installGuideImageCount:doc.querySelectorAll('.install-step-card img').length,
+     legacyButtonsPresent:['liveCopy','liveShare','liveFullscreen','requestSongLink'].every(id=>!!doc.getElementById(id)),
+     largeOffscreenElements:elements});
+  }catch(err){checks.push({width,error:String(err)})}
+  frame.remove();
+ }
+ const allPassed=checks.every(c=>!c.error&&!c.horizontalOverflow&&c.menuDisplay!=='none'&&c.navigationDisplay==='none'&&c.installGuideImageCount===8&&c.legacyButtonsPresent&&c.livePlayerTop>0&&c.livePlayerTop<850);
+ const result={status:allPassed?'PASS':'REVIEW',checks};
+ output.textContent=JSON.stringify(result,null,2);
+ output.className=allPassed?'success':'failure';
+ document.title=(allPassed?'PASS':'REVIEW')+' | Mobile Layout QA';
+})();
+</script></body></html>
