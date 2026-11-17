@@ -352,6 +352,44 @@ body{overflow-x:hidden}
 @media(max-width:350px){.visual-step{grid-template-columns:1fr}.phone-shot{width:145px;height:190px;justify-self:center}.step-copy strong{font-size:13px}.step-copy p{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.install-guide *{scroll-behavior:auto}}
 
+
+/* Recording music player */
+.recordings-panel{margin:20px 0 28px;padding:24px;border:1px solid rgba(245,197,121,.35);border-radius:24px;background:linear-gradient(135deg,rgba(51,25,74,.97),rgba(15,15,39,.97));color:#fff1dd;box-shadow:0 16px 55px rgba(0,0,0,.22);direction:rtl}
+.recordings-panel .rec-top,.recordings-panel .rec-playlist-heading{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.recordings-panel .rec-badge{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(249,197,121,.38);border-radius:30px;padding:7px 12px;color:#ffe4b5;background:rgba(249,197,121,.08);font-weight:700;font-size:12px}
+.recordings-panel .rec-badge-dot{width:7px;height:7px;border-radius:100%;background:#f9c579}
+.recordings-panel .rec-count{color:#cbb9db;font-size:12px}
+.recordings-panel .rec-main{display:grid;grid-template-columns:150px minmax(0,1fr);gap:24px;align-items:center;margin:20px 0}
+.recordings-panel .rec-art{aspect-ratio:1;position:relative;overflow:hidden;border-radius:20px;background:#1d1636;border:1px solid rgba(249,197,121,.32);box-shadow:0 0 32px rgba(186,87,255,.2)}
+.recordings-panel .rec-art img{width:100%;height:100%;object-fit:cover}
+.recordings-panel .rec-art-note{position:absolute;bottom:9px;left:0;right:0;font-size:9px;letter-spacing:2px;text-align:center;direction:ltr;text-shadow:0 1px 6px #120b28}
+.recordings-panel .rec-kicker{font-size:12px;color:#eacfa8;margin:0 0 6px}
+.recordings-panel h3{font-size:clamp(18px,2.5vw,26px);line-height:1.5;margin:0 0 5px;color:#fff4e4}
+.recordings-panel .rec-meta{font-size:12px;color:#ccbedb;margin:0 0 18px}
+.recordings-panel .rec-seek-row{display:flex;align-items:center;gap:12px;direction:ltr}
+.recordings-panel .rec-clock{font:12px/1.5 ui-monospace,Consolas,monospace;color:#e4d6ec;min-width:37px;text-align:center}
+.recordings-panel .rec-progress{flex:1;width:100%;min-width:0;accent-color:#f9c579;cursor:pointer}
+.recordings-panel .rec-controls{display:flex;justify-content:center;align-items:center;gap:16px;margin:18px 0 6px}
+.recordings-panel button{cursor:pointer;font-family:inherit}
+.recordings-panel .rec-controls button{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid rgba(249,197,121,.3);color:#ffe6c2;background:rgba(255,255,255,.06);transition:background .15s,transform .15s}
+.recordings-panel .rec-controls button:hover{background:rgba(249,197,121,.16)}
+.recordings-panel .rec-skip{height:46px;width:46px;border-radius:50%}
+.recordings-panel .rec-primary{min-height:54px;min-width:154px;border-radius:34px!important;color:#25132e!important;background:linear-gradient(135deg,#ffe3a5,#e9b360)!important;border-color:#ffe3a5!important;font-weight:800;font-size:14px}
+.recordings-panel .rec-primary svg{width:23px;height:23px}
+.recordings-panel .rec-message{font-size:12px;color:#d6c5e5;min-height:18px;text-align:center;margin:10px 0 0}
+.recordings-panel .rec-playlist-heading{border-top:1px solid rgba(248,211,160,.2);padding-top:18px;margin-bottom:9px}
+.recordings-panel .rec-playlist-heading strong{font-size:14px;color:#f8d9ac}
+.recordings-panel .rec-playlist-heading span{font-size:11px;color:#ad9dbf}
+.recordings-panel .rec-playlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.recordings-panel .rec-track{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid rgba(198,157,222,.22);border-radius:13px;color:#efe2f2;background:rgba(255,255,255,.035);text-align:right;width:100%;min-width:0}
+.recordings-panel .rec-track.is-current{background:rgba(249,197,121,.13);border-color:rgba(249,197,121,.7)}
+.recordings-panel .rec-track:hover{background:rgba(249,197,121,.11)}
+.recordings-panel .rec-track-num{height:32px;width:32px;min-width:32px;display:grid;place-items:center;border-radius:10px;background:rgba(250,198,120,.11);color:#fce0b0;font:700 13px Tahoma,Arial,sans-serif}
+.recordings-panel .rec-track-text{display:flex;flex-direction:column;gap:3px;min-width:0}
+.recordings-panel .rec-track-text strong{font-size:12px;line-height:1.5}
+.recordings-panel .rec-track-text small{color:#bcb0d0;font-size:11px}
+.recordings-panel button:focus-visible,.recordings-panel input:focus-visible{outline:3px solid #ffe3a5;outline-offset:3px}
+@media(max-width:640px){.recordings-panel{padding:16px;border-radius:18px}.recordings-panel .rec-main{grid-template-columns:1fr;gap:15px;margin:17px 0}.recordings-panel .rec-art{width:138px;justify-self:center}.recordings-panel .rec-details{text-align:center}.recordings-panel .rec-playlist{grid-template-columns:1fr}.recordings-panel .rec-controls{gap:10px}.recordings-panel .rec-playlist-heading span{display:none}}
 </style>
 <body><div class="site">
 <header class="topbar"><a class="brand-wrap" href="./"><img src="./radio-neon-logo.webp" alt=""><span><span class="brand-title">رادیو آوا و نوا</span><br><span class="brand-en">Radio Ava o Nava</span></span></a>
