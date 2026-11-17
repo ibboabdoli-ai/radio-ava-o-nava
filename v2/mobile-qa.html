@@ -5,7 +5,7 @@
 </head><body><section><h1>آزمون واکنش‌گرایی موبایل</h1><p>این صفحه آزمایشی، سایت را در قاب‌هایی با عرض ۳۲۰، ۳۹۰ و ۴۳۰ پیکسل اجرا و ابعاد عناصر واقعی را از مرورگر می‌خواند.</p><pre id="output">در حال آماده‌سازی آزمون…</pre></section>
 <script>
 (async()=>{
- const output=document.getElementById('output'), widths=[320,390,430];
+ const output=document.getElementById('output'), widths=[430,390,320];
  const checks=[];
  function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
  for(const width of widths){
@@ -21,13 +21,14 @@
     await wait(450);
   }
   try{
+   frame.contentWindow.scrollTo(0,0);await wait(200);
    const doc=frame.contentDocument;
    const root=doc.documentElement,body=doc.body;
    const box=selector=>doc.querySelector(selector)?.getBoundingClientRect();
    const show=selector=>{const el=doc.querySelector(selector);return el?getComputedStyle(el).display:null};
    const viewport=root.clientWidth;
    const maxScroll=Math.max(root.scrollWidth,body.scrollWidth);
-   const hero=box('.hero'),player=box('.live-panel'),dock=box('.player-dock');
+   const hero=box('.hero'),player=box('.live-panel'),dock=box('.player-dock'),section=box('.live-section'),heading=box('.live-section .section-heading'),visual=box('.hero-visual'),header=box('.site-header');
    const elements=[...doc.querySelectorAll('body *')].filter(e=>{
       const st=getComputedStyle(e);if(st.display==='none'||st.position==='fixed')return false;
       if(e.closest('.schedule-grid,.filter-tabs'))return false;
@@ -36,7 +37,7 @@
    }).slice(0,6).map(e=>({tag:e.tagName.toLowerCase(),class:e.className?.baseVal||e.className||'',right:Math.round(e.getBoundingClientRect().right)}));
    checks.push({width,viewport,scrollWidth:maxScroll,horizontalOverflow:maxScroll>viewport+2,mobileStylesActive:show('#menuButton')==='grid',bodyOverflow:getComputedStyle(body).overflowX,
      menuDisplay:show('#menuButton'),navigationDisplay:show('#navigation'),
-     heroHeight:Math.round(hero?.height||0),livePlayerTop:Math.round(player?.top||-1),livePlayerWidth:Math.round(player?.width||0),
+     heroHeight:Math.round(hero?.height||0),heroTop:Math.round(hero?.top||0),heroBottom:Math.round(hero?.bottom||0),heroVisualDisplay:show('.hero-visual'),headerHeight:Math.round(header?.height||0),liveSectionTop:Math.round(section?.top||0),liveHeadingTop:Math.round(heading?.top||0),liveHeadingHeight:Math.round(heading?.height||0),windowScrollY:Math.round(frame.contentWindow.scrollY),livePlayerTop:Math.round(player?.top||-1),livePlayerWidth:Math.round(player?.width||0),
      dockPosition:show('.player-dock')==='none'?null:getComputedStyle(doc.querySelector('.player-dock')).position,
      musicCardCount:doc.querySelectorAll('.music-card').length,installGuideImageCount:doc.querySelectorAll('.install-step-card img').length,
      legacyButtonsPresent:['liveCopy','liveShare','liveFullscreen','requestSongLink'].every(id=>!!doc.getElementById(id)),
