@@ -18,7 +18,7 @@
   const safeHttps=(url,hostnames)=>{try{const u=new URL(url);return u.protocol==='https:'&&(!hostnames||hostnames.some(h=>u.hostname===h||u.hostname.endsWith('.'+h)))?u.href:null;}catch{return null;}};
   function toast(message){const t=$('toast');t.textContent=message;t.hidden=false;clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.hidden=true,5500);}
   function setLink(id,url){const n=$(id),v=safeHttps(url);if(!n)return;if(v)n.href=v;else n.removeAttribute('href');}
-  function setDock(title,subtitle,playState,href){setText('dockTitle',title);setText('dockSubtitle',subtitle);setText('dockPlay',playState?'Ⅱ':'▶');$('dockDetail').href=href;$('playerDock').classList.toggle('dock-active',state.mode!=='idle');let action=state.mode==='recording'?'پخش یا مکث برنامه':state.mode==='music'?'کنترل موسیقی':'پخش یا توقف زنده';$('dockPlay').setAttribute('aria-label',action);}
+  function setDock(title,subtitle,playState,href){setText('dockTitle',title);setText('dockSubtitle',subtitle);setText('dockPlay',playState?'Ⅱ':'▶');$('dockDetail').href=href;$('playerDock').classList.toggle('dock-active',state.mode!=='idle');let action=state.mode==='recording'?'پخش یا مکث برنامه':state.mode==='music'?'کنترل موسیقی':state.mode==='audius'?'کنترل موسیقی آدیوس':'پخش یا توقف زنده';$('dockPlay').setAttribute('aria-label',action);}
   function saveFavorites(favs){try{localStorage.setItem('ava-v2-favs',JSON.stringify([...favs].slice(0,100)))}catch{}}
   const favorites=(()=>{try{const v=JSON.parse(localStorage.getItem('ava-v2-favs')||'[]');return new Set(Array.isArray(v)?v.filter(x=>typeof x==='string').slice(0,100):[])}catch{return new Set()}})();
   const fmtTime=(date,tz)=>new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(date);
@@ -79,6 +79,7 @@
     if(next!=='live'&&state.liveWanted)stopLive('پخش زنده برای شنیدن محتوای دیگر متوقف شد.',false);
     if(next!=='recording'&&!recAudio.paused)recAudio.pause();
     if(next!=='music')pauseMusic();
+    if(next!=='audius')window.dispatchEvent(new Event('radio-audius-stop'));
     state.mode=next;
   }
   async function connectLive(){
@@ -242,7 +243,22 @@
     try{if(state.musicPlaying)state.musicWidget.pause();else state.musicWidget.play();}catch{toast('پلیر رسمی پاسخ نداد؛ از لینک منبع استفاده کن.');}
   }
   $('musicToggle').addEventListener('click',toggleMusic);
-  $('dockPlay').addEventListener('click',()=>{if(state.mode==='live'||state.mode==='idle')toggleLive();else if(state.mode==='recording')toggleRecording();else toggleMusic();});
+  window.addEventListener('radio-audius-started',event=>{
+    const detail=event.detail||{};
+    suspendOtherModes('audius');
+    setDock(detail.title||'موسیقی ایرانی',detail.artist||'Audius',true,'#audius');
+  });
+  window.addEventListener('radio-audius-paused',event=>{
+    if(state.mode!=='audius')return;
+    const detail=event.detail||{};
+    setDock(detail.title||'موسیقی ایرانی','مکث شده',false,'#audius');
+  });
+  $('dockPlay').addEventListener('click',()=>{
+    if(state.mode==='live'||state.mode==='idle')toggleLive();
+    else if(state.mode==='recording')toggleRecording();
+    else if(state.mode==='audius')window.dispatchEvent(new Event('radio-audius-toggle'));
+    else toggleMusic();
+  });
   function wireNavigation(){const nav=$('navigation'),menu=$('menuButton');
     menu.addEventListener('click',()=>{const open=!nav.classList.contains('open');nav.classList.toggle('open',open);menu.setAttribute('aria-expanded',String(open));});
     nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menu.setAttribute('aria-expanded','false');nav.querySelectorAll('a').forEach(n=>n.classList.toggle('current',n===a));}));
