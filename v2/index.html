@@ -18,7 +18,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./site.css?v=3"><link rel="stylesheet" href="./polish.css?v=6"><link rel="stylesheet" href="./mobile.css?v=4"><link rel="stylesheet" href="./mobile-premium.css?v=5"><link rel="stylesheet" href="./audius.css?v=2">
-<script defer src="https://w.soundcloud.com/player/api.js"></script>
+
 <script defer src="./app.js?v=7"></script><script defer src="./interaction.js?v=5"></script><script defer src="./mobile-premium.js?v=5"></script><script defer src="./audius.js?v=2"></script>
 </head>
 <body>
@@ -93,52 +93,40 @@
   <div class="section-heading"><div><p class="kicker">OUR PROGRAMS</p><h2 id="scheduleTitle">جدول برنامه‌های هفتگی</h2><p class="section-description">زمان‌ها به‌صورت خودکار برای ایران، سوئد و انگلیس محاسبه می‌شوند.</p></div></div>
   <div id="scheduleGrid" class="schedule-grid" aria-label="برنامه‌های هفتگی"></div>
 </section>
-<section class="section-tinted" id="music" aria-labelledby="musicTitle"><div class="container section-block">
-  <div class="section-heading"><div><p class="kicker">MUSIC COLLECTION</p><h2 id="musicTitle">آرشیو موسیقی</h2><p class="section-description">سبک دلخواه و خواننده مورد علاقه‌ات را انتخاب کن.</p></div><div class="music-quick-links"><a class="audius-jump" href="#audius">موسیقی ایرانی آدیوس ↗</a><span class="section-count" id="musicCount">در حال بارگذاری</span></div></div>
-  <div class="library-tools"><label class="search-field"><span aria-hidden="true">⌕</span><input type="search" id="musicSearch" placeholder="جست‌وجوی آهنگ یا خواننده..." aria-label="جست‌وجوی آرشیو" autocomplete="off"></label><div class="filter-tabs" id="genreFilters" aria-label="فیلتر سبک موسیقی"></div></div>
-  <div class="library-tools secondary-tools"><label class="artist-select-label" for="artistFilter">خواننده <select id="artistFilter" aria-label="فیلتر خواننده"><option value="all">همه هنرمندان</option></select></label><button class="small-btn" id="favoritesOnly" type="button" aria-pressed="false">♡ علاقه‌مندی‌ها</button></div>
-  <div id="musicGrid" class="music-grid" aria-live="polite"></div><p id="musicEmpty" class="empty-state" hidden>در این دسته‌بندی قطعه قابل پخشی پیدا نشد.</p>
-  <div class="soundcloud-player" id="soundcloudPanel" hidden>
-    <div class="soundcloud-heading"><div><p class="kicker">NOW SELECTED</p><h3 id="selectedMusicTitle">انتخاب آهنگ</h3><p id="selectedMusicArtist"></p></div><a id="musicOfficialUrl" target="_blank" rel="noopener noreferrer" href="https://soundcloud.com/">باز کردن منبع رسمی ↗</a></div>
-    <iframe id="musicFrame" title="پلیر رسمی موسیقی SoundCloud" width="100%" height="166" loading="lazy" allow="autoplay" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-    <div class="music-player-actions"><button id="musicPrev" type="button" class="small-btn">قبلی</button><button id="musicToggle" type="button" class="btn btn-gold">پخش / مکث</button><button id="musicNext" type="button" class="small-btn">بعدی</button></div>
-    <p id="musicStatus" class="help-text" role="status" aria-live="polite">برای پخش از پلیر رسمی استفاده کن.</p>
-  </div>
-</div></section>
-
-<section class="container section-block audius-section" id="audius" aria-labelledby="audiusTitle">
-  <div class="section-heading">
-    <div><p class="kicker">INDEPENDENT PERSIAN MUSIC</p><h2 id="audiusTitle">موسیقی ایرانی در آدیوس</h2><p class="section-description">مجموعه منتخب سنتور، موسیقی دستگاهی، نی و آواز ایرانی؛ با پلیر اختصاصی آوا و نوا.</p></div>
-    <span class="section-count" id="audiusCount">در حال بارگذاری</span>
-  </div>
-  <div class="audius-header-actions"><div class="audius-tags"><span>پخش مستقیم</span><span>کاور هنرمندان</span><span>فهرست پخش آوا و نوا</span></div><a href="https://audius.co/" target="_blank" rel="noopener noreferrer" class="audius-provider-link">منبع موسیقی: Audius ↗</a></div>
-  <div id="audiusGrid" class="audius-grid" aria-label="آرشیو مستقل موسیقی ایرانی" aria-live="polite"></div>
-  <p id="audiusEmpty" class="empty-state" hidden>اطلاعات قطعات آدیوس دریافت نشد. اتصال اینترنت را بررسی کن.</p>
-  <div class="audius-player" id="audiusPlayer" hidden aria-label="موزیک پلیر آوا و نوا">
-    <div class="audius-playing-header">
-      <img id="audiusCover" alt="کاور قطعه" src="../radio-neon-logo.webp" width="120" height="120" loading="lazy">
-      <div class="audius-playing-text">
-        <p class="kicker">AVA O NAVA · NOW PLAYING</p>
-        <h3 id="audiusTitleNow">آماده شنیدن</h3>
-        <p id="audiusArtistNow">موسیقی ایرانی</p>
-        <a id="audiusSourceLink" href="https://audius.co/" target="_blank" rel="noopener noreferrer">نمایش قطعه در آدیوس ↗</a>
-      </div>
-    </div>
-    <div class="audius-seek-row" dir="ltr">
-      <time id="audiusElapsed">0:00</time>
-      <input id="audiusSeek" type="range" min="0" max="1000" value="0" disabled aria-label="جابه‌جایی در قطعه">
-      <time id="audiusTotal">--:--</time>
-    </div>
-    <div class="audius-controls">
-      <button type="button" id="audiusPrevious" class="audius-skip" aria-label="آهنگ قبلی" title="قبلی">❮❮</button>
-      <button type="button" id="audiusToggle" class="audius-primary" aria-label="پخش موسیقی">▶</button>
-      <button type="button" id="audiusNext" class="audius-skip" aria-label="آهنگ بعدی" title="بعدی">❯❯</button>
-      <label class="audius-volume">صدا <input type="range" id="audiusVolume" min="0" max="100" value="80" aria-label="میزان صدای موسیقی"></label>
-    </div>
-    <p class="audius-status" id="audiusStatus" role="status" aria-live="polite">برای شنیدن موسیقی یکی از قطعات را انتخاب کن.</p>
-  </div>
-  <p class="audius-note">صدا از سرویس رسمی آدیوس دریافت می‌شود. فایل موسیقی روی سرور رادیو ذخیره نمی‌شود و در صورت محدودشدن منبع، لینک اصلی قطعه در دسترس است.</p>
-  <audio id="audiusAudio" preload="none" playsinline></audio>
+<section class="container section-block audius-section" id="music" aria-labelledby="audiusTitle">
+ <div class="section-heading"><div><p class="kicker">AVA O NAVA · PERSIAN MUSIC</p><h2 id="audiusTitle">آرشیو موسیقی فارسی</h2><p class="section-description">جست‌وجوی قطعات، خوانندگان و آلبوم‌های فارسی در آدیوس؛ با پلیر اختصاصی آوا و نوا.</p></div><span class="section-count" id="audiusCount">در حال بارگذاری</span></div>
+ <div class="audius-discovery" aria-label="کشف موسیقی فارسی">
+   <form id="audiusSearchForm" class="audius-search-form" role="search">
+     <label class="audius-search-field" for="audiusSearch">جست‌وجوی موسیقی، آلبوم یا خواننده</label>
+     <div class="audius-search-box"><input id="audiusSearch" type="search" placeholder="مثلاً شجریان، گوگوش، سنتور..." autocomplete="off" maxlength="70"><button type="submit" id="audiusSearchButton">جست‌وجو</button></div>
+   </form>
+   <div class="audius-filter-list" id="audiusGenres" role="group" aria-label="دسته‌بندی موسیقی">
+     <button class="audius-filter active" type="button" data-audius-query="" aria-pressed="true">منتخب آوا و نوا</button>
+     <button class="audius-filter" type="button" data-audius-query="persian" aria-pressed="false">موسیقی فارسی</button>
+     <button class="audius-filter" type="button" data-audius-query="santour" aria-pressed="false">سنتور</button>
+     <button class="audius-filter" type="button" data-audius-query="shajarian" aria-pressed="false">سنتی و آواز</button>
+     <button class="audius-filter" type="button" data-audius-query="googoosh" aria-pressed="false">پاپ و قدیمی</button>
+     <button class="audius-filter" type="button" data-audius-query="persian rap" aria-pressed="false">رپ فارسی</button>
+     <button class="audius-filter" type="button" data-audius-query="setar" aria-pressed="false">بی‌کلام</button>
+   </div>
+   <div class="audius-content-tabs" role="group" aria-label="نوع محتوا"><button class="active" type="button" id="audiusTracksTab" aria-pressed="true">آهنگ‌ها</button><button type="button" id="audiusAlbumsTab" aria-pressed="false">آلبوم‌ها و پلی‌لیست‌ها</button></div>
+ </div>
+ <div class="audius-header-actions"><div class="audius-tags"><span>موسیقی ایرانی</span><span>پلیر اختصاصی</span><span>کاور اصلی</span></div><a href="https://audius.co/" target="_blank" rel="noopener noreferrer" class="audius-provider-link">منبع: Audius ↗</a></div>
+ <p id="audiusContext" class="audius-context" aria-live="polite">منتخب موسیقی ایرانی آوا و نوا</p>
+ <div id="audiusGrid" class="audius-grid" aria-label="آرشیو موسیقی فارسی"></div>
+ <div id="audiusAlbumGrid" class="audius-grid" aria-label="آلبوم‌های فارسی" hidden></div>
+ <p id="audiusEmpty" class="empty-state" hidden>نتیجه‌ای پیدا نشد. نام هنرمند یا سبک دیگری را جست‌وجو کن.</p>
+ <button type="button" id="audiusLoadMore" class="audius-load-more" hidden>نمایش نتایج بیشتر</button>
+ <div class="audius-player" id="audiusPlayer" hidden aria-label="موزیک پلیر آوا و نوا">
+   <div class="audius-playing-header"><img id="audiusCover" alt="کاور قطعه" src="../radio-neon-logo.webp" width="120" height="120" loading="lazy">
+     <div class="audius-playing-text"><p class="kicker">AVA O NAVA · NOW PLAYING</p><h3 id="audiusTitleNow">آماده شنیدن</h3><p id="audiusArtistNow">موسیقی ایرانی</p><a id="audiusSourceLink" href="https://audius.co/" target="_blank" rel="noopener noreferrer">منبع رسمی قطعه ↗</a></div>
+   </div>
+   <div class="audius-seek-row" dir="ltr"><time id="audiusElapsed">0:00</time><input id="audiusSeek" type="range" min="0" max="1000" value="0" disabled aria-label="جابه‌جایی در قطعه"><time id="audiusTotal">--:--</time></div>
+   <div class="audius-controls"><button type="button" id="audiusPrevious" class="audius-skip" aria-label="آهنگ قبلی">❮❮</button><button type="button" id="audiusToggle" class="audius-primary" aria-label="پخش موسیقی">▶</button><button type="button" id="audiusNext" class="audius-skip" aria-label="آهنگ بعدی">❯❯</button><label class="audius-volume">صدا <input type="range" id="audiusVolume" min="0" max="100" value="80" aria-label="میزان صدا"></label></div>
+   <p class="audius-status" id="audiusStatus" role="status" aria-live="polite">برای شنیدن موسیقی یکی از قطعات را انتخاب کن.</p>
+ </div>
+ <p class="audius-note">این آرشیو نتایج موجود در آدیوس را نشان می‌دهد؛ شامل تمام موسیقی‌های منتشرشده در جهان نیست. دسترسی و پخش هر اثر به تنظیمات منبع بستگی دارد. فایل موسیقی روی سرور رادیو ذخیره نمی‌شود.</p>
+ <audio id="audiusAudio" preload="none" playsinline></audio>
 </section>
 <section class="container section-block" id="episodes" aria-labelledby="episodesTitle">
   <div class="section-heading"><div><p class="kicker">RADIO REPLAYS</p><h2 id="episodesTitle">برنامه‌های ضبط‌شده</h2><p class="section-description">اگر برنامه‌ای را از دست دادی، اینجا دوباره بشنو.</p></div></div>
