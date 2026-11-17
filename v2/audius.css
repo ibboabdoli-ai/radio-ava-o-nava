@@ -70,3 +70,9 @@
 }
 @media(max-width:350px){.audius-grid{gap:9px}.audius-track-body h3{font-size:12px}.audius-tags span:nth-child(3){display:none}}
 @media(prefers-reduced-motion:reduce){.audius-track,.audius-choose,.audius-skip{transition:none!important}}
+
+/* Small archive shortcut only; existing SoundCloud library is unchanged. */
+.music-quick-links{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.audius-jump{border:1px solid #e4bc8466;border-radius:30px;background:#e6b98519;color:#f4d19c;font-size:12px;font-weight:700;padding:8px 13px;white-space:nowrap;min-height:42px;display:inline-flex;align-items:center;justify-content:center}
+.audius-jump:hover{border-color:#f6d8a8;background:#e6b9852b}
+@media(max-width:700px){.music-quick-links{flex-direction:column;align-items:flex-start;gap:5px}.audius-jump{font-size:11px;min-height:38px;padding:6px 9px}}
