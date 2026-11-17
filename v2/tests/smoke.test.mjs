@@ -104,3 +104,33 @@ test('Only four pictured featured music cards gain sourced photographs',()=>{
  assert.match(app,/cover\.classList\.add\('has-image'\)/);
  assert.match(get('polish.css'),/\.music-cover\.has-image>img/);
 });
+
+test('Audius Persian catalog includes seven real native-stream entries',()=>{
+ const data=JSON.parse(get('audius-catalog.json'));
+ const js=get('audius.js'),style=get('audius.css');
+ new vm.Script(js);
+ assert.equal(data.provider,'Audius');
+ assert.equal(data.tracks.length,7);
+ const ids=new Set();
+ for(const track of data.tracks){
+   assert.match(track.id,/^[A-Za-z0-9]{2,24}$/);
+   assert.equal(track.publicStream,true);
+   assert.equal(new URL(track.source).hostname,'audius.co');
+   assert.equal(new URL(track.artwork).protocol,'https:');
+   assert.ok(track.title&&track.artist&&track.genre);
+   assert.ok(!ids.has(track.id));ids.add(track.id);
+ }
+ assert.match(html,/id="audiusGrid"/);
+ assert.match(html,/id="audiusAudio"/);
+ assert.match(html,/id="audiusSeek"/);
+ assert.match(html,/id="audiusNext"/);
+ assert.match(html,/href="\.\/audius\.css\?v=1"/);
+ assert.match(html,/src="\.\/audius\.js\?v=1"/);
+ assert.match(app,/radio-audius-started/);
+ assert.match(app,/radio-audius-stop/);
+ assert.match(js,/\/stream\?app_name=/);
+ assert.match(js,/radio-audius-toggle/);
+ assert.match(style,/\.audius-grid/);
+ assert.match(get('sw.js'),/audius-catalog\.json/);
+ assert.ok(!get('sw.js').includes('api.audius.co'));
+});
