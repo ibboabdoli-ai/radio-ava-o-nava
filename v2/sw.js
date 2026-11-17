@@ -1,6 +1,6 @@
 /* Ava o Nava v2: cache only the static shell; NEVER cache audio or third-party embeds. */
 const CACHE='ava-v2-static-1';
-const SHELL=['./','./index.html','./site.css?v=1','./app.js?v=1','./catalog.json','./shows.json','./manifest.webmanifest','../radio-neon-logo.webp'];
+const SHELL=['./','./index.html','./site.css?v=1','./app.js?v=1','./catalog.json','./shows.json','./manifest.webmanifest','../radio-neon-logo.webp','./icon.svg'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>Promise.allSettled(SHELL.map(url=>cache.add(url)))));
   self.skipWaiting();
