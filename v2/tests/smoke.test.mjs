@@ -81,7 +81,7 @@ test('Timezone conversion in November 2026',()=>{
 test('One unified accessible responsive design, no obsolete style layers',()=>{
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
-  assert.match(html,/href="\.\/site\.css\?v=11"/);
+  assert.match(html,/href="\.\/site\.css\?v=12"/);
   assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,1);
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
@@ -111,4 +111,28 @@ test('No hardcoded authentication secret or invented live claims',()=>{
  assert.ok(!/icecast.*password\s*[:=]/i.test(app+get('shows.json')));
  assert.match(app,/Unknown is not OFFLINE/);
  assert.match(app,/navigator\.mediaSession/);
+});
+
+test('iOS and Android install guide is compact and accessible',()=>{
+  const guide=get('install-guide.js');
+  new vm.Script(guide);
+  assert.match(html,/id="installImageDialog"/);
+  assert.match(html,/id="installDialogImage"/);
+  assert.match(html,/id="installDialogClose"/);
+  assert.equal((html.match(/class="install-preview"/g)||[]).length,8);
+  assert.match(html,/src="\.\/install-guide\.js\?v=1"/);
+  assert.match(css,/\.install-preview img\{/);
+  assert.match(css,/scroll-snap-type:x mandatory/);
+  assert.match(css,/\.install-image-dialog::backdrop/);
+  assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
+  assert.match(sw,/ava-v2-static-13/);
+  assert.match(sw,/install-guide\.js\?v=1/);
+  for(const platform of ['ios','android']){
+    for(let i=1;i<=4;i++){
+      const svg=get('../assets/'+platform+'-install-'+i+'.svg');
+      assert.match(svg,/<svg /);
+      assert.match(svg,/fill="#171425" aria-hidden="true"/);
+      assert.ok(html.includes('../assets/'+platform+'-install-'+i+'.svg'));
+    }
+  }
 });
