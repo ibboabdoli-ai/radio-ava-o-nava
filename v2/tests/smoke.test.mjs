@@ -73,3 +73,22 @@ test('Mobile visual polish, motion accessibility and legacy parity',()=>{
   assert.match(interaction,/requestFullscreen/);
   assert.equal(new URL(shows.links.requestSong).hostname,'t.me');
 });
+
+test('Premium mobile navigation, presentation and compatibility',()=>{
+ const premium=get('mobile-premium.css');const navigation=get('mobile-premium.js');
+ new vm.Script(navigation);
+ assert.match(html,/id="mobileBottomNav"/);
+ assert.match(html,/id="headerShare"/);
+ assert.match(html,/class="mobile-station-intro container"/);
+ assert.match(html,/href="\.\/mobile-premium\.css\?v=5"/);
+ assert.match(html,/src="\.\/mobile-premium\.js\?v=5"/);
+ assert.match(html,/src="\.\/app\.js\?v=5"/);
+ assert.equal((html.match(/data-mobile-tab="/g)||[]).length,4);
+ assert.match(premium,/@media\(max-width:700px\)/);
+ assert.match(premium,/prefers-reduced-motion:reduce/);
+ assert.match(premium,/env\(safe-area-inset-bottom\)/);
+ assert.match(premium,/.player-dock:not\(.dock-active\)/);
+ assert.match(navigation,/IntersectionObserver/);
+ assert.match(app,/classList.toggle\('dock-active'/);
+ assert.match(get('interaction.js'),/mobile-tab/);
+});
