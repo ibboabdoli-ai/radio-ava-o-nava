@@ -134,9 +134,6 @@
   .music-actions{gap:5px;padding-top:10px}
   .music-play{padding:9px 5px;min-height:42px;font-size:11px}
   .favorite-button{padding:4px 8px;min-height:42px;min-width:38px}
-  .soundcloud-player{padding:17px;border-radius:19px}
-  .soundcloud-heading h3{font-size:20px}
-  .soundcloud-heading a{font-size:11px}
   .music-player-actions{gap:7px;flex-wrap:wrap}
   .music-player-actions .small-btn{flex:1}
   .music-player-actions .btn{flex:2;min-width:120px}
