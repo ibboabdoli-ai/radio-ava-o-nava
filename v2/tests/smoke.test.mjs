@@ -137,7 +137,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
         ios:['b1fd3f9265a92bcc223635a3cb846146726b10af','d6078cf6c90b18cc024dfbf68131f1da19c3c430','283ff35c481a117f1ad1574acf01d9bf07710e35','0886b95e6ae61bb6496b9ee2661d1d3c606fd885'],
         android:['1f71a21ed18956d6f10af11b714a1763c69c7da3','08ffb4496b01f2d7a5cc1c0fc6f7f29cfda428e5','3b82be6dcd9db4548b071f6cd4f246e2fe777f5b','619956e6ad5ce44a34df6e26b64cf4ed664d3476']
       };
-      const blobHash=createHash('sha1').update('blob '+Buffer.byteLength(svg)+'\\0'+svg).digest('hex');
+      const blobHash=createHash('sha1').update('blob '+Buffer.byteLength(svg)+'\0'+svg).digest('hex');
       assert.equal(blobHash,originals[platform][i-1]);
       assert.ok(html.includes('../assets/'+platform+'-install-'+i+'.svg'));
     }
