@@ -5,10 +5,9 @@
   const fa = n => new Intl.NumberFormat('fa-IR').format(n);
   const days = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
   const wk = {Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6};
-  const genres = [{id:'all',title:'همه سبک‌ها'},{id:'traditional',title:'سنتی و دستگاهی'},{id:'pop',title:'پاپ ایرانی'},{id:'nostalgic',title:'نوستالژیک'},{id:'instrumental',title:'بی‌کلام'},{id:'modern',title:'پاپ جدید'}];
   const FALLBACK = {schedule:{weekdays:[6,0,1,2,3],hour:22,minute:0},recordings:[],links:{stream:'https://live.ibboabdoli.com/stream',stats:'https://live.ibboabdoli.com/radio-stats.xsl',clubhouse:'https://www.clubhouse.com/',contest:'https://docs.google.com/forms/d/e/1FAIpQLSewM20f3DLbL2yz60VNdestV-9ZJfLAaA8ivepjCWbx88_TzQ/viewform?usp=header',telegram:'https://t.me/+nFR4GhHTc7Y3ZjNk',whatsapp:'https://www.whatsapp.com/channel/0029VbDqKNg5vKA9OxDV4046'},program:{title:'آوا و نوا',subtitle:'موسیقی، شعر و آواز'}};
-  const state = {shows:FALLBACK,tracks:[],filter:'all',artist:'all',search:'',favoritesOnly:false,selectedMusic:null,filtered:[],musicWidget:null,musicReady:false,musicPlaying:false,pendingMusicAutoPlay:false,recordingIndex:-1,mode:'idle',liveWanted:false,liveTries:0,liveTimer:null,liveWatchdog:null,liveSequence:0,lastStats:null,lastStatsTime:0,lastStatsStarted:null};
-  const liveAudio=$('liveAudio'), recAudio=$('recordingAudio'), musicFrame=$('musicFrame');
+  const state = {shows:FALLBACK,recordingIndex:-1,mode:'idle',liveWanted:false,liveTries:0,liveTimer:null,liveWatchdog:null,liveSequence:0,lastStats:null,lastStatsTime:0,lastStatsStarted:null};
+  const liveAudio=$('liveAudio'), recAudio=$('recordingAudio');
   const host = el => document.createElement(el);
   const elText = (name,text,className) => {const n=host(name);n.textContent=String(text ?? '');if(className)n.className=className;return n;};
   const setText=(id,text)=>{const n=$(id);if(n)n.textContent=String(text);};
@@ -18,9 +17,7 @@
   const safeHttps=(url,hostnames)=>{try{const u=new URL(url);return u.protocol==='https:'&&(!hostnames||hostnames.some(h=>u.hostname===h||u.hostname.endsWith('.'+h)))?u.href:null;}catch{return null;}};
   function toast(message){const t=$('toast');t.textContent=message;t.hidden=false;clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.hidden=true,5500);}
   function setLink(id,url){const n=$(id),v=safeHttps(url);if(!n)return;if(v)n.href=v;else n.removeAttribute('href');}
-  function setDock(title,subtitle,playState,href){setText('dockTitle',title);setText('dockSubtitle',subtitle);setText('dockPlay',playState?'Ⅱ':'▶');$('dockDetail').href=href;$('playerDock').classList.toggle('dock-active',state.mode!=='idle');let action=state.mode==='recording'?'پخش یا مکث برنامه':state.mode==='music'?'کنترل موسیقی':state.mode==='audius'?'کنترل موسیقی آدیوس':'پخش یا توقف زنده';$('dockPlay').setAttribute('aria-label',action);}
-  function saveFavorites(favs){try{localStorage.setItem('ava-v2-favs',JSON.stringify([...favs].slice(0,100)))}catch{}}
-  const favorites=(()=>{try{const v=JSON.parse(localStorage.getItem('ava-v2-favs')||'[]');return new Set(Array.isArray(v)?v.filter(x=>typeof x==='string').slice(0,100):[])}catch{return new Set()}})();
+  function setDock(title,subtitle,playState,href){setText('dockTitle',title);setText('dockSubtitle',subtitle);setText('dockPlay',playState?'Ⅱ':'▶');$('dockDetail').href=href;$('playerDock').classList.toggle('dock-active',state.mode!=='idle');let action=state.mode==='recording'?'پخش یا مکث برنامه':state.mode==='audius'?'کنترل موسیقی آدیوس':'پخش یا توقف زنده';$('dockPlay').setAttribute('aria-label',action);}
   const fmtTime=(date,tz)=>new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(date);
   const dayInTehran=date=>wk[new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Tehran',weekday:'short'}).format(date)];
   function showCandidates(){
@@ -74,11 +71,9 @@
   function clearLiveTimers(){clearTimeout(state.liveTimer);clearTimeout(state.liveWatchdog);state.liveTimer=null;state.liveWatchdog=null;}
   function liveUI(label,details,isPlaying){setText('liveAction',label);setText('liveMessage',details);setText('livePlayIcon',isPlaying?'Ⅱ':'▶');$('waveform').classList.toggle('is-active',isPlaying);setDock('رادیو آوا و نوا',details,isPlaying,'#listen');}
   function stopLive(message='پخش متوقف شد.',update=true){state.liveWanted=false;state.liveSequence++;clearLiveTimers();liveAudio.pause();liveAudio.removeAttribute('src');liveAudio.load();state.liveTries=0;if(state.mode==='live')state.mode='idle';if(update)liveUI('پخش زنده','برای شروع، دکمه پخش را بزنید.',false);setText('liveMessage',message);}
-  function pauseMusic(){if(state.musicWidget&&state.musicReady)try{state.musicWidget.pause();}catch{} state.musicPlaying=false;}
   function suspendOtherModes(next){
     if(next!=='live'&&state.liveWanted)stopLive('پخش زنده برای شنیدن محتوای دیگر متوقف شد.',false);
     if(next!=='recording'&&!recAudio.paused)recAudio.pause();
-    if(next!=='music')pauseMusic();
     if(next!=='audius')window.dispatchEvent(new Event('radio-audius-stop'));
     state.mode=next;
   }
@@ -160,89 +155,6 @@
   recAudio.addEventListener('loadedmetadata',()=>setText('recordingTotal',fmtDuration(recAudio.duration)));
   recAudio.addEventListener('ended',()=>chooseRecording(state.recordingIndex+1,true));
   recAudio.addEventListener('error',()=>setText('recordingMessage','بارگذاری ضبط ممکن نشد؛ فایل بعدی را امتحان کنید.'));
-  function filteredTracks(){
-    const q=state.search.toLocaleLowerCase('fa').trim();
-    return state.tracks.filter(t=>(state.filter==='all'||t.genres.includes(state.filter))&&(state.artist==='all'||t.artistId===state.artist)&&(!state.favoritesOnly||favorites.has(t.id))&&(!q||(t.title+' '+t.artist).toLocaleLowerCase('fa').includes(q)));
-  }
-  function updateArtistOptions(){
-    const select=$('artistFilter'),previous=state.artist,ids=[...new Map(state.tracks.filter(t=>state.filter==='all'||t.genres.includes(state.filter)).map(t=>[t.artistId,t.artist])).entries()];
-    select.replaceChildren();const all=host('option');all.value='all';all.textContent='همه هنرمندان';select.append(all);
-    ids.forEach(([id,name])=>{const option=host('option');option.value=id;option.textContent=name;select.append(option)});
-    if(ids.some(([id])=>id===previous))select.value=previous;else{select.value='all';state.artist='all';}
-  }
-  function renderMusic(){
-    const grid=$('musicGrid');grid.replaceChildren();const items=state.filtered=filteredTracks();
-    // A genre/artist filter is a separate queue: stop any track outside it.
-    if(state.selectedMusic&&!items.some(t=>t.id===state.selectedMusic.id)){
-      pauseMusic();musicFrame.removeAttribute('src');state.musicWidget=null;state.musicReady=false;state.pendingMusicAutoPlay=false;state.selectedMusic=null;
-      $('soundcloudPanel').hidden=true;
-      if(state.mode==='music'){state.mode='idle';setDock('رادیو آوا و نوا','آماده پخش',false,'#listen');}
-    }
-    setText('musicCount',fa(items.length)+' مورد');$('musicEmpty').hidden=items.length!==0;
-    for(const t of items){
-      const card=host('article');card.className='music-card';
-      const cover=host('div');cover.className='music-cover';
-      const officialArtwork=t.artwork&&safeHttps(t.artwork.url,['mrshajarian.com','sndcdn.com','scdn.co','wikimedia.org']);
-      if(officialArtwork){
-        cover.classList.add('has-image');
-        const artwork=host('img');
-        artwork.src=officialArtwork;artwork.alt=t.artwork.alt||'تصویر آلبوم یا هنرمند';
-        artwork.loading='lazy';artwork.decoding='async';artwork.referrerPolicy='no-referrer';
-        artwork.addEventListener('error',()=>{
-          if(!artwork.src.endsWith('/v2/icon.svg')){artwork.src='./icon.svg';artwork.alt='تصویر جایگزین رادیو آوا و نوا';}
-        });
-        cover.append(artwork);
-      }else{
-        cover.append(elText('span',(t.artist||'آ').trim().charAt(0)),elText('small','AVA O NAVA'));
-        cover.setAttribute('aria-hidden','true');
-      }
-      const details=host('div');details.className='music-details';
-      details.append(elText('small',t.type==='album'?'آلبوم':'قطعه موسیقی','music-type'),elText('h3',t.title),elText('p',t.artist));
-      const actions=host('div');actions.className='music-actions';
-      const play=elText('button','▶ شنیدن','music-play');play.type='button';play.addEventListener('click',()=>chooseMusic(t,true));
-      const fav=elText('button',favorites.has(t.id)?'♥':'♡','favorite-button'+(favorites.has(t.id)?' is-fav':''));fav.type='button';fav.setAttribute('aria-label',favorites.has(t.id)?'حذف از علاقه‌مندی‌ها':'افزودن به علاقه‌مندی‌ها');
-      fav.addEventListener('click',()=>{if(favorites.has(t.id))favorites.delete(t.id);else favorites.add(t.id);saveFavorites(favorites);renderMusic();});
-      actions.append(play,fav);details.append(actions);card.append(cover,details);grid.append(card);
-    }
-  }
-  function renderFilters(){const filters=$('genreFilters');filters.replaceChildren();for(const g of genres){const button=elText('button',g.title);button.type='button';button.className=state.filter===g.id?'active':'';button.setAttribute('aria-pressed',String(state.filter===g.id));button.addEventListener('click',()=>{state.filter=g.id;state.artist='all';renderFilters();updateArtistOptions();renderMusic();});filters.append(button);}}
-  $('musicSearch').addEventListener('input',e=>{state.search=e.target.value;renderMusic();});
-  $('artistFilter').addEventListener('change',e=>{state.artist=e.target.value;renderMusic();});
-  $('favoritesOnly').addEventListener('click',()=>{state.favoritesOnly=!state.favoritesOnly;$('favoritesOnly').classList.toggle('active',state.favoritesOnly);$('favoritesOnly').setAttribute('aria-pressed',String(state.favoritesOnly));renderMusic();});
-  function chooseMusic(t,autoplay=false){
-    const url=safeHttps(t.url,['soundcloud.com']);if(!url){toast('منبع موسیقی معتبر نیست.');return;}
-    suspendOtherModes('music');if(autoplay)state.pendingMusicAutoPlay=false;state.selectedMusic=t;state.musicReady=false;state.musicPlaying=false;
-    $('soundcloudPanel').hidden=false;setText('selectedMusicTitle',t.title);setText('selectedMusicArtist',t.artist);setText('musicStatus','پلیر رسمی در حال بارگذاری است…');setLink('musicOfficialUrl',url);
-    if(window.SC&&window.SC.Widget){
-      if(!state.musicWidget){musicFrame.src='https://w.soundcloud.com/player/?url='+encodeURIComponent(url)+'&auto_play=false&show_artwork=false';state.musicWidget=window.SC.Widget(musicFrame);
-        const ev=window.SC.Widget.Events;
-        state.musicWidget.bind(ev.READY,()=>{state.musicReady=true;setText('musicStatus','برای شنیدن، داخل پلیر یا دکمه پخش را بزنید.');if(state.pendingMusicAutoPlay){state.pendingMusicAutoPlay=false;try{state.musicWidget.play();}catch{setText('musicStatus','پخش خودکار مجاز نبود؛ دکمه پخش را بزنید.');}}});
-        state.musicWidget.bind(ev.PLAY,()=>{suspendOtherModes('music');state.musicPlaying=true;setText('musicStatus','در حال پخش از منبع رسمی');setDock(state.selectedMusic?.title||'آرشیو موسیقی',state.selectedMusic?.artist||'رادیو آوا و نوا',true,'#music');});
-        state.musicWidget.bind(ev.PAUSE,()=>{state.musicPlaying=false;if(state.mode==='music')setDock(state.selectedMusic?.title||'موسیقی','مکث شده',false,'#music');});
-        state.musicWidget.bind(ev.FINISH,()=>{state.musicPlaying=false;playAdjacent(1,true);});
-        if(ev.ERROR)state.musicWidget.bind(ev.ERROR,()=>{state.musicReady=false;setText('musicStatus','این منبع پخش نشد؛ لینک رسمی آهنگ را باز کن.');});
-      }else state.musicWidget.load(url,{auto_play:false,show_artwork:false,show_user:true,sharing:true});
-    }else{
-      musicFrame.src='https://w.soundcloud.com/player/?url='+encodeURIComponent(url)+'&auto_play=false&show_artwork=false';
-      setText('musicStatus','از دکمه پخش داخل پلیر رسمی استفاده کن.');
-    }
-    setDock(t.title,t.artist,false,'#music');
-    $('soundcloudPanel').scrollIntoView({behavior:'smooth',block:'center'});
-    if(autoplay){setText('musicStatus','بعد از آماده‌شدن پلیر، پخش را بزنید.');}
-  }
-  function playAdjacent(dir,auto=false){
-    if(!state.selectedMusic)return;const items=state.filtered.length?state.filtered:state.tracks;const pos=items.findIndex(t=>t.id===state.selectedMusic.id);
-    if(pos<0||!items[pos+dir]){setText('musicStatus','در این فهرست آهنگ دیگری وجود ندارد.');return;}
-    state.pendingMusicAutoPlay=auto;chooseMusic(items[pos+dir],false);
-  }
-  $('musicPrev').addEventListener('click',()=>playAdjacent(-1));
-  $('musicNext').addEventListener('click',()=>playAdjacent(1));
-  function toggleMusic(){
-    if(!state.selectedMusic){toast('اول یک آهنگ را انتخاب کن.');return;}
-    if(!state.musicWidget||!state.musicReady){toast('برای پخش، دکمه داخل پلیر رسمی را بزن.');return;}
-    try{if(state.musicPlaying)state.musicWidget.pause();else state.musicWidget.play();}catch{toast('پلیر رسمی پاسخ نداد؛ از لینک منبع استفاده کن.');}
-  }
-  $('musicToggle').addEventListener('click',toggleMusic);
   window.addEventListener('radio-audius-started',event=>{
     const detail=event.detail||{};
     suspendOtherModes('audius');
@@ -257,7 +169,7 @@
     if(state.mode==='live'||state.mode==='idle')toggleLive();
     else if(state.mode==='recording')toggleRecording();
     else if(state.mode==='audius')window.dispatchEvent(new Event('radio-audius-toggle'));
-    else toggleMusic();
+    else toggleLive();
   });
   function wireNavigation(){const nav=$('navigation'),menu=$('menuButton');
     menu.addEventListener('click',()=>{const open=!nav.classList.contains('open');nav.classList.toggle('open',open);menu.setAttribute('aria-expanded',String(open));});
@@ -268,17 +180,17 @@
   async function init(){
     wireNavigation();setDock('رادیو آوا و نوا','آماده پخش',false,'#listen');
     try{
-      const [shows,catalog]=await Promise.all([fetch('./shows.json',{cache:'no-store'}),fetch('./catalog.json',{cache:'no-store'})]);
-      if(!shows.ok||!catalog.ok)throw Error('Content unavailable');
-      const [a,b]=await Promise.all([shows.json(),catalog.json()]);
-      if(!a.links||!Array.isArray(a.recordings)||!a.schedule||!Array.isArray(b.tracks))throw Error('Invalid content');
-      state.shows=a;state.tracks=b.tracks.filter(t=>safeHttps(t.url,['soundcloud.com'])&&typeof t.title==='string'&&Array.isArray(t.genres));
-    }catch{toast('بارگذاری برخی اطلاعات ممکن نشد؛ اتصال اینترنت را بررسی کن.');}
+      const response=await fetch('./shows.json',{cache:'no-store'});
+      if(!response.ok)throw new Error('Program content unavailable');
+      const content=await response.json();
+      if(!content.links||!Array.isArray(content.recordings)||!content.schedule)throw new Error('Invalid program content');
+      state.shows=content;
+    }catch{toast('برخی اطلاعات برنامه‌ها بارگذاری نشد؛ اتصال اینترنت را بررسی کن.');}
     setLink('clubhouseLink',state.shows.program.roomUrl||state.shows.links.clubhouse);
     setLink('houseLink',state.shows.program.roomUrl||state.shows.links.clubhouse);
     setLink('contestLink',state.shows.links.contest);setLink('telegramLink',state.shows.links.telegram);setLink('whatsappLink',state.shows.links.whatsapp);setLink('requestSongLink',state.shows.links.requestSong||'https://t.me/+bSKXuElY13I3NWY0');
     setText('liveProgram',state.shows.program.title||'آوا و نوا');setText('liveHost',state.shows.program.subtitle||'موسیقی، شعر و آواز');
-    renderSchedule();updateClocks();renderFilters();updateArtistOptions();renderMusic();renderRecordings();if(state.shows.recordings.length)chooseRecording(0,false);
+    renderSchedule();updateClocks();renderRecordings();if(state.shows.recordings.length)chooseRecording(0,false);
     // Initial selection must not force the dock into recordings mode.
     state.mode='idle';setDock('رادیو آوا و نوا','آماده پخش',false,'#listen');
     pollStats();
