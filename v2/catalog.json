@@ -1,0 +1,229 @@
+{
+  "version": 1,
+  "source": "existing reviewed radio archive",
+  "notice": "Uses official SoundCloud embeds; availability depends on provider.",
+  "tracks": [
+    {
+      "id": "music-1",
+      "title": "مثنوی همایون",
+      "artist": "محمدرضا شجریان",
+      "artistId": "shajarian",
+      "genres": [
+        "traditional"
+      ],
+      "type": "album",
+      "url": "https://soundcloud.com/mohammadrezashajarian-sc/sets/homayoun-masnavi",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    },
+    {
+      "id": "music-2",
+      "title": "شب عاشق",
+      "artist": "غلامحسین بنان",
+      "artistId": "banan",
+      "genres": [
+        "traditional",
+        "nostalgic"
+      ],
+      "type": "album",
+      "url": "https://soundcloud.com/banan79877/sets/masterpieces-of-ostad-banan-1",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    },
+    {
+      "id": "music-3",
+      "title": "Aks Khosoosi",
+      "artist": "گوگوش",
+      "artistId": "googoosh",
+      "genres": [
+        "pop",
+        "nostalgic"
+      ],
+      "type": "album",
+      "url": "https://soundcloud.com/googooshmusic/sets/aks-khosoosi-1",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    },
+    {
+      "id": "music-4",
+      "title": "بیا ساقی",
+      "artist": "شهرام ناظری و حسین علیزاده",
+      "artistId": "shahram-nazeri",
+      "genres": [
+        "traditional"
+      ],
+      "type": "track",
+      "url": "https://soundcloud.com/mahoor-institute/biya-saqi-tasnif",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    },
+    {
+      "id": "music-5",
+      "title": "رؤیای هستی",
+      "artist": "غلامحسین بنان",
+      "artistId": "banan",
+      "genres": [
+        "traditional",
+        "nostalgic"
+      ],
+      "type": "track",
+      "url": "https://soundcloud.com/mahoor-institute/tasnif-roya-hasti-roya-ye-hastigholam-hosein-banan",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    },
+    {
+      "id": "music-6",
+      "title": "سراب رد پای تو",
+      "artist": "داریوش اقبالی",
+      "artistId": "dariush",
+      "genres": [
+        "pop",
+        "nostalgic"
+      ],
+      "type": "track",
+      "url": "https://soundcloud.com/dariush-eghbali/dariush-taghvim",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    },
+    {
+      "id": "music-7",
+      "title": "هفت‌پیکر",
+      "artist": "فرامرز پایور",
+      "artistId": "payvar",
+      "genres": [
+        "instrumental",
+        "traditional"
+      ],
+      "type": "track",
+      "url": "https://soundcloud.com/mahoor-institute/mikharam-barat-titishhaft-peykarfaramarz-payvar",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    },
+    {
+      "id": "music-8",
+      "title": "چندضربی همایون",
+      "artist": "محمدرضا ابراهیمی",
+      "artistId": "ebrahimi",
+      "genres": [
+        "instrumental",
+        "traditional"
+      ],
+      "type": "track",
+      "url": "https://soundcloud.com/mahoor-institute/chand-zarbi-e-homayoun-sana",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    },
+    {
+      "id": "music-9",
+      "title": "حریق سبز",
+      "artist": "ابی",
+      "artistId": "ebi",
+      "genres": [
+        "pop",
+        "nostalgic"
+      ],
+      "type": "track",
+      "url": "https://soundcloud.com/ebipopmusic/ebi-harighe-sabz",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    },
+    {
+      "id": "music-10",
+      "title": "خالی",
+      "artist": "ابی",
+      "artistId": "ebi",
+      "genres": [
+        "pop",
+        "nostalgic"
+      ],
+      "type": "track",
+      "url": "https://soundcloud.com/iranmediamusic/ebi-khali",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    },
+    {
+      "id": "music-11",
+      "title": "شام مهتاب",
+      "artist": "داریوش اقبالی",
+      "artistId": "dariush",
+      "genres": [
+        "pop",
+        "nostalgic"
+      ],
+      "type": "track",
+      "url": "https://soundcloud.com/best-of-dariush/zd8d0gheh0rz",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    },
+    {
+      "id": "music-12",
+      "title": "ستاره",
+      "artist": "شادمهر عقیلی",
+      "artistId": "shadmehr",
+      "genres": [
+        "pop",
+        "modern"
+      ],
+      "type": "track",
+      "url": "https://soundcloud.com/shadmehr-pop-genius/shadmehr-aghili-setare",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    },
+    {
+      "id": "music-13",
+      "title": "نماز",
+      "artist": "فریدون فروغی",
+      "artistId": "fereydoun",
+      "genres": [
+        "pop",
+        "nostalgic"
+      ],
+      "type": "track",
+      "url": "https://soundcloud.com/fereidoonforoughi/namaz-fereidoon-foroughi",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    },
+    {
+      "id": "music-14",
+      "title": "کوچه شهر دلم",
+      "artist": "فریدون فروغی",
+      "artistId": "fereydoun",
+      "genres": [
+        "pop",
+        "nostalgic"
+      ],
+      "type": "track",
+      "url": "https://soundcloud.com/fereidoonforoughi/koucheye-shahre-delam-fereidoon-foroughi",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    },
+    {
+      "id": "music-15",
+      "title": "زمونه",
+      "artist": "هایده",
+      "artistId": "hayedeh",
+      "genres": [
+        "pop",
+        "nostalgic"
+      ],
+      "type": "track",
+      "url": "https://soundcloud.com/hayedeh-music/zamooneh",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    },
+    {
+      "id": "music-16",
+      "title": "حیف حیف",
+      "artist": "هایده",
+      "artistId": "hayedeh",
+      "genres": [
+        "pop",
+        "nostalgic"
+      ],
+      "type": "track",
+      "url": "https://soundcloud.com/hayedeh-music/heif-heif-2",
+      "platform": "soundcloud",
+      "sourceStatus": "existing-catalog"
+    }
+  ]
+}
