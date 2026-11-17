@@ -1,0 +1,21 @@
+name: Radio v2 static checks
+on:
+  pull_request:
+    paths:
+      - 'v2/**'
+      - '.github/workflows/radio-v2-check.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Validate radio v2 files
+        run: node --test v2/tests/smoke.test.mjs
