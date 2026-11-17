@@ -81,7 +81,7 @@ test('Timezone conversion in November 2026',()=>{
 test('One unified accessible responsive design, no obsolete style layers',()=>{
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
-  assert.match(html,/href="\.\/site\.css\?v=12"/);
+  assert.match(html,/href="\.\/site\.css\?v=14"/);
   assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,1);
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
@@ -120,12 +120,12 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(html,/id="installDialogImage"/);
   assert.match(html,/id="installDialogClose"/);
   assert.equal((html.match(/class="install-preview"/g)||[]).length,8);
-  assert.match(html,/src="\.\/install-guide\.js\?v=1"/);
+  assert.match(html,/src="\.\/install-guide\.js\?v=2"/);
   assert.match(css,/\.install-preview img\{/);
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-13/);
+  assert.match(sw,/ava-v2-static-14/);
   assert.match(sw,/install-guide\.js\?v=1/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -135,4 +135,25 @@ test('iOS and Android install guide is compact and accessible',()=>{
       assert.ok(html.includes('../assets/'+platform+'-install-'+i+'.svg'));
     }
   }
+});
+
+test('Install slides show exactly one of four steps at once per platform',()=>{
+ const guide=get('install-guide.js');
+ for(const platform of ['ios','android'])
+   assert.ok(html.includes('data-install-slider="'+platform+'"'),platform);
+ assert.equal((html.match(/class="install-step-grid" aria-live="off"/g)||[]).length,2);
+ assert.equal((html.match(/class="install-slider-arrow install-prev"/g)||[]).length,2);
+ assert.equal((html.match(/class="install-slider-arrow install-next"/g)||[]).length,2);
+ assert.equal((html.match(/data-slide="[0-3]"/g)||[]).length,8);
+ assert.equal((html.match(/class="install-slider-status"/g)||[]).length,2);
+ assert.match(guide,/cards\.forEach/);
+ assert.match(guide,/card\.hidden=i!==current/);
+ assert.match(guide,/touchstart/);
+ assert.match(guide,/touchend/);
+ assert.match(guide,/ArrowLeft/);
+ assert.match(guide,/ArrowRight/);
+ assert.match(css,/\.install-slider \.install-step-grid\{/);
+ assert.match(css,/\.install-slider \.install-step-card\[hidden\]/);
+ assert.match(css,/\.install-slider-dot\.active span/);
+ assert.match(css,/\.install-slider \.install-preview img\{[^}]*object-fit:contain/);
 });
