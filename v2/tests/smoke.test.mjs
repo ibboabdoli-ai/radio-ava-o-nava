@@ -54,3 +54,22 @@ test('No app secrets, hardcoded credentials or false live claims',()=>{
   assert.match(app,/Unknown is not OFFLINE/);
   assert.match(app,/navigator\.mediaSession/);
 });
+
+test('Mobile visual polish, motion accessibility and legacy parity',()=>{
+  const polish=get('polish.css'),mobile=get('mobile.css'),interaction=get('interaction.js');
+  new vm.Script(interaction);
+  assert.match(html,/href="\.\/polish\.css\?v=3"/);
+  assert.match(html,/href="\.\/mobile\.css\?v=3"/);
+  assert.match(html,/src="\.\/interaction\.js\?v=3"/);
+  for(const id of ['liveFullscreen','liveCopy','liveShare','requestSongLink','install','about','contact'])assert.ok(html.includes('id="'+id+'"'),id);
+  for(const system of ['ios','android'])for(let n=1;n<=4;n++)assert.ok(html.includes(system+'-install-'+n+'.svg'));
+  assert.match(html,/class="install-platform-detail" open/);
+  assert.match(html,/class="install-platform-detail"><summary/);
+  assert.match(mobile,/@media\(max-width:700px\)/);
+  assert.match(mobile,/scroll-snap-type:x mandatory/);
+  assert.match(polish,/prefers-reduced-motion:reduce/);
+  assert.match(interaction,/pointerdown/);
+  assert.match(interaction,/pointermove/);
+  assert.match(interaction,/requestFullscreen/);
+  assert.equal(new URL(shows.links.requestSong).hostname,'t.me');
+});
