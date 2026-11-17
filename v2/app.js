@@ -180,7 +180,21 @@
     setText('musicCount',fa(items.length)+' مورد');$('musicEmpty').hidden=items.length!==0;
     for(const t of items){
       const card=host('article');card.className='music-card';
-      const cover=host('div');cover.className='music-cover';cover.append(elText('span',(t.artist||'آ').trim().charAt(0)),elText('small','AVA O NAVA'));cover.setAttribute('aria-hidden','true');
+      const cover=host('div');cover.className='music-cover';
+      const officialArtwork=t.artwork&&safeHttps(t.artwork.url,['mrshajarian.com','sndcdn.com','scdn.co','wikimedia.org']);
+      if(officialArtwork){
+        cover.classList.add('has-image');
+        const artwork=host('img');
+        artwork.src=officialArtwork;artwork.alt=t.artwork.alt||'تصویر آلبوم یا هنرمند';
+        artwork.loading='lazy';artwork.decoding='async';artwork.referrerPolicy='no-referrer';
+        artwork.addEventListener('error',()=>{
+          if(!artwork.src.endsWith('/v2/icon.svg')){artwork.src='./icon.svg';artwork.alt='تصویر جایگزین رادیو آوا و نوا';}
+        });
+        cover.append(artwork);
+      }else{
+        cover.append(elText('span',(t.artist||'آ').trim().charAt(0)),elText('small','AVA O NAVA'));
+        cover.setAttribute('aria-hidden','true');
+      }
       const details=host('div');details.className='music-details';
       details.append(elText('small',t.type==='album'?'آلبوم':'قطعه موسیقی','music-type'),elText('h3',t.title),elText('p',t.artist));
       const actions=host('div');actions.className='music-actions';
