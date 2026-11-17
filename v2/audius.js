@@ -130,8 +130,17 @@
   const isiOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   if(isiOS){$('audiusVolume').disabled=true;$('audiusVolume').title='تنظیم صدا با دکمه‌های آیفون';}
   else{audio.volume=.8;$('audiusVolume').addEventListener('input',event=>{audio.volume=Number(event.target.value)/100;});}
-  audio.addEventListener('playing',()=>{player.loading=false;updateButtons();const track=selected();if(track)announce('در حال پخش: '+track.title);});
+  audio.addEventListener('playing',()=>{
+    player.loading=false;updateButtons();
+    const track=selected();
+    if(track){
+      announce('در حال پخش: '+track.title);
+      window.dispatchEvent(new CustomEvent('radio-audius-started',{detail:{title:track.title,artist:track.artist}}));
+    }
+  });
   audio.addEventListener('pause',()=>{
+    // Ignore a stale pause event from the previous track after a new stream starts.
+    if(!audio.paused)return;
     updateButtons();const t=selected();
     if(t)window.dispatchEvent(new CustomEvent('radio-audius-paused',{detail:{title:t.title,artist:t.artist}}));
   });
@@ -145,7 +154,12 @@
     }
   });
   audio.addEventListener('waiting',()=>{if(!audio.paused)announce('در حال دریافت صدا از آدیوس…');});
-  audio.addEventListener('error',()=>{player.loading=false;updateButtons();announce('این فایل اکنون پخش نمی‌شود؛ از لینک منبع رسمی استفاده کن یا قطعه بعدی را بزن.');});
+  audio.addEventListener('error',()=>{
+    player.loading=false;updateButtons();
+    const track=selected();
+    if(track)window.dispatchEvent(new CustomEvent('radio-audius-paused',{detail:{title:track.title,artist:track.artist}}));
+    announce('این فایل اکنون پخش نمی‌شود؛ از لینک منبع رسمی استفاده کن یا قطعه بعدی را بزن.');
+  });
   audio.addEventListener('ended',()=>{updateButtons();adjacent(1,true);});
   window.addEventListener('radio-audius-stop',()=>{if(!audio.paused)audio.pause();});
   window.addEventListener('radio-audius-toggle',toggle);
