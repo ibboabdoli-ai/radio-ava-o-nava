@@ -246,7 +246,7 @@
     }catch{toast('بارگذاری برخی اطلاعات ممکن نشد؛ اتصال اینترنت را بررسی کن.');}
     setLink('clubhouseLink',state.shows.program.roomUrl||state.shows.links.clubhouse);
     setLink('houseLink',state.shows.program.roomUrl||state.shows.links.clubhouse);
-    setLink('contestLink',state.shows.links.contest);setLink('telegramLink',state.shows.links.telegram);setLink('whatsappLink',state.shows.links.whatsapp);
+    setLink('contestLink',state.shows.links.contest);setLink('telegramLink',state.shows.links.telegram);setLink('whatsappLink',state.shows.links.whatsapp);setLink('requestSongLink',state.shows.links.requestSong||'https://t.me/+bSKXuElY13I3NWY0');
     setText('liveProgram',state.shows.program.title||'آوا و نوا');setText('liveHost',state.shows.program.subtitle||'موسیقی، شعر و آواز');
     renderSchedule();updateClocks();renderFilters();updateArtistOptions();renderMusic();renderRecordings();if(state.shows.recordings.length)chooseRecording(0,false);
     // Initial selection must not force the dock into recordings mode.
