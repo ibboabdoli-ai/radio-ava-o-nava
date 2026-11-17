@@ -4,8 +4,8 @@
  const $=id=>document.getElementById(id);
  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
  const finePointer=window.matchMedia('(hover: hover) and (pointer: fine)');
- const surfaces='.live-panel,.up-next,.schedule-card,.music-card,.recording-card,.recording-player,.community-card,.install-platform-detail,.install-step-card,.about-section,.hero-feature,.hero-cover,.utility-button,.btn,.main-play,.rec-play,.icon-button,.small-btn,.music-play,.favorite-button,.header-cta,.dock-button,.menu-button';
- const tactile='.utility-button,.btn,.main-play,.rec-play,.icon-button,.small-btn,.music-play,.favorite-button,.dock-button,.menu-button,.schedule-card,.music-card,.recording-card,.community-card,.install-step-card,.install-platform-detail';
+ const surfaces='.live-panel,.up-next,.schedule-card,.music-card,.recording-card,.recording-player,.community-card,.install-platform-detail,.install-step-card,.about-section,.hero-feature,.hero-cover,.utility-button,.btn,.main-play,.rec-play,.icon-button,.small-btn,.music-play,.favorite-button,.header-cta,.dock-button,.menu-button,.mobile-tab,.header-share,.mobile-station-intro';
+ const tactile='.utility-button,.btn,.main-play,.rec-play,.icon-button,.small-btn,.music-play,.favorite-button,.dock-button,.menu-button,.mobile-tab,.header-share,.mobile-station-intro,.schedule-card,.music-card,.recording-card,.community-card,.install-step-card,.install-platform-detail';
  const visibleTimeout=new WeakMap(),timers=new WeakMap();
  const activePointers=new Map();
  let pendingPointer=null,frame=0,observer=null;
