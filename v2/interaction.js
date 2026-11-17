@@ -87,6 +87,8 @@
    },{once:true});
  }
  installReveals();
+ // On large screens show both guides; on phones keep Android folded by default.
+ if(window.matchMedia('(min-width:701px)').matches)document.querySelectorAll('.install-platform-detail').forEach(panel=>{panel.open=true;});
  function tell(message){const msg=$('liveMessage');if(msg)msg.textContent=message;}
  const official='https://radio.ibboabdoli.com/';
  const copyBtn=$('liveCopy');
