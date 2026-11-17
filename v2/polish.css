@@ -30,7 +30,6 @@ body::after{content:"";position:fixed;inset:0;z-index:4;pointer-events:none;opac
 .up-next{background:linear-gradient(135deg,#272039,#171623)}
 .section-heading h2{letter-spacing:-.6px}
 .section-heading .kicker{font-weight:800}
-.soundcloud-player{box-shadow:0 16px 44px #0008}
 .player-dock{box-shadow:0 -12px 40px #0009}
 .live-utility-actions{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:24px}
 .utility-button{padding:9px 13px;background:#2b2238;color:#f5e6f0;border:1px solid #b58cc06c;border-radius:12px;min-height:44px;font-size:12px;display:inline-flex;align-items:center;gap:7px}
