@@ -1,6 +1,6 @@
 /* Ava o Nava v2: cache only the static shell; NEVER cache audio or third-party embeds. */
-const CACHE='ava-v2-static-3';
-const SHELL=['./','./index.html','./site.css?v=3','./polish.css?v=3','./mobile.css?v=3','./app.js?v=3','./interaction.js?v=3','./catalog.json','./shows.json','./manifest.webmanifest','../radio-neon-logo.webp','./icon.svg','../assets/ios-install-1.svg','../assets/ios-install-2.svg','../assets/ios-install-3.svg','../assets/ios-install-4.svg','../assets/android-install-1.svg','../assets/android-install-2.svg','../assets/android-install-3.svg','../assets/android-install-4.svg'];
+const CACHE='ava-v2-static-4';
+const SHELL=['./','./index.html','./site.css?v=3','./polish.css?v=3','./mobile.css?v=4','./app.js?v=3','./interaction.js?v=3','./catalog.json','./shows.json','./manifest.webmanifest','../radio-neon-logo.webp','./icon.svg','../assets/ios-install-1.svg','../assets/ios-install-2.svg','../assets/ios-install-3.svg','../assets/ios-install-4.svg','../assets/android-install-1.svg','../assets/android-install-2.svg','../assets/android-install-3.svg','../assets/android-install-4.svg'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>Promise.allSettled(SHELL.map(url=>cache.add(url)))));
   self.skipWaiting();
