@@ -116,7 +116,8 @@
       }else{
         const mapped=incoming.map(normalizeTrack).filter(Boolean);
         discovery.results=unique(append?[...discovery.results,...mapped]:mapped);
-        resetPlayerForQueue();
+        // Loading more must not interrupt music already playing.
+        if(!append)resetPlayerForQueue();
         player.tracks=discovery.results;
         renderCards();
       }
@@ -178,6 +179,10 @@
     discovery.mode='tracks';discovery.query='';discovery.page=0;
     discovery.results=[...discovery.initial];discovery.albums=[];
     grid.hidden=false;discoveryGrid.hidden=true;
+    $('audiusTracksTab').classList.add('active');
+    $('audiusTracksTab').setAttribute('aria-pressed','true');
+    $('audiusAlbumsTab').classList.remove('active');
+    $('audiusAlbumsTab').setAttribute('aria-pressed','false');
     resetPlayerForQueue();player.tracks=discovery.results;
     renderCards();more.hidden=true;empty.hidden=player.tracks.length>0;
     updateDiscoveryStatus('منتخب موسیقی ایرانی آوا و نوا');
@@ -326,7 +331,10 @@
     event.preventDefault();
     clearTimeout(searchDelay);
     const q=$('audiusSearch').value.trim();
-    if(!q)return showFeatured();
+    if(!q){
+      if(discovery.mode==='albums')return browse('persian','albums',false);
+      return showFeatured();
+    }
     browse(q,discovery.mode,false);
   });
   $('audiusSearch').addEventListener('input',()=>{
