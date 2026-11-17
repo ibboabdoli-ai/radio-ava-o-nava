@@ -4,6 +4,7 @@ import {readFileSync,existsSync} from 'node:fs';
 import {join,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
+import {createHash} from 'node:crypto';
 const root=join(dirname(fileURLToPath(import.meta.url)),'..');
 const get=name=>readFileSync(join(root,name),'utf8');
 const html=get('index.html'),app=get('app.js'),sw=get('sw.js');
@@ -131,7 +132,13 @@ test('iOS and Android install guide is compact and accessible',()=>{
     for(let i=1;i<=4;i++){
       const svg=get('../assets/'+platform+'-install-'+i+'.svg');
       assert.match(svg,/<svg /);
-      assert.match(svg,/fill="#171425" aria-hidden="true"/);
+      // Original artwork must remain byte-for-byte identical to the main version.
+      const originals={
+        ios:['b1fd3f9265a92bcc223635a3cb846146726b10af','d6078cf6c90b18cc024dfbf68131f1da19c3c430','283ff35c481a117f1ad1574acf01d9bf07710e35','0886b95e6ae61bb6496b9ee2661d1d3c606fd885'],
+        android:['1f71a21ed18956d6f10af11b714a1763c69c7da3','08ffb4496b01f2d7a5cc1c0fc6f7f29cfda428e5','3b82be6dcd9db4548b071f6cd4f246e2fe777f5b','619956e6ad5ce44a34df6e26b64cf4ed664d3476']
+      };
+      const blobHash=createHash('sha1').update('blob '+Buffer.byteLength(svg)+'\\0'+svg).digest('hex');
+      assert.equal(blobHash,originals[platform][i-1]);
       assert.ok(html.includes('../assets/'+platform+'-install-'+i+'.svg'));
     }
   }
