@@ -11,7 +11,8 @@
     ],
     "hour": 22,
     "minute": 0,
-    "description": "موسیقی زنده، شعر، آواز، دکلمه و گفت‌وگو"
+    "description": "موسیقی زنده، شعر، آواز، دکلمه و گفت‌وگو",
+    "dayPrograms": {}
   },
   "recordings": [
     {
@@ -70,5 +71,12 @@
     "subtitle": "موسیقی زنده، شعر و آواز",
     "roomUrl": "",
     "host": ""
+  },
+  "competition": {
+    "title": "مسابقه آوا و نوا",
+    "registrationDeadline": null,
+    "rules": [],
+    "publicParticipantsCount": null,
+    "winners": []
   }
 }
