@@ -81,7 +81,7 @@
     if(search)search.disabled=busy;
     more.disabled=busy;
     more.textContent=busy?'در حال دریافت…':'نمایش نتایج بیشتر';
-    grid.setAttribute('aria-busy',String(busy));discoveryGrid.setAttribute('aria-busy',String(busy));
+    grid.setAttribute('aria-busy',String(busy));discoveryGrid.setAttribute('aria-busy',String(busy));artistGrid.setAttribute('aria-busy',String(busy));
   }
   function resetPlayerForQueue(){
     audio.pause();audio.removeAttribute('src');audio.load();
@@ -392,7 +392,10 @@
     const q=$('audiusSearch').value.trim();
     $('audiusGenres').querySelectorAll('button').forEach((b,i)=>{const active=!q&&i===0;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
     if(!q){if(discovery.mode==='albums')browse('persian','albums',false);
-      else if(discovery.mode==='artists')switchMode('tracks'),switchMode('artists');
+      else if(discovery.mode==='artists'){
+        discovery.results=[...discovery.initial];renderArtists();more.hidden=true;empty.hidden=discovery.artists.length>0;
+        updateDiscoveryStatus('هنرمندان موجود در منتخب‌های آوا و نوا');
+      }
       else showFeatured();return;}
     if(q.length<2){updateDiscoveryStatus('برای جست‌وجو حداقل دو حرف بنویس.');return;}
     searchDelay=setTimeout(()=>browse(q,discovery.mode,false),600);
