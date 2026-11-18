@@ -94,7 +94,7 @@ test('One unified accessible responsive design, no obsolete style layers',()=>{
   assert.equal(css.includes("radial-gradient(360px circle"),false);
   for(const id of ['mobileBottomNav','headerShare','liveFullscreen','liveShare','liveCopy','requestSongLink','install','about','contact','recordingPlay','audiusToggle'])
     assert.ok(html.includes('id="'+id+'"'),id);
-  for(const system of ['ios','android'])for(let i=1;i<=4;i++)assert.ok(html.includes(system+'-install-'+i+'.svg'));
+  for(const system of ['ios','android'])for(let i=1;i<=4;i++)assert.ok(html.includes(system+'-install-'+i+'.jpg'));
   assert.match(app,/\.classList\.toggle\('is-playing'/);
   assert.match(audiusJs,/\.classList\.toggle\('is-playing'/);
   assert.match(audiusJs,/function matchesSearch/);
@@ -350,10 +350,10 @@ test('Arash live heading, compact dock and archive selection lock',()=>{
 });
 test('Approved iOS and Android images and steps show without JS fallback',()=>{
  for(const platform of ['ios','android']){
-   assert.match(html,new RegExp('src="../assets/'+platform+'-install-1\\.svg"'));
-   assert.match(html,new RegExp('data-install-src="../assets/'+platform+'-install-4\\.svg"'));
+   assert.match(html,new RegExp('src="../assets/'+platform+'-install-1\\.jpg"'));
+   assert.match(html,new RegExp('data-install-src="../assets/'+platform+'-install-4\\.jpg"'));
  }
- assert.equal((html.match(/class="install-step-card" hidden/g)||[]).length,6);
+ assert.equal((html.match(/class="install-step-card" data-step-active="false" hidden/g)||[]).length,6);
  assert.match(css,/\.install-slider \.install-step-card\[hidden\]\{display:none!important\}/);
  assert.match(get('install-guide.js'),/picture\.loading='eager'/);
  assert.equal((html.match(/class="install-slider-dot(?: active)?"/g)||[]).length,8);
