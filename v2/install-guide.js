@@ -28,19 +28,8 @@
     const persianNumber=n=>new Intl.NumberFormat('fa-IR').format(n);
     const show=index=>{
       current=Math.max(0,Math.min(cards.length-1,index));
-      cards.forEach((card,i)=>{
-        const active=i===current;
-        card.hidden=!active;
-        card.dataset.stepActive=String(active);
-        card.setAttribute('aria-hidden',String(!active));
-        if(active){
-          const picture=card.querySelector('.install-preview img');
-          const src=slideImage(platform,i);
-          if(picture&&src&&picture.getAttribute('src')!==src){
-            picture.src=src;picture.loading='eager';picture.decoding='async';
-          }
-        }
-      });
+      // Screenshots already have a native JPG src in HTML; never replace it at runtime.
+      // Update the controls and the slide state together, without touching image loading.
       previous.disabled=current===0;
       next.disabled=current===cards.length-1;
       count.textContent='مرحله '+persianNumber(current+1)+' از '+persianNumber(cards.length);
@@ -49,6 +38,12 @@
         dot.classList.toggle('active',selected);
         dot.setAttribute('aria-current',selected?'step':'false');
         dot.setAttribute('aria-pressed',String(selected));
+      });
+      cards.forEach((card,i)=>{
+        const active=i===current;
+        card.hidden=!active;
+        card.dataset.stepActive=String(active);
+        card.setAttribute('aria-hidden',String(!active));
       });
     };
     previous.addEventListener('click',()=>show(current-1));
