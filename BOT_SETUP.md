@@ -1,25 +1,49 @@
-# Radio Ava o Nava Telegram bot
+# راه‌اندازی ربات تلگرام رادیو آوا و نوا
 
-A serverless Telegram bot prepared for deployment on Vercel. The radio website remains hosted on GitHub Pages.
+ربات به صورت تابع سروری اجرا می‌شود و سایت اصلی روی GitHub Pages باقی می‌ماند. این شاخه آمادهٔ بازبینی است؛ ربات تا زمان دریافت توکن، استقرار و آزمایش واقعی فعال نیست.
 
-## Features
-- Listener menu: live radio, Clubhouse room, competition registration, recorded programs, schedule, song requests and channel notifications
-- Admin commands in private chat: /setroom <Clubhouse URL>, /endroom, /announce <message>, /status
-- Detect new Clubhouse room URLs published in the configured Telegram channel and update public program.json
-- Song requests forwarded to a private organizer chat; no public storage of listener messages
-- No automatic Clubhouse room-end detection
-- WhatsApp Channel posting is not implemented
+## قابلیت‌ها
 
-## Setup
-1. Create a Telegram bot using https://t.me/BotFather.
-2. Deploy this GitHub repository to a separate Vercel project with serverless functions enabled. Do not alter the existing GitHub Pages site.
-3. Set these **server-side secrets** in Vercel (never commit or paste tokens in chat):
-   TELEGRAM_BOT_TOKEN, TELEGRAM_WEBHOOK_SECRET (random 32+ chars), TELEGRAM_ADMIN_IDS (comma-separated Telegram user IDs), RADIO_GITHUB_TOKEN (fine-grained GitHub Contents read/write for only this repository).
-   Optional: TELEGRAM_CHANNEL_ID (numeric ID; bot must be channel admin), TELEGRAM_REQUEST_CHAT_ID (private chat ID), RADIO_GITHUB_REPO, RADIO_GITHUB_BRANCH.
-4. Register a Telegram webhook using POST https://api.telegram.org/bot<TOKEN>/setWebhook with JSON body {"url":"https://YOUR-VERCEL-DOMAIN/api/telegram","secret_token":"YOUR-SECRET","allowed_updates":["message","channel_post"]}.
-5. Test /start, /live, /competition, /setroom and /endroom with an admin account.
+- خوش‌آمدگویی به اعضای جدید گروه، با نام و لینک رادیو و روم کلاب‌هاوس
+- منوی خصوصی با چهار گزینه: روم، پخش زنده، ساعت برنامه‌ها و درباره ما
+- پاسخ کوتاه به سؤال‌های رایج درباره برنامه، روم، رادیو و شرکت در روم
+- فرمان‌های مدیر در گفت‌وگوی خصوصی: \`/setroom\`, \`/endroom\`, \`/announce گروه\`, \`/announce کانال\`, \`/status\`
+- به‌روزرسانی \`program.json\` برای نمایش لینک روم روی سایت
+- بررسی هدر محرمانهٔ وب‌هوک تلگرام و نگهداری نکردن توکن در مخزن
 
-## Important
-The current website's setHouseLink() accepts Clubhouse /room/ and /house/ URLs but not /i/ invite URLs. Update that validator before relying on /i/ links in the bot. The bot is not live until configured, deployed and tested.
+## راه‌اندازی لازم
 
-Use content you own or are licensed to distribute. Never put GitHub or Telegram credentials in a public website.
+۱. در BotFather یک ربات بسازید و توکن را فقط در متغیر محرمانهٔ سرویس وارد کنید. توکن را در چت یا GitHub نفرستید.
+
+۲. ربات را به یک پروژهٔ جداگانهٔ Vercel وصل کنید. پروژهٔ سایت یا استقرار GitHub Pages را تغییر ندهید.
+
+۳. این متغیرها را در بخش محرمانهٔ پروژهٔ Vercel بسازید:
+
+- \`TELEGRAM_BOT_TOKEN\`: توکن BotFather
+- \`TELEGRAM_WEBHOOK_SECRET\`: رشتهٔ تصادفی محرمانه، حداقل ۳۲ نویسه
+- \`TELEGRAM_ADMIN_IDS\`: شناسهٔ عددی مدیران، جداشده با ویرگول
+- \`RADIO_GITHUB_TOKEN\`: توکن محدود با دسترسی فقط به محتوای همین مخزن؛ فقط برای تغییر لینک روم
+- \`RADIO_GITHUB_BRANCH\`: شاخه‌ای که \`program.json\` سایت از آن منتشر می‌شود. پس از تأیید و ادغام، \`main\` خواهد بود.
+- \`TELEGRAM_GROUP_ID\`: اختیاری؛ شناسهٔ گروه برای اطلاعیه‌ها
+- \`TELEGRAM_CHANNEL_ID\`: اختیاری؛ شناسهٔ کانال برای اطلاعیه‌ها و خواندن لینک روم از پست‌ها
+- \`TELEGRAM_REQUEST_CHAT_ID\`: اختیاری؛ مقصد خصوصی درخواست آهنگ
+
+۴. به تابع \`/api/telegram\` وب‌هوک ثبت کنید. مقدار \`secret_token\` باید با \`TELEGRAM_WEBHOOK_SECRET\` برابر باشد و \`allowed_updates\` شامل \`message\` و \`channel_post\` باشد.
+
+۵. ربات را به گروه اضافه کنید و اجازهٔ ارسال پیام بدهید. برای اطلاعیهٔ کانال، ربات باید مدیر کانال با اجازهٔ ارسال پست باشد.
+
+## فرمان مدیر
+
+- \`/setroom https://www.clubhouse.com/i/...\`
+- \`/endroom\`
+- \`/announce گروه متن اطلاعیه\`
+- \`/announce کانال متن اطلاعیه\`
+- \`/status\`
+
+تنظیم لینک روم با GitHub API، \`program.json\` شاخهٔ انتخاب‌شده را تغییر می‌دهد. پست کانال نیز اگر شامل پیوند معتبر باشد، همین مقدار را به‌روزرسانی می‌کند.
+
+## بررسی و محدودیت‌ها
+
+برای آزمایش واقعی لازم است ربات ساخته شود، توکن‌ها در Vercel ثبت شوند، وب‌هوک فعال شود و ربات به گروه آزمایشی افزوده شود. حافظهٔ موقت هر نمونهٔ serverless دوباره‌کاری \`update_id\` تکراری را کاهش می‌دهد؛ ذخیرهٔ پایدار نداریم، بنابراین احتمال تکرار پیام میان نمونه‌های سرد کاملاً حذف نمی‌شود.
+
+ساختار کد و آزمون‌های کمکی قابل بررسی‌اند؛ این ربات هنوز روی Telegram یا Vercel مستقر نشده است.
