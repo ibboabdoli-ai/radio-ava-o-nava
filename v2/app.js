@@ -8,6 +8,7 @@
   const FALLBACK = {schedule:{weekdays:[6,0,1,2,3],hour:22,minute:0},recordings:[],links:{stream:'https://live.ibboabdoli.com/stream',stats:'https://live.ibboabdoli.com/radio-stats.xsl',clubhouse:'https://www.clubhouse.com/',contest:'https://docs.google.com/forms/d/e/1FAIpQLSewM20f3DLbL2yz60VNdestV-9ZJfLAaA8ivepjCWbx88_TzQ/viewform?usp=header',telegram:'https://t.me/+nFR4GhHTc7Y3ZjNk',whatsapp:'https://www.whatsapp.com/channel/0029VbDqKNg5vKA9OxDV4046'},program:{title:'آوا و نوا',subtitle:'موسیقی، شعر و آواز'}};
   const state = {shows:FALLBACK,recordingIndex:-1,mode:'idle',liveWanted:false,liveTries:0,liveTimer:null,liveWatchdog:null,liveSequence:0,lastStats:null,lastStatsTime:0,lastStatsStarted:null,statsError:false};
   const liveAudio=$('liveAudio'), recAudio=$('recordingAudio');
+  const recordingDurations=new Map();
   const host = el => document.createElement(el);
   const elText = (name,text,className) => {const n=host(name);n.textContent=String(text ?? '');if(className)n.className=className;return n;};
   const setText=(id,text)=>{const n=$(id);if(n)n.textContent=String(text);};
@@ -45,18 +46,23 @@
     }
     return results.sort((a,b)=>a.at-b.at);
   }
+  const iranDate=new Intl.DateTimeFormat('fa-IR-u-ca-gregory',{timeZone:'Asia/Tehran',year:'numeric',month:'long',day:'numeric'});
+  const titleForDay=day=>{
+    const candidate=state.shows.schedule?.dayPrograms?.[String(day)];
+    return typeof candidate==='string'&&candidate.trim()?candidate.trim().slice(0,90):state.shows.program?.title||'آوا و نوا';
+  };
   function renderSchedule(){
     const items=showCandidates();const cfg=state.shows.schedule||FALLBACK.schedule,grid=$('scheduleGrid');grid.replaceChildren();
     for(const day of cfg.weekdays){
       const show=items.find(x=>x.day===day);const card=host('article');card.className='schedule-card'+(items[0]?.day===day?' is-next':'');
-      card.append(elText('small','برنامه هفتگی'),elText('strong',days[day]),elText('span',String(cfg.hour).padStart(2,'0')+':'+String(cfg.minute).padStart(2,'0')+' ایران','schedule-time'),elText('span',show?fmtTime(show.at,'Europe/Stockholm')+' سوئد':'—','secondary-time'),elText('span',show?fmtTime(show.at,'Europe/London')+' انگلیس':'—','secondary-time'));grid.append(card);
+      card.append(elText('small',titleForDay(day)),elText('strong',days[day]),elText('span',String(cfg.hour).padStart(2,'0')+':'+String(cfg.minute).padStart(2,'0')+' ایران','schedule-time'),elText('span',show?fmtTime(show.at,'Europe/Stockholm')+' سوئد':'—','secondary-time'),elText('span',show?fmtTime(show.at,'Europe/London')+' انگلیس':'—','secondary-time'));grid.append(card);
     }
   }
   function updateClocks(){
     const now=new Date();
     setText('clockIran',fmtTime(now,'Asia/Tehran'));setText('clockSweden',fmtTime(now,'Europe/Stockholm'));setText('clockUk',fmtTime(now,'Europe/London'));
-    const next=showCandidates(now)[0];if(!next){setText('nextShowDay','برنامه بعدی مشخص نیست');setText('nextCountdown','--:--:--');setText('nextShowTime','اطلاعات برنامه موجود نیست');return;}
-    setText('nextShowDay',days[next.day]);setText('nextShowTime','شروع '+fmtTime(next.at,'Asia/Tehran')+' ایران · '+fmtTime(next.at,'Europe/Stockholm')+' سوئد · '+fmtTime(next.at,'Europe/London')+' انگلیس');
+    const next=showCandidates(now)[0];if(!next){setText('nextShowDay','برنامه بعدی مشخص نیست');setText('nextCountdown','--:--:--');setText('nextShowTime','اطلاعات برنامه موجود نیست');setText('nextShowTitle','برنامه بعدی نامشخص');setText('nextShowDetails','');return;}
+    setText('nextShowDay',days[next.day]+' · '+iranDate.format(next.at));setText('nextShowTitle',titleForDay(next.day));setText('nextShowDetails',state.shows.schedule?.description||state.shows.program?.subtitle||'');setText('nextShowTime','شروع '+fmtTime(next.at,'Asia/Tehran')+' ایران · '+fmtTime(next.at,'Europe/Stockholm')+' سوئد · '+fmtTime(next.at,'Europe/London')+' انگلیس');
     const left=Math.max(0,Math.ceil((next.at.getTime()-now.getTime())/1000));setText('nextCountdown',[Math.floor(left/3600),Math.floor(left%3600/60),left%60].map(v=>String(v).padStart(2,'0')).join(':'));
   }
   function updateStatsUI(){
@@ -166,16 +172,41 @@
       navigator.mediaSession.setActionHandler('play',play);navigator.mediaSession.setActionHandler('pause',pause);
     }catch{/* Browser does not support requested media controls. */}
   }
+  function durationFor(track){
+    const cached=recordingDurations.get(track.id);
+    if(Number.isFinite(cached)&&cached>0)return cached;
+    try{
+      const saved=Number(localStorage.getItem('ava-v2-duration-'+track.id));
+      if(Number.isFinite(saved)&&saved>0){recordingDurations.set(track.id,saved);return saved;}
+    }catch{}
+    return null;
+  }
   function renderRecordings(){
     const grid=$('recordingGrid');grid.replaceChildren();const tracks=state.shows.recordings||[];
     if(!tracks.length){grid.append(elText('p','در حال حاضر فایل ضبط‌شده‌ای در دسترس نیست.','empty-state'));$('recordingPrev').disabled=true;$('recordingNext').disabled=true;return;}
     tracks.forEach((track,i)=>{
       const b=host('button');b.type='button';b.className='recording-card'+(state.recordingIndex===i?' active':'');
       const num=elText('span',String(i+1).padStart(2,'0'),'rec-number'),wrapper=host('span');
-      wrapper.append(elText('strong',track.title),elText('small',track.time+' · '+track.date));b.append(num,wrapper);
+      const duration=durationFor(track);
+      wrapper.append(elText('strong',track.title),elText('small','ساعت '+track.time),
+        elText('small',duration?'مدت: '+fmtDuration(duration):'مدت: پس از انتخاب','recording-duration'));
+      b.append(num,wrapper);
       b.setAttribute('aria-pressed',String(state.recordingIndex===i));
+      b.setAttribute('aria-label',track.title+'، ساعت '+track.time+(duration?'، مدت '+fmtDuration(duration):''));
       b.addEventListener('click',()=>chooseRecording(i,false));grid.append(b);
     });
+  }
+  function saveRecordingDuration(){
+    const item=state.shows.recordings?.[state.recordingIndex];
+    const duration=recAudio.duration;
+    setText('recordingTotal',fmtDuration(duration));
+    $('recordingSeek').disabled=!(Number.isFinite(duration)&&duration>0);
+    if(!item||!Number.isFinite(duration)||duration<=0)return;
+    const seconds=Math.round(duration);
+    if(recordingDurations.get(item.id)===seconds)return;
+    recordingDurations.set(item.id,seconds);
+    try{localStorage.setItem('ava-v2-duration-'+item.id,String(seconds));}catch{}
+    renderRecordings();
   }
   function chooseRecording(i,autoplay=false){
     const tracks=state.shows.recordings||[];if(!tracks.length||i<0||i>=tracks.length)return;
@@ -212,11 +243,8 @@
     setText('recordingCurrent',fmtDuration(recAudio.currentTime));if(Number.isFinite(recAudio.duration)&&recAudio.duration>0){$('recordingSeek').disabled=false;$('recordingSeek').value=Math.floor(1000*recAudio.currentTime/recAudio.duration);}
     if(Date.now()-saveAt>5000){saveAt=Date.now();const it=state.shows.recordings[state.recordingIndex];if(it)try{localStorage.setItem('ava-v2-position-'+it.id,String(Math.round(recAudio.currentTime)));}catch{}}
   });
-  recAudio.addEventListener('loadedmetadata',()=>{
-    setText('recordingTotal',fmtDuration(recAudio.duration));
-    $('recordingSeek').disabled=!(Number.isFinite(recAudio.duration)&&recAudio.duration>0);
-  });
-  recAudio.addEventListener('durationchange',()=>setText('recordingTotal',fmtDuration(recAudio.duration)));
+  recAudio.addEventListener('loadedmetadata',saveRecordingDuration);
+  recAudio.addEventListener('durationchange',saveRecordingDuration);
   recAudio.addEventListener('playing',()=>{setText('recordingMessage','در حال پخش برنامه');$('recordingRetry').hidden=true;});
   recAudio.addEventListener('waiting',()=>{if(!recAudio.paused)setText('recordingMessage','در حال دریافت صدا…');});
   recAudio.addEventListener('ended',()=>{
@@ -243,9 +271,36 @@
     else if(state.mode==='audius')window.dispatchEvent(new Event('radio-audius-toggle'));
     else toggleLive();
   });
-  function wireNavigation(){const nav=$('navigation'),menu=$('menuButton');
+  function wireNavigation(){
+    const nav=$('navigation'),menu=$('menuButton');
+    const close=()=>{nav.classList.remove('open');menu.setAttribute('aria-expanded','false');};
     menu.addEventListener('click',()=>{const open=!nav.classList.contains('open');nav.classList.toggle('open',open);menu.setAttribute('aria-expanded',String(open));});
-    nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menu.setAttribute('aria-expanded','false');nav.querySelectorAll('a').forEach(n=>n.classList.toggle('current',n===a));}));
+    nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+      close();nav.querySelectorAll('a').forEach(n=>n.classList.toggle('current',n===a));
+    }));
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&nav.classList.contains('open')){close();menu.focus();}});
+    document.addEventListener('click',event=>{if(nav.classList.contains('open')&&!nav.contains(event.target)&&!menu.contains(event.target))close();});
+    window.addEventListener('hashchange',()=>{
+      const active=nav.querySelector('a[href="'+location.hash+'"]');
+      if(active)nav.querySelectorAll('a').forEach(n=>n.classList.toggle('current',n===active));
+    });
+  }
+  function renderCompetition(){
+    const info=state.shows.competition||{};
+    setText('contestTitle',info.title||'مسابقه آوا و نوا');
+    const deadline=typeof info.registrationDeadline==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(info.registrationDeadline)?info.registrationDeadline:null;
+    setText('contestDeadline',deadline?deadline:'هنوز اعلام نشده');
+    const list=$('contestRules');
+    list.replaceChildren();
+    const rules=Array.isArray(info.rules)?info.rules.filter(rule=>typeof rule==='string'&&rule.trim()).slice(0,8):[];
+    for(const rule of rules)list.append(elText('li',rule));
+    if(!rules.length)list.append(elText('li','قوانین مسابقه هنوز اعلام نشده است. برای اطلاع از شرایط نهایی، همین صفحه را بررسی کن.'));
+    const count=info.publicParticipantsCount;
+    setText('contestParticipants',Number.isSafeInteger(count)&&count>=0?fa(count)+' نفر':'آمار عمومی اعلام نشده');
+    const winners=$('contestWinners');winners.replaceChildren();
+    const names=Array.isArray(info.winners)?info.winners.filter(name=>typeof name==='string'&&name.trim()).slice(0,8):[];
+    if(names.length){for(const name of names)winners.append(elText('li',name));}
+    else winners.append(elText('li','نتایج و برندگان هنوز اعلام نشده‌اند.'));
   }
   window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;$('installButton').hidden=false;});
   $('installButton').addEventListener('click',async()=>{if(!deferredInstall)return;deferredInstall.prompt();await deferredInstall.userChoice.catch(()=>{});deferredInstall=null;$('installButton').hidden=true;});
@@ -262,7 +317,7 @@
     setLink('houseLink',state.shows.program.roomUrl||state.shows.links.clubhouse);
     setLink('contestLink',state.shows.links.contest);setLink('telegramLink',state.shows.links.telegram);setLink('whatsappLink',state.shows.links.whatsapp);setLink('requestSongLink',state.shows.links.requestSong||'https://t.me/+bSKXuElY13I3NWY0');
     setText('liveProgram',state.shows.program.title||'آوا و نوا');setText('liveHost',state.shows.program.subtitle||'موسیقی، شعر و آواز');
-    renderSchedule();updateClocks();renderRecordings();if(state.shows.recordings.length)chooseRecording(0,false);
+    renderSchedule();updateClocks();renderCompetition();renderRecordings();if(state.shows.recordings.length)chooseRecording(0,false);
     // Initial selection must not force the dock into recordings mode.
     state.mode='idle';setDock('رادیو آوا و نوا','آماده پخش',false,'#listen');
     pollStats();
