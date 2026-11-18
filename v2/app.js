@@ -290,21 +290,8 @@
     });
   }
   function renderCompetition(){
-    const info=state.shows.competition||{};
-    setText('contestTitle',info.title||'مسابقه آوا و نوا');
-    const deadline=typeof info.registrationDeadline==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(info.registrationDeadline)?info.registrationDeadline:null;
-    setText('contestDeadline',deadline?deadline:'هنوز اعلام نشده');
-    const list=$('contestRules');
-    list.replaceChildren();
-    const rules=Array.isArray(info.rules)?info.rules.filter(rule=>typeof rule==='string'&&rule.trim()).slice(0,8):[];
-    for(const rule of rules)list.append(elText('li',rule));
-    if(!rules.length)list.append(elText('li','قوانین مسابقه هنوز اعلام نشده است. برای اطلاع از شرایط نهایی، همین صفحه را بررسی کن.'));
-    const count=info.publicParticipantsCount;
-    setText('contestParticipants',Number.isSafeInteger(count)&&count>=0?fa(count)+' نفر':'آمار عمومی اعلام نشده');
-    const winners=$('contestWinners');winners.replaceChildren();
-    const names=Array.isArray(info.winners)?info.winners.filter(name=>typeof name==='string'&&name.trim()).slice(0,8):[];
-    if(names.length){for(const name of names)winners.append(elText('li',name));}
-    else winners.append(elText('li','نتایج و برندگان هنوز اعلام نشده‌اند.'));
+    // The short public contest card contains only the approved title and registration link.
+    setText('contestTitle',state.shows.competition?.title||'مسابقه آوا و نوا');
   }
   window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;$('installButton').hidden=false;});
   $('installButton').addEventListener('click',async()=>{if(!deferredInstall)return;deferredInstall.prompt();await deferredInstall.userChoice.catch(()=>{});deferredInstall=null;$('installButton').hidden=true;});

@@ -84,7 +84,7 @@ test('Timezone conversion in November 2026',()=>{
 test('One unified accessible responsive design, no obsolete style layers',()=>{
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
-  assert.match(html,/href="\.\/site\.css\?v=21"/);
+  assert.match(html,/href="\.\/site\.css\?v=22"/);
   assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,1);
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
@@ -94,7 +94,7 @@ test('One unified accessible responsive design, no obsolete style layers',()=>{
   assert.equal(css.includes("radial-gradient(360px circle"),false);
   for(const id of ['mobileBottomNav','headerShare','liveFullscreen','liveShare','liveCopy','requestSongLink','install','about','contact','recordingPlay','audiusToggle'])
     assert.ok(html.includes('id="'+id+'"'),id);
-  for(const system of ['ios','android'])for(let i=1;i<=4;i++)assert.ok(html.includes(system+'-install-'+i+'.svg'));
+  for(const system of ['ios','android'])for(let i=1;i<=4;i++)assert.ok(html.includes(system+'-install-'+i+'.jpg'));
   assert.match(app,/\.classList\.toggle\('is-playing'/);
   assert.match(audiusJs,/\.classList\.toggle\('is-playing'/);
   assert.match(audiusJs,/function matchesSearch/);
@@ -123,13 +123,13 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(html,/id="installDialogImage"/);
   assert.match(html,/id="installDialogClose"/);
   assert.equal((html.match(/class="install-preview"/g)||[]).length,8);
-  assert.match(html,/src="\.\/install-guide\.js\?v=5"/);
+  assert.match(html,/src="\.\/install-guide\.js\?v=6"/);
   assert.match(css,/\.install-preview img\{/);
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-22/);
-  assert.match(sw,/install-guide\.js\?v=5/);
+  assert.match(sw,/ava-v2-static-23/);
+  assert.match(sw,/install-guide\.js\?v=6/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
       const svg=get('../assets/'+platform+'-install-'+i+'.svg');
@@ -142,7 +142,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
       assert.match(svg,/data:image\/jpeg;base64,/);
       const blobHash=createHash('sha1').update('blob '+Buffer.byteLength(svg)+'\0'+svg).digest('hex');
       assert.equal(blobHash,originals[platform][i-1]);
-      assert.ok(html.includes('../assets/'+platform+'-install-'+i+'.svg'));
+      assert.ok(html.includes('../assets/'+platform+'-install-'+i+'.jpg'));
     }
   }
 });
@@ -168,22 +168,37 @@ test('Install slides show exactly one of four steps at once per platform',()=>{
  assert.match(css,/\.install-slider \.install-preview img\{[^}]*object-fit:contain/);
 });
 
-test('Install slides load only the visible screenshot and preserve all original art',()=>{
+test('Approved image pixels are preserved as native iOS-compatible JPEGs',()=>{
  const guide=get('install-guide.js');
  assert.match(guide,/const slideImage=\(platform,index\)=>/);
- assert.match(guide,/if\(active\)/);
- assert.match(guide,/picture\.src=src/);
- assert.match(guide,/picture\.loading='eager'/);
+ assert.match(guide,/card\.dataset\.stepActive=String\(active\)/);
  assert.match(guide,/const src=\(platform==='ios'/);
- assert.ok(!html.includes('install-images.js'),'Removed duplicate base64 bundle from HTML');
- assert.ok(!sw.includes('install-images.js'),'Removed duplicate base64 bundle from service-worker cache');
+ assert.ok(!html.includes('install-images.js'),'No inline base64 image bundle');
+ assert.ok(!sw.includes('install-images.js'),'No embedded bundle cached in SW');
+ let initial=0,hidden=0;
  for(const platform of ['ios','android']){
    for(let i=1;i<=4;i++){
-     const src='../assets/'+platform+'-install-'+i+'.svg';
-     assert.match(html,new RegExp('data-install-src="'+src.replaceAll('.','\\.')+'"'));
-     assert.ok(!sw.includes(src),'Do not eagerly cache a hidden large installation image');
+     const name='../assets/'+platform+'-install-'+i;
+     const svg=get(name+'.svg');
+     const encoded=svg.match(/href="data:image\/jpeg;base64,([A-Za-z0-9+/=]+)"/)?.[1];
+     assert.ok(encoded,'Original approved SVG has embedded JPEG '+name);
+     const approved=Buffer.from(encoded,'base64');
+     const jpg=readFileSync(join(root,name+'.jpg'));
+     assert.ok(jpg.length>10000,'JPG image data exists '+name);
+     assert.equal(jpg[0],0xff);
+     assert.equal(jpg[1],0xd8);
+     assert.deepEqual(jpg,approved,'Identical approved image data for '+name);
+     assert.ok(html.includes('src="'+name+'.jpg"'),'Browser-native image source '+name);
+     assert.ok(html.includes('data-install-image="'+name+'.jpg"'));
+     assert.ok(!sw.includes(name+'.jpg'),'Hidden images should not be pre-cached');
+     if(i===1)initial++;else hidden++;
    }
  }
+ assert.equal(initial,2);
+ assert.equal(hidden,6);
+ assert.equal((html.match(/class="install-step-card" data-step-active="true"/g)||[]).length,2);
+ assert.equal((html.match(/class="install-step-card" data-step-active="false" hidden/g)||[]).length,6);
+ assert.match(css,/\.install-slider \.install-step-card\[data-step-active="false"\]/);
  assert.match(css,/Real iPhone screenshots/);
 });
 
@@ -197,7 +212,7 @@ test('Replay controls, live status and contest registration are safely connected
  assert.match(app,/Unknown is not OFFLINE/);
  assert.match(app,/!recAudio\.paused/);
  assert.match(app,/state\.recordingIndex\+1<state\.shows\.recordings\.length/);
- assert.match(html,/نام‌ها و پاسخ‌ها در سایت عمومی نمایش داده نمی‌شوند/);
+ assert.match(html,/href="\.\/privacy\.html"/);
  assert.ok(!html.includes('docs.google.com/spreadsheets/d/'),'Do not expose private registration sheet on the public site');
  assert.equal(shows.recordings.length,5);
  assert.equal(new Set(shows.recordings.map(recording=>recording.id)).size,5);
@@ -247,10 +262,11 @@ test('Public competition information is configurable without leaking registratio
  assert.ok(Array.isArray(shows.competition.winners));
  assert.ok(shows.competition.registrationDeadline===null||/^\d{4}-\d{2}-\d{2}$/.test(shows.competition.registrationDeadline));
  assert.ok(shows.competition.publicParticipantsCount===null||(Number.isSafeInteger(shows.competition.publicParticipantsCount)&&shows.competition.publicParticipantsCount>=0));
- assert.match(html,/id="contestDeadline"/);
- assert.match(html,/id="contestParticipants"/);
- assert.match(html,/id="contestRules"/);
- assert.match(html,/id="contestWinners"/);
+ assert.match(html,/id="contestTitle"/);
+ assert.match(html,/id="contestLink"/);
+ for(const removed of ['contestDeadline','contestParticipants','contestRules','contestWinners']){
+   assert.ok(!html.includes('id="'+removed+'"'),'Private or unannounced contest details must not be visible');
+ }
  assert.match(app,/function renderCompetition\(\)/);
  assert.ok(!html.includes('docs.google.com/spreadsheets/d/'));
 });
@@ -334,11 +350,28 @@ test('Arash live heading, compact dock and archive selection lock',()=>{
 });
 test('Approved iOS and Android images and steps show without JS fallback',()=>{
  for(const platform of ['ios','android']){
-   assert.match(html,new RegExp('src="../assets/'+platform+'-install-1\\.svg"'));
-   assert.match(html,new RegExp('data-install-src="../assets/'+platform+'-install-4\\.svg"'));
+   assert.match(html,new RegExp('src="../assets/'+platform+'-install-1\\.jpg"'));
+   assert.match(html,new RegExp('data-install-src="../assets/'+platform+'-install-4\\.jpg"'));
  }
- assert.equal((html.match(/class="install-step-card" hidden/g)||[]).length,6);
+ assert.equal((html.match(/class="install-step-card" data-step-active="false" hidden/g)||[]).length,6);
  assert.match(css,/\.install-slider \.install-step-card\[hidden\]\{display:none!important\}/);
  assert.match(get('install-guide.js'),/picture\.loading='eager'/);
  assert.equal((html.match(/class="install-slider-dot(?: active)?"/g)||[]).length,8);
+});
+
+
+test('Radio live panel is compact and community card actions are identical',()=>{
+ const contest=html.slice(html.indexOf('<section class="container section-block" id="community"'),html.indexOf('<section class="container install-detail'));
+ assert.equal((contest.match(/class="community-card(?: feature-card)?"/g)||[]).length,4);
+ assert.ok(!contest.includes('contest-facts'));
+ assert.ok(!contest.includes('contest-info'));
+ assert.ok(!contest.includes('contest-privacy'));
+ assert.equal((contest.match(/class="(?:btn btn-gold )?community-action(?: telegram-request-link)?"/g)||[]).length,5);
+ assert.match(css,/\.live-layout\{align-items:start\}/);
+ assert.match(css,/\.community-grid\{align-items:stretch;grid-auto-rows:1fr\}/);
+ assert.match(css,/\.recording-player \.rec-play\{/);
+ assert.match(css,/\.live-panel \.waveform\{/);
+ assert.match(html,/class="visually-hidden">پخش برنامه ضبط‌شده/);
+ assert.match(app,/function renderCompetition\(\)/);
+ assert.ok(!app.includes("$('contestRules')"),'No removed contest UI fields referenced at runtime');
 });

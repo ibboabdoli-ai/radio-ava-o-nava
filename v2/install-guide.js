@@ -6,12 +6,12 @@
   const title=document.getElementById('installDialogTitle');
   const close=document.getElementById('installDialogClose');
   if(!dialog||!image||!title||!close)return;
-  const allowed=/^\.\.\/assets\/(?:ios|android)-install-[1-4]\.svg$/;
+  const allowed=/^\.\.\/assets\/(?:ios|android)-install-[1-4]\.jpg$/;
   // Load one real screenshot only after its slide becomes visible.
   // No multi-megabyte base64 bundle and no duplicated image downloads.
   const slideImage=(platform,index)=>{
     if(!['ios','android'].includes(platform)||!Number.isInteger(index)||index<0||index>3)return null;
-    const path='../assets/'+platform+'-install-'+(index+1)+'.svg';
+    const path='../assets/'+platform+'-install-'+(index+1)+'.jpg';
     return allowed.test(path)?path:null;
   };
   // One slide at a time for both iPhone and Android. Keep buttons keyboard-
@@ -31,6 +31,7 @@
       cards.forEach((card,i)=>{
         const active=i===current;
         card.hidden=!active;
+        card.dataset.stepActive=String(active);
         card.setAttribute('aria-hidden',String(!active));
         if(active){
           const picture=card.querySelector('.install-preview img');
