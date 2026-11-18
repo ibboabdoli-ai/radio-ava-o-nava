@@ -85,7 +85,8 @@ test('One unified accessible responsive design, no obsolete style layers',()=>{
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
   assert.match(html,/href="\.\/site\.css\?v=24"/);
-  assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,1);
+  assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,2);
+  assert.match(html,/href="\.\/studio\.css\?v=1"/);
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
   for(const text of ['.main-play::before','.rec-play::before','.audius-primary::before','.mobile-bottom-nav','@media(max-width:700px)','prefers-reduced-motion:reduce','.up-next','.audius-grid','.recording-grid','.install-step-card'])
@@ -430,4 +431,63 @@ test('Both tutorial platform cards are siblings inside the desktop grid',()=>{
  assert.equal(depth,0,'Guide grid must close before the bottom notes');
  assert.deepEqual(direct,['install-slider','install-slider'],'iOS and Android cards must be grid siblings');
  assert.deepEqual(tips,[2,2],'Platform notes must be inside their respective cards');
+});
+
+
+test('Approved responsive studio updates the original website without removing services',()=>{
+ const studio=get('studio.js'),design=get('studio.css');
+ new vm.Script(studio);
+ const requiredIDs=['studioSidebar','studioSearchForm','studioSearch','studioArchive','studioGenres','studioDockSeek',
+  'studioDockPrev','studioDockNext','studioDockCurrent','studioDockTotal','studioDockVolume','studioDockCover',
+  'studioHeaderSearch','dockTitle','dockSubtitle','dockPlay','livePlay','recordingGrid','audiusGrid',
+  'scheduleGrid','contestLink','requestSongLink','install','installImageDialog','mobileBottomNav'];
+ for(const id of requiredIDs)assert.ok(html.includes('id="'+id+'"'),id);
+ assert.match(html,/class="hero studio-home container" id="home"/);
+ assert.match(html,/id="heroTitle">رادیو آوا و نوا/);
+ assert.match(html,/موسیقی زنده، شعر و آواز با آرش/);
+ assert.match(html,/id="listenTitle">پخش زنده رادیو آوا و نوا با آرش/);
+ assert.match(html,/src="\\.\\/studio-hero\\.svg"/);
+ assert.match(html,/src="\\.\\/studio\\.js\\?v=1"/);
+ for(const id of ['listen','schedule','music','episodes','community','install','about'])
+   assert.ok(html.includes('id="'+id+'"'),'Preserved original section '+id);
+ assert.match(studio,/\\$\\('livePlay'\\)\\?\\.click\\(\\)/);
+ assert.match(studio,/\\$\\('recordingPlay'\\)/);
+ assert.match(studio,/\\$\\('audiusSearch'\\)/);
+ assert.match(studio,/mode\\(\\)==='recording'/);
+ assert.match(studio,/setInterval\\(refreshDock,1000\\)/);
+ assert.match(app,/\\$\\('playerDock'\\)\\.classList\\.add\\('dock-active'\\)/);
+});
+test('Approved card artwork exists and all covers are usable without remote placeholder images',()=>{
+ const covers=['studio-hero','studio-violin','studio-sunset','studio-poetry','studio-vinyl','studio-retro',
+ 'studio-pomegranate','studio-guitar','studio-jazz','studio-piano','studio-headphones','studio-singer'];
+ for(const name of covers){
+   const svg=get(name+'.svg');
+   assert.match(svg,/<svg xmlns="http:\\/\\/www\\.w3\\.org\\/2000\\/svg"/);
+   assert.ok(svg.length>1000,'Artwork is not a blank placeholder: '+name);
+   assert.ok(!svg.includes('<script'),'No script embedded in cover');
+   assert.ok(sw.includes('./'+name+'.svg'),'Artwork pre-cached for installed app: '+name);
+ }
+ assert.equal((html.match(/data-studio-recording="[0-4]"/g)||[]).length,5);
+ assert.equal((html.match(/data-studio-genre="/g)||[]).length,6);
+ assert.equal((html.match(/class="studio-cover-card studio-recording-tile"/g)||[]).length,5);
+ assert.equal((html.match(/class="studio-cover-card studio-genre-tile"/g)||[]).length,6);
+});
+test('Desktop, tablet and phone maintain visual layout with no hidden home',()=>{
+ const design=get('studio.css');
+ assert.match(design,/@media\\(min-width:1181px\\)/);
+ assert.match(design,/@media\\(max-width:1180px\\)/);
+ assert.match(design,/@media\\(max-width:880px\\)/);
+ assert.match(design,/@media\\(max-width:700px\\)/);
+ assert.match(design,/\\.studio-home\\.hero\\{display:flex!important;/);
+ assert.match(design,/\\.studio-sidebar\\{display:flex;position:fixed;/);
+ assert.match(design,/\\.studio-mobile-bottom/);
+ assert.match(design,/\\.studio-player-dock/);
+ assert.equal((html.match(/data-mobile-tab="/g)||[]).length,4);
+ const links=['home','episodes','music','listen'];
+ for(const id of links)assert.ok(html.includes('data-mobile-tab="'+id+'"'));
+ const shell=get('sw.js');
+ assert.match(shell,/ava-v2-static-27/);
+ assert.match(shell,/studio\\.css\\?v=1/);
+ assert.match(shell,/studio\\.js\\?v=1/);
+ assert.ok(!shell.includes('archive.ibboabdoli.com'),'No audio pre-cache');
 });
