@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "timezone": "Asia/Tehran",
+  "schedule": {
+    "weekdays": [
+      6,
+      0,
+      1,
+      2,
+      3
+    ],
+    "hour": 22,
+    "minute": 0,
+    "description": "موسیقی زنده، شعر، آواز، دکلمه و گفت‌وگو"
+  },
+  "recordings": [
+    {
+      "id": "recording-1",
+      "title": "برنامه ۱۶ نوامبر ۲۰۲۶",
+      "date": "۱۶ نوامبر ۲۰۲۶",
+      "time": "۱۸:۲۴",
+      "src": "https://archive.ibboabdoli.com/recordings/rec_20261116-182430.mp3",
+      "summary": "آرشیو برنامه‌های رادیو آوا و نوا"
+    },
+    {
+      "id": "recording-2",
+      "title": "برنامه ۱۶ نوامبر ۲۰۲۶",
+      "date": "۱۶ نوامبر ۲۰۲۶",
+      "time": "۰۷:۵۱",
+      "src": "https://archive.ibboabdoli.com/recordings/rec_20261116-075102.mp3",
+      "summary": "آرشیو برنامه‌های رادیو آوا و نوا"
+    },
+    {
+      "id": "recording-3",
+      "title": "برنامه ۱۵ نوامبر ۲۰۲۶",
+      "date": "۱۵ نوامبر ۲۰۲۶",
+      "time": "۱۸:۵۷",
+      "src": "https://archive.ibboabdoli.com/recordings/rec_20261115-185719.mp3",
+      "summary": "آرشیو برنامه‌های رادیو آوا و نوا"
+    },
+    {
+      "id": "recording-4",
+      "title": "برنامه ۱۵ نوامبر ۲۰۲۶",
+      "date": "۱۵ نوامبر ۲۰۲۶",
+      "time": "۰۹:۰۱",
+      "src": "https://archive.ibboabdoli.com/recordings/rec_20261115-090134.mp3",
+      "summary": "آرشیو برنامه‌های رادیو آوا و نوا"
+    }
+  ],
+  "links": {
+    "site": "https://radio.ibboabdoli.com/",
+    "stream": "https://live.ibboabdoli.com/stream",
+    "stats": "https://live.ibboabdoli.com/radio-stats.xsl",
+    "clubhouse": "https://www.clubhouse.com/house/%D8%A7%D9%88%D8%A7-%D9%88-%D9%86%D9%88%D8%A7-%D9%85%D9%88%D8%B3%DB%8C%D9%82%DB%8C-%D8%B2%D9%86%D8%AF%D9%87-%D8%B4%D8%B9%D8%B1-%D9%88-%D8%A7%D9%88%D8%A7%D8%B2",
+    "telegram": "https://t.me/+nFR4GhHTc7Y3ZjNk",
+    "whatsapp": "https://www.whatsapp.com/channel/0029VbDqKNg5vKA9OxDV4046",
+    "contest": "https://docs.google.com/forms/d/e/1FAIpQLSewM20f3DLbL2yz60VNdestV-9ZJfLAaA8ivepjCWbx88_TzQ/viewform?usp=header",
+    "requestSong": "https://t.me/+bSKXuElY13I3NWY0"
+  },
+  "program": {
+    "title": "آوا و نوا",
+    "subtitle": "موسیقی زنده، شعر و آواز",
+    "roomUrl": "",
+    "host": ""
+  }
+}

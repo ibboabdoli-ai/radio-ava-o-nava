@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "provider": "Audius",
+  "apiBase": "https://api.audius.co/v1",
+  "appName": "RadioAvaONava",
+  "description": "Curated Persian music from Audius; no audio files hosted here. Playback is the platform-provided stream and may depend on source availability.",
+  "tracks": [
+    {
+      "id": "YaM7agv",
+      "title": "تقدیم به ایران",
+      "originalTitle": "Taghdim be Iran",
+      "artist": "سنتوری · محمدحسین آقایی",
+      "uploader": "Santouri",
+      "genre": "سنتور",
+      "duration": 114,
+      "source": "https://audius.co/santoury/taghdim-be-iran",
+      "artwork": "https://val001.open-audio-validator.com/content/QmYkCgiQGhJxN5DMVPXyeqq9vPsP5wuRHTAjWkdbuJh7C6/480x480.jpg",
+      "streamableChecked": "2026-11-17",
+      "publicStream": true
+    },
+    {
+      "id": "1gxWxzQ",
+      "title": "مشکات",
+      "originalTitle": "Meshkat",
+      "artist": "سنتوری · محمدحسین آقایی",
+      "uploader": "Santouri",
+      "genre": "سنتور",
+      "duration": 105,
+      "source": "https://audius.co/santoury/meshkat",
+      "artwork": "https://audius-creator-8.theblueprint.xyz/content/QmSCbCPkGsZxb8eTrFZr23x41xqGzHcDkaARbsxdnjuXwb/480x480.jpg",
+      "streamableChecked": "2026-11-17",
+      "publicStream": true
+    },
+    {
+      "id": "6Yx2jKl",
+      "title": "حسرت",
+      "originalTitle": "Hasrat",
+      "artist": "سنتوری · محمدحسین آقایی",
+      "uploader": "Santouri",
+      "genre": "سنتور",
+      "duration": 108,
+      "source": "https://audius.co/santoury/hasrat",
+      "artwork": "https://audius-01.staked.cloud/content/QmbV3wRkEyKSurQ7pRwnMxCuw2SYUYtJdcXjDMEE9fbjVa/480x480.jpg",
+      "streamableChecked": "2026-11-17",
+      "publicStream": true
+    },
+    {
+      "id": "6RomE",
+      "title": "باغ آینه",
+      "originalTitle": "Bagh-e-Ayene",
+      "artist": "سهیل رجب",
+      "uploader": "soheilrajab",
+      "genre": "آواز ایرانی",
+      "duration": 310,
+      "source": "https://audius.co/soheilrajab/bagh-e-ayene",
+      "artwork": "https://audius-creator-9.theblueprint.xyz/content/Qme5WJSGUXZSHx5mLMpRAoQHXY3MMtLFdzCiCdPQDHp68u/480x480.jpg",
+      "streamableChecked": "2026-11-17",
+      "publicStream": true
+    },
+    {
+      "id": "V5zYy",
+      "title": "آهوانه",
+      "originalTitle": "Ahovaneh-Soheil Rajab",
+      "artist": "سهیل رجب",
+      "uploader": "soheilrajab",
+      "genre": "آواز ایرانی",
+      "duration": 232,
+      "source": "https://audius.co/soheilrajab/ahovaneh-soheil-rajab",
+      "artwork": "https://audius-01.staked.cloud/content/QmPMTdk3HBRqM3cqjYUAvNGpGiS3Y3Bcn1pbuw6GFMeKhd/480x480.jpg",
+      "streamableChecked": "2026-11-17",
+      "publicStream": true
+    },
+    {
+      "id": "QZ3PANv",
+      "title": "نفس سکوت",
+      "originalTitle": "Breath of Silence",
+      "artist": "عادل ابراهیمی",
+      "uploader": "Adel Ebrahimi",
+      "genre": "نی و بی‌کلام",
+      "duration": 134,
+      "source": "https://audius.co/Adelmusic/breath-of-silence",
+      "artwork": "https://audius-content-14.figment.io/content/01JR2XXWD1NFJSVYAT65X1XVYD/480x480.jpg",
+      "streamableChecked": "2026-11-17",
+      "publicStream": true
+    },
+    {
+      "id": "v22g3mO",
+      "title": "نوا",
+      "originalTitle": "nava",
+      "artist": "P.M.jam",
+      "uploader": "P.M.jam",
+      "genre": "دستگاهی و بی‌کلام",
+      "duration": 122,
+      "source": "https://audius.co/peiman_jam/nava",
+      "artwork": "https://audius-creator-9.theblueprint.xyz/content/01K07YMXMMSGGN3A9DJYSSBG6S/480x480.jpg",
+      "streamableChecked": "2026-11-17",
+      "publicStream": true
+    }
+  ]
+}
