@@ -1,0 +1,26 @@
+name: Radio v2 regression checks
+on:
+  pull_request:
+    paths:
+      - 'v2/**'
+      - '.github/workflows/radio-v2-ci.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'v2/**'
+      - '.github/workflows/radio-v2-ci.yml'
+permissions:
+  contents: read
+jobs:
+  radio-v2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Static and logic regression tests
+        run: node --test v2/tests/smoke.test.mjs
+      - name: Check public archive file availability (HEAD only)
+        run: node --test v2/tests/media-health.test.mjs
