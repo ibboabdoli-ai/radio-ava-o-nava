@@ -84,7 +84,7 @@ test('Timezone conversion in November 2026',()=>{
 test('One unified accessible responsive design, no obsolete style layers',()=>{
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
-  assert.match(html,/href="\.\/site\.css\?v=18"/);
+  assert.match(html,/href="\.\/site\.css\?v=19"/);
   assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,1);
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
@@ -128,7 +128,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-19/);
+  assert.match(sw,/ava-v2-static-20/);
   assert.match(sw,/install-guide\.js\?v=3/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -198,7 +198,7 @@ test('Replay controls, live status and contest registration are safely connected
  assert.match(app,/Unknown is not OFFLINE/);
  assert.match(app,/!recAudio\.paused/);
  assert.match(app,/state\.recordingIndex\+1<state\.shows\.recordings\.length/);
- assert.match(html,/اطلاعات شرکت‌کنندگان فقط برای مدیر مسابقه/);
+ assert.match(html,/نام‌ها و پاسخ‌ها در سایت عمومی نمایش داده نمی‌شوند/);
  assert.ok(!html.includes('docs.google.com/spreadsheets/d/'),'Do not expose private registration sheet on the public site');
  assert.equal(shows.recordings.length,5);
  assert.equal(new Set(shows.recordings.map(recording=>recording.id)).size,5);
@@ -239,4 +239,56 @@ test('Next broadcast is computed by Tehran clock and honors daylight savings els
  assert.equal(later,'2026-11-21T18:30:00.000Z');
  const summer=vm.runInNewContext(source+'\nshowCandidates(new Date("2026-07-18T08:00:00Z"))[0].at.toISOString()');
  assert.equal(summer,'2026-07-18T18:30:00.000Z');
+});
+
+
+test('Public competition information is configurable without leaking registrations',()=>{
+ assert.ok(shows.competition,'Competition metadata is present');
+ assert.ok(Array.isArray(shows.competition.rules));
+ assert.ok(Array.isArray(shows.competition.winners));
+ assert.ok(shows.competition.registrationDeadline===null||/^\d{4}-\d{2}-\d{2}$/.test(shows.competition.registrationDeadline));
+ assert.ok(shows.competition.publicParticipantsCount===null||(Number.isSafeInteger(shows.competition.publicParticipantsCount)&&shows.competition.publicParticipantsCount>=0));
+ assert.match(html,/id="contestDeadline"/);
+ assert.match(html,/id="contestParticipants"/);
+ assert.match(html,/id="contestRules"/);
+ assert.match(html,/id="contestWinners"/);
+ assert.match(app,/function renderCompetition\(\)/);
+ assert.ok(!html.includes('docs.google.com/spreadsheets/d/'));
+});
+test('Artist discovery has a separate accessible view, and playback remains isolated',()=>{
+ assert.match(html,/id="audiusArtistsTab" aria-pressed="false"/);
+ assert.match(html,/id="audiusArtistGrid"/);
+ assert.match(html,/سبک‌های موسیقی/);
+ assert.match(audiusJs,/function artistsFromTracks\(tracks\)/);
+ assert.match(audiusJs,/function renderArtists\(\)/);
+ assert.match(audiusJs,/function setBrowseView\(mode\)/);
+ assert.match(audiusJs,/selected\(\)\?\.id===track\.id/);
+ assert.match(audiusJs,/artistGrid\.setAttribute\('aria-busy'/);
+ const start=audiusJs.indexOf('  function artistsFromTracks(tracks){');
+ const end=audiusJs.indexOf('  function renderArtists(){',start);
+ const code=audiusJs.slice(start,end);
+ assert.ok(start>0&&end>start);
+ const actual=JSON.parse(vm.runInNewContext(code+'\nJSON.stringify(artistsFromTracks([{artist:"شجریان",artwork:"x"},{artist:"شجریان",artwork:"y"},{artist:"گوگوش",artwork:"z"}]))'));
+ assert.equal(actual.length,2);
+ assert.equal(actual[0].name,'شجریان');
+ assert.equal(actual[0].tracks,2);
+});
+test('Recordings reveal durations only after metadata is received',()=>{
+ assert.match(app,/function durationFor\(track\)/);
+ assert.match(app,/function saveRecordingDuration\(\)/);
+ assert.match(app,/localStorage\.setItem\('ava-v2-duration-'/);
+ assert.match(app,/recAudio\.addEventListener\('loadedmetadata',saveRecordingDuration\)/);
+ assert.match(app,/مدت: پس از انتخاب/);
+ assert.match(html,/id="recordingSeek"[^>]*disabled/);
+});
+test('Program title, day and details are grounded in published schedule metadata',()=>{
+ assert.ok(shows.schedule.dayPrograms && typeof shows.schedule.dayPrograms==='object');
+ for(const day of Object.keys(shows.schedule.dayPrograms))assert.ok(/^[0-6]$/.test(day));
+ assert.match(html,/id="nextShowTitle"/);
+ assert.match(html,/id="nextShowDetails"/);
+ assert.match(app,/function renderSchedule\(\)/);
+ assert.match(app,/titleForDay/);
+ assert.match(app,/iranDate\.format\(next\.at\)/);
+ assert.match(app,/event\.key==='Escape'/);
+ assert.match(html,/class="footer-copyright"/);
 });

@@ -8,9 +8,9 @@
   const APP_NAME='RadioAvaONava';
   const fallback=new URL('../radio-neon-logo.webp',location.href).href;
   const player={tracks:[],index:-1,playing:false,loading:false,serial:0};
-  const discovery={mode:'tracks',query:'',page:0,limit:24,pending:false,requestId:0,results:[],albums:[],initial:[]};
+  const discovery={mode:'tracks',query:'',page:0,limit:24,pending:false,requestId:0,results:[],albums:[],artists:[],initial:[]};
   const API='https://api.audius.co/v1';
-  const discoveryGrid=$('audiusAlbumGrid'),more=$('audiusLoadMore'),empty=$('audiusEmpty');
+  const discoveryGrid=$('audiusAlbumGrid'),artistGrid=$('audiusArtistGrid'),more=$('audiusLoadMore'),empty=$('audiusEmpty');
   const tcount=n=>new Intl.NumberFormat('fa-IR').format(n);
 
   const validTrack=id=>typeof id==='string'&&/^[A-Za-z0-9]{2,24}$/.test(id);
@@ -71,8 +71,9 @@
   }
   function updateDiscoveryStatus(message){
     set('audiusContext',message);
-    const count=discovery.mode==='albums'?discovery.albums.length:discovery.results.length;
-    set('audiusCount',tcount(count)+(discovery.mode==='albums'?' آلبوم / پلی‌لیست':' قطعه'));
+    const count=discovery.mode==='albums'?discovery.albums.length:discovery.mode==='artists'?discovery.artists.length:discovery.results.length;
+    const unit=discovery.mode==='albums'?' آلبوم / پلی‌لیست':discovery.mode==='artists'?' هنرمند':' قطعه';
+    set('audiusCount',tcount(count)+unit);
   }
   function setBusy(busy){
     discovery.pending=busy;
@@ -80,12 +81,42 @@
     if(search)search.disabled=busy;
     more.disabled=busy;
     more.textContent=busy?'در حال دریافت…':'نمایش نتایج بیشتر';
-    grid.setAttribute('aria-busy',String(busy));discoveryGrid.setAttribute('aria-busy',String(busy));
+    grid.setAttribute('aria-busy',String(busy));discoveryGrid.setAttribute('aria-busy',String(busy));artistGrid.setAttribute('aria-busy',String(busy));
   }
   function resetPlayerForQueue(){
     audio.pause();audio.removeAttribute('src');audio.load();
     player.index=-1;player.tracks=[];player.playing=false;player.serial++;
     panel.hidden=true;
+  }
+  function artistsFromTracks(tracks){
+    const names=new Map();
+    for(const track of tracks){
+      const name=String(track.artist||'').trim();
+      if(!name||name==='هنرمند آدیوس')continue;
+      const key=name.toLocaleLowerCase('fa').replace(/\s+/g,' ');
+      if(!names.has(key))names.set(key,{name,artwork:track.artwork,tracks:0});
+      names.get(key).tracks++;
+    }
+    return [...names.values()].sort((a,b)=>b.tracks-a.tracks||a.name.localeCompare(b.name,'fa'));
+  }
+  function renderArtists(){
+    artistGrid.replaceChildren();
+    discovery.artists=artistsFromTracks(discovery.results.length?discovery.results:discovery.initial);
+    for(const artist of discovery.artists){
+      const card=element('article','audius-track audius-artist');
+      const cover=makeCover(element('img','audius-track-photo'),artist.artwork,'تصویر مرتبط با آثار '+artist.name);
+      cover.width=360;cover.height=300;
+      const body=element('div','audius-track-body');
+      body.append(element('small','','هنرمند در فهرست فعلی'),element('h3','',artist.name),
+        element('p','',tcount(artist.tracks)+' قطعه در نتایج حاضر'));
+      const choose=element('button','audius-choose','جست‌وجوی آثار');
+      choose.type='button';
+      choose.addEventListener('click',()=>{
+        $('audiusSearch').value=artist.name;
+        switchMode('tracks');
+      });
+      body.append(choose);card.append(cover,body);artistGrid.append(card);
+    }
   }
   function renderAlbums(){
     discoveryGrid.replaceChildren();
@@ -133,12 +164,12 @@
       }else{
         const mapped=incoming.filter(v=>matchesSearch(v,term)).map(normalizeTrack).filter(Boolean);
         discovery.results=unique(append?[...discovery.results,...mapped]:mapped);
-        // Search results change independently of the currently playing queue.
-        renderCards();
+        // Discovery changes do not interrupt the currently playing audio queue.
+        if(mode==='artists')renderArtists();else renderCards();
       }
       discovery.page=Math.floor(offset/discovery.limit)+1;
       more.hidden=incoming.length<discovery.limit;
-      const count=mode==='albums'?discovery.albums.length:discovery.results.length;
+      const count=mode==='albums'?discovery.albums.length:mode==='artists'?discovery.artists.length:discovery.results.length;
       empty.hidden=count!==0;
       updateDiscoveryStatus('نتایج جست‌وجوی «'+term+'» در آدیوس — فقط موارد قابل دریافت');
     }catch{
@@ -146,7 +177,7 @@
       more.hidden=true;
       if(!append){
         if(mode==='albums'){discovery.albums=[];renderAlbums();}
-        else{discovery.results=[];renderCards();}
+        else{discovery.results=[];if(mode==='artists')renderArtists();else renderCards();}
         empty.hidden=false;
       }
       updateDiscoveryStatus('دریافت آرشیو آدیوس ممکن نشد؛ دوباره تلاش کن یا عبارت دیگری جست‌وجو کن.');
@@ -168,36 +199,39 @@
       // Album results do not interrupt the currently playing queue.
       $('audiusTracksTab').classList.add('active');$('audiusTracksTab').setAttribute('aria-pressed','true');
       $('audiusAlbumsTab').classList.remove('active');$('audiusAlbumsTab').setAttribute('aria-pressed','false');
-      grid.hidden=false;discoveryGrid.hidden=true;
+      setBrowseView('tracks');
       more.hidden=true;empty.hidden=true;renderCards();
       updateDiscoveryStatus('قطعات آلبوم «'+album.title+'»');
       grid.scrollIntoView({behavior:'smooth',block:'start'});
     }catch{if(request===discovery.requestId)updateDiscoveryStatus('باز کردن قطعات آلبوم ممکن نشد؛ منبع رسمی آدیوس را باز کن.');}
     finally{clearTimeout(timeout);if(request===discovery.requestId)setBusy(false);}
   }
+  function setBrowseView(mode){
+    const views=[['tracks','audiusTracksTab',grid],['artists','audiusArtistsTab',artistGrid],['albums','audiusAlbumsTab',discoveryGrid]];
+    for(const [kind,id,area] of views){
+      const active=kind===mode,button=$(id);
+      area.hidden=!active;
+      button.classList.toggle('active',active);
+      button.setAttribute('aria-pressed',String(active));
+    }
+  }
   function switchMode(mode){
     if(discovery.mode===mode)return;
-    discovery.mode=mode;
-    const albums=mode==='albums';
-    grid.hidden=albums;discoveryGrid.hidden=!albums;
-    $('audiusTracksTab').classList.toggle('active',!albums);
-    $('audiusAlbumsTab').classList.toggle('active',albums);
-    $('audiusTracksTab').setAttribute('aria-pressed',String(!albums));
-    $('audiusAlbumsTab').setAttribute('aria-pressed',String(albums));
-    const search=$('audiusSearch').value.trim();
-    if(albums)browse(search||discovery.query||'persian','albums',false);
-    else if(search)browse(search,'tracks',false);
+    discovery.mode=mode;setBrowseView(mode);
+    const query=$('audiusSearch').value.trim();
+    if(mode==='artists'&&!query){
+      if(!discovery.results.length)discovery.results=[...discovery.initial];
+      renderArtists();more.hidden=true;empty.hidden=discovery.artists.length>0;
+      updateDiscoveryStatus('هنرمندان موجود در منتخب‌ها یا نتایج فعلی؛ برای جست‌وجوی گسترده نام هنرمند را وارد کن.');
+    }else if(mode==='albums')browse(query||'persian','albums',false);
+    else if(query)browse(query,mode,false);
     else showFeatured();
   }
   function showFeatured(){
     discovery.requestId++;
     discovery.mode='tracks';discovery.query='';discovery.page=0;
     discovery.results=[...discovery.initial];discovery.albums=[];
-    grid.hidden=false;discoveryGrid.hidden=true;
-    $('audiusTracksTab').classList.add('active');
-    $('audiusTracksTab').setAttribute('aria-pressed','true');
-    $('audiusAlbumsTab').classList.remove('active');
-    $('audiusAlbumsTab').setAttribute('aria-pressed','false');
+    setBrowseView('tracks');
     renderCards();more.hidden=true;empty.hidden=discovery.results.length>0;
     updateDiscoveryStatus('منتخب موسیقی ایرانی آوا و نوا');
   }
@@ -228,8 +262,8 @@
       const choose=element('button','audius-choose','شنیدن');
       choose.type='button';choose.dataset.audiusId=track.id;choose.setAttribute('aria-label','پخش '+track.title);choose.setAttribute('aria-pressed','false');
       choose.addEventListener('click',()=>{
-        if(player.index===i&&player.playing)pause();
-        else if(player.index===i)playCurrent();
+        if(selected()?.id===track.id&&player.playing)pause();
+        else if(selected()?.id===track.id)playCurrent();
         else {player.tracks=[...discovery.results];chooseTrack(i,true);}
       });
       const source=element('a','audius-source','↗');source.href=track.source;source.rel='noopener noreferrer';source.target='_blank';source.title='منبع رسمی: '+track.title;source.setAttribute('aria-label','مشاهده '+track.title+' در آدیوس');
@@ -357,7 +391,12 @@
     clearTimeout(searchDelay);
     const q=$('audiusSearch').value.trim();
     $('audiusGenres').querySelectorAll('button').forEach((b,i)=>{const active=!q&&i===0;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
-    if(!q){if(discovery.mode==='albums')browse('persian','albums',false);else showFeatured();return;}
+    if(!q){if(discovery.mode==='albums')browse('persian','albums',false);
+      else if(discovery.mode==='artists'){
+        discovery.results=[...discovery.initial];renderArtists();more.hidden=true;empty.hidden=discovery.artists.length>0;
+        updateDiscoveryStatus('هنرمندان موجود در منتخب‌های آوا و نوا');
+      }
+      else showFeatured();return;}
     if(q.length<2){updateDiscoveryStatus('برای جست‌وجو حداقل دو حرف بنویس.');return;}
     searchDelay=setTimeout(()=>browse(q,discovery.mode,false),600);
   });
@@ -367,10 +406,12 @@
     });
     $('audiusSearch').value='';
     const q=button.dataset.audiusQuery||'';
-    if(!q&&! (discovery.mode==='albums'))showFeatured();
+    if(discovery.mode==='artists'){discovery.mode='tracks';setBrowseView('tracks');}
+    if(!q&&discovery.mode!=='albums')showFeatured();
     else browse(q||'persian',discovery.mode,false);
   }));
   $('audiusTracksTab').addEventListener('click',()=>switchMode('tracks'));
+  $('audiusArtistsTab').addEventListener('click',()=>switchMode('artists'));
   $('audiusAlbumsTab').addEventListener('click',()=>switchMode('albums'));
   more.addEventListener('click',()=>{if(!discovery.pending)browse(discovery.query||'persian',discovery.mode,true);});
   async function init(){
