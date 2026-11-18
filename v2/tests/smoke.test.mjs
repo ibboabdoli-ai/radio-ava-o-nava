@@ -65,7 +65,9 @@ test('Program and recordings are preserved',()=>{
  assert.deepEqual(shows.schedule.weekdays,[6,0,1,2,3]);
  assert.equal(shows.schedule.hour,22);
  assert.equal(shows.timezone,'Asia/Tehran');
- assert.equal(shows.recordings.length,4);
+ assert.equal(shows.recordings.length,5);
+ assert.equal(shows.recordings[0].id,'recording-20261117-074916');
+ assert.equal(shows.recordings[0].src,'https://archive.ibboabdoli.com/recordings/rec_20261117-074916.mp3');
  for(const r of shows.recordings)assert.equal(new URL(r.src).hostname,'archive.ibboabdoli.com');
  assert.equal(new URL(shows.links.stream).hostname,'live.ibboabdoli.com');
  assert.equal(new URL(shows.links.contest).hostname,'docs.google.com');
