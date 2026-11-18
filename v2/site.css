@@ -739,3 +739,41 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
  .install-preview-hint{font-size:12px}
  .install-slider .install-preview img{background:#171425}
 }
+
+/* Radio mobile corrections: safe dock above navigation, compact archive, visible tutorial images. */
+.install-slider .install-step-card[hidden]{display:none!important}
+.install-slider .install-slider-dots{gap:8px}
+.install-slider-dot span{font-size:13px;font-weight:800;line-height:1;display:grid;place-items:center}
+.install-slider-dot.active{background:#e8c08a22}
+.install-slider-dot.active span{color:#f5d5a5}
+.install-preview img:not([src]){visibility:hidden}
+.telegram-request-link{display:inline-flex;align-items:center;justify-content:center;text-align:center;min-height:46px;max-width:100%;white-space:normal}
+.recording-player:has(#recordingPlay:disabled) .rec-play{opacity:.45;box-shadow:none;cursor:not-allowed}
+.recording-player:has(#recordingPlay:disabled) .rec-controls{opacity:.7}
+@media(max-width:700px){
+  :root{--radio-mobile-nav-height:calc(68px + env(safe-area-inset-bottom))}
+  .mobile-bottom-nav{bottom:0;min-height:var(--radio-mobile-nav-height);z-index:95}
+  .player-dock{bottom:var(--radio-mobile-nav-height);z-index:94;padding:0}
+  .dock-inner{min-height:54px;gap:9px;padding-block:5px}
+  .dock-inner img{height:34px;width:34px;flex:0 0 34px}
+  .dock-button{height:38px;width:38px;flex:0 0 38px;margin:0;align-self:center}
+  .dock-button::before{border-top-width:6px;border-bottom-width:6px;border-left-width:9px}
+  .dock-info strong{font-size:12px}
+  .dock-info span{font-size:11px}
+  .dock-link{font-size:11px;max-width:90px;white-space:normal;line-height:1.4}
+  body{padding-bottom:var(--radio-mobile-nav-height)}
+  body:has(.player-dock.dock-active){padding-bottom:calc(126px + env(safe-area-inset-bottom))}
+  .recording-player{padding:16px 14px;gap:2px}
+  .recording-cover img{width:62px;height:62px}
+  .recording-player .kicker{margin-top:6px}
+  .recording-player h3{font-size:16px}
+  .seek-row{margin-top:9px}
+  .rec-controls{gap:12px;margin:10px 0 8px}
+  .rec-play{height:52px;width:52px}
+  .recording-player .help-text{line-height:1.6;margin-top:1px}
+  .install-slider-dot{width:43px;min-height:42px}
+  .install-slider-dot span{width:30px;height:30px;border-radius:10px;background:#443852;color:#e7d6e9}
+  .install-slider-dot.active span{width:30px;border-radius:10px;background:var(--gold);color:#241926}
+  .install-slider .install-step-card[hidden]{display:none!important}
+  .install-slider .install-preview img[src]{display:block;visibility:visible;max-height:55dvh;width:auto;max-width:100%;object-fit:contain;margin:0 auto}
+}
