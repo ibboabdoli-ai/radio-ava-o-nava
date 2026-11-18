@@ -86,7 +86,7 @@ test('One unified accessible responsive design, no obsolete style layers',()=>{
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
   assert.match(html,/href="\.\/site\.css\?v=24"/);
   assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,2);
-  assert.match(html,/href="\.\/studio\.css\?v=1"/);
+  assert.ok(html.includes('href="./studio.css?v=2"'));
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
   for(const text of ['.main-play::before','.rec-play::before','.audius-primary::before','.mobile-bottom-nav','@media(max-width:700px)','prefers-reduced-motion:reduce','.up-next','.audius-grid','.recording-grid','.install-step-card'])
