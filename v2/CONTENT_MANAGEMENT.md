@@ -44,3 +44,13 @@ node --test v2/tests/media-health.test.mjs
 ```
 
 The media check verifies remote URLs and HTTP HEAD; it does not prove audible playback on all devices. Before a final release, check the website at a desktop width and a narrow mobile width, then play every recording once on real devices.
+
+## Operational checks after the performance update (18 Nov 2026)
+
+- Installation artwork is loaded only for the displayed iPhone or Android step. The original eight separate SVG tutorial assets are kept intact; `install-images.js` remains in Git history for rollback but is not fetched by the site or pre-cached by the service worker.
+- Selecting a recording triggers its metadata request; landing on the homepage no longer requests a large audio file automatically.
+- Radio statistics are polled approximately every 45 seconds while visible, with bounded exponential backoff on errors. Unknown status must never be reported as definitely offline.
+- The on-site song-request composer **copies text only**. The radio does not receive or store it until the visitor explicitly sends the message through the existing Telegram group. Do not call this a direct bot message.
+- Form submissions are stored in Google Forms/Sheets, with the private spreadsheet restricted to authorized users. The public `privacy.html` explains data use but organizer contact and a specific retention period still require final review. Do not publish private spreadsheet access URLs.
+- **Open issue #15**: Four of the five published R2 recordings returned HTTP 200 to a two-byte `Range` GET. Until the CDN/origin is fixed and verified, seeking within long MP3s may be slow or unreliable even though file availability (HEAD) passes. Check Cloudflare cache/encoding/range configuration before changing backend settings: https://github.com/ibboabdoli-ai/radio-ava-o-nava/issues/15.
+- Copyright and permission status for recordings is not established by a successful upload. Verify permission to publish music and participants' recorded speech before adding public material.
