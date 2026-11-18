@@ -7,6 +7,29 @@
   const close=document.getElementById('installDialogClose');
   if(!dialog||!image||!title||!close)return;
   const allowed=/^\.\.\/assets\/(?:ios|android)-install-[1-4]\.svg$/;
+  const slides=window.radioInstallImages;
+  // Only our eight bundled images are accepted. No third-party image hosts.
+  const slideImage=(platform,index)=>{
+    const data=slides?.[platform]?.[index];
+    return typeof data==='string'&&data.startsWith('data:image/jpeg;base64,')?data:null;
+  };
+  document.querySelectorAll('[data-install-slider]').forEach(slider=>{
+    const platform=slider.dataset.installSlider;
+    if(!['ios','android'].includes(platform))return;
+    slider.querySelectorAll('.install-step-card').forEach((card,index)=>{
+      const src=slideImage(platform,index);
+      if(!src)return;
+      const picture=card.querySelector('.install-preview img');
+      const button=card.querySelector('.install-preview');
+      if(!picture||!button)return;
+      picture.src=src;
+      picture.removeAttribute('loading');
+      picture.setAttribute('decoding','async');
+      button.dataset.installPlatform=platform;
+      button.dataset.installStep=String(index);
+      button.dataset.installImage='bundled';
+    });
+  });
 
   // One slide at a time for both iPhone and Android. Keep buttons keyboard-
   // accessible; swipes only advance on clearly horizontal movement.
@@ -67,8 +90,12 @@
   let previousFocus=null;
   document.querySelectorAll('button.install-preview').forEach(button=>{
     button.addEventListener('click',()=>{
-      const src=button.dataset.installImage||'';
-      if(!allowed.test(src))return;
+      const platform=button.dataset.installPlatform;
+      const index=Number(button.dataset.installStep);
+      const bundled=(platform==='ios'||platform==='android')&&Number.isInteger(index)&&index>=0&&index<4
+        ?slideImage(platform,index):null;
+      const src=bundled||(button.dataset.installImage||'');
+      if(!bundled&&!allowed.test(src))return;
       previousFocus=button;
       title.textContent=button.dataset.installLabel||'راهنمای تصویری نصب';
       image.alt=title.textContent;
