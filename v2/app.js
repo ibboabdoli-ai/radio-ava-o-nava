@@ -185,8 +185,8 @@
   }
   function renderRecordings(){
     const grid=$('recordingGrid');grid.replaceChildren();const tracks=state.shows.recordings||[];
-    if(!tracks.length){grid.append(elText('p','در حال حاضر فایل ضبط‌شده‌ای در دسترس نیست.','empty-state'));$('recordingPrev').disabled=true;$('recordingNext').disabled=true;return;}
-    if(state.recordingIndex<0){$('recordingPrev').disabled=true;$('recordingNext').disabled=true;}
+    if(!tracks.length){grid.append(elText('p','در حال حاضر فایل ضبط‌شده‌ای در دسترس نیست.','empty-state'));$('recordingPrev').disabled=true;$('recordingNext').disabled=true;$('recordingPlay').disabled=true;return;}
+    if(state.recordingIndex<0){$('recordingPrev').disabled=true;$('recordingNext').disabled=true;$('recordingPlay').disabled=true;$('recordingPlay').setAttribute('aria-label','ابتدا یک برنامه انتخاب کن');}
     tracks.forEach((track,i)=>{
       const b=host('button');b.type='button';b.className='recording-card'+(state.recordingIndex===i?' active':'');
       const num=elText('span',String(i+1).padStart(2,'0'),'rec-number'),wrapper=host('span');
@@ -221,6 +221,7 @@
     setText('recordingMessage',autoplay?'در حال دریافت برنامه…':'برای شنیدن برنامه دکمه پخش را بزنید.');
     $('recordingRetry').hidden=true;
     $('recordingPrev').disabled=target===0;$('recordingNext').disabled=target===tracks.length-1;
+    $('recordingPlay').disabled=false;$('recordingPlay').setAttribute('aria-label','پخش یا مکث برنامه انتخاب‌شده');
     setText('recordingPlay','▶');$('recordingPlay').classList.remove('is-playing');renderRecordings();if(state.mode==='recording'||state.mode==='idle')setDock(track.title,'آرشیو رادیو',false,'#episodes');
     try{const saved=Number(localStorage.getItem('ava-v2-position-'+track.id));
       if(Number.isFinite(saved)&&saved>0)recAudio.addEventListener('loadedmetadata',()=>{
@@ -230,7 +231,7 @@
     if(autoplay)recAudio.play().catch(()=>{setText('recordingMessage','پخش آغاز نشد؛ دکمه پخش را دوباره بزنید.');$('recordingRetry').hidden=false;});
   }
   function toggleRecording(){
-    if(state.recordingIndex<0){chooseRecording(0,false);}
+    if(state.recordingIndex<0){setText('recordingMessage','ابتدا از فهرست یک برنامه انتخاب کن.');return;}
     if(recAudio.paused){suspendOtherModes('recording');recAudio.play().catch(()=>setText('recordingMessage','فایل باز نشد. اتصال اینترنت یا دسترسی به آرشیو را بررسی کن.'));}
     else recAudio.pause();
   }
