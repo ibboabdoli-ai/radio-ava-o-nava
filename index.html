@@ -503,7 +503,7 @@ function duration(sec){const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=
 // The public Icecast stats script owns the global LIVE timer.
 function cleanText(v,max){return typeof v==='string'?v.trim().slice(0,max):''}
 function setHouseLink(url){
- try{const u=new URL(url);if(u.protocol==='https:'&&u.hostname==='www.clubhouse.com'&&(u.pathname.startsWith('/room/')||u.pathname.startsWith('/house/'))){$('clubhouse').href=u.href;$('clubhouse').textContent=u.pathname.startsWith('/room/')?'ورود مستقیم به روم کلاب‌هاوس':'ورود به هاوس کلاب‌هاوس';return true}}catch(e){}return false;
+ try{const u=new URL(url);if(u.protocol==='https:'&&u.hostname==='www.clubhouse.com'&&(u.pathname.startsWith('/room/')||u.pathname.startsWith('/i/')||u.pathname.startsWith('/house/'))){$('clubhouse').href=u.href;$('clubhouse').textContent=(u.pathname.startsWith('/room/')||u.pathname.startsWith('/i/'))?'ورود مستقیم به روم کلاب‌هاوس':'ورود به هاوس کلاب‌هاوس';return true}}catch(e){}return false;
 }
 async function loadProgram(){
  try{const r=await fetch('./program.json',{cache:'no-store'});if(!r.ok)return;const p=await r.json();
