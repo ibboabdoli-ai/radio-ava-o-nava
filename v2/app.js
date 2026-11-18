@@ -178,13 +178,13 @@
     const tracks=state.shows.recordings||[];if(!tracks.length||i<0||i>=tracks.length)return;
     const target=i,track=tracks[target],url=safeHttps(track.src,['ibboabdoli.com']);
     if(!url){toast('آدرس فایل ضبط‌شده معتبر نیست.');return;}
-    suspendOtherModes('recording');recAudio.pause();state.recordingIndex=target;recAudio.src=url;recAudio.load();
+    if(autoplay)suspendOtherModes('recording');recAudio.pause();state.recordingIndex=target;recAudio.src=url;recAudio.load();
     setText('recordingTitle',track.title);setText('recordingMeta',track.time+' · '+track.date);
     $('recordingSeek').value=0;$('recordingSeek').disabled=true;setText('recordingCurrent','00:00');setText('recordingTotal','--:--');
     setText('recordingMessage',autoplay?'در حال دریافت برنامه…':'برای شنیدن برنامه دکمه پخش را بزنید.');
     $('recordingRetry').hidden=true;
     $('recordingPrev').disabled=target===0;$('recordingNext').disabled=target===tracks.length-1;
-    setText('recordingPlay','▶');$('recordingPlay').classList.remove('is-playing');renderRecordings();setDock(track.title,'آرشیو رادیو',false,'#episodes');
+    setText('recordingPlay','▶');$('recordingPlay').classList.remove('is-playing');renderRecordings();if(state.mode==='recording'||state.mode==='idle')setDock(track.title,'آرشیو رادیو',false,'#episodes');
     try{const saved=Number(localStorage.getItem('ava-v2-position-'+track.id));
       if(Number.isFinite(saved)&&saved>0)recAudio.addEventListener('loadedmetadata',()=>{
         if(state.shows.recordings[state.recordingIndex]?.id===track.id&&Number.isFinite(recAudio.duration)&&saved<recAudio.duration-10)recAudio.currentTime=saved;
