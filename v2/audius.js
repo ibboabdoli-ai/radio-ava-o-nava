@@ -80,6 +80,7 @@
     if(search)search.disabled=busy;
     more.disabled=busy;
     more.textContent=busy?'در حال دریافت…':'نمایش نتایج بیشتر';
+    grid.setAttribute('aria-busy',String(busy));discoveryGrid.setAttribute('aria-busy',String(busy));
   }
   function resetPlayerForQueue(){
     audio.pause();audio.removeAttribute('src');audio.load();
@@ -132,9 +133,7 @@
       }else{
         const mapped=incoming.filter(v=>matchesSearch(v,term)).map(normalizeTrack).filter(Boolean);
         discovery.results=unique(append?[...discovery.results,...mapped]:mapped);
-        // Loading more must not interrupt music already playing.
-        if(!append)resetPlayerForQueue();
-        player.tracks=discovery.results;
+        // Search results change independently of the currently playing queue.
         renderCards();
       }
       discovery.page=Math.floor(offset/discovery.limit)+1;
@@ -147,7 +146,7 @@
       more.hidden=true;
       if(!append){
         if(mode==='albums'){discovery.albums=[];renderAlbums();}
-        else{discovery.results=[];resetPlayerForQueue();renderCards();}
+        else{discovery.results=[];renderCards();}
         empty.hidden=false;
       }
       updateDiscoveryStatus('دریافت آرشیو آدیوس ممکن نشد؛ دوباره تلاش کن یا عبارت دیگری جست‌وجو کن.');
@@ -166,7 +165,7 @@
       const tracks=unique(data.map(normalizeTrack).filter(Boolean));
       if(!tracks.length){updateDiscoveryStatus('این آلبوم قطعه قابل پخش عمومی ندارد.');return;}
       discovery.mode='tracks';discovery.results=tracks;discovery.page=0;
-      resetPlayerForQueue();player.tracks=tracks;
+      // Album results do not interrupt the currently playing queue.
       $('audiusTracksTab').classList.add('active');$('audiusTracksTab').setAttribute('aria-pressed','true');
       $('audiusAlbumsTab').classList.remove('active');$('audiusAlbumsTab').setAttribute('aria-pressed','false');
       grid.hidden=false;discoveryGrid.hidden=true;
@@ -199,8 +198,7 @@
     $('audiusTracksTab').setAttribute('aria-pressed','true');
     $('audiusAlbumsTab').classList.remove('active');
     $('audiusAlbumsTab').setAttribute('aria-pressed','false');
-    resetPlayerForQueue();player.tracks=discovery.results;
-    renderCards();more.hidden=true;empty.hidden=player.tracks.length>0;
+    renderCards();more.hidden=true;empty.hidden=discovery.results.length>0;
     updateDiscoveryStatus('منتخب موسیقی ایرانی آوا و نوا');
   }
   function updateButtons(){
@@ -220,7 +218,7 @@
   }
   function renderCards(){
     grid.replaceChildren();
-    player.tracks.forEach((track,i)=>{
+    discovery.results.forEach((track,i)=>{
       const card=element('article','audius-track');
       const img=makeCover(element('img','audius-track-photo'),track.artwork,'کاور '+track.title);
       img.width=360;img.height=300;
@@ -232,7 +230,7 @@
       choose.addEventListener('click',()=>{
         if(player.index===i&&player.playing)pause();
         else if(player.index===i)playCurrent();
-        else chooseTrack(i,true);
+        else {player.tracks=[...discovery.results];chooseTrack(i,true);}
       });
       const source=element('a','audius-source','↗');source.href=track.source;source.rel='noopener noreferrer';source.target='_blank';source.title='منبع رسمی: '+track.title;source.setAttribute('aria-label','مشاهده '+track.title+' در آدیوس');
       actions.append(choose,source);body.append(actions);card.append(img,body);grid.append(card);
@@ -270,7 +268,7 @@
     }catch{/* Unsupported mobile media controls do not prevent playback. */}
   }
   function playCurrent(){
-    if(player.index<0){chooseTrack(0,false);if(player.index<0)return;}
+    if(player.index<0){player.tracks=[...discovery.results];chooseTrack(0,false);if(player.index<0)return;}
     const track=selected();if(!track)return;
     window.dispatchEvent(new CustomEvent('radio-audius-started',{detail:{title:track.title,artist:track.artist}}));
     announce('در حال اتصال به موسیقی آدیوس…');
@@ -298,7 +296,7 @@
     chooseTrack(next,autoplay);
   }
   function toggle(){
-    if(player.index<0)return chooseTrack(0,true);
+    if(player.index<0){player.tracks=[...discovery.results];return chooseTrack(0,true);}
     if(audio.paused)playCurrent();else pause();
   }
   $('audiusToggle').addEventListener('click',toggle);
@@ -358,9 +356,10 @@
   $('audiusSearch').addEventListener('input',()=>{
     clearTimeout(searchDelay);
     const q=$('audiusSearch').value.trim();
-    if(!q)return;
-    if(q.length<2)return;
-    searchDelay=setTimeout(()=>browse(q,discovery.mode,false),550);
+    $('audiusGenres').querySelectorAll('button').forEach((b,i)=>{const active=!q&&i===0;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
+    if(!q){if(discovery.mode==='albums')browse('persian','albums',false);else showFeatured();return;}
+    if(q.length<2){updateDiscoveryStatus('برای جست‌وجو حداقل دو حرف بنویس.');return;}
+    searchDelay=setTimeout(()=>browse(q,discovery.mode,false),600);
   });
   $('audiusGenres').querySelectorAll('[data-audius-query]').forEach(button=>button.addEventListener('click',()=>{
     $('audiusGenres').querySelectorAll('button').forEach(b=>{

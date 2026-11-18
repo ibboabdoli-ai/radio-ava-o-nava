@@ -84,7 +84,7 @@ test('Timezone conversion in November 2026',()=>{
 test('One unified accessible responsive design, no obsolete style layers',()=>{
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
-  assert.match(html,/href="\.\/site\.css\?v=17"/);
+  assert.match(html,/href="\.\/site\.css\?v=18"/);
   assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,1);
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
@@ -128,7 +128,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-18/);
+  assert.match(sw,/ava-v2-static-19/);
   assert.match(sw,/install-guide\.js\?v=3/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -186,4 +186,57 @@ test('Eight individual user-selected images power iPhone and Android slides',()=
  assert.match(html,/install-images\.js\?v=1/);
  assert.match(sw,/install-images\.js\?v=1/);
  assert.match(css,/Real iPhone screenshots/);
+});
+
+test('Replay controls, live status and contest registration are safely connected',()=>{
+ assert.match(html,/id="serverHint"/);
+ assert.match(html,/id="nextShowTime"/);
+ assert.match(html,/id="recordingRetry"/);
+ assert.match(html,/id="recordingSeek"[^>]*disabled/);
+ assert.match(app,/normalizeStats/);
+ assert.match(app,/status-json\.xsl/);
+ assert.match(app,/Unknown is not OFFLINE/);
+ assert.match(app,/!recAudio\.paused/);
+ assert.match(app,/state\.recordingIndex\+1<state\.shows\.recordings\.length/);
+ assert.match(html,/اطلاعات شرکت‌کنندگان فقط برای مدیر مسابقه/);
+ assert.ok(!html.includes('docs.google.com/spreadsheets/d/'),'Do not expose private registration sheet on the public site');
+ assert.equal(shows.recordings.length,5);
+ assert.equal(new Set(shows.recordings.map(recording=>recording.id)).size,5);
+ for(const item of shows.recordings)assert.match(item.src,/^https:\/\/archive\.ibboabdoli\.com\/recordings\/[^/]+\.mp3$/);
+});
+test('Installation guide HTML has two matching platform containers',()=>{
+ const install=html.slice(html.indexOf('<section class="container install-detail'),html.indexOf('<section class="container about-section'));
+ assert.ok(install.includes('data-install-slider="ios"'));
+ assert.ok(install.includes('data-install-slider="android"'));
+ assert.equal((install.match(/class="install-platform-title"/g)||[]).length,2);
+ assert.equal((install.match(/<\/details>/g)||[]).length,0);
+ assert.match(css,/max-height:65dvh/);
+});
+test('Music searches do not destroy an active playback queue',()=>{
+ assert.match(audiusJs,/discovery\.results\.forEach/);
+ assert.match(audiusJs,/player\.tracks=\[\.\.\.discovery\.results\];chooseTrack\(i,true\)/);
+ assert.equal((audiusJs.match(/resetPlayerForQueue\(\)/g)||[]).length,1);
+ assert.match(audiusJs,/aria-busy/);
+ assert.match(html,/audiusSearch/);
+});
+test('Live stat normalization distinguishes current stream and no source',()=>{
+ const snippet=app.slice(app.indexOf('  function normalizeStats(s){'),app.indexOf('  let polling=false;'));
+ assert.ok(snippet.startsWith('  function normalizeStats(s){'));
+ const convert=value=>JSON.parse(JSON.stringify(value));
+ const live=vm.runInNewContext(snippet+'\nnormalizeStats({icestats:{source:{listenurl:"https://live.ibboabdoli.com/stream",listeners:4}}})');
+ const quiet=vm.runInNewContext(snippet+'\nnormalizeStats({icestats:{}})');
+ assert.deepEqual(convert(live),{live:true,listeners:4,startedAt:null});
+ assert.deepEqual(convert(quiet),{live:false,listeners:0,startedAt:null});
+});
+test('Next broadcast is computed by Tehran clock and honors daylight savings elsewhere',()=>{
+ const begin=app.indexOf('  const timeFormatters='),end=app.indexOf('  function renderSchedule(){');
+ assert.ok(begin>0&&end>begin);
+ const prefix='const state={shows:{schedule:{weekdays:[6,0,1,2,3],hour:22,minute:0}}};const FALLBACK={schedule:state.shows.schedule};const wk={Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6};\n';
+ const source=prefix+app.slice(begin,end);
+ const first=vm.runInNewContext(source+'\nshowCandidates(new Date("2026-11-18T08:00:00Z"))[0].at.toISOString()');
+ assert.equal(first,'2026-11-18T18:30:00.000Z');
+ const later=vm.runInNewContext(source+'\nshowCandidates(new Date("2026-11-18T19:00:00Z"))[0].at.toISOString()');
+ assert.equal(later,'2026-11-21T18:30:00.000Z');
+ const summer=vm.runInNewContext(source+'\nshowCandidates(new Date("2026-07-18T08:00:00Z"))[0].at.toISOString()');
+ assert.equal(summer,'2026-07-18T18:30:00.000Z');
 });

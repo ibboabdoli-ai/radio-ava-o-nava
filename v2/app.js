@@ -6,7 +6,7 @@
   const days = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
   const wk = {Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6};
   const FALLBACK = {schedule:{weekdays:[6,0,1,2,3],hour:22,minute:0},recordings:[],links:{stream:'https://live.ibboabdoli.com/stream',stats:'https://live.ibboabdoli.com/radio-stats.xsl',clubhouse:'https://www.clubhouse.com/',contest:'https://docs.google.com/forms/d/e/1FAIpQLSewM20f3DLbL2yz60VNdestV-9ZJfLAaA8ivepjCWbx88_TzQ/viewform?usp=header',telegram:'https://t.me/+nFR4GhHTc7Y3ZjNk',whatsapp:'https://www.whatsapp.com/channel/0029VbDqKNg5vKA9OxDV4046'},program:{title:'آوا و نوا',subtitle:'موسیقی، شعر و آواز'}};
-  const state = {shows:FALLBACK,recordingIndex:-1,mode:'idle',liveWanted:false,liveTries:0,liveTimer:null,liveWatchdog:null,liveSequence:0,lastStats:null,lastStatsTime:0,lastStatsStarted:null};
+  const state = {shows:FALLBACK,recordingIndex:-1,mode:'idle',liveWanted:false,liveTries:0,liveTimer:null,liveWatchdog:null,liveSequence:0,lastStats:null,lastStatsTime:0,lastStatsStarted:null,statsError:false};
   const liveAudio=$('liveAudio'), recAudio=$('recordingAudio');
   const host = el => document.createElement(el);
   const elText = (name,text,className) => {const n=host(name);n.textContent=String(text ?? '');if(className)n.className=className;return n;};
@@ -18,20 +18,32 @@
   function toast(message){const t=$('toast');t.textContent=message;t.hidden=false;clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.hidden=true,5500);}
   function setLink(id,url){const n=$(id),v=safeHttps(url);if(!n)return;if(v)n.href=v;else n.removeAttribute('href');}
   function setDock(title,subtitle,playState,href){setText('dockTitle',title);setText('dockSubtitle',subtitle);setText('dockPlay',playState?'Ⅱ':'▶');$('dockPlay').classList.toggle('is-playing',!!playState);$('dockPlay').setAttribute('aria-pressed',String(!!playState));$('dockDetail').href=href;$('playerDock').classList.toggle('dock-active',state.mode!=='idle');let action=state.mode==='recording'?'پخش یا مکث برنامه':state.mode==='audius'?'کنترل موسیقی آدیوس':'پخش یا توقف زنده';$('dockPlay').setAttribute('aria-label',action);}
-  const fmtTime=(date,tz)=>new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(date);
-  const dayInTehran=date=>wk[new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Tehran',weekday:'short'}).format(date)];
-  function showCandidates(){
-    const cfg=state.shows.schedule||FALLBACK.schedule,now=new Date(),results=[];
-    const utcMidnight=Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate());
-    for(let d=-1;d<10;d++){
-      // Tehran currently uses UTC+03:30. Verify both wall-clock and weekday with Intl.
-      const candidate=new Date(utcMidnight+d*86400000+(cfg.hour-3)*3600000+(cfg.minute-30)*60000);
-      if(candidate.getTime()<=now.getTime())continue;
-      if(!cfg.weekdays.includes(dayInTehran(candidate)))continue;
+  const timeFormatters=new Map();
+  const fmtTime=(date,tz)=>{
+    if(!timeFormatters.has(tz))timeFormatters.set(tz,new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}));
+    return timeFormatters.get(tz).format(date);
+  };
+  const iranParts=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Tehran',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
+  const iranDay=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Tehran',weekday:'short'});
+  const dayInTehran=date=>wk[iranDay.format(date)];
+  function tehranOffset(timestamp){
+    const parts=Object.fromEntries(iranParts.formatToParts(new Date(timestamp)).filter(x=>x.type!=='literal').map(x=>[x.type,Number(x.value)]));
+    return Date.UTC(parts.year,parts.month-1,parts.day,parts.hour,parts.minute)-Math.floor(timestamp/60000)*60000;
+  }
+  function showCandidates(now=new Date()){
+    const cfg=state.shows.schedule||FALLBACK.schedule,results=[];
+    if(!Array.isArray(cfg.weekdays)||!Number.isInteger(cfg.hour)||cfg.hour<0||cfg.hour>23||!Number.isInteger(cfg.minute)||cfg.minute<0||cfg.minute>59)return results;
+    const base=Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate());
+    for(let d=-2;d<12;d++){
+      const requested=base+d*86400000+cfg.hour*3600000+cfg.minute*60000;
+      let timestamp=requested-tehranOffset(requested);
+      timestamp=requested-tehranOffset(timestamp);
+      const candidate=new Date(timestamp),day=dayInTehran(candidate);
+      if(timestamp<=now.getTime()||!cfg.weekdays.includes(day))continue;
       if(fmtTime(candidate,'Asia/Tehran')!==String(cfg.hour).padStart(2,'0')+':'+String(cfg.minute).padStart(2,'0'))continue;
-      results.push({at:candidate,day:dayInTehran(candidate)});
+      results.push({at:candidate,day});
     }
-    return results;
+    return results.sort((a,b)=>a.at-b.at);
   }
   function renderSchedule(){
     const items=showCandidates();const cfg=state.shows.schedule||FALLBACK.schedule,grid=$('scheduleGrid');grid.replaceChildren();
@@ -43,30 +55,63 @@
   function updateClocks(){
     const now=new Date();
     setText('clockIran',fmtTime(now,'Asia/Tehran'));setText('clockSweden',fmtTime(now,'Europe/Stockholm'));setText('clockUk',fmtTime(now,'Europe/London'));
-    const next=showCandidates()[0];if(!next){setText('nextShowDay','برنامه بعدی مشخص نیست');setText('nextCountdown','--:--:--');return;}
-    setText('nextShowDay',days[next.day]);const left=Math.max(0,Math.floor((next.at.getTime()-Date.now())/1000));setText('nextCountdown',[Math.floor(left/3600),Math.floor(left%3600/60),left%60].map(v=>String(v).padStart(2,'0')).join(':'));
+    const next=showCandidates(now)[0];if(!next){setText('nextShowDay','برنامه بعدی مشخص نیست');setText('nextCountdown','--:--:--');setText('nextShowTime','اطلاعات برنامه موجود نیست');return;}
+    setText('nextShowDay',days[next.day]);setText('nextShowTime','شروع '+fmtTime(next.at,'Asia/Tehran')+' ایران · '+fmtTime(next.at,'Europe/Stockholm')+' سوئد · '+fmtTime(next.at,'Europe/London')+' انگلیس');
+    const left=Math.max(0,Math.ceil((next.at.getTime()-now.getTime())/1000));setText('nextCountdown',[Math.floor(left/3600),Math.floor(left%3600/60),left%60].map(v=>String(v).padStart(2,'0')).join(':'));
   }
   function updateStatsUI(){
-    const old=Date.now()-state.lastStatsTime>30000,stats=state.lastStats;
-    if(!stats||old){setText('serverBadge','وضعیت نامشخص');$('serverBadge').className='live-pill';setText('stationState','نامشخص');setText('listenerCount','نامشخص');setText('liveDuration','--:--:--');return;}
-    setText('serverBadge',stats.live?'● در حال پخش زنده':'رادیو خاموش است');$('serverBadge').className='live-pill '+(stats.live?'is-on':'is-off');
-    setText('stationState',stats.live?'زنده':'خاموش');setText('listenerCount',fa(stats.live?stats.listeners:0));
+    const stale=Date.now()-state.lastStatsTime>30000,stats=state.lastStats;
+    const localPlaying=state.liveWanted&&!liveAudio.paused&&liveAudio.readyState>=2;
+    if(!stats||stale||(localPlaying&&!stats.live)){
+      setText('serverBadge',localPlaying?'● صدا در حال پخش است':'آمار پخش در دسترس نیست');
+      $('serverBadge').className='live-pill '+(localPlaying?'is-on':'');
+      setText('stationState',localPlaying?'پخش در دستگاه':'نامشخص');
+      setText('listenerCount','نامشخص');setText('liveDuration','--:--:--');
+      setText('serverHint',localPlaying?'صدا روی دستگاه شما برقرار است؛ آمار سرور تأیید نشده است.':'آمار سرور دریافت نشد؛ این به معنی خاموش بودن رادیو نیست.');
+      return;
+    }
+    setText('serverBadge',stats.live?'● پخش زنده فعال':'پخش زنده فعال نیست');
+    $('serverBadge').className='live-pill '+(stats.live?'is-on':'is-off');
+    setText('stationState',stats.live?'زنده':'خارج از پخش');
+    setText('listenerCount',fa(stats.live?stats.listeners:0));
     setText('liveDuration',stats.live&&state.lastStatsStarted?fmtDuration((Date.now()-state.lastStatsStarted)/1000):stats.live?'--:--:--':'00:00:00');
+    setText('serverHint',stats.live?'وضعیت از سرور رادیو دریافت شده است.':'در حال حاضر سرور هیچ پخش فعالی گزارش نمی‌کند.');
+  }
+  function normalizeStats(s){
+    if(typeof s?.live==='boolean'&&Number.isSafeInteger(Number(s.listeners))&&Number(s.listeners)>=0){
+      return {live:s.live,listeners:Number(s.listeners),startedAt:s.startedAt};
+    }
+    if(s?.icestats&&typeof s.icestats==='object'){
+      const all=s.icestats.source?Array.isArray(s.icestats.source)?s.icestats.source:[s.icestats.source]:[];
+      const source=all.find(item=>String(item.listenurl||item.mount||'').includes('/stream'))||all[0];
+      return {live:!!source,listeners:Math.max(0,Number(source?.listeners)||0),
+        startedAt:source?.stream_start_iso8601||source?.stream_start||null};
+    }
+    throw new Error('Unknown stats format');
   }
   let polling=false;
   async function pollStats(){
-    if(polling)return;polling=true;
-    const ctl=new AbortController(),timeout=setTimeout(()=>ctl.abort(),7000);
+    if(polling||document.hidden)return;polling=true;
+    const primary=safeHttps(state.shows.links.stats,['ibboabdoli.com']);
+    const fallback=safeHttps('https://live.ibboabdoli.com/status-json.xsl',['ibboabdoli.com']);
     try{
-      const url=safeHttps(state.shows.links.stats,['ibboabdoli.com']);if(!url)throw Error('invalid stats URL');
-      const r=await fetch(url+'?t='+Date.now(),{cache:'no-store',mode:'cors',signal:ctl.signal});
-      if(!r.ok)throw Error('HTTP '+r.status);
-      const s=await r.json();if(typeof s.live!=='boolean'||!Number.isSafeInteger(Number(s.listeners))||Number(s.listeners)<0)throw Error('bad stats');
-      const started=typeof s.startedAt==='string'?Date.parse(s.startedAt.replace(/([+-]\d{2})(\d{2})$/,'$1:$2')):NaN;
-      state.lastStats={live:s.live,listeners:Number(s.listeners)};
-      state.lastStatsStarted=Number.isFinite(started)&&started<=Date.now()+15000&&started>0?started:null;
-      state.lastStatsTime=Date.now();
-    }catch{/* Unknown is not OFFLINE. */}finally{clearTimeout(timeout);polling=false;updateStatsUI();}
+      if(!primary)throw new Error('No stats endpoint');
+      let lastError;
+      for(const url of [...new Set([primary,fallback].filter(Boolean))]){
+        const ctl=new AbortController(),timeout=setTimeout(()=>ctl.abort(),4500);
+        try{
+          const r=await fetch(url+(url.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store',mode:'cors',signal:ctl.signal});
+          if(!r.ok)throw new Error('HTTP '+r.status);
+          const stats=normalizeStats(await r.json());
+          const started=typeof stats.startedAt==='string'?Date.parse(stats.startedAt.replace(/([+-]\d{2})(\d{2})$/,'$1:$2')):NaN;
+          state.lastStats={live:stats.live,listeners:stats.listeners};
+          state.lastStatsStarted=Number.isFinite(started)&&started<=Date.now()+15000&&started>0?started:null;
+          state.lastStatsTime=Date.now();state.statsError=false;return;
+        }catch(error){lastError=error;}finally{clearTimeout(timeout);}
+      }
+      throw lastError||new Error('No response');
+    }catch{state.statsError=true;/* Unknown is not OFFLINE. */}
+    finally{polling=false;updateStatsUI();}
   }
   function clearLiveTimers(){clearTimeout(state.liveTimer);clearTimeout(state.liveWatchdog);state.liveTimer=null;state.liveWatchdog=null;}
   function liveUI(label,details,isPlaying){setText('liveAction',label);setText('liveMessage',details);setText('livePlayIcon',isPlaying?'Ⅱ':'▶');$('livePlay').classList.toggle('is-playing',!!isPlaying);$('livePlay').setAttribute('aria-label',isPlaying?'توقف پخش زنده':'شروع پخش زنده');$('livePlay').setAttribute('aria-pressed',String(!!isPlaying));$('waveform').classList.toggle('is-active',isPlaying);setDock('رادیو آوا و نوا',details,isPlaying,'#listen');}
@@ -85,10 +130,15 @@
     liveUI('در حال اتصال','در حال دریافت صدای رادیو…',false);
     liveAudio.pause();liveAudio.src=url+(url.includes('?')?'&':'?')+'v='+Date.now();liveAudio.load();
     state.liveWatchdog=setTimeout(()=>{if(state.liveWanted&&token===state.liveSequence&&liveAudio.readyState<3)retryLive();},16000);
-    try{await liveAudio.play();}catch{if(state.liveWanted&&token===state.liveSequence)retryLive();}
+    try{await liveAudio.play();}catch(error){
+      if(!state.liveWanted||token!==state.liveSequence)return;
+      if(error?.name==='NotAllowedError'){stopLive('مرورگر اجازه پخش نداده است. دوباره روی دکمه پخش بزنید.');return;}
+      retryLive();
+    }
   }
   function retryLive(){
     if(!state.liveWanted||state.liveTimer)return;
+    if(navigator.onLine===false){clearLiveTimers();liveUI('منتظر اینترنت','پس از وصل شدن اینترنت دوباره تلاش می‌کنیم.',false);return;}
     clearTimeout(state.liveWatchdog);liveAudio.pause();state.liveTries++;
     if(state.liveTries>6){stopLive('پس از چند تلاش، اتصال برقرار نشد. دوباره پخش را بزنید.');toast('اتصال پخش زنده برقرار نشد. وضعیت سرور را بررسی کن.');return;}
     const delay=Math.min(2000*Math.pow(1.6,state.liveTries-1),12000);
@@ -118,23 +168,32 @@
   }
   function renderRecordings(){
     const grid=$('recordingGrid');grid.replaceChildren();const tracks=state.shows.recordings||[];
-    if(!tracks.length){grid.append(elText('p','در حال حاضر فایل ضبط‌شده‌ای در دسترس نیست.','empty-state'));return;}
+    if(!tracks.length){grid.append(elText('p','در حال حاضر فایل ضبط‌شده‌ای در دسترس نیست.','empty-state'));$('recordingPrev').disabled=true;$('recordingNext').disabled=true;return;}
     tracks.forEach((track,i)=>{
       const b=host('button');b.type='button';b.className='recording-card'+(state.recordingIndex===i?' active':'');
       const num=elText('span',String(i+1).padStart(2,'0'),'rec-number'),wrapper=host('span');
-      wrapper.append(elText('strong',track.title),elText('small',track.time+' · '+track.date));b.append(num,wrapper);b.addEventListener('click',()=>chooseRecording(i,false));grid.append(b);
+      wrapper.append(elText('strong',track.title),elText('small',track.time+' · '+track.date));b.append(num,wrapper);
+      b.setAttribute('aria-pressed',String(state.recordingIndex===i));
+      b.addEventListener('click',()=>chooseRecording(i,false));grid.append(b);
     });
   }
   function chooseRecording(i,autoplay=false){
-    const tracks=state.shows.recordings||[];if(!tracks.length)return;
-    const target=(i+tracks.length)%tracks.length,track=tracks[target],url=safeHttps(track.src,['ibboabdoli.com']);
+    const tracks=state.shows.recordings||[];if(!tracks.length||i<0||i>=tracks.length)return;
+    const target=i,track=tracks[target],url=safeHttps(track.src,['ibboabdoli.com']);
     if(!url){toast('آدرس فایل ضبط‌شده معتبر نیست.');return;}
-    suspendOtherModes('recording');recAudio.pause();state.recordingIndex=target;recAudio.src=url;recAudio.load();
+    if(autoplay)suspendOtherModes('recording');recAudio.pause();state.recordingIndex=target;recAudio.src=url;recAudio.load();
     setText('recordingTitle',track.title);setText('recordingMeta',track.time+' · '+track.date);
-    $('recordingSeek').value=0;setText('recordingCurrent','00:00');setText('recordingTotal','--:--');setText('recordingMessage','برای شنیدن برنامه دکمه پخش را بزنید.');
-    setText('recordingPlay','▶');$('recordingPlay').classList.remove('is-playing');renderRecordings();setDock(track.title,'آرشیو رادیو',false,'#episodes');
-    try{const saved=Number(localStorage.getItem('ava-v2-position-'+track.id));if(Number.isFinite(saved)&&saved>0)recAudio.addEventListener('loadedmetadata',()=>{if(saved<recAudio.duration-10)recAudio.currentTime=saved;},{once:true});}catch{}
-    if(autoplay)recAudio.play().catch(()=>setText('recordingMessage','پخش خودکار مجاز نبود؛ دکمه پخش را بزنید.'));
+    $('recordingSeek').value=0;$('recordingSeek').disabled=true;setText('recordingCurrent','00:00');setText('recordingTotal','--:--');
+    setText('recordingMessage',autoplay?'در حال دریافت برنامه…':'برای شنیدن برنامه دکمه پخش را بزنید.');
+    $('recordingRetry').hidden=true;
+    $('recordingPrev').disabled=target===0;$('recordingNext').disabled=target===tracks.length-1;
+    setText('recordingPlay','▶');$('recordingPlay').classList.remove('is-playing');renderRecordings();if(state.mode==='recording'||state.mode==='idle')setDock(track.title,'آرشیو رادیو',false,'#episodes');
+    try{const saved=Number(localStorage.getItem('ava-v2-position-'+track.id));
+      if(Number.isFinite(saved)&&saved>0)recAudio.addEventListener('loadedmetadata',()=>{
+        if(state.shows.recordings[state.recordingIndex]?.id===track.id&&Number.isFinite(recAudio.duration)&&saved<recAudio.duration-10)recAudio.currentTime=saved;
+      },{once:true});
+    }catch{}
+    if(autoplay)recAudio.play().catch(()=>{setText('recordingMessage','پخش آغاز نشد؛ دکمه پخش را دوباره بزنید.');$('recordingRetry').hidden=false;});
   }
   function toggleRecording(){
     if(state.recordingIndex<0){chooseRecording(0,false);}
@@ -142,19 +201,32 @@
     else recAudio.pause();
   }
   $('recordingPlay').addEventListener('click',toggleRecording);
-  $('recordingPrev').addEventListener('click',()=>chooseRecording(state.recordingIndex-1,false));
-  $('recordingNext').addEventListener('click',()=>chooseRecording(state.recordingIndex+1,false));
+  $('recordingPrev').addEventListener('click',()=>chooseRecording(state.recordingIndex-1,!recAudio.paused));
+  $('recordingNext').addEventListener('click',()=>chooseRecording(state.recordingIndex+1,!recAudio.paused));
+  $('recordingRetry').addEventListener('click',()=>{if(state.recordingIndex>=0)chooseRecording(state.recordingIndex,true);});
   $('recordingSeek').addEventListener('input',e=>{if(Number.isFinite(recAudio.duration)&&recAudio.duration>0)recAudio.currentTime=Number(e.target.value)/1000*recAudio.duration;});
   recAudio.addEventListener('play',()=>{suspendOtherModes('recording');setText('recordingPlay','Ⅱ');$('recordingPlay').classList.add('is-playing');const item=state.shows.recordings[state.recordingIndex];setDock(item.title,'در حال پخش آرشیو',true,'#episodes');setMediaSession(item.title,'آرشیو آوا و نوا',()=>recAudio.play(),()=>recAudio.pause());});
   recAudio.addEventListener('pause',()=>{setText('recordingPlay','▶');$('recordingPlay').classList.remove('is-playing');if(state.mode==='recording'){const it=state.shows.recordings[state.recordingIndex];if(it)setDock(it.title,'مکث شده',false,'#episodes');}});
   let saveAt=0;
   recAudio.addEventListener('timeupdate',()=>{
-    setText('recordingCurrent',fmtDuration(recAudio.currentTime));if(Number.isFinite(recAudio.duration)&&recAudio.duration>0)$('recordingSeek').value=Math.floor(1000*recAudio.currentTime/recAudio.duration);
+    setText('recordingCurrent',fmtDuration(recAudio.currentTime));if(Number.isFinite(recAudio.duration)&&recAudio.duration>0){$('recordingSeek').disabled=false;$('recordingSeek').value=Math.floor(1000*recAudio.currentTime/recAudio.duration);}
     if(Date.now()-saveAt>5000){saveAt=Date.now();const it=state.shows.recordings[state.recordingIndex];if(it)try{localStorage.setItem('ava-v2-position-'+it.id,String(Math.round(recAudio.currentTime)));}catch{}}
   });
-  recAudio.addEventListener('loadedmetadata',()=>setText('recordingTotal',fmtDuration(recAudio.duration)));
-  recAudio.addEventListener('ended',()=>chooseRecording(state.recordingIndex+1,true));
-  recAudio.addEventListener('error',()=>setText('recordingMessage','بارگذاری ضبط ممکن نشد؛ فایل بعدی را امتحان کنید.'));
+  recAudio.addEventListener('loadedmetadata',()=>{
+    setText('recordingTotal',fmtDuration(recAudio.duration));
+    $('recordingSeek').disabled=!(Number.isFinite(recAudio.duration)&&recAudio.duration>0);
+  });
+  recAudio.addEventListener('durationchange',()=>setText('recordingTotal',fmtDuration(recAudio.duration)));
+  recAudio.addEventListener('playing',()=>{setText('recordingMessage','در حال پخش برنامه');$('recordingRetry').hidden=true;});
+  recAudio.addEventListener('waiting',()=>{if(!recAudio.paused)setText('recordingMessage','در حال دریافت صدا…');});
+  recAudio.addEventListener('ended',()=>{
+    if(state.recordingIndex+1<state.shows.recordings.length)chooseRecording(state.recordingIndex+1,true);
+    else setText('recordingMessage','به پایان آرشیو رسیدی.');
+  });
+  recAudio.addEventListener('error',()=>{
+    setText('recordingMessage','دریافت فایل ممکن نشد؛ اتصال آرشیو را بررسی کن یا دوباره تلاش کن.');
+    $('recordingRetry').hidden=false;
+  });
   window.addEventListener('radio-audius-started',event=>{
     const detail=event.detail||{};
     suspendOtherModes('audius');
@@ -194,7 +266,7 @@
     // Initial selection must not force the dock into recordings mode.
     state.mode='idle';setDock('رادیو آوا و نوا','آماده پخش',false,'#listen');
     pollStats();
-    setInterval(updateClocks,1000);setInterval(updateStatsUI,1000);setInterval(pollStats,12000);
+    setInterval(updateClocks,1000);setInterval(updateStatsUI,1000);setInterval(pollStats,15000);
     setInterval(renderSchedule,60000);
     document.addEventListener('visibilitychange',()=>{if(!document.hidden){updateClocks();renderSchedule();pollStats();}});
     window.addEventListener('online',pollStats);
