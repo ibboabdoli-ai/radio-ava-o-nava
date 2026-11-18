@@ -84,7 +84,7 @@ test('Timezone conversion in November 2026',()=>{
 test('One unified accessible responsive design, no obsolete style layers',()=>{
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
-  assert.match(html,/href="\.\/site\.css\?v=20"/);
+  assert.match(html,/href="\.\/site\.css\?v=21"/);
   assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,1);
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
@@ -123,13 +123,13 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(html,/id="installDialogImage"/);
   assert.match(html,/id="installDialogClose"/);
   assert.equal((html.match(/class="install-preview"/g)||[]).length,8);
-  assert.match(html,/src="\.\/install-guide\.js\?v=4"/);
+  assert.match(html,/src="\.\/install-guide\.js\?v=5"/);
   assert.match(css,/\.install-preview img\{/);
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-21/);
-  assert.match(sw,/install-guide\.js\?v=4/);
+  assert.match(sw,/ava-v2-static-22/);
+  assert.match(sw,/install-guide\.js\?v=5/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
       const svg=get('../assets/'+platform+'-install-'+i+'.svg');
@@ -173,7 +173,7 @@ test('Install slides load only the visible screenshot and preserve all original 
  assert.match(guide,/const slideImage=\(platform,index\)=>/);
  assert.match(guide,/if\(active\)/);
  assert.match(guide,/picture\.src=src/);
- assert.match(guide,/picture\.loading='lazy'/);
+ assert.match(guide,/picture\.loading='eager'/);
  assert.match(guide,/const src=\(platform==='ios'/);
  assert.ok(!html.includes('install-images.js'),'Removed duplicate base64 bundle from HTML');
  assert.ok(!sw.includes('install-images.js'),'Removed duplicate base64 bundle from service-worker cache');
@@ -314,17 +314,31 @@ test('No eager archive media requests or unnecessary polling',()=>{
  assert.match(app,/Math\.min\(180000,45000/);
  assert.match(app,/document\.hidden/);
 });
-test('Song requests do not transmit private data from this web page',()=>{
+test('Telegram request opens directly, with no copy form or data transmission',()=>{
  const interaction=get('interaction.js');
- assert.match(html,/id="songRequestForm"/);
- assert.match(html,/id="songRequestStatus"/);
- assert.match(html,/id="songRequestOutput"/);
- assert.match(interaction,/navigator\.clipboard\.writeText\(message\)/);
- const start=interaction.indexOf("const requestForm=$('songRequestForm')");
- assert.ok(start>0);
- const end=interaction.indexOf("const fullscreen=$('liveFullscreen')",start);
- const handler=interaction.slice(start,end);
- assert.ok(!/fetch\(|sendBeacon\(|XMLHttpRequest/.test(handler));
- assert.ok(!/localStorage|sessionStorage/.test(handler));
- assert.ok(!/password|token/i.test(handler));
+ assert.match(html,/id="requestSongLink"/);
+ assert.match(html,/نوشتن پیام در تلگرام/);
+ assert.ok(!html.includes('id="songRequestForm"'));
+ assert.ok(!html.includes('id="songRequestCopy"'));
+ assert.ok(!interaction.includes("const requestForm=$('songRequestForm')"));
+ const telegram=new URL(shows.links.requestSong);
+ assert.equal(telegram.hostname,'t.me');
+});
+test('Arash live heading, compact dock and archive selection lock',()=>{
+ assert.match(html,/id="listenTitle">پخش زنده رادیو آوا و نوا با آرش/);
+ assert.ok(!html.includes('مجری همیشگی'));
+ assert.match(html,/id="recordingPlay"[^>]*disabled/);
+ assert.match(app,/if\(state\.recordingIndex<0\)\{setText\('recordingMessage'/);
+ assert.match(css,/--radio-mobile-nav-height/);
+ assert.match(css,/\.player-dock\{bottom:var\(--radio-mobile-nav-height\)/);
+});
+test('Approved iOS and Android images and steps show without JS fallback',()=>{
+ for(const platform of ['ios','android']){
+   assert.match(html,new RegExp('src="../assets/'+platform+'-install-1\\.svg"'));
+   assert.match(html,new RegExp('data-install-src="../assets/'+platform+'-install-4\\.svg"'));
+ }
+ assert.equal((html.match(/class="install-step-card" hidden/g)||[]).length,6);
+ assert.match(css,/\.install-slider \.install-step-card\[hidden\]\{display:none!important\}/);
+ assert.match(get('install-guide.js'),/picture\.loading='eager'/);
+ assert.equal((html.match(/class="install-slider-dot(?: active)?"/g)||[]).length,8);
 });
