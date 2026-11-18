@@ -7,30 +7,13 @@
   const close=document.getElementById('installDialogClose');
   if(!dialog||!image||!title||!close)return;
   const allowed=/^\.\.\/assets\/(?:ios|android)-install-[1-4]\.svg$/;
-  const slides=window.radioInstallImages;
-  // Only our eight bundled images are accepted. No third-party image hosts.
+  // Load one real screenshot only after its slide becomes visible.
+  // No multi-megabyte base64 bundle and no duplicated image downloads.
   const slideImage=(platform,index)=>{
-    const data=slides?.[platform]?.[index];
-    return typeof data==='string'&&data.startsWith('data:image/jpeg;base64,')?data:null;
+    if(!['ios','android'].includes(platform)||!Number.isInteger(index)||index<0||index>3)return null;
+    const path='../assets/'+platform+'-install-'+(index+1)+'.svg';
+    return allowed.test(path)?path:null;
   };
-  document.querySelectorAll('[data-install-slider]').forEach(slider=>{
-    const platform=slider.dataset.installSlider;
-    if(!['ios','android'].includes(platform))return;
-    slider.querySelectorAll('.install-step-card').forEach((card,index)=>{
-      const src=slideImage(platform,index);
-      if(!src)return;
-      const picture=card.querySelector('.install-preview img');
-      const button=card.querySelector('.install-preview');
-      if(!picture||!button)return;
-      picture.src=src;
-      picture.removeAttribute('loading');
-      picture.setAttribute('decoding','async');
-      button.dataset.installPlatform=platform;
-      button.dataset.installStep=String(index);
-      button.dataset.installImage='bundled';
-    });
-  });
-
   // One slide at a time for both iPhone and Android. Keep buttons keyboard-
   // accessible; swipes only advance on clearly horizontal movement.
   document.querySelectorAll('[data-install-slider]').forEach(slider=>{
@@ -46,8 +29,16 @@
     const show=index=>{
       current=Math.max(0,Math.min(cards.length-1,index));
       cards.forEach((card,i)=>{
-        card.hidden=i!==current;
-        card.setAttribute('aria-hidden',String(i!==current));
+        const active=i===current;
+        card.hidden=!active;
+        card.setAttribute('aria-hidden',String(!active));
+        if(active){
+          const picture=card.querySelector('.install-preview img');
+          const src=slideImage(platform,i);
+          if(picture&&src&&picture.getAttribute('src')!==src){
+            picture.src=src;picture.loading='lazy';picture.decoding='async';
+          }
+        }
       });
       previous.disabled=current===0;
       next.disabled=current===cards.length-1;
@@ -92,10 +83,9 @@
     button.addEventListener('click',()=>{
       const platform=button.dataset.installPlatform;
       const index=Number(button.dataset.installStep);
-      const bundled=(platform==='ios'||platform==='android')&&Number.isInteger(index)&&index>=0&&index<4
-        ?slideImage(platform,index):null;
-      const src=bundled||(button.dataset.installImage||'');
-      if(!bundled&&!allowed.test(src))return;
+      const src=(platform==='ios'||platform==='android')&&Number.isInteger(index)
+        ?slideImage(platform,index):button.dataset.installImage||'';
+      if(!src||!allowed.test(src))return;
       previousFocus=button;
       title.textContent=button.dataset.installLabel||'راهنمای تصویری نصب';
       image.alt=title.textContent;
