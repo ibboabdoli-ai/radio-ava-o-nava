@@ -865,3 +865,10 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
  .community-card .community-action{font-size:13px;min-height:48px}
  .install-slider .install-preview img{width:auto;height:auto;max-width:100%;max-height:58dvh;object-fit:contain}
 }
+
+/* Override the previous featured CTA size so all four cards share one control design. */
+.community-card a.community-action{min-height:48px;font-size:12px;padding:10px 13px}
+.community-card .social-actions a.community-action{min-height:48px;font-size:12px}
+@media(max-width:700px){
+ .community-card a.community-action{min-height:48px;font-size:13px}
+}
