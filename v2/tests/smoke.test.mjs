@@ -219,7 +219,7 @@ test('Music searches do not destroy an active playback queue',()=>{
  assert.match(html,/audiusSearch/);
 });
 test('Live stat normalization distinguishes current stream and no source',()=>{
- const snippet=app.slice(app.indexOf('  function normalizeStats(s){'),app.indexOf('  let polling=false;'));
+ const snippet=app.slice(app.indexOf('  function normalizeStats(s){'),app.indexOf('  let polling=false,'));
  assert.ok(snippet.startsWith('  function normalizeStats(s){'));
  const convert=value=>JSON.parse(JSON.stringify(value));
  const live=vm.runInNewContext(snippet+'\nnormalizeStats({icestats:{source:{listenurl:"https://live.ibboabdoli.com/stream",listeners:4}}})');
