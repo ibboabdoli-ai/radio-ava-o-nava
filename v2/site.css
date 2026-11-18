@@ -577,3 +577,22 @@ input[type=range]{accent-color:var(--gold)}
  .install-slider .install-step-card{animation:none!important}
  .install-slider-arrow,.install-slider-dot span{transition:none!important}
 }
+
+/* Full-width readable installation slides on phones. */
+@media(max-width:700px){
+ .install-platform-detail{padding:14px 10px}
+ .install-slider{width:100%;margin-top:12px}
+ .install-slider .install-step-card{padding:11px 8px}
+ .install-slider .install-preview{padding:5px;background:#171425}
+ .install-slider .install-preview img{
+   width:100%;max-width:100%;height:auto;max-height:none;
+   aspect-ratio:360/710;object-fit:contain;object-position:center;
+   border-radius:10px
+ }
+ .install-slider .install-step-copy{align-items:flex-start;margin-bottom:10px}
+ .install-slider .install-step-copy strong{font-size:15px;line-height:1.75}
+ .install-slider .install-step-copy p{font-size:13px;line-height:1.75}
+ .install-slider-status{font-size:14px}
+ .install-slider-arrow{width:48px;height:48px}
+ .install-preview-hint{font-size:12px}
+}
