@@ -18,7 +18,7 @@
   const safeHttps=(url,hostnames)=>{try{const u=new URL(url);return u.protocol==='https:'&&(!hostnames||hostnames.some(h=>u.hostname===h||u.hostname.endsWith('.'+h)))?u.href:null;}catch{return null;}};
   function toast(message){const t=$('toast');t.textContent=message;t.hidden=false;clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.hidden=true,5500);}
   function setLink(id,url){const n=$(id),v=safeHttps(url);if(!n)return;if(v)n.href=v;else n.removeAttribute('href');}
-  function setDock(title,subtitle,playState,href){setText('dockTitle',title);setText('dockSubtitle',subtitle);setText('dockPlay',playState?'Ⅱ':'▶');$('dockPlay').classList.toggle('is-playing',!!playState);$('dockPlay').setAttribute('aria-pressed',String(!!playState));$('dockDetail').href=href;$('playerDock').classList.toggle('dock-active',state.mode!=='idle');let action=state.mode==='recording'?'پخش یا مکث برنامه':state.mode==='audius'?'کنترل موسیقی آدیوس':'پخش یا توقف زنده';$('dockPlay').setAttribute('aria-label',action);}
+  function setDock(title,subtitle,playState,href){setText('dockTitle',title);setText('dockSubtitle',subtitle);setText('dockPlay',playState?'Ⅱ':'▶');$('dockPlay').classList.toggle('is-playing',!!playState);$('dockPlay').setAttribute('aria-pressed',String(!!playState));$('dockDetail').href=href;$('playerDock').classList.add('dock-active');let action=state.mode==='recording'?'پخش یا مکث برنامه':state.mode==='audius'?'کنترل موسیقی آدیوس':'پخش یا توقف زنده';$('dockPlay').setAttribute('aria-label',action);}
   const timeFormatters=new Map();
   const fmtTime=(date,tz)=>{
     if(!timeFormatters.has(tz))timeFormatters.set(tz,new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}));
