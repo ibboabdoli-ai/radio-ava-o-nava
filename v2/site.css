@@ -715,3 +715,27 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
   .footer-copyright{border-top:1px solid var(--line-soft);font-size:12px!important}
   .next-show-title{font-size:16px}
 }
+
+/* Radio audit 2026-11: readable interactions without redesigning the theme. */
+.song-request-form{display:flex;flex-direction:column;gap:7px;width:100%;margin:0 0 12px}
+.song-request-form label{display:block;font-size:13px;font-weight:700;color:#e9dbe7;margin-top:4px}
+.song-request-form input,.song-request-output{width:100%;min-width:0;border:1px solid #ad92b66b;background:#12101f;color:var(--ink);border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.75;resize:vertical}
+.song-request-form input::placeholder{color:#afa4bb}
+.song-copy-button{width:100%;min-height:44px;border:1px solid var(--gold);background:#eac18723;color:var(--gold-light);border-radius:11px;font-weight:750;font-size:13px;padding:8px 12px}
+.song-copy-button:hover{background:#eac18735}
+.song-request-status{min-height:1.4em;font-size:12px!important;line-height:1.7!important;margin:1px 0 0!important}
+.song-request-output[hidden]{display:none!important}
+.contest-privacy .inline-link{display:inline;color:var(--gold);text-decoration:underline;text-underline-offset:3px}
+.recording-card .recording-duration{font-size:12px;line-height:1.7}
+.live-pill,.server-hint,.live-stats strong{letter-spacing:0}
+@media(max-width:700px){
+ .song-request-form label{font-size:13px}
+ .song-request-form input{min-height:46px;font-size:16px}
+ .song-copy-button{min-height:48px;font-size:14px}
+ .server-hint{font-size:12px}
+ .audius-track-body small,.audius-track-body p,.audius-context,.audius-note{font-size:12px}
+ .footer-intro>p{font-size:13px}
+ .install-slider .install-step-copy p{font-size:13px}
+ .install-preview-hint{font-size:12px}
+ .install-slider .install-preview img{background:#171425}
+}
