@@ -36,7 +36,7 @@
           const picture=card.querySelector('.install-preview img');
           const src=slideImage(platform,i);
           if(picture&&src&&picture.getAttribute('src')!==src){
-            picture.src=src;picture.loading='lazy';picture.decoding='async';
+            picture.src=src;picture.loading='eager';picture.decoding='async';
           }
         }
       });
@@ -83,8 +83,9 @@
     button.addEventListener('click',()=>{
       const platform=button.dataset.installPlatform;
       const index=Number(button.dataset.installStep);
+      const known=button.dataset.installImage||'';
       const src=(platform==='ios'||platform==='android')&&Number.isInteger(index)
-        ?slideImage(platform,index):button.dataset.installImage||'';
+        ?slideImage(platform,index):known;
       if(!src||!allowed.test(src))return;
       previousFocus=button;
       title.textContent=button.dataset.installLabel||'راهنمای تصویری نصب';
