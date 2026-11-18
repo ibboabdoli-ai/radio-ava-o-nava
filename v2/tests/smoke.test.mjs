@@ -132,7 +132,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(sw,/install-guide\.js\?v=6/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
-      const svg=get('../assets/'+platform+'-install-'+i+'.jpg');
+      const svg=get('../assets/'+platform+'-install-'+i+'.svg');
       assert.match(svg,/<svg /);
       // Illustrations must match the eight user-approved separate slide images.
       const originals={
