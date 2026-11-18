@@ -198,7 +198,7 @@ test('Replay controls, live status and contest registration are safely connected
  assert.match(app,/Unknown is not OFFLINE/);
  assert.match(app,/!recAudio\.paused/);
  assert.match(app,/state\.recordingIndex\+1<state\.shows\.recordings\.length/);
- assert.match(html,/اطلاعات شرکت‌کنندگان فقط برای مدیر مسابقه/);
+ assert.match(html,/نام‌ها و پاسخ‌ها در سایت عمومی نمایش داده نمی‌شوند/);
  assert.ok(!html.includes('docs.google.com/spreadsheets/d/'),'Do not expose private registration sheet on the public site');
  assert.equal(shows.recordings.length,5);
  assert.equal(new Set(shows.recordings.map(recording=>recording.id)).size,5);
