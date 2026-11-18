@@ -26,8 +26,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./site.css?v=24">
+<link rel="stylesheet" href="./studio.css?v=2">
 
-<script defer src="./app.js?v=14"></script><script defer src="./interaction.js?v=7"></script><script defer src="./mobile-premium.js?v=5"></script><script defer src="./audius.js?v=7"></script><script defer src="./install-guide.js?v=7"></script>
+<script defer src="./app.js?v=14"></script><script defer src="./interaction.js?v=7"></script><script defer src="./mobile-premium.js?v=5"></script><script defer src="./audius.js?v=7"></script><script defer src="./install-guide.js?v=7"></script><script defer src="./studio.js?v=1"></script>
 </head>
 <body>
 <a class="skip" href="#main">رفتن به محتوا</a>
@@ -40,6 +41,7 @@
     </a>
     <button class="header-share" id="headerShare" type="button" aria-label="اشتراک‌گذاری لینک رادیو" title="اشتراک‌گذاری رادیو"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 16V3m0 0L7.5 7.5M12 3l4.5 4.5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg></button>
     <button class="menu-button" id="menuButton" type="button" aria-label="نمایش منو" aria-controls="navigation" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <button class="studio-header-search" id="studioHeaderSearch" type="button" aria-label="جست‌وجوی موسیقی"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19V6l12-3v13M9 10l12-3"/><ellipse cx="6" cy="19" rx="3" ry="2"/><ellipse cx="18" cy="16" rx="3" ry="2"/></svg></button>
     <nav class="main-nav" id="navigation" aria-label="منوی اصلی">
       <a href="#top" class="current">خانه</a><a href="#listen">پخش زنده</a>
       <a href="#music">موسیقی</a><a href="#episodes">ضبط‌ها</a>
@@ -48,32 +50,58 @@
     <a class="header-cta" href="#listen"><span class="live-led" aria-hidden="true"></span> شنیدن رادیو</a>
   </div>
 </header>
+<aside class="studio-sidebar" id="studioSidebar" aria-label="دسترسی‌های رادیو">
+<a class="studio-side-brand" href="#home"><img src="../radio-neon-logo.webp" width="66" height="66" alt="لوگوی رادیو آوا و نوا"><strong>رادیو آوا و نوا</strong><small>RADIO AVA O NAVA</small></a>
+<nav class="studio-side-nav" aria-label="منوی دسکتاپ رادیو">
+<a href="#home" class="studio-side-link active"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>خانه</span></a>
+<a href="#listen" class="studio-side-link"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M7 7a7 7 0 0 0 0 10m10-10a7 7 0 0 1 0 10M4 4a11 11 0 0 0 0 16m16-16a11 11 0 0 1 0 16"/></svg><span>پخش زنده</span></a>
+<a href="#episodes" class="studio-side-link"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16m6-12h4m-4 4h4"/></svg><span>آرشیو برنامه‌ها</span></a>
+<a href="#music" class="studio-side-link"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19V6l12-3v13M9 10l12-3"/><ellipse cx="6" cy="19" rx="3" ry="2"/><ellipse cx="18" cy="16" rx="3" ry="2"/></svg><span>موسیقی</span></a>
+<a href="#studioGenres" class="studio-side-link"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 8 8-5 8 5-8 5zM4 13l8 5 8-5M4 18l8 5 8-5"/></svg><span>سبک‌ها</span></a>
+<a href="#community" class="studio-side-link"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M17 6a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 5v1"/></svg><span>همراه ما</span></a>
+<a href="#about" class="studio-side-link"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-9v1"/></svg><span>درباره رادیو</span></a>
+</nav>
+<a class="studio-side-bottom" href="#install"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16m6-12h4m-4 4h4"/></svg> نصب روی گوشی</a>
+</aside>
 <main id="main">
-<section class="mobile-station-intro container" aria-label="معرفی رادیو">
-  <div class="mobile-station-copy">
-    <div class="mobile-station-kicker"><span class="mobile-pulse-dot" aria-hidden="true"></span><span>یک قرار شنیدنی هر شب</span></div>
-    <h2>اینجا جای<br><span>صداهای خوب</span> است.</h2>
-    <p>موسیقی زنده، شعر، آواز و دکلمه</p>
-    <div class="mobile-onair-schedule"><span class="mobile-calendar-mark" aria-hidden="true">◷</span><span>شنبه تا چهارشنبه <b>۲۲:۰۰ ایران</b></span></div>
-  </div>
-  <div class="mobile-station-art" aria-hidden="true"><div class="mobile-art-halo"></div><img src="../radio-neon-logo.webp" width="148" height="148" alt="" fetchpriority="high"><div class="mobile-art-ring ring-one"></div><div class="mobile-art-ring ring-two"></div></div>
-</section>
-<section class="hero container" id="home" aria-labelledby="heroTitle">
-  <div class="hero-copy">
-    <div class="eyebrow"><span class="eyebrow-line"></span> صدایی از دل موسیقی و شعر</div>
-    <h1 id="heroTitle">اینجا <em>آوا و نوا</em> است؛<br>جایی برای شنیدن.</h1>
-    <p class="hero-lead">موسیقی زنده، شعر، آواز و دکلمه؛ دور هم جمع می‌شویم تا لحظه‌های شنیدنی بسازیم.</p>
-    <div class="hero-actions">
-      <a class="btn btn-gold" href="#listen"><span aria-hidden="true">▶</span> گوش دادن به پخش زنده</a>
-      <a class="btn btn-outline" href="#episodes">شنیدن برنامه‌های قبلی <span aria-hidden="true">↗</span></a>
+<section class="hero studio-home container" id="home" aria-labelledby="heroTitle">
+  <div class="studio-toolbar" role="search" aria-label="جست‌وجوی رادیو"><form id="studioSearchForm" class="studio-search-form"><button aria-label="شروع جست‌وجو" type="submit"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19V6l12-3v13M9 10l12-3"/><ellipse cx="6" cy="19" rx="3" ry="2"/><ellipse cx="18" cy="16" rx="3" ry="2"/></svg></button><input id="studioSearch" type="search" placeholder="جست‌وجو در موسیقی، برنامه‌ها و هنرمندان..." aria-label="جست‌وجوی موسیقی و هنرمندان"></form><span class="studio-toolbar-caption">موسیقی، شعر و آواز برای هر لحظه</span></div>
+  <div class="studio-feature">
+    <img class="studio-feature-background" src="./studio-hero.svg" width="1200" height="540" alt="" fetchpriority="high">
+    <div class="studio-feature-copy">
+      <span class="studio-onair"><i aria-hidden="true"></i> پخش زنده رادیو</span>
+      <h1 id="heroTitle">رادیو آوا و نوا</h1>
+      <p>موسیقی زنده، شعر و آواز با آرش</p>
+      <a class="studio-feature-play" href="#listen">گوش دادن به پخش زنده <span aria-hidden="true">▶</span></a>
     </div>
-    <div class="hero-feature"><span class="feature-avatar"><img src="../radio-neon-logo.webp" alt="" width="38" height="38"></span><span><strong>شنبه تا چهارشنبه</strong><small>هر شب ساعت ۲۲:۰۰ به وقت ایران</small></span></div>
+    <a class="studio-feature-mobile-play" href="#listen" aria-label="رفتن به پخش زنده رادیو آوا و نوا با آرش">▶</a>
   </div>
-  <div class="hero-visual" aria-hidden="true">
-    <div class="orbit orbit-outer"></div><div class="orbit orbit-inner"></div><div class="visual-glow"></div>
-    <div class="hero-cover"><img src="../radio-neon-logo.webp" alt="" width="290" height="290"></div>
-    <div class="visual-caption"><span>ON AIR</span><strong>آوا و نوا</strong><small>صدای شما، قصه ما</small></div>
-    <div class="sound-lines"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="studio-shelf" aria-labelledby="studioArchiveTitle">
+    <div class="studio-shelf-heading"><h2 id="studioArchiveTitle">آخرین برنامه‌های ضبط‌شده</h2><a href="#episodes">مشاهده همه <span aria-hidden="true">‹</span></a></div>
+    <div class="studio-rail studio-archive-rail" id="studioArchive"><button type="button" class="studio-cover-card studio-recording-tile" data-studio-recording="0" aria-label="انتخاب و پخش برنامه ۱۷ نوامبر ۲۰۲۶، ساعت ۰۷:۴۹">
+<span class="studio-cover-art"><img src="./studio-violin.svg" loading="lazy" decoding="async" width="240" height="240" alt="تصویر هنری برنامه ۱۷ نوامبر ۲۰۲۶"><span class="studio-cover-meta">۰۷:۴۹</span></span>
+<strong>برنامه ۱۷ نوامبر ۲۰۲۶</strong></button>
+<button type="button" class="studio-cover-card studio-recording-tile" data-studio-recording="1" aria-label="انتخاب و پخش برنامه ۱۶ نوامبر ۲۰۲۶، ساعت ۱۸:۲۴">
+<span class="studio-cover-art"><img src="./studio-sunset.svg" loading="lazy" decoding="async" width="240" height="240" alt="تصویر هنری برنامه ۱۶ نوامبر ۲۰۲۶"><span class="studio-cover-meta">۱۸:۲۴</span></span>
+<strong>برنامه ۱۶ نوامبر ۲۰۲۶</strong></button>
+<button type="button" class="studio-cover-card studio-recording-tile" data-studio-recording="2" aria-label="انتخاب و پخش برنامه ۱۶ نوامبر ۲۰۲۶، ساعت ۰۷:۵۱">
+<span class="studio-cover-art"><img src="./studio-poetry.svg" loading="lazy" decoding="async" width="240" height="240" alt="تصویر هنری برنامه ۱۶ نوامبر ۲۰۲۶"><span class="studio-cover-meta">۰۷:۵۱</span></span>
+<strong>برنامه ۱۶ نوامبر ۲۰۲۶</strong></button>
+<button type="button" class="studio-cover-card studio-recording-tile" data-studio-recording="3" aria-label="انتخاب و پخش برنامه ۱۵ نوامبر ۲۰۲۶، ساعت ۱۸:۵۷">
+<span class="studio-cover-art"><img src="./studio-vinyl.svg" loading="lazy" decoding="async" width="240" height="240" alt="تصویر هنری برنامه ۱۵ نوامبر ۲۰۲۶"><span class="studio-cover-meta">۱۸:۵۷</span></span>
+<strong>برنامه ۱۵ نوامبر ۲۰۲۶</strong></button>
+<button type="button" class="studio-cover-card studio-recording-tile" data-studio-recording="4" aria-label="انتخاب و پخش برنامه ۱۵ نوامبر ۲۰۲۶، ساعت ۰۹:۰۱">
+<span class="studio-cover-art"><img src="./studio-retro.svg" loading="lazy" decoding="async" width="240" height="240" alt="تصویر هنری برنامه ۱۵ نوامبر ۲۰۲۶"><span class="studio-cover-meta">۰۹:۰۱</span></span>
+<strong>برنامه ۱۵ نوامبر ۲۰۲۶</strong></button></div>
+  </div>
+  <div class="studio-shelf studio-genre-shelf" id="studioGenres" aria-labelledby="studioGenresTitle">
+    <div class="studio-shelf-heading"><h2 id="studioGenresTitle">موسیقی‌های منتخب</h2><a href="#music">مشاهده همه <span aria-hidden="true">‹</span></a></div>
+    <div class="studio-rail studio-music-rail"><button class="studio-cover-card studio-genre-tile" type="button" data-studio-genre="سنتی" aria-label="جست‌وجوی موسیقی سنتی در آرشیو موسیقی"><img src="./studio-pomegranate.svg" width="240" height="240" loading="lazy" decoding="async" alt="تصویر هنری سبک موسیقی سنتی"><strong>موسیقی سنتی</strong></button>
+<button class="studio-cover-card studio-genre-tile" type="button" data-studio-genre="پاپ" aria-label="جست‌وجوی پاپ ایرانی در آرشیو موسیقی"><img src="./studio-guitar.svg" width="240" height="240" loading="lazy" decoding="async" alt="تصویر هنری سبک پاپ ایرانی"><strong>پاپ ایرانی</strong></button>
+<button class="studio-cover-card studio-genre-tile" type="button" data-studio-genre="جاز" aria-label="جست‌وجوی جاز در آرشیو موسیقی"><img src="./studio-jazz.svg" width="240" height="240" loading="lazy" decoding="async" alt="تصویر هنری سبک جاز"><strong>جاز</strong></button>
+<button class="studio-cover-card studio-genre-tile" type="button" data-studio-genre="بی کلام" aria-label="جست‌وجوی بی‌کلام در آرشیو موسیقی"><img src="./studio-piano.svg" width="240" height="240" loading="lazy" decoding="async" alt="تصویر هنری سبک بی‌کلام"><strong>بی‌کلام</strong></button>
+<button class="studio-cover-card studio-genre-tile" type="button" data-studio-genre="الکترونیک" aria-label="جست‌وجوی الکترونیک در آرشیو موسیقی"><img src="./studio-headphones.svg" width="240" height="240" loading="lazy" decoding="async" alt="تصویر هنری سبک الکترونیک"><strong>الکترونیک</strong></button>
+<button class="studio-cover-card studio-genre-tile" type="button" data-studio-genre="آواز" aria-label="جست‌وجوی آواز و ترانه در آرشیو موسیقی"><img src="./studio-singer.svg" width="240" height="240" loading="lazy" decoding="async" alt="تصویر هنری سبک آواز و ترانه"><strong>آواز و ترانه</strong></button></div>
   </div>
 </section>
 <section class="container live-section" id="listen" aria-labelledby="listenTitle">
@@ -162,8 +190,21 @@
   <nav class="footer-links" aria-label="پیوندهای پایین صفحه"><a href="#listen">پخش زنده</a><a href="#music">موسیقی</a><a href="#episodes">ضبط‌ها</a><a href="#schedule">برنامه‌ها</a><a href="#community">مسابقه</a><a href="#contact">ارتباط با ما</a><a href="#install">نصب اپ</a><a href="#about">درباره ما</a><a href="./privacy.html">حریم خصوصی</a></nav>
   <p class="footer-copyright">© رادیو آوا و نوا · صدای شما، قصه ما</p>
 </div></footer>
-<nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="دسترسی سریع موبایل"><a class="mobile-tab active" href="#listen" data-mobile-tab="listen" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.3"/><path d="M8.4 8.4a5 5 0 0 0 0 7.2m7.2-7.2a5 5 0 0 1 0 7.2M5.5 5.5a9 9 0 0 0 0 13m13-13a9 9 0 0 1 0 13"/></svg><span>زنده</span></a><a class="mobile-tab" href="#music" data-mobile-tab="music"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 18V6l12-2v12M9 11l12-2"/><ellipse cx="6.5" cy="18.5" rx="2.5" ry="1.8"/><ellipse cx="18.5" cy="16.5" rx="2.5" ry="1.8"/></svg><span>موسیقی</span></a><a class="mobile-tab" href="#episodes" data-mobile-tab="episodes"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="5" height="16" rx="1"/><rect x="10.5" y="4" width="5" height="16" rx="1"/><path d="m16.5 5 3.8-1 3 14-3.8 1z"/></svg><span>آرشیو</span></a><a class="mobile-tab" href="#community" data-mobile-tab="community"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2"/><path d="M17 5a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 5v1"/></svg><span>همراه ما</span></a></nav>
-<div class="player-dock" id="playerDock" role="region" aria-label="پلیر رادیو"><div class="dock-inner container"><img src="../radio-neon-logo.webp" alt="" width="44" height="44"><div class="dock-info"><strong id="dockTitle">رادیو آوا و نوا</strong><span id="dockSubtitle">آماده پخش</span></div><button class="dock-button" id="dockPlay" aria-label="پخش زنده" type="button">▶</button><a class="dock-link" id="dockDetail" href="#listen">مشاهده پلیر ↑</a></div></div>
+<nav class="mobile-bottom-nav studio-mobile-bottom" id="mobileBottomNav" aria-label="دسترسی سریع موبایل">
+<a class="mobile-tab active" href="#home" data-mobile-tab="home" aria-current="page"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>خانه</span></a>
+<a class="mobile-tab" href="#episodes" data-mobile-tab="episodes"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16m6-12h4m-4 4h4"/></svg><span>آرشیو</span></a>
+<a class="mobile-tab" href="#music" data-mobile-tab="music"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19V6l12-3v13M9 10l12-3"/><ellipse cx="6" cy="19" rx="3" ry="2"/><ellipse cx="18" cy="16" rx="3" ry="2"/></svg><span>موسیقی</span></a>
+<a class="mobile-tab" href="#listen" data-mobile-tab="listen"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M7 7a7 7 0 0 0 0 10m10-10a7 7 0 0 1 0 10M4 4a11 11 0 0 0 0 16m16-16a11 11 0 0 1 0 16"/></svg><span>پخش زنده</span></a></nav>
+<div class="player-dock studio-player-dock" id="playerDock" role="region" aria-label="پلیر ثابت رادیو">
+  <div class="dock-inner container">
+    <div class="studio-dock-meta"><img id="studioDockCover" src="../radio-neon-logo.webp" alt="کاور در حال پخش" width="52" height="52"><div class="dock-info"><strong id="dockTitle">رادیو آوا و نوا</strong><span id="dockSubtitle">آماده پخش</span></div></div>
+    <div class="studio-dock-center">
+      <div class="studio-dock-controls"><button type="button" id="studioDockPrev" aria-label="قبلی" disabled>⏮</button><button class="dock-button" id="dockPlay" aria-label="پخش زنده" type="button">▶</button><button type="button" id="studioDockNext" aria-label="بعدی" disabled>⏭</button></div>
+      <div class="studio-dock-timeline" dir="ltr"><span id="studioDockCurrent">00:00</span><input type="range" id="studioDockSeek" min="0" max="1000" value="0" disabled aria-label="جابه‌جایی زمان پخش"><span id="studioDockTotal">--:--</span></div>
+    </div>
+    <div class="studio-dock-tools"><label for="studioDockVolume" aria-label="تنظیم صدا"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M7 7a7 7 0 0 0 0 10m10-10a7 7 0 0 1 0 10M4 4a11 11 0 0 0 0 16m16-16a11 11 0 0 1 0 16"/></svg></label><input type="range" id="studioDockVolume" min="0" max="100" value="80" aria-label="تنظیم صدای پخش"><a class="dock-link" id="dockDetail" href="#listen">نمایش پلیر</a></div>
+  </div>
+</div>
 <audio id="liveAudio" preload="none" playsinline></audio>
 <audio id="recordingAudio" preload="none" playsinline></audio>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>

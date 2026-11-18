@@ -1,6 +1,6 @@
 /* Ava o Nava v2: cache only the static shell; NEVER cache audio or third-party embeds. */
-const CACHE='ava-v2-static-26';
-const SHELL=['./','./index.html','./site.css?v=24','./app.js?v=14','./interaction.js?v=7','./install-guide.js?v=7','./mobile-premium.js?v=5','./audius-catalog.json','./audius.js?v=7','./shows.json','./manifest.webmanifest','../radio-neon-logo.webp','./icon.svg'];
+const CACHE='ava-v2-static-28';
+const SHELL=['./','./index.html','./site.css?v=24','./studio.css?v=2','./studio.js?v=1','./studio-hero.svg','./studio-violin.svg','./studio-sunset.svg','./studio-poetry.svg','./studio-vinyl.svg','./studio-retro.svg','./studio-pomegranate.svg','./studio-guitar.svg','./studio-jazz.svg','./studio-piano.svg','./studio-headphones.svg','./studio-singer.svg','./app.js?v=14','./interaction.js?v=7','./install-guide.js?v=7','./mobile-premium.js?v=5','./audius-catalog.json','./audius.js?v=7','./shows.json','./manifest.webmanifest','../radio-neon-logo.webp','./icon.svg'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>Promise.allSettled(SHELL.map(url=>cache.add(url)))));
   self.skipWaiting();
