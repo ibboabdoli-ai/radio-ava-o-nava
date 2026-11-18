@@ -18,3 +18,18 @@ test('Five publicly accessible archived recordings respond to HEAD',async(t)=>{
     });
   }
 });
+
+test('Byte ranges required for reliable replay seeking on all five archives',async(t)=>{
+ for(const item of manifest.recordings){
+   await t.test(item.id,{timeout:18000},async()=>{
+     const response=await fetch(item.src,{method:'GET',headers:{Range:'bytes=0-1'},signal:AbortSignal.timeout(14000)});
+     try{
+       assert.equal(response.status,206,'Archive must support HTTP 206 partial content to seek: '+item.id);
+       assert.match(response.headers.get('content-range')||'',/^bytes 0-1\/\d+$/i,
+         'Archive missing valid Content-Range for '+item.id);
+     }finally{
+       try{await response.body?.cancel();}catch{}
+     }
+   });
+ }
+});
