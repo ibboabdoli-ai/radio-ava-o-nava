@@ -123,13 +123,13 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(html,/id="installDialogImage"/);
   assert.match(html,/id="installDialogClose"/);
   assert.equal((html.match(/class="install-preview"/g)||[]).length,8);
-  assert.match(html,/src="\.\/install-guide\.js\?v=6"/);
+  assert.match(html,/src="\.\/install-guide\.js\?v=7"/);
   assert.match(css,/\.install-preview img\{/);
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-23/);
-  assert.match(sw,/install-guide\.js\?v=6/);
+  assert.match(sw,/ava-v2-static-24/);
+  assert.match(sw,/install-guide\.js\?v=7/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
       const svg=get('../assets/'+platform+'-install-'+i+'.svg');
@@ -355,7 +355,7 @@ test('Approved iOS and Android images and steps show without JS fallback',()=>{
  }
  assert.equal((html.match(/class="install-step-card" data-step-active="false" hidden/g)||[]).length,6);
  assert.match(css,/\.install-slider \.install-step-card\[hidden\]\{display:none!important\}/);
- assert.match(get('install-guide.js'),/picture\.loading='eager'/);
+ assert.ok(!get('install-guide.js').includes('picture.src=src'),'Use the statically supplied approved JPEGs');
  assert.equal((html.match(/class="install-slider-dot(?: active)?"/g)||[]).length,8);
 });
 
@@ -374,4 +374,29 @@ test('Radio live panel is compact and community card actions are identical',()=>
  assert.match(html,/class="visually-hidden">پخش برنامه ضبط‌شده/);
  assert.match(app,/function renderCompetition\(\)/);
  assert.ok(!app.includes("$('contestRules')"),'No removed contest UI fields referenced at runtime');
+});
+
+
+test('Install step navigation synchronizes the counter, buttons and visible image',()=>{
+ const guide=get('install-guide.js');
+ const begin=guide.indexOf('    const show=index=>{');
+ const end=guide.indexOf("    previous.addEventListener('click'",begin);
+ assert.ok(begin>=0 && end>begin);
+ const run=step=>{
+   const cards=Array.from({length:4},(_,i)=>({hidden:i!==0,dataset:{stepActive:String(i===0)},setAttribute(name,value){this[name]=value;}}));
+   const dots=Array.from({length:4},()=>({classList:{toggle(name,value){this[name]=value;}},setAttribute(name,value){this[name]=value;}}));
+   const previous={disabled:true},next={disabled:false},count={textContent:''};
+   const scope={cards,dots,previous,next,count,persianNumber:n=>String(n)};
+   vm.runInNewContext('let current=0;\n'+guide.slice(begin,end)+'\nshow('+step+');',scope);
+   return {cards,dots,previous,next,count};
+ };
+ for(let step=0;step<4;step++){
+   const state=run(step);
+   assert.equal(state.count.textContent,'مرحله '+(step+1)+' از 4');
+   assert.equal(state.previous.disabled,step===0);
+   assert.equal(state.next.disabled,step===3);
+   assert.deepEqual(state.cards.map(x=>x.hidden),[0,1,2,3].map(i=>i!==step));
+   assert.deepEqual(state.cards.map(x=>x.dataset.stepActive),[0,1,2,3].map(i=>String(i===step)));
+   assert.deepEqual(state.dots.map(x=>x['aria-current']),[0,1,2,3].map(i=>i===step?'step':'false'));
+ }
 });
