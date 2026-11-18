@@ -82,7 +82,7 @@ test('Timezone conversion in November 2026',()=>{
 test('One unified accessible responsive design, no obsolete style layers',()=>{
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
-  assert.match(html,/href="\.\/site\.css\?v=16"/);
+  assert.match(html,/href="\.\/site\.css\?v=17"/);
   assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,1);
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
@@ -121,13 +121,13 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(html,/id="installDialogImage"/);
   assert.match(html,/id="installDialogClose"/);
   assert.equal((html.match(/class="install-preview"/g)||[]).length,8);
-  assert.match(html,/src="\.\/install-guide\.js\?v=2"/);
+  assert.match(html,/src="\.\/install-guide\.js\?v=3"/);
   assert.match(css,/\.install-preview img\{/);
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-17/);
-  assert.match(sw,/install-guide\.js\?v=2/);
+  assert.match(sw,/ava-v2-static-18/);
+  assert.match(sw,/install-guide\.js\?v=3/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
       const svg=get('../assets/'+platform+'-install-'+i+'.svg');
@@ -163,4 +163,24 @@ test('Install slides show exactly one of four steps at once per platform',()=>{
  assert.match(css,/\.install-slider \.install-step-card\[hidden\]/);
  assert.match(css,/\.install-slider-dot\.active span/);
  assert.match(css,/\.install-slider \.install-preview img\{[^}]*object-fit:contain/);
+});
+
+test('Eight individual user-selected images power iPhone and Android slides',()=>{
+ const script=get('install-images.js');
+ new vm.Script(script);
+ const sandbox={window:{}};
+ vm.runInNewContext(script,sandbox);
+ for(const platform of ['ios','android']){
+   assert.equal(sandbox.window.radioInstallImages[platform].length,4);
+   for(const image of sandbox.window.radioInstallImages[platform]){
+     assert.match(image,/^data:image\/jpeg;base64,/);
+     assert.ok(image.length>20000,'full image data is present');
+   }
+ }
+ const guide=get('install-guide.js');
+ assert.match(guide,/slideImage\(platform,index\)/);
+ assert.match(guide,/picture\.src=src/);
+ assert.match(html,/install-images\.js\?v=1/);
+ assert.match(sw,/install-images\.js\?v=1/);
+ assert.match(css,/Real iPhone screenshots/);
 });
