@@ -105,6 +105,23 @@
    try{await navigator.clipboard.writeText(official);tell('لینک رادیو برای اشتراک‌گذاری کپی شد.');}
    catch{window.open('https://t.me/share/url?url='+encodeURIComponent(official),'_blank','noopener,noreferrer');}
  });
+ const requestForm=$('songRequestForm');
+ if(requestForm)requestForm.addEventListener('submit',async event=>{
+   event.preventDefault();
+   const title=$('songRequestTitle')?.value.trim().slice(0,120)||'';
+   const artist=$('songRequestArtist')?.value.trim().slice(0,80)||'';
+   const status=$('songRequestStatus'),fallback=$('songRequestOutput');
+   if(!title){status.textContent='نام آهنگ یا پیام را وارد کن.';return;}
+   const message='درخواست برای رادیو آوا و نوا: '+title+(artist?' | هنرمند: '+artist:'');
+   try{
+     if(!navigator.clipboard?.writeText)throw new Error('Clipboard unsupported');
+     await navigator.clipboard.writeText(message);
+     fallback.hidden=true;status.textContent='متن کپی شد؛ گروه تلگرام را باز کن و پیام را ارسال کن.';
+   }catch{
+     fallback.value=message;fallback.hidden=false;fallback.focus();fallback.select();
+     status.textContent='کپی خودکار ممکن نشد. متن زیر را کپی کن و در گروه تلگرام بفرست.';
+   }
+ });
  const fullscreen=$('liveFullscreen'),panel=$('listen')?.querySelector('.live-panel');
  if(fullscreen&&panel)fullscreen.addEventListener('click',async()=>{
    try{

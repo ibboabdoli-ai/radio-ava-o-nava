@@ -66,7 +66,7 @@
     const left=Math.max(0,Math.ceil((next.at.getTime()-now.getTime())/1000));setText('nextCountdown',[Math.floor(left/3600),Math.floor(left%3600/60),left%60].map(v=>String(v).padStart(2,'0')).join(':'));
   }
   function updateStatsUI(){
-    const stale=Date.now()-state.lastStatsTime>30000,stats=state.lastStats;
+    const stale=Date.now()-state.lastStatsTime>95000,stats=state.lastStats;
     const localPlaying=state.liveWanted&&!liveAudio.paused&&liveAudio.readyState>=2;
     if(!stats||stale||(localPlaying&&!stats.live)){
       setText('serverBadge',localPlaying?'● صدا در حال پخش است':'آمار پخش در دسترس نیست');
@@ -95,9 +95,11 @@
     }
     throw new Error('Unknown stats format');
   }
-  let polling=false;
-  async function pollStats(){
-    if(polling||document.hidden)return;polling=true;
+  let polling=false,lastPollAttempt=0,statsFailures=0;
+  async function pollStats(force=false){
+    const interval=statsFailures?Math.min(180000,45000*Math.pow(2,statsFailures-1)):45000;
+    if(polling||document.hidden||(!force&&Date.now()-lastPollAttempt<interval))return;
+    lastPollAttempt=Date.now();polling=true;
     const primary=safeHttps(state.shows.links.stats,['ibboabdoli.com']);
     const fallback=safeHttps('https://live.ibboabdoli.com/status-json.xsl',['ibboabdoli.com']);
     try{
@@ -112,11 +114,11 @@
           const started=typeof stats.startedAt==='string'?Date.parse(stats.startedAt.replace(/([+-]\d{2})(\d{2})$/,'$1:$2')):NaN;
           state.lastStats={live:stats.live,listeners:stats.listeners};
           state.lastStatsStarted=Number.isFinite(started)&&started<=Date.now()+15000&&started>0?started:null;
-          state.lastStatsTime=Date.now();state.statsError=false;return;
+          state.lastStatsTime=Date.now();state.statsError=false;statsFailures=0;return;
         }catch(error){lastError=error;}finally{clearTimeout(timeout);}
       }
       throw lastError||new Error('No response');
-    }catch{state.statsError=true;/* Unknown is not OFFLINE. */}
+    }catch{state.statsError=true;statsFailures=Math.min(statsFailures+1,4);/* Unknown is not OFFLINE. */}
     finally{polling=false;updateStatsUI();}
   }
   function clearLiveTimers(){clearTimeout(state.liveTimer);clearTimeout(state.liveWatchdog);state.liveTimer=null;state.liveWatchdog=null;}
@@ -184,6 +186,7 @@
   function renderRecordings(){
     const grid=$('recordingGrid');grid.replaceChildren();const tracks=state.shows.recordings||[];
     if(!tracks.length){grid.append(elText('p','در حال حاضر فایل ضبط‌شده‌ای در دسترس نیست.','empty-state'));$('recordingPrev').disabled=true;$('recordingNext').disabled=true;return;}
+    if(state.recordingIndex<0){$('recordingPrev').disabled=true;$('recordingNext').disabled=true;}
     tracks.forEach((track,i)=>{
       const b=host('button');b.type='button';b.className='recording-card'+(state.recordingIndex===i?' active':'');
       const num=elText('span',String(i+1).padStart(2,'0'),'rec-number'),wrapper=host('span');
@@ -317,14 +320,14 @@
     setLink('houseLink',state.shows.program.roomUrl||state.shows.links.clubhouse);
     setLink('contestLink',state.shows.links.contest);setLink('telegramLink',state.shows.links.telegram);setLink('whatsappLink',state.shows.links.whatsapp);setLink('requestSongLink',state.shows.links.requestSong||'https://t.me/+bSKXuElY13I3NWY0');
     setText('liveProgram',state.shows.program.title||'آوا و نوا');setText('liveHost',state.shows.program.subtitle||'موسیقی، شعر و آواز');
-    renderSchedule();updateClocks();renderCompetition();renderRecordings();if(state.shows.recordings.length)chooseRecording(0,false);
-    // Initial selection must not force the dock into recordings mode.
+    renderSchedule();updateClocks();renderCompetition();renderRecordings();
+    // Do not download archived audio metadata until the visitor chooses a recording.
     state.mode='idle';setDock('رادیو آوا و نوا','آماده پخش',false,'#listen');
     pollStats();
     setInterval(updateClocks,1000);setInterval(updateStatsUI,1000);setInterval(pollStats,15000);
     setInterval(renderSchedule,60000);
-    document.addEventListener('visibilitychange',()=>{if(!document.hidden){updateClocks();renderSchedule();pollStats();}});
-    window.addEventListener('online',pollStats);
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden){updateClocks();renderSchedule();pollStats(true);}});
+    window.addEventListener('online',()=>pollStats(true));
     if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});
   }
   init();

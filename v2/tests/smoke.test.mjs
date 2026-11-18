@@ -84,7 +84,7 @@ test('Timezone conversion in November 2026',()=>{
 test('One unified accessible responsive design, no obsolete style layers',()=>{
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
-  assert.match(html,/href="\.\/site\.css\?v=19"/);
+  assert.match(html,/href="\.\/site\.css\?v=20"/);
   assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,1);
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
@@ -123,13 +123,13 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(html,/id="installDialogImage"/);
   assert.match(html,/id="installDialogClose"/);
   assert.equal((html.match(/class="install-preview"/g)||[]).length,8);
-  assert.match(html,/src="\.\/install-guide\.js\?v=3"/);
+  assert.match(html,/src="\.\/install-guide\.js\?v=4"/);
   assert.match(css,/\.install-preview img\{/);
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-20/);
-  assert.match(sw,/install-guide\.js\?v=3/);
+  assert.match(sw,/ava-v2-static-21/);
+  assert.match(sw,/install-guide\.js\?v=4/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
       const svg=get('../assets/'+platform+'-install-'+i+'.svg');
@@ -157,7 +157,7 @@ test('Install slides show exactly one of four steps at once per platform',()=>{
  assert.equal((html.match(/data-slide="[0-3]"/g)||[]).length,8);
  assert.equal((html.match(/class="install-slider-status"/g)||[]).length,2);
  assert.match(guide,/cards\.forEach/);
- assert.match(guide,/card\.hidden=i!==current/);
+ assert.match(guide,/card\.hidden=!active/);
  assert.match(guide,/touchstart/);
  assert.match(guide,/touchend/);
  assert.match(guide,/ArrowLeft/);
@@ -168,23 +168,22 @@ test('Install slides show exactly one of four steps at once per platform',()=>{
  assert.match(css,/\.install-slider \.install-preview img\{[^}]*object-fit:contain/);
 });
 
-test('Eight individual user-selected images power iPhone and Android slides',()=>{
- const script=get('install-images.js');
- new vm.Script(script);
- const sandbox={window:{}};
- vm.runInNewContext(script,sandbox);
+test('Install slides load only the visible screenshot and preserve all original art',()=>{
+ const guide=get('install-guide.js');
+ assert.match(guide,/const slideImage=\(platform,index\)=>/);
+ assert.match(guide,/if\(active\)/);
+ assert.match(guide,/picture\.src=src/);
+ assert.match(guide,/picture\.loading='lazy'/);
+ assert.match(guide,/const src=\(platform==='ios'/);
+ assert.ok(!html.includes('install-images.js'),'Removed duplicate base64 bundle from HTML');
+ assert.ok(!sw.includes('install-images.js'),'Removed duplicate base64 bundle from service-worker cache');
  for(const platform of ['ios','android']){
-   assert.equal(sandbox.window.radioInstallImages[platform].length,4);
-   for(const image of sandbox.window.radioInstallImages[platform]){
-     assert.match(image,/^data:image\/jpeg;base64,/);
-     assert.ok(image.length>20000,'full image data is present');
+   for(let i=1;i<=4;i++){
+     const src='../assets/'+platform+'-install-'+i+'.svg';
+     assert.match(html,new RegExp('data-install-src="'+src.replaceAll('.','\\.')+'"'));
+     assert.ok(!sw.includes(src),'Do not eagerly cache a hidden large installation image');
    }
  }
- const guide=get('install-guide.js');
- assert.match(guide,/slideImage\(platform,index\)/);
- assert.match(guide,/picture\.src=src/);
- assert.match(html,/install-images\.js\?v=1/);
- assert.match(sw,/install-images\.js\?v=1/);
  assert.match(css,/Real iPhone screenshots/);
 });
 
@@ -220,7 +219,7 @@ test('Music searches do not destroy an active playback queue',()=>{
  assert.match(html,/audiusSearch/);
 });
 test('Live stat normalization distinguishes current stream and no source',()=>{
- const snippet=app.slice(app.indexOf('  function normalizeStats(s){'),app.indexOf('  let polling=false;'));
+ const snippet=app.slice(app.indexOf('  function normalizeStats(s){'),app.indexOf('  let polling=false,'));
  assert.ok(snippet.startsWith('  function normalizeStats(s){'));
  const convert=value=>JSON.parse(JSON.stringify(value));
  const live=vm.runInNewContext(snippet+'\nnormalizeStats({icestats:{source:{listenurl:"https://live.ibboabdoli.com/stream",listeners:4}}})');
@@ -291,4 +290,41 @@ test('Program title, day and details are grounded in published schedule metadata
  assert.match(app,/iranDate\.format\(next\.at\)/);
  assert.match(app,/event\.key==='Escape'/);
  assert.match(html,/class="footer-copyright"/);
+});
+
+
+test('Public page has canonical and social card metadata',()=>{
+ assert.match(html,/rel="canonical" href="https:\/\/radio\.ibboabdoli\.com\/v2\/"/);
+ assert.match(html,/property="og:url" content="https:\/\/radio\.ibboabdoli\.com\/v2\/"/);
+ assert.match(html,/name="twitter:card" content="summary_large_image"/);
+ const sitemap=get('../sitemap.xml');
+ assert.match(sitemap,/https:\/\/radio\.ibboabdoli\.com\/v2\//);
+ assert.match(sitemap,/https:\/\/radio\.ibboabdoli\.com\/v2\/privacy\.html/);
+ assert.match(get('../robots.txt'),/Sitemap: https:\/\/radio\.ibboabdoli\.com\/sitemap\.xml/);
+ const privacy=get('privacy.html');
+ assert.match(privacy,/اطلاعات ثبت‌نام و حریم خصوصی/);
+ assert.match(html,/href="\.\/privacy\.html"/);
+ assert.match(get('manage.html'),/noindex,nofollow/);
+});
+test('No eager archive media requests or unnecessary polling',()=>{
+ assert.match(html,/id="recordingAudio" preload="none"/);
+ assert.ok(!app.includes('chooseRecording(0,false);\\n    // Initial selection'),'No eager default archive selection');
+ assert.match(app,/Do not download archived audio metadata/);
+ assert.match(app,/statsFailures/);
+ assert.match(app,/Math\.min\(180000,45000/);
+ assert.match(app,/document\.hidden/);
+});
+test('Song requests do not transmit private data from this web page',()=>{
+ const interaction=get('interaction.js');
+ assert.match(html,/id="songRequestForm"/);
+ assert.match(html,/id="songRequestStatus"/);
+ assert.match(html,/id="songRequestOutput"/);
+ assert.match(interaction,/navigator\.clipboard\.writeText\(message\)/);
+ const start=interaction.indexOf("const requestForm=$('songRequestForm')");
+ assert.ok(start>0);
+ const end=interaction.indexOf("const fullscreen=$('liveFullscreen')",start);
+ const handler=interaction.slice(start,end);
+ assert.ok(!/fetch\(|sendBeacon\(|XMLHttpRequest/.test(handler));
+ assert.ok(!/localStorage|sessionStorage/.test(handler));
+ assert.ok(!/password|token/i.test(handler));
 });
