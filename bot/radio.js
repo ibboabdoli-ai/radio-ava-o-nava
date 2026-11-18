@@ -154,6 +154,7 @@ async function handle(update) {
   if (!message || !message.chat) return;
   const chat = message.chat.id;
   const text = (message.text || "").trim();
+  const command = text.replace(/^\/([A-Za-z0-9_]+)@[A-Za-z0-9_]+/, "/$1");
   const privateChat = message.chat.type === "private";
 
   if (Array.isArray(message.new_chat_members)) {
@@ -164,27 +165,30 @@ async function handle(update) {
     return;
   }
 
-  if (text === "/start" || text === "/help" || text === "راهنما") {
+  if (command === "/whoami" && privateChat)
+    return send(chat, "شناسهٔ تلگرام شما: " + message.from.id);
+
+  if (command === "/start" || command === "/help" || text === "راهنما") {
     const intro = "به رادیو آوا و نوا خوش آمدید 🌷\nموسیقی زنده، شعر و آواز؛ شنبه تا چهارشنبه، ساعت ۲۲ به وقت ایران.\nیکی از گزینه‌ها را انتخاب کنید.";
     return send(chat, intro, privateChat ? keyboard() : undefined);
   }
 
-  if (text === "ورود به روم کلاب‌هاوس" || text === "روم کلاب‌هاوس" || text === "/roomlink") {
+  if (text === "ورود به روم کلاب‌هاوس" || text === "روم کلاب‌هاوس" || command === "/roomlink") {
     let activeRoom = "";
     try { activeRoom = (await program()).value.roomUrl; } catch {}
     return send(chat, "لینک روم کلاب‌هاوس:\n" + roomText(activeRoom));
   }
 
-  if (text === "پخش زنده رادیو" || text === "پخش زنده" || text === "/live")
+  if (text === "پخش زنده رادیو" || text === "پخش زنده" || command === "/live")
     return send(chat, "پخش زنده رادیو آوا و نوا:\n" + SITE);
 
-  if (text === "ساعت برنامه‌ها" || text === "برنامه هفتگی" || text === "/schedule")
+  if (text === "ساعت برنامه‌ها" || text === "برنامه هفتگی" || command === "/schedule")
     return send(chat, "شنبه تا چهارشنبه، ساعت ۲۲ به وقت ایران.");
 
-  if (text === "درباره آوا و نوا" || text === "/about")
+  if (text === "درباره آوا و نوا" || command === "/about")
     return send(chat, "آوا و نوا جمعی دوستانه برای موسیقی زنده، شعر، آواز و دکلمه است.\nشنبه تا چهارشنبه، ساعت ۲۲ به وقت ایران.\nرادیو: " + SITE);
 
-  if (text.startsWith("/song")) {
+  if (command.startsWith("/song")) {
     if (!privateChat) return send(chat, "برای درخواست آهنگ، در گفت‌وگوی خصوصی ربات پیام بدهید.");
     const destination = process.env.TELEGRAM_REQUEST_CHAT_ID;
     if (!destination) return send(chat, "دریافت درخواست آهنگ هنوز راه‌اندازی نشده است.");
@@ -198,8 +202,8 @@ async function handle(update) {
     return send(chat, "برای اطلاعیه‌ها عضو کانال رسمی شوید:\nhttps://t.me/+nFR4GhHTc7Y3ZjNk");
 
   if (isAdmin(message)) {
-    if (text.startsWith("/setroom ")) {
-      const url = validRoom(text.slice(9).trim());
+    if (command.startsWith("/setroom ")) {
+      const url = validRoom(command.slice(9).trim());
       if (!url) return send(chat, "لینک معتبر کلاب‌هاوس را بفرستید. لینک باید با clubhouse.com/i/ یا clubhouse.com/room/ شروع شود.");
       try {
         await updateRoom(url);
@@ -209,7 +213,7 @@ async function handle(update) {
       }
     }
 
-    if (text === "/endroom") {
+    if (command === "/endroom") {
       try {
         await updateRoom("");
         return send(chat, "روم فعال پاک شد؛ دکمهٔ کلاب‌هاوس حالا به لینک هاوس می‌رود.");
@@ -218,8 +222,8 @@ async function handle(update) {
       }
     }
 
-    if (text.startsWith("/announce ")) {
-      const parts = text.slice(10).trim().split(/\s+/);
+    if (command.startsWith("/announce ")) {
+      const parts = command.slice(10).trim().split(/\s+/);
       const targetName = parts.shift();
       const announcement = parts.join(" ").trim();
       const target = targetName === "گروه" ? GROUP_ID : targetName === "کانال" ? CHANNEL_ID : "";
@@ -233,7 +237,7 @@ async function handle(update) {
       }
     }
 
-    if (text === "/status") {
+    if (command === "/status") {
       try {
         const current = await program();
         return send(chat, "وضعیت روم: " + (current.value.roomUrl ? "لینک فعال ثبت شده" : "روم فعال ثبت نشده"));
