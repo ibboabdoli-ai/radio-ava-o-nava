@@ -61,10 +61,13 @@
   }
   function updateStatsUI(){
     const stale=Date.now()-state.lastStatsTime>30000,stats=state.lastStats;
-    if(!stats||stale){
-      setText('serverBadge','آمار پخش در دسترس نیست');$('serverBadge').className='live-pill';
-      setText('stationState','نامشخص');setText('listenerCount','نامشخص');setText('liveDuration','--:--:--');
-      setText('serverHint','آمار سرور دریافت نشد؛ این به معنی خاموش بودن رادیو نیست.');
+    const localPlaying=state.liveWanted&&!liveAudio.paused&&liveAudio.readyState>=2;
+    if(!stats||stale||(localPlaying&&!stats.live)){
+      setText('serverBadge',localPlaying?'● صدا در حال پخش است':'آمار پخش در دسترس نیست');
+      $('serverBadge').className='live-pill '+(localPlaying?'is-on':'');
+      setText('stationState',localPlaying?'پخش در دستگاه':'نامشخص');
+      setText('listenerCount','نامشخص');setText('liveDuration','--:--:--');
+      setText('serverHint',localPlaying?'صدا روی دستگاه شما برقرار است؛ آمار سرور تأیید نشده است.':'آمار سرور دریافت نشد؛ این به معنی خاموش بودن رادیو نیست.');
       return;
     }
     setText('serverBadge',stats.live?'● پخش زنده فعال':'پخش زنده فعال نیست');
