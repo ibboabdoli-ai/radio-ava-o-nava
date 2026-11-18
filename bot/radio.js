@@ -41,16 +41,26 @@ function roomText(value) {
   return value && validRoom(value) ? value : HOUSE;
 }
 
+function escapeHtml(value) {
+  return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 function welcomeText(members, activeRoom) {
   const names = members
     .filter(member => !member.is_bot)
     .map(member => [member.first_name, member.last_name].filter(Boolean).join(" ").trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .map(escapeHtml);
   if (!names.length) return "";
-  return "به گروه رادیو آوا و نوا خوش آمدید، " + names.join("، ") + " 🌷\n" +
-    "موسیقی زنده، شعر و آواز؛ شنبه تا چهارشنبه ساعت ۲۲ به وقت ایران.\n" +
-    "رادیو: " + SITE + "\n" +
-    "روم کلاب‌هاوس: " + roomText(activeRoom);
+  const room = roomText(activeRoom);
+  const roomLabel = activeRoom && validRoom(activeRoom)
+    ? "ورود به روم فعال کلاب‌هاوس"
+    : "صفحه آوا و نوا در کلاب‌هاوس";
+  return "🌷 <b>به آوا و نوا خوش آمدید، " + names.join("، ") + "!</b>\n\n" +
+    "🎶 موسیقی زنده، شعر و آواز\n" +
+    "🗓 شنبه تا چهارشنبه | ساعت ۲۲ به وقت ایران\n\n" +
+    "📻 <a href=\"" + SITE + "\">شنیدن رادیو</a>\n" +
+    "🎙 <a href=\"" + escapeHtml(room) + "\">" + roomLabel + "</a>";
 }
 
 function faqReply(text) {
@@ -80,11 +90,12 @@ async function telegram(method, data) {
   return result.result;
 }
 
-function send(chat_id, text, reply_markup) {
+function send(chat_id, text, reply_markup, parse_mode) {
   return telegram("sendMessage", {
     chat_id,
     text,
     reply_markup,
+    parse_mode,
     link_preview_options: { is_disabled: true }
   });
 }
@@ -161,7 +172,7 @@ async function handle(update) {
     let activeRoom = "";
     try { activeRoom = (await program()).value.roomUrl; } catch {}
     const greeting = welcomeText(message.new_chat_members, activeRoom);
-    if (greeting) await send(chat, greeting);
+    if (greeting) await send(chat, greeting, undefined, "HTML");
     return;
   }
 
