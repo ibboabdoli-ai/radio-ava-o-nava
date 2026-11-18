@@ -667,3 +667,51 @@ input[type=range]{accent-color:var(--gold)}
   .install-slider .install-preview img{width:100%;max-height:65dvh;object-fit:contain}
   body:has(.player-dock.dock-active){padding-bottom:calc(160px + env(safe-area-inset-bottom))}
 }
+
+/* Radio v2 follow-up: readable artist discovery, contest facts, footer and focus. */
+.next-show-title{display:block;color:var(--gold-light);font-size:17px;font-weight:800;line-height:1.65;margin:8px 0 2px}
+.next-show-details{display:block;color:#d8cbdc;font-size:12px;line-height:1.8;margin:0 0 10px}
+.audius-group-title{font-size:12px;font-weight:750;color:#e0d3e9;margin:3px 0 8px}
+.audius-artist-grid .audius-track-photo{aspect-ratio:1.4;object-fit:cover}
+.audius-artist-grid .audius-track-body h3{min-height:0}
+.audius-artist-grid .audius-choose{width:100%;margin-top:auto;min-height:44px}
+.audius-artist-grid .audius-track-body{gap:6px}
+.recording-card .recording-duration{display:block;color:#d5bc9a;font-size:11px;margin-top:3px}
+.recording-card.active .recording-duration{color:var(--gold-light)}
+.contest-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%;margin:0 0 13px}
+.contest-facts>div{display:flex;flex-direction:column;gap:3px;background:#ffffff06;border:1px solid var(--line);border-radius:11px;padding:9px 10px;min-width:0}
+.contest-facts span{font-size:11px;color:#d4c7db}
+.contest-facts strong{font-size:12px;color:var(--gold-light);font-weight:700;line-height:1.7;overflow-wrap:anywhere}
+.contest-info{width:100%;margin-bottom:14px;border:1px solid #bda2c35c;border-radius:12px;padding:9px 12px;background:#ffffff06}
+.contest-info summary{display:list-item;list-style:disclosure-closed inside;color:var(--gold);font-size:13px;cursor:pointer;font-weight:750}
+.contest-info[open] summary{list-style:disclosure-open inside;padding-bottom:7px;border-bottom:1px solid var(--line-soft)}
+.contest-info h4{margin:12px 0 2px;font-size:12px;color:#e9dce8}
+.contest-info ul{margin:4px 0 7px;padding-inline-start:19px}
+.contest-info li{font-size:12px;color:#e2d5e6;line-height:1.9}
+.footer-content{display:grid;grid-template-columns:minmax(190px,.85fr) minmax(0,1.6fr);column-gap:32px;row-gap:20px;align-items:start}
+.footer-intro{min-width:0;max-width:360px}
+.footer-intro>p{font-size:12px;line-height:2;color:#d1c5d7;margin-top:10px}
+.footer-links{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:16px;row-gap:13px;align-content:start}
+.footer-links a{min-height:33px;font-size:12px;line-height:1.8}
+.footer-copyright{grid-column:1/-1;border-top:1px solid var(--line-soft);width:100%;padding-top:13px;font-size:12px!important;color:#c2b5c9!important}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+@media(min-width:701px) and (max-width:1130px){
+  .main-nav{gap:11px}.main-nav a{font-size:11px}
+  .footer-links{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:700px){
+  .audius-group-title{font-size:13px}
+  .audius-content-tabs{gap:4px;padding:4px}
+  .audius-content-tabs button{font-size:12px;line-height:1.4;padding:7px 5px;white-space:normal}
+  .audius-artist-grid .audius-track-photo{aspect-ratio:1.15}
+  .recording-card strong{font-size:13px}
+  .recording-card small,.recording-card .recording-duration{font-size:12px}
+  .contest-facts{grid-template-columns:1fr 1fr}
+  .contest-info summary{font-size:13px}
+  .footer-content{display:flex;flex-direction:column;align-items:stretch;gap:19px}
+  .footer-intro{max-width:none}
+  .footer-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 18px}
+  .footer-links a{font-size:14px;min-height:44px;align-items:center}
+  .footer-copyright{border-top:1px solid var(--line-soft);font-size:12px!important}
+  .next-show-title{font-size:16px}
+}
