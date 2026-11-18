@@ -596,3 +596,27 @@ input[type=range]{accent-color:var(--gold)}
  .install-slider-arrow{width:48px;height:48px}
  .install-preview-hint{font-size:12px}
 }
+
+/* Real iPhone screenshots + separately illustrated Android slides, one image per step. */
+.install-slider .install-preview img{
+  width:min(100%,520px);
+  height:auto;
+  max-height:68dvh;
+  aspect-ratio:auto;
+  object-fit:contain;
+  object-position:center;
+  background:#0e0b18;
+}
+.install-slider .install-preview{background:#0e0b18}
+.install-slider .install-step-card{min-height:0}
+@media(max-width:700px){
+ .install-slider .install-preview img{
+   width:100%;
+   height:auto;
+   max-height:67dvh;
+   aspect-ratio:auto;
+   object-fit:contain;
+ }
+ .install-slider .install-step-card{padding:8px}
+ .install-slider .install-preview{padding:4px}
+}
