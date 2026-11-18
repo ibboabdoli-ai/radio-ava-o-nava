@@ -84,7 +84,7 @@ test('Timezone conversion in November 2026',()=>{
 test('One unified accessible responsive design, no obsolete style layers',()=>{
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
-  assert.match(html,/href="\.\/site\.css\?v=23"/);
+  assert.match(html,/href="\.\/site\.css\?v=24"/);
   assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,1);
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
@@ -128,7 +128,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-25/);
+  assert.match(sw,/ava-v2-static-26/);
   assert.match(sw,/install-guide\.js\?v=7/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -409,4 +409,25 @@ test('Archive play and pause icons remain visible with explicit solid borders',(
  assert.match(play[1],/border-bottom:8px solid transparent/);
  assert.match(css,/\.recording-player \.rec-play\.is-playing::before\{[^}]*background:linear-gradient/);
  assert.match(html,/class="rec-play" disabled/);
+});
+
+test('Both tutorial platform cards are siblings inside the desktop grid',()=>{
+ const from=html.indexOf('<div class="install-detail-grid">');
+ const to=html.indexOf('<p class="install-scroll-help">',from);
+ assert.ok(from>0 && to>from,'Guide content must have its own grid');
+ const block=html.slice(from,to);
+ const tags=block.match(/<\/?div\b[^>]*>|<p class="install-tip">/g)||[];
+ const direct=[],tips=[];
+ let depth=0;
+ for(const tag of tags){
+   if(tag.startsWith('</div')){depth--;assert.ok(depth>=0,'No stray closing div');}
+   else if(tag.startsWith('<p ')){tips.push(depth);}
+   else {
+     if(depth===1)direct.push(tag.match(/class="([^"]+)"/)?.[1]||'');
+     depth++;
+   }
+ }
+ assert.equal(depth,0,'Guide grid must close before the bottom notes');
+ assert.deepEqual(direct,['install-slider','install-slider'],'iOS and Android cards must be grid siblings');
+ assert.deepEqual(tips,[2,2],'Platform notes must be inside their respective cards');
 });
