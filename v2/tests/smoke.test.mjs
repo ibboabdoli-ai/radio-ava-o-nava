@@ -132,11 +132,12 @@ test('iOS and Android install guide is compact and accessible',()=>{
     for(let i=1;i<=4;i++){
       const svg=get('../assets/'+platform+'-install-'+i+'.svg');
       assert.match(svg,/<svg /);
-      // Original artwork must remain byte-for-byte identical to the main version.
+      // Illustrations must match the eight user-approved separate slide images.
       const originals={
-        ios:['b1fd3f9265a92bcc223635a3cb846146726b10af','d6078cf6c90b18cc024dfbf68131f1da19c3c430','283ff35c481a117f1ad1574acf01d9bf07710e35','0886b95e6ae61bb6496b9ee2661d1d3c606fd885'],
-        android:['1f71a21ed18956d6f10af11b714a1763c69c7da3','08ffb4496b01f2d7a5cc1c0fc6f7f29cfda428e5','3b82be6dcd9db4548b071f6cd4f246e2fe777f5b','619956e6ad5ce44a34df6e26b64cf4ed664d3476']
+        ios:['1f31e4fe2c9997a09a254b60b2c0694b22479507','f877f839b5649f0ac522602e1b184cceaa241b08','d6ec8273797f5b439ccfcc36a04ddf12be2a5af3','409f764fc7a7c6145b0dc1a6bd4e3b7dba1a9394'],
+        android:['99a2a173091d0d7d3ca6600e9f60c3c066904be9','ccf75b45fd080938f44896737d52121c66542d46','37fb5fe31f493428b3c8132a91242d7a6f1184c4','07c3a7c430c1164950c3f01d7f45ec5d2e662540']
       };
+      assert.match(svg,/data:image\/jpeg;base64,/);
       const blobHash=createHash('sha1').update('blob '+Buffer.byteLength(svg)+'\0'+svg).digest('hex');
       assert.equal(blobHash,originals[platform][i-1]);
       assert.ok(html.includes('../assets/'+platform+'-install-'+i+'.svg'));
