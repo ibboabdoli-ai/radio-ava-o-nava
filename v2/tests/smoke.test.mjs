@@ -129,7 +129,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-27/);
+  assert.match(sw,/ava-v2-static-28/);
   assert.match(sw,/install-guide\.js\?v=7/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -467,6 +467,7 @@ test('Approved card artwork exists and no shelf has blank image placeholders',()
  assert.equal((html.match(/data-studio-recording="[0-4]"/g)||[]).length,5);
  assert.equal((html.match(/data-studio-genre="/g)||[]).length,6);
  assert.equal((html.match(/class="studio-cover-card studio-recording-tile"/g)||[]).length,5);
+ assert.equal((html.match(/class="studio-cover-art"/g)||[]).length,5);
  assert.equal((html.match(/class="studio-cover-card studio-genre-tile"/g)||[]).length,6);
 });
 test('Desktop tablet and mobile reproduce the approved responsive navigation',()=>{
@@ -478,8 +479,8 @@ test('Desktop tablet and mobile reproduce the approved responsive navigation',()
   assert.ok(design.includes(rule),'Expected responsive design rule: '+rule);
  assert.equal((html.match(/data-mobile-tab="/g)||[]).length,4);
  for(const id of ['home','episodes','music','listen'])assert.ok(html.includes('data-mobile-tab="'+id+'"'));
- assert.ok(sw.includes('ava-v2-static-27'));
- assert.ok(sw.includes('studio.css?v=1'));
+ assert.ok(sw.includes('ava-v2-static-28'));
+ assert.ok(sw.includes('studio.css?v=2'));
  assert.ok(sw.includes('studio.js?v=1'));
  assert.ok(!sw.includes('archive.ibboabdoli.com'),'No recorded audio pre-cache');
 });
