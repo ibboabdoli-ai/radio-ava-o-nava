@@ -620,3 +620,50 @@ input[type=range]{accent-color:var(--gold)}
  .install-slider .install-step-card{padding:8px}
  .install-slider .install-preview{padding:4px}
 }
+
+/* v2 accessibility and usability pass — preserves the established radio palette. */
+.server-hint{margin:-2px 0 15px;font-size:12px;color:var(--muted);line-height:1.7}
+.live-pill:not(.is-on):not(.is-off){border-color:#b4a0b25c;background:#ffffff0a;color:#e7d8e9}
+#nextShowTime{font-size:12px;line-height:1.8;color:var(--muted);max-width:240px}
+.recording-retry{margin:0 auto 12px;padding:8px 17px;border:1px solid var(--gold);border-radius:11px;background:#e8c28d21;color:var(--gold);font-size:12px;font-weight:750}
+.recording-retry[hidden]{display:none!important}
+.rec-controls button:disabled{opacity:.3;cursor:not-allowed}
+.recording-card[aria-pressed="true"]{box-shadow:0 0 0 1px #e9c18d88}
+.recording-player .help-text{min-height:1.9em;font-size:12px;line-height:1.8}
+.recording-player .seek-row input:disabled{opacity:.4;cursor:not-allowed}
+.audius-grid[aria-busy="true"]{opacity:.72}
+.audius-search-box input:focus-visible,.audius-filter:focus-visible,.audius-content-tabs button:focus-visible,
+.recording-retry:focus-visible,.recording-card:focus-visible,.install-slider-arrow:focus-visible,.install-slider-dot:focus-visible{
+  outline:3px solid var(--focus);outline-offset:3px
+}
+.contest-privacy{margin-top:10px!important;color:var(--muted);font-size:11px!important;line-height:1.7}
+.install-detail-grid{align-items:start}
+.install-slider{min-width:0;margin-top:0;padding:15px;border:1px solid var(--line);border-radius:18px;background:#1c1928}
+.install-platform-title{font-size:17px;margin:0 0 14px;color:var(--gold);display:flex;justify-content:space-between;gap:12px;align-items:center}
+.install-platform-title span{font-size:11px;font-weight:500;color:var(--muted);direction:ltr}
+.install-slider .install-preview img{max-height:440px;width:min(100%,295px);height:auto;object-fit:contain}
+.install-slider .install-step-copy strong{font-size:14px}
+.install-slider .install-step-copy p{font-size:12px}
+@media(min-width:701px){
+  .hero{min-height:355px;padding-top:22px;padding-bottom:22px}
+  .hero h1{font-size:clamp(32px,3.65vw,49px);line-height:1.42}
+  .hero-visual{height:302px;width:min(100%,370px)}
+  .hero-cover{height:210px;width:210px}
+  .hero-actions{margin:18px 0 15px}
+  .hero-feature{margin-top:4px}
+}
+@media(min-width:701px) and (max-width:1100px){
+  .audius-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .install-detail-grid{gap:12px}
+}
+@media(max-width:700px){
+  .server-hint{font-size:11px;margin-bottom:11px}
+  #nextShowTime{max-width:none;font-size:11px}
+  .recording-player .help-text{font-size:12px}
+  .install-detail-grid{grid-template-columns:1fr;gap:14px}
+  .install-slider{padding:11px;margin:0;border-radius:16px}
+  .install-platform-title{font-size:16px;margin-bottom:12px}
+  .install-platform-title span{font-size:10px}
+  .install-slider .install-preview img{width:100%;max-height:65dvh;object-fit:contain}
+  body:has(.player-dock.dock-active){padding-bottom:calc(160px + env(safe-area-inset-bottom))}
+}
