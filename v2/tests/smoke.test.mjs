@@ -84,7 +84,7 @@ test('Timezone conversion in November 2026',()=>{
 test('One unified accessible responsive design, no obsolete style layers',()=>{
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
-  assert.match(html,/href="\.\/site\.css\?v=22"/);
+  assert.match(html,/href="\.\/site\.css\?v=23"/);
   assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,1);
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
@@ -128,7 +128,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-24/);
+  assert.match(sw,/ava-v2-static-25/);
   assert.match(sw,/install-guide\.js\?v=7/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -399,4 +399,14 @@ test('Install step navigation synchronizes the counter, buttons and visible imag
    assert.deepEqual(state.cards.map(x=>x.dataset.stepActive),[0,1,2,3].map(i=>String(i===step)));
    assert.deepEqual(state.dots.map(x=>x['aria-current']),[0,1,2,3].map(i=>i===step?'step':'false'));
  }
+});
+
+test('Archive play and pause icons remain visible with explicit solid borders',()=>{
+ const play=css.match(/\.recording-player \.rec-play::before\{([^}]+)\}/);
+ assert.ok(play,'Recording play icon selector must exist');
+ assert.match(play[1],/border-left:13px solid #f1ca95/,'Play arrow must have a solid border, not default none');
+ assert.match(play[1],/border-top:8px solid transparent/);
+ assert.match(play[1],/border-bottom:8px solid transparent/);
+ assert.match(css,/\.recording-player \.rec-play\.is-playing::before\{[^}]*background:linear-gradient/);
+ assert.match(html,/class="rec-play" disabled/);
 });
