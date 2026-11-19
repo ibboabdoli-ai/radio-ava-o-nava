@@ -25,11 +25,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./site.css?v=24">
+<link rel="stylesheet" href="./site.css?v=25">
 <link rel="stylesheet" href="./studio.css?v=4">
 <link rel="stylesheet" href="./expanded-player.css?v=2">
 
-<script defer src="./app.js?v=15"></script><script defer src="./interaction.js?v=7"></script><script defer src="./mobile-premium.js?v=5"></script><script defer src="./audius.js?v=7"></script><script defer src="./install-guide.js?v=7"></script><script defer src="./studio.js?v=3"></script><script defer src="./expanded-player.js?v=2"></script>
+<script defer src="./app.js?v=15"></script><script defer src="./interaction.js?v=7"></script><script defer src="./mobile-premium.js?v=5"></script><script defer src="./audius.js?v=8"></script><script defer src="./install-guide.js?v=7"></script><script defer src="./studio.js?v=3"></script><script defer src="./expanded-player.js?v=3"></script>
 </head>
 <body>
 <a class="skip" href="#main">رفتن به محتوا</a>
@@ -164,7 +164,7 @@
    </div>
    <div class="audius-content-tabs" role="group" aria-label="نوع محتوا"><button class="active" type="button" id="audiusTracksTab" aria-pressed="true">آهنگ‌ها</button><button type="button" id="audiusArtistsTab" aria-pressed="false">هنرمندان</button><button type="button" id="audiusAlbumsTab" aria-pressed="false">آلبوم‌ها</button></div>
  </div>
- <div class="audius-header-actions"><div class="audius-tags"><span>آدیوس</span><span>پخش اختصاصی</span></div><a href="https://audius.co/" target="_blank" rel="noopener noreferrer" class="audius-provider-link">منبع: Audius ↗</a></div>
+ <div class="audius-header-actions"><div class="audius-tags"><span>آدیوس</span><span>پخش اختصاصی</span></div><span class="audius-provider-name" aria-label="منبع پخش موسیقی">منبع پخش: Audius</span></div>
  <p id="audiusContext" class="audius-context" aria-live="polite">منتخب موسیقی ایرانی آوا و نوا</p>
  <div id="audiusGrid" class="audius-grid" aria-label="آرشیو موسیقی فارسی"></div>
  <div id="audiusAlbumGrid" class="audius-grid" aria-label="آلبوم‌های فارسی" hidden></div>
@@ -173,7 +173,7 @@
  <button type="button" id="audiusLoadMore" class="audius-load-more" hidden>نمایش نتایج بیشتر</button>
  <div class="audius-player" id="audiusPlayer" hidden aria-label="موزیک پلیر آوا و نوا">
    <div class="audius-playing-header"><img id="audiusCover" alt="کاور قطعه" src="../radio-neon-logo.webp" width="120" height="120" loading="lazy">
-     <div class="audius-playing-text"><p class="kicker">AVA O NAVA · NOW PLAYING</p><h3 id="audiusTitleNow">آماده شنیدن</h3><p id="audiusArtistNow">موسیقی ایرانی</p><a id="audiusSourceLink" href="https://audius.co/" target="_blank" rel="noopener noreferrer">منبع رسمی قطعه ↗</a></div>
+     <div class="audius-playing-text"><p class="kicker">AVA O NAVA · NOW PLAYING</p><h3 id="audiusTitleNow">آماده شنیدن</h3><p id="audiusArtistNow">موسیقی ایرانی</p><span class="audius-source-attribution">موسیقی از Audius پخش می‌شود</span></div>
    </div>
    <div class="audius-seek-row" dir="ltr"><time id="audiusElapsed">0:00</time><input id="audiusSeek" type="range" min="0" max="1000" value="0" disabled aria-label="جابه‌جایی در قطعه"><time id="audiusTotal">--:--</time></div>
    <div class="audius-controls"><button type="button" id="audiusPrevious" class="audius-skip" aria-label="آهنگ قبلی">❮❮</button><button type="button" id="audiusToggle" class="audius-primary" aria-label="پخش موسیقی">▶</button><button type="button" id="audiusNext" class="audius-skip" aria-label="آهنگ بعدی">❯❯</button><label class="audius-volume">صدا <input type="range" id="audiusVolume" min="0" max="100" value="80" aria-label="میزان صدا"></label></div>
