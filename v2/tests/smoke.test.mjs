@@ -474,7 +474,7 @@ test('Ten gallery covers match the exact user-approved photographic art',()=>{
    assert.ok(binary.length>10000,'Full cover present: '+name);
    assert.equal(binary.subarray(0,4).toString('ascii'),'RIFF');
    assert.equal(binary.subarray(8,12).toString('ascii'),'WEBP');
-   const hash=createHash('sha1').update('blob '+binary.length+'\\0').update(binary).digest('hex');
+   const hash=createHash('sha1').update(Buffer.concat([Buffer.from('blob '+binary.length),Buffer.from([0]),binary])).digest('hex');
    assert.equal(hash,sha,'Pixel-authenticated approved crop: '+name);
    assert.ok(html.includes('src="./'+path+'"'),name);
    assert.ok(sw.includes('./'+path),'PWA keeps correct artwork: '+name);
