@@ -1,6 +1,6 @@
 // Cloudflare Worker + D1. No player/stream changes. Secrets are NEVER exposed to visitors.
 const json=(data,status=200,headers={})=>new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store',...headers}});
-const input=(value,max)=>typeof value==='string'?value.trim().replace(/[\\u0000-\\u001F\\u007F]/g,'').slice(0,max):'';
+const input=(value,max)=>typeof value==='string'?Array.from(value.trim()).filter(ch=>ch.charCodeAt(0)>=32&&ch.charCodeAt(0)!==127).join('').slice(0,max):'';
 const statuses=new Set(['pending','approved','rejected','played']);
 function cors(req,env){
  const origin=req.headers.get('Origin');
@@ -53,7 +53,7 @@ export default {
    const rows=await env.DB.prepare('SELECT id,title,artist,requested_by,status,created_at FROM song_requests WHERE status=? ORDER BY created_at ASC LIMIT 100').bind(status).all();
    return json({requests:rows.results},200,headers);
   }
-  const match=url.pathname.match(/^\\/api\\/admin\\/requests\\/([0-9a-f-]{36})$/i);
+  const match=url.pathname.match(new RegExp('^/api/admin/requests/([0-9a-f-]{36})$','i'));
   if(match&&req.method==='PATCH'){
    if(!isAdmin(req,env))return json({error:'unauthorized'},401,headers);
    let body;try{body=await req.json();}catch{return json({error:'invalid_json'},400,headers);}
