@@ -85,7 +85,7 @@ test('One unified accessible responsive design, no obsolete style layers',()=>{
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
   assert.match(html,/href="\.\/site\.css\?v=24"/);
-  assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,2);
+  assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,3);
   assert.ok(html.includes('href="./studio.css?v=4"'));
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
@@ -557,8 +557,8 @@ test('Approved full-screen music and live player uses existing audio sources wit
  assert.match(js,/document\.body\.classList\.remove\('expanded-player-open'\)/);
  assert.match(js,/lastFocused\?\.isConnected/);
  assert.match(js,/\$\('livePlay'\)/);
- assert.match(js,/\$\('recordingPlay'\)/);
- assert.match(js,/\$\('audiusToggle'\)/);
+ assert.ok(js.includes("mode==='recording'?'recordingPlay'"));
+ assert.ok(js.includes("mode==='recording'?'recordingPlay':'audiusToggle'"));
  assert.match(js,/\$\('recordingShuffle'\)/);
  assert.match(js,/\$\('recordingRepeat'\)/);
  assert.match(styles,/\.expanded-player-dialog\[data-expanded-mode="live"\] #expandedPrev/);
