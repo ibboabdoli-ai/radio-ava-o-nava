@@ -445,7 +445,7 @@ test('Approved responsive studio updates the original website without removing s
  for(const id of requiredIDs)assert.ok(html.includes('id="'+id+'"'),id);
  for(const item of ['class="hero studio-home container" id="home"','id="heroTitle">رادیو آوا و نوا',
   'موسیقی زنده، شعر و آواز با آرش','id="listenTitle">پخش زنده رادیو آوا و نوا با آرش',
-  'class="studio-hero-logo" src="../radio-neon-logo.webp"','src="./studio.js?v=3"'])
+  'class="studio-feature-logo" src="../radio-neon-logo.webp"','src="./studio.js?v=3"'])
   assert.ok(html.includes(item),item);
  for(const id of ['listen','schedule','music','episodes','community','install','about'])
   assert.ok(html.includes('id="'+id+'"'),'Preserved original section '+id);
