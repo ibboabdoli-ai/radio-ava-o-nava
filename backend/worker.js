@@ -62,6 +62,47 @@ export default {
    if(!result.meta.changes)return json({error:'not_found'},404,headers);
    return json({ok:true,status:body.status},200,headers);
   }
+  // Trusted observation API. An observation is NOT proof of Clubhouse attendance;
+  // connect only after a compliant, validated room-presence source is available.
+  if(url.pathname==='/api/admin/attendance'&&req.method==='POST'){
+   if(!isAdmin(req,env))return json({error:'unauthorized'},401,headers);
+   if(!req.headers.get('content-type')?.toLowerCase().startsWith('application/json'))return json({error:'json_required'},415,headers);
+   if(Number(req.headers.get('content-length')||0)>4096)return json({error:'too_large'},413,headers);
+   let body;try{body=await req.json();}catch{return json({error:'invalid_json'},400,headers);}
+   const userId=input(body?.clubhouseUserId,100);
+   const displayName=input(body?.displayName,80);
+   const roomId=input(body?.roomId,120);
+   const state=body?.state;
+   if(!/^[A-Za-z0-9_:-]{2,100}$/.test(userId)||!displayName||!roomId||!['seen','left'].includes(state))
+    return json({error:'invalid_observation'},400,headers);
+   const now=Date.now(),active=state==='seen'?1:0;
+   // Each 1-point minute is earned from observed seconds, not from client-supplied timestamps.
+   // Credit only successive same-room observations at most 75 seconds apart.
+   await env.DB.prepare(`
+    INSERT INTO listener_scores
+      (clubhouse_user_id,display_name,total_seconds,first_seen_ms,last_seen_ms,last_room_id,active)
+    VALUES (?,?,0,?,?,?,?)
+    ON CONFLICT(clubhouse_user_id) DO UPDATE SET
+      total_seconds=listener_scores.total_seconds+
+        CASE WHEN listener_scores.active=1 AND excluded.active=1
+          AND listener_scores.last_room_id=excluded.last_room_id
+          AND excluded.last_seen_ms>listener_scores.last_seen_ms
+          AND excluded.last_seen_ms-listener_scores.last_seen_ms<=75000
+        THEN CAST((excluded.last_seen_ms-listener_scores.last_seen_ms)/1000 AS INTEGER)
+        ELSE 0 END,
+      display_name=excluded.display_name,
+      last_seen_ms=excluded.last_seen_ms,
+      last_room_id=excluded.last_room_id,
+      active=excluded.active
+   `).bind(userId,displayName,now,now,roomId,active).run();
+   const result=await env.DB.prepare('SELECT total_seconds,active FROM listener_scores WHERE clubhouse_user_id=?').bind(userId).first();
+   return json({ok:true,points:Math.floor(result.total_seconds/60),active:!!result.active},200,headers);
+  }
+  if(url.pathname==='/api/admin/leaderboard'&&req.method==='GET'){
+   if(!isAdmin(req,env))return json({error:'unauthorized'},401,headers);
+   const rows=await env.DB.prepare('SELECT clubhouse_user_id,display_name,total_seconds FROM listener_scores ORDER BY total_seconds DESC,clubhouse_user_id ASC LIMIT 50').all();
+   return json({listeners:rows.results.map(item=>({clubhouseUserId:item.clubhouse_user_id,displayName:item.display_name,points:Math.floor(item.total_seconds/60)}))},200,headers);
+  }
   return json({error:'not_found'},404,headers);
  }
 };
