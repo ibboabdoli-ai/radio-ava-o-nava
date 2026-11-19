@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#100e1c"><meta name="robots" content="noindex">
+<title>درخواست آهنگ | رادیو آوا و نوا</title>
+<link rel="icon" href="../radio-neon-logo.webp">
+<link rel="stylesheet" href="./site.css?v=25">
+<style>
+body{background:#100e1c;color:#f8f3ff;font-family:Vazirmatn,Tahoma,sans-serif;min-height:100vh}
+.request-wrap{max-width:680px;margin:48px auto;padding:18px}
+.request-panel{border:1px solid #ffffff35;background:#211b31;border-radius:23px;padding:clamp(18px,4vw,34px);box-shadow:0 12px 50px #0003}
+.request-panel h1{font-size:clamp(24px,5vw,36px);margin:0 0 12px}
+.request-panel p{color:#ccc3d5;line-height:2}
+.request-panel label{display:block;margin:18px 0 6px}
+.request-panel input{width:100%;box-sizing:border-box;border-radius:12px;border:1px solid #b5a7bb;background:#140f21;color:white;padding:14px;font:inherit}
+.request-panel button{margin-top:22px;width:100%;padding:14px;border:0;border-radius:12px;background:#e9c78d;color:#181323;font:inherit;font-weight:800;cursor:pointer}
+.request-panel button:disabled{opacity:.6;cursor:wait}
+#feedback{min-height:36px}#queue{padding-right:26px;line-height:2.2}
+a{color:#e9c78d}small{color:#cbbfd1}
+</style>
+</head><body>
+<main class="request-wrap"><a href="./">بازگشت به رادیو آوا و نوا</a>
+<section class="request-panel">
+<h1>درخواست آهنگ</h1>
+<p>آهنگ موردعلاقه‌ات را پیشنهاد بده. پس از بررسی مدیر، در صف درخواست‌ها قرار می‌گیرد. ثبت درخواست به معنی پخش قطعی نیست.</p>
+<form id="requestForm">
+<label for="songTitle">نام آهنگ</label><input id="songTitle" maxlength="120" required autocomplete="off">
+<label for="songArtist">نام خواننده</label><input id="songArtist" maxlength="120" required autocomplete="off">
+<label for="requester">نام نمایشی شما</label><input id="requester" maxlength="60" required autocomplete="nickname">
+<button id="submit" type="submit">ثبت درخواست آهنگ</button>
+<p id="feedback" role="status" aria-live="polite"></p>
+</form>
+<h2>صف آهنگ‌های تأییدشده</h2>
+<ol id="queue"></ol><small id="queueStatus">در حال بررسی سرویس…</small>
+</section></main>
+<script type="module">
+const form=document.getElementById('requestForm'),feedback=document.getElementById('feedback'),queue=document.getElementById('queue'),queueStatus=document.getElementById('queueStatus');
+let api='';
+async function initialize(){
+ try{
+  const config=await fetch('./request-config.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error();return r.json()});
+  if(typeof config.apiBase!=='string'||!config.apiBase.startsWith('https://'))throw Error();
+  const base=new URL(config.apiBase);if(base.username||base.password||base.search||base.hash)throw Error();
+  api=base.href.replace(/\/$/,'');
+  await refreshQueue();
+ }catch{feedback.textContent='امکان ثبت مستقیم درخواست هنوز فعال نشده است.';queueStatus.textContent='صف درخواست‌ها فعلاً در دسترس نیست.';form.querySelector('button').disabled=true;}
+}
+async function refreshQueue(){
+ try{
+  const response=await fetch(api+'/api/queue');
+  if(!response.ok)throw Error();
+  const data=await response.json();
+  queue.replaceChildren();
+  for(const item of (Array.isArray(data.queue)?data.queue:[])){
+   const li=document.createElement('li');li.textContent=item.title+' — '+item.artist;queue.append(li);
+  }
+  queueStatus.textContent=queue.children.length?'':'هنوز آهنگی در صف تأییدشده نیست.';
+ }catch{queueStatus.textContent='نمایش صف فعلاً ممکن نیست.';}
+}
+form.addEventListener('submit',async event=>{
+ event.preventDefault();if(!api)return;
+ const button=document.getElementById('submit');button.disabled=true;feedback.textContent='در حال ارسال…';
+ try{
+  const response=await fetch(api+'/api/requests',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({title:document.getElementById('songTitle').value,artist:document.getElementById('songArtist').value,requestedBy:document.getElementById('requester').value})});
+  if(response.status===429){feedback.textContent='لطفاً یک دقیقه بعد دوباره تلاش کن.';return;}
+  if(!response.ok)throw Error();
+  feedback.textContent='درخواست ثبت شد و منتظر تأیید مدیر است.';form.reset();
+ }catch{feedback.textContent='ثبت درخواست انجام نشد. دوباره تلاش کن.';}
+ finally{button.disabled=false;}
+});
+initialize();
+</script></body></html>
