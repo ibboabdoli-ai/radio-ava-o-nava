@@ -117,7 +117,7 @@
   document.querySelectorAll('.studio-side-link').forEach(a=>a.addEventListener('click',()=>{
     document.querySelectorAll('.studio-side-link').forEach(n=>n.classList.toggle('active',n===a));
   }));
-  const observable=['home','listen','episodes','music','community','about'];
+  const observable=['home','listen','episodes','music','audiusGenres','schedule','community','install','about'];
   if('IntersectionObserver' in window){
     const obs=new IntersectionObserver(entries=>{
       for(const entry of entries){
