@@ -59,13 +59,21 @@
    const artist=isLive?'موسیقی زنده، شعر و آواز با آرش':
       mode==='audius'?($('audiusArtistNow')?.textContent||'موسیقی ایرانی'):
       ($('recordingMeta')?.textContent||'آرشیو رادیو آوا و نوا');
-   $('expandedPlayerTitle').textContent=title;
+   // File-like placeholders are not meaningful song names. Never invent an artist or title.
+   const cleanTitle=mode==='audius'&&/^untitled(?:[\s_-]|$)/i.test(title)?'قطعه بدون عنوان':title;
+   $('expandedPlayerTitle').textContent=cleanTitle;
    $('expandedPlayerArtist').textContent=artist;
    setImage(currentCover(mode));
    cover.alt='کاور '+title;
+   const liveListening=isLive&&playing&&audio.readyState>=2;
+   const liveConnecting=isLive&&!liveListening&&!!audio.currentSrc;
    badge.hidden=!isLive;
+   if(isLive){
+     badge.lastChild.textContent=liveListening?' در حال شنیدن':liveConnecting?' در حال اتصال':' آماده پخش';
+     badge.classList.toggle('is-listening',liveListening);
+   }
    wave.hidden=!isLive;
-   wave.classList.toggle('is-active',isLive&&playing);
+   wave.classList.toggle('is-active',liveListening&&!matchMedia('(prefers-reduced-motion: reduce)').matches);
    progress.hidden=isLive;
    const duration=audio.duration,validDuration=!isLive&&Number.isFinite(duration)&&duration>0;
    seek.disabled=!validDuration;
@@ -77,11 +85,17 @@
    shuffle.hidden=mode!=='recording';
    repeat.hidden=mode!=='recording';
    repeat.setAttribute('aria-pressed',$('recordingRepeat')?.getAttribute('aria-pressed')||'false');
-   source.href=isLive?'#listen':mode==='recording'?'#episodes':'#music';
+   const provider=$('audiusSourceLink')?.href||'';
+   let safeProvider=null;
+   try{const url=new URL(provider);if(url.protocol==='https:'&&(url.hostname==='audius.co'||url.hostname.endsWith('.audius.co')))safeProvider=url.href;}catch{}
+   source.href=isLive?'#listen':mode==='recording'?'#episodes':safeProvider||'#music';
+   source.target=!isLive&&mode==='audius'&&safeProvider?'_blank':'_self';
+   source.rel=source.target==='_blank'?'noopener noreferrer':'';
+   $('expandedDetailsLabel').textContent=isLive?'پخش زنده':mode==='recording'?'فهرست برنامه‌ها':safeProvider?'منبع موسیقی':'آرشیو موسیقی';
    play.classList.toggle('is-playing',playing);
    play.setAttribute('aria-label',playing?'مکث پخش':'شروع پخش');
    play.setAttribute('aria-pressed',String(playing));
-   const label=isLive?playing?'در حال شنیدن پخش زنده':'آماده اتصال به پخش زنده':
+   const label=isLive?liveListening?'در حال شنیدن رادیو':liveConnecting?'در حال اتصال به رادیو':'آماده پخش زنده':
      playing?'در حال پخش':'آماده پخش';
    status.textContent=label;
  }

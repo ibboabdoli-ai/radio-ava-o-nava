@@ -27,9 +27,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./site.css?v=24">
 <link rel="stylesheet" href="./studio.css?v=4">
-<link rel="stylesheet" href="./expanded-player.css?v=1">
+<link rel="stylesheet" href="./expanded-player.css?v=2">
 
-<script defer src="./app.js?v=15"></script><script defer src="./interaction.js?v=7"></script><script defer src="./mobile-premium.js?v=5"></script><script defer src="./audius.js?v=7"></script><script defer src="./install-guide.js?v=7"></script><script defer src="./studio.js?v=3"></script><script defer src="./expanded-player.js?v=1"></script>
+<script defer src="./app.js?v=15"></script><script defer src="./interaction.js?v=7"></script><script defer src="./mobile-premium.js?v=5"></script><script defer src="./audius.js?v=7"></script><script defer src="./install-guide.js?v=7"></script><script defer src="./studio.js?v=3"></script><script defer src="./expanded-player.js?v=2"></script>
 </head>
 <body>
 <a class="skip" href="#main">رفتن به محتوا</a>
@@ -236,13 +236,13 @@
       </div>
       <div class="expanded-transport">
         <button id="expandedShuffle" type="button" class="expanded-transport-secondary" aria-label="پخش تصادفی" aria-pressed="false" hidden>⤨</button>
-        <button id="expandedPrev" type="button" class="expanded-transport-skip" aria-label="قبلی">⏮</button>
+        <button id="expandedPrev" type="button" class="expanded-transport-skip" aria-label="قبلی"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 5v14M19 6 10 12l9 6z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
         <button id="expandedPlay" type="button" class="expanded-play-button" aria-label="شروع پخش">▶</button>
-        <button id="expandedNext" type="button" class="expanded-transport-skip" aria-label="بعدی">⏭</button>
+        <button id="expandedNext" type="button" class="expanded-transport-skip" aria-label="بعدی"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 5v14M5 6l9 6-9 6z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
         <button id="expandedRepeat" type="button" class="expanded-transport-secondary" aria-label="تکرار" aria-pressed="false" hidden>↻</button>
       </div>
       <div class="expanded-player-footer">
-        <a id="expandedDetails" href="#listen" class="expanded-footer-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18V7m7 11V4m8 14V10"/></svg><span>نمایش بخش</span></a>
+        <a id="expandedDetails" href="#listen" class="expanded-footer-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18V7m7 11V4m8 14V10"/></svg><span id="expandedDetailsLabel">نمایش بخش</span></a>
         <button id="expandedShare" class="expanded-footer-item" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m0 0L8 7m4-4 4 4M5 13v6h14v-6"/></svg><span>اشتراک‌گذاری</span></button>
         <span id="expandedPlayerStatus" class="expanded-footer-status" role="status" aria-live="polite">آماده پخش</span>
       </div>

@@ -129,7 +129,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-30/);
+  assert.match(sw,/ava-v2-static-31/);
   assert.match(sw,/install-guide\.js\?v=7/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -494,7 +494,7 @@ test('Desktop tablet and mobile reproduce the approved responsive navigation',()
   assert.ok(design.includes(rule),'Expected responsive design rule: '+rule);
  assert.equal((html.match(/data-mobile-tab="/g)||[]).length,4);
  for(const id of ['home','episodes','music','listen'])assert.ok(html.includes('data-mobile-tab="'+id+'"'));
- assert.ok(sw.includes('ava-v2-static-30'));
+ assert.ok(sw.includes('ava-v2-static-31'));
  assert.ok(sw.includes('studio.css?v=4'));
  assert.ok(sw.includes('studio.js?v=3'));
  assert.ok(!sw.includes('archive.ibboabdoli.com'),'No recorded audio pre-cache');
@@ -545,10 +545,10 @@ test('Approved full-screen music and live player uses existing audio sources wit
  for(const tag of ['liveAudio','recordingAudio','audiusAudio']){
    assert.equal((html.match(new RegExp('id="'+tag+'"','g'))||[]).length,1,'Single original audio element: '+tag);
  }
- assert.match(html,/expanded-player\.js\?v=1/);
- assert.match(html,/expanded-player\.css\?v=1/);
- assert.ok(sw.includes("./expanded-player.js?v=1"));
- assert.ok(sw.includes("./expanded-player.css?v=1"));
+ assert.match(html,/expanded-player\.js\?v=2/);
+ assert.match(html,/expanded-player\.css\?v=2/);
+ assert.ok(sw.includes("./expanded-player.js?v=2"));
+ assert.ok(sw.includes("./expanded-player.css?v=2"));
  assert.ok(!js.includes("createElement('audio')"),'No duplicated audio engine');
  assert.ok(!js.includes("new Audio("),'No duplicated playback source');
  assert.ok(!js.includes("audio.load()"),'Opening full player must not reload media');
@@ -577,4 +577,28 @@ test('Full player cover uses real selected Audius artwork, recorded images or st
  assert.match(js,/cover\.alt='کاور '\+title/);
  assert.match(js,/navigator\.share/);
  assert.match(js,/navigator\.clipboard\.writeText\(url\)/);
+});
+
+test('Full-screen controls are unambiguous and fit the approved mobile design',()=>{
+ const js=get('expanded-player.js'),css=get('expanded-player.css');
+ const prev=html.match(/<button id="expandedPrev"[^>]*>([\s\S]*?)<\/button>/)?.[1];
+ const next=html.match(/<button id="expandedNext"[^>]*>([\s\S]*?)<\/button>/)?.[1];
+ assert.match(prev||'',/<svg viewBox="0 0 24 24"/);
+ assert.match(next||'',/<svg viewBox="0 0 24 24"/);
+ assert.ok(!prev.includes('⏮')&&!next.includes('⏭'),'Avoid platform-dependent blue emoji');
+ assert.ok(html.includes('id="expandedDetailsLabel"'));
+ assert.ok(js.includes("'منبع موسیقی'"));
+ assert.ok(js.includes("'فهرست برنامه‌ها'"));
+ assert.ok(js.includes("'قطعه بدون عنوان'"));
+ assert.ok(js.includes('safeProvider'));
+ assert.ok(js.includes('liveListening&&audio.readyState')===false,'No redundant live state check');
+ assert.ok(js.includes('audio.readyState>=2'));
+ assert.ok(js.includes("badge.classList.toggle('is-listening',liveListening)"));
+ assert.ok(css.includes('.expanded-player-dialog[data-expanded-mode="live"] .expanded-cover-frame'));
+ assert.ok(css.includes('height:100dvh;max-height:100dvh;overflow:hidden'));
+ assert.ok(css.includes('width:min(100%,31dvh,315px)'));
+ assert.ok(css.includes('width:min(100%,34dvh,345px)'));
+ assert.ok(css.includes('.expanded-transport .expanded-transport-skip svg'));
+ assert.ok(css.includes('@media(max-width:700px) and (max-height:560px)'));
+ assert.ok(css.includes('.expanded-live-badge:not(.is-listening)'));
 });
