@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS listener_scores (
  first_seen_ms INTEGER NOT NULL,
  last_seen_ms INTEGER NOT NULL,
  last_room_id TEXT NOT NULL,
+ active INTEGER NOT NULL DEFAULT 1 CHECK(active IN (0,1)),
  leaderboard_opt_in INTEGER NOT NULL DEFAULT 0 CHECK(leaderboard_opt_in IN (0,1))
 );
 CREATE INDEX IF NOT EXISTS listener_scores_ranking
