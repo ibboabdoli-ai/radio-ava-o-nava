@@ -1,3 +1,8 @@
 {
-  "apiBase": ""
+  "apiBase": "",
+  "features": {
+    "requests": false,
+    "queue": false,
+    "leaderboard": false
+  }
 }
