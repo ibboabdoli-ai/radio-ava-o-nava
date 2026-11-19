@@ -85,13 +85,11 @@
    shuffle.hidden=mode!=='recording';
    repeat.hidden=mode!=='recording';
    repeat.setAttribute('aria-pressed',$('recordingRepeat')?.getAttribute('aria-pressed')||'false');
-   const provider=$('audiusSourceLink')?.href||'';
-   let safeProvider=null;
-   try{const url=new URL(provider);if(url.protocol==='https:'&&(url.hostname==='audius.co'||url.hostname.endsWith('.audius.co')))safeProvider=url.href;}catch{}
-   source.href=isLive?'#listen':mode==='recording'?'#episodes':safeProvider||'#music';
-   source.target=!isLive&&mode==='audius'&&safeProvider?'_blank':'_self';
-   source.rel=source.target==='_blank'?'noopener noreferrer':'';
-   $('expandedDetailsLabel').textContent=isLive?'پخش زنده':mode==='recording'?'فهرست برنامه‌ها':safeProvider?'منبع موسیقی':'آرشیو موسیقی';
+   // Keep browsing inside Ava o Nava; the music provider remains credited as text.
+   source.href=isLive?'#listen':mode==='recording'?'#episodes':'#music';
+   source.target='_self';
+   source.removeAttribute('rel');
+   $('expandedDetailsLabel').textContent=isLive?'پخش زنده':mode==='recording'?'فهرست برنامه‌ها':'بازگشت به موسیقی';
    play.classList.toggle('is-playing',playing);
    play.setAttribute('aria-label',playing?'مکث پخش':'شروع پخش');
    play.setAttribute('aria-pressed',String(playing));
@@ -164,8 +162,9 @@
    sync();
  });
  async function share(){
-   const mode=getMode(),url=new URL(source.href,location.href).href;
-   const title=$('expandedPlayerTitle')?.textContent||'رادیو آوا و نوا';
+   // The share action always promotes our official radio website, never an external music URL.
+   const url='https://radio.ibboabdoli.com/v2/';
+   const title='رادیو آوا و نوا';
    if(navigator.share){
      try{await navigator.share({title,url});return;}
      catch(error){if(error?.name==='AbortError')return;}
