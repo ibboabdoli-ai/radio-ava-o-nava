@@ -587,7 +587,7 @@ test('Full-screen controls are unambiguous and fit the approved mobile design',(
  assert.match(next||'',/<svg viewBox="0 0 24 24"/);
  assert.ok(!prev.includes('⏮')&&!next.includes('⏭'),'Avoid platform-dependent blue emoji');
  assert.ok(html.includes('id="expandedDetailsLabel"'));
- assert.ok(js.includes("'منبع موسیقی'"));
+ assert.ok(js.includes("'بازگشت به موسیقی'"));
  assert.ok(js.includes("'فهرست برنامه‌ها'"));
  assert.ok(js.includes("'قطعه بدون عنوان'"));
  assert.ok(!js.includes('safeProvider'));
