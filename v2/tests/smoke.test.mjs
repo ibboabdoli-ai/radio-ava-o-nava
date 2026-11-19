@@ -85,7 +85,7 @@ test('One unified accessible responsive design, no obsolete style layers',()=>{
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
   assert.match(html,/href="\.\/site\.css\?v=24"/);
-  assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,2);
+  assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,3);
   assert.ok(html.includes('href="./studio.css?v=4"'));
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
@@ -129,7 +129,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-29/);
+  assert.match(sw,/ava-v2-static-30/);
   assert.match(sw,/install-guide\.js\?v=7/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -494,7 +494,7 @@ test('Desktop tablet and mobile reproduce the approved responsive navigation',()
   assert.ok(design.includes(rule),'Expected responsive design rule: '+rule);
  assert.equal((html.match(/data-mobile-tab="/g)||[]).length,4);
  for(const id of ['home','episodes','music','listen'])assert.ok(html.includes('data-mobile-tab="'+id+'"'));
- assert.ok(sw.includes('ava-v2-static-29'));
+ assert.ok(sw.includes('ava-v2-static-30'));
  assert.ok(sw.includes('studio.css?v=4'));
  assert.ok(sw.includes('studio.js?v=3'));
  assert.ok(!sw.includes('archive.ibboabdoli.com'),'No recorded audio pre-cache');
@@ -528,4 +528,53 @@ test('Approved player, equalizer, iPhone volume and section order are integrated
  assert.ok(studio.includes('.ios-volume-native .live-panel .volume-control'));
  assert.ok(studio.includes('.ios-volume-native #studioDockVolume'));
  assert.ok(html.includes('id="liveVolume"'),'Desktop slider remains');
+});
+
+
+test('Approved full-screen music and live player uses existing audio sources without duplicates',()=>{
+ const js=get('expanded-player.js'),styles=get('expanded-player.css');
+ new vm.Script(js);
+ assert.match(html,/id="expandedPlayerDialog"[^>]*aria-modal="true"/);
+ assert.match(html,/id="studioDockExpand"[^>]*aria-haspopup="dialog"/);
+ for(const id of ['expandedPlayerClose','expandedPlayerKind','expandedPlayerCover','expandedPlayerTitle',
+ 'expandedPlayerArtist','expandedLiveBadge','expandedLiveWave','expandedProgress','expandedSeek',
+ 'expandedElapsed','expandedTotal','expandedPrev','expandedPlay','expandedNext',
+ 'expandedShuffle','expandedRepeat','expandedDetails','expandedShare','expandedPlayerStatus']){
+   assert.ok(html.includes('id="'+id+'"'),id);
+ }
+ for(const tag of ['liveAudio','recordingAudio','audiusAudio']){
+   assert.equal((html.match(new RegExp('id="'+tag+'"','g'))||[]).length,1,'Single original audio element: '+tag);
+ }
+ assert.match(html,/expanded-player\.js\?v=1/);
+ assert.match(html,/expanded-player\.css\?v=1/);
+ assert.ok(sw.includes("./expanded-player.js?v=1"));
+ assert.ok(sw.includes("./expanded-player.css?v=1"));
+ assert.ok(!js.includes("createElement('audio')"),'No duplicated audio engine');
+ assert.ok(!js.includes("new Audio("),'No duplicated playback source');
+ assert.ok(!js.includes("audio.load()"),'Opening full player must not reload media');
+ assert.match(js,/dialog\.showModal\(\)/);
+ assert.match(js,/dialog\.close\(\)/);
+ assert.match(js,/document\.body\.classList\.remove\('expanded-player-open'\)/);
+ assert.match(js,/lastFocused\?\.isConnected/);
+ assert.match(js,/\$\('livePlay'\)/);
+ assert.ok(js.includes("mode==='recording'?'recordingPlay'"));
+ assert.ok(js.includes("mode==='recording'?'recordingPlay':'audiusToggle'"));
+ assert.match(js,/\$\('recordingShuffle'\)/);
+ assert.match(js,/\$\('recordingRepeat'\)/);
+ assert.match(styles,/\.expanded-player-dialog\[data-expanded-mode="live"\] #expandedPrev/);
+ assert.match(styles,/\.expanded-player-progress\[hidden\]/);
+ assert.match(styles,/\.expanded-live-wave\.is-active span/);
+ assert.match(styles,/@media\(max-width:700px\)/);
+ assert.match(styles,/@media\(prefers-reduced-motion:reduce\)/);
+});
+test('Full player cover uses real selected Audius artwork, recorded images or station logo',()=>{
+ const js=get('expanded-player.js');
+ assert.match(js,/const coverIds=\['gallery\/recording-1\.webp'/);
+ assert.match(js,/\$\('audiusCover'\)/);
+ assert.match(js,/const currentCover=mode=>/);
+ assert.match(js,/if\(mode==='live'\)return fallback/);
+ assert.match(js,/const selectedRecording=/);
+ assert.match(js,/cover\.alt='کاور '\+title/);
+ assert.match(js,/navigator\.share/);
+ assert.match(js,/navigator\.clipboard\.writeText\(url\)/);
 });
