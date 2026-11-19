@@ -1,6 +1,6 @@
 /* Ava o Nava v2: cache only the static shell; NEVER cache audio or third-party embeds. */
-const CACHE='ava-v2-static-30';
-const SHELL=['./','./index.html','./site.css?v=24','./studio.css?v=4','./expanded-player.css?v=1','./expanded-player.js?v=1','./gallery/recording-1.webp','./gallery/recording-2.webp','./gallery/recording-3.webp','./gallery/recording-4.webp','./gallery/recording-5.webp','./gallery/genre-traditional.webp','./gallery/genre-pop.webp','./gallery/genre-jazz.webp','./gallery/genre-instrumental.webp','./gallery/genre-electronic.webp','./studio.js?v=3','./app.js?v=15','./interaction.js?v=7','./install-guide.js?v=7','./mobile-premium.js?v=5','./audius-catalog.json','./audius.js?v=7','./shows.json','./manifest.webmanifest','../radio-neon-logo.webp','./icon.svg'];
+const CACHE='ava-v2-static-31';
+const SHELL=['./','./index.html','./site.css?v=24','./studio.css?v=4','./expanded-player.css?v=2','./expanded-player.js?v=2','./gallery/recording-1.webp','./gallery/recording-2.webp','./gallery/recording-3.webp','./gallery/recording-4.webp','./gallery/recording-5.webp','./gallery/genre-traditional.webp','./gallery/genre-pop.webp','./gallery/genre-jazz.webp','./gallery/genre-instrumental.webp','./gallery/genre-electronic.webp','./studio.js?v=3','./app.js?v=15','./interaction.js?v=7','./install-guide.js?v=7','./mobile-premium.js?v=5','./audius-catalog.json','./audius.js?v=7','./shows.json','./manifest.webmanifest','../radio-neon-logo.webp','./icon.svg'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>Promise.allSettled(SHELL.map(url=>cache.add(url)))));
   self.skipWaiting();
