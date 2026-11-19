@@ -11,4 +11,8 @@ database_id = "REPLACE_WITH_D1_DATABASE_ID"
 
 [vars]
 ALLOWED_ORIGIN = "https://radio.ibboabdoli.com"
-# Set ADMIN_TOKEN and IP_HASH_SECRET with wrangler secret put (never commit secrets).
+RADIO_FEATURES_ENABLED = "false"
+REGISTRATION_ENABLED = "false"
+ATTENDANCE_OBSERVER_ENABLED = "false"
+# Set AUTH_RATE_SECRET with wrangler secret put after staging review.
+# Set OBSERVER_TOKEN only after an independent, validated presence source exists.

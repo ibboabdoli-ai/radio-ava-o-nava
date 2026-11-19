@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="fa" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#100e1c"><meta name="robots" content="noindex">
+<title>باشگاه شنوندگان | رادیو آوا و نوا</title>
+<link rel="icon" href="../radio-neon-logo.webp"><link rel="stylesheet" href="./site.css?v=25"><link rel="stylesheet" href="./radio-club.css">
+</head><body>
+<main class="club-wrap">
+<header class="club-header"><a href="./">← بازگشت به رادیو</a><h1>باشگاه شنوندگان</h1><p>امتیاز حضور، درخواست آهنگ و صف پخش</p></header>
+<p id="notice" role="status" aria-live="polite"></p>
+<section id="auth" class="club-card" aria-labelledby="auth-title"><h2 id="auth-title">ورود</h2>
+<form id="auth-form"><label>نام کاربری <input name="username" required minlength="3" maxlength="40" pattern="[a-zA-Z0-9_]+" autocomplete="username"></label><label>گذرواژه <input name="password" type="password" required minlength="12" autocomplete="current-password"></label><div class="club-actions"><button type="submit" name="action" value="login">ورود</button><button type="submit" name="action" value="register" class="secondary">ثبت‌نام</button></div></form>
+<p class="hint">برای دریافت امتیاز حضور، اتصال شناسهٔ Clubhouse پس از رضایت شما و تأیید منبع حضور لازم است.</p></section>
+<section id="account" class="club-card" hidden aria-labelledby="account-title"><h2 id="account-title">حساب من</h2><p id="account-summary"></p><p id="identity-status"></p><button id="identity-unlink" class="secondary" type="button" hidden>قطع اتصال شناسهٔ Clubhouse</button><label class="check"><input id="ranking-opt-in" type="checkbox"> نمایش نام من در جدول امتیازها</label><button id="logout" class="secondary" type="button">خروج</button></section>
+<div class="club-grid"><section class="club-card" aria-labelledby="catalog-title"><h2 id="catalog-title">درخواست آهنگ</h2><p class="hint">فقط آهنگ‌های تأییدشده در فهرست قابل درخواست‌اند. تأیید درخواست به معنی پخش قطعی نیست.</p><label>جست‌وجو <input id="search" type="search" placeholder="نام آهنگ یا هنرمند"></label><div id="catalog" class="club-list"></div></section>
+<section class="club-card" aria-labelledby="queue-title"><h2 id="queue-title">صف آهنگ‌ها</h2><ol id="queue" class="club-list"></ol></section>
+<section id="my-data" class="club-card" hidden aria-labelledby="my-title"><h2 id="my-title">درخواست‌ها و حضور من</h2><h3>درخواست‌ها</h3><div id="my-requests" class="club-list"></div><h3>سابقهٔ حضور</h3><div id="attendance" class="club-list"></div><h3>گردش امتیاز</h3><div id="transactions" class="club-list"></div></section>
+<section class="club-card" aria-labelledby="leaders-title"><h2 id="leaders-title">جدول امتیازها</h2><p class="hint">فقط کسانی که خودشان اجازه داده‌اند نمایش داده می‌شوند.</p><ol id="leaders" class="club-list"></ol></section></div>
+<section id="admin" class="club-card" hidden aria-labelledby="admin-title"><h2 id="admin-title">مدیریت</h2><div class="club-grid">
+<div><h3>افزودن آهنگ مجاز</h3><form id="catalog-form"><label>نام آهنگ <input name="title" required maxlength="120"></label><label>هنرمند <input name="artist" required maxlength="120"></label><label>پیوند Audius <input name="sourceUrl" type="url" required placeholder="https://audius.co/…"></label><label>یادداشت مجوز <input name="rightsNote" required maxlength="500"></label><label>هزینهٔ امتیاز <input name="cost" type="number" min="1" max="1000" value="1" required></label><label class="check"><input name="rightsConfirmed" type="checkbox" required> مجوز استفاده را بررسی کردم</label><label class="check"><input name="playableConfirmed" type="checkbox" required> امکان پخش را بررسی کردم</label><button type="submit">افزودن آهنگ</button></form></div>
+<div><h3>درخواست‌های منتظر</h3><div id="pending" class="club-list"></div><h3>صف تأییدشده</h3><div id="approved" class="club-list"></div></div>
+<div><h3>کاربران و امتیازها</h3><div id="users" class="club-list"></div><h3>اتصال شناسهٔ Clubhouse</h3><form id="identity-form"><label>کاربر <select id="identity-user" required></select></label><label>شناسهٔ پایدار Clubhouse <input id="identity-clubhouse" required maxlength="100" autocomplete="off"></label><label class="check"><input id="identity-consent" type="checkbox" required> رضایت کاربر ثبت و بررسی شده است</label><button type="submit">ثبت اتصال</button></form></div></div></section>
+</main><script type="module" src="./radio-club.js"></script></body></html>
