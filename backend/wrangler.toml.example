@@ -1,0 +1,14 @@
+name = "ava-radio-requests"
+main = "worker.js"
+compatibility_date = "2026-11-01"
+workers_dev = true
+
+# Create your D1 database first, then replace the placeholders.
+[[d1_databases]]
+binding = "DB"
+database_name = "ava-radio-requests"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[vars]
+ALLOWED_ORIGIN = "https://radio.ibboabdoli.com"
+# Set ADMIN_TOKEN and IP_HASH_SECRET with wrangler secret put (never commit secrets).
