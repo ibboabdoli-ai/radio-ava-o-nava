@@ -84,7 +84,7 @@ test('Timezone conversion in November 2026',()=>{
 test('One unified accessible responsive design, no obsolete style layers',()=>{
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
-  assert.match(html,/href="\.\/site\.css\?v=24"/);
+  assert.match(html,/href="\.\/site\.css\?v=25"/);
   assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,3);
   assert.ok(html.includes('href="./studio.css?v=4"'));
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
@@ -129,7 +129,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-31/);
+  assert.match(sw,/ava-v2-static-32/);
   assert.match(sw,/install-guide\.js\?v=7/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -494,7 +494,7 @@ test('Desktop tablet and mobile reproduce the approved responsive navigation',()
   assert.ok(design.includes(rule),'Expected responsive design rule: '+rule);
  assert.equal((html.match(/data-mobile-tab="/g)||[]).length,4);
  for(const id of ['home','episodes','music','listen'])assert.ok(html.includes('data-mobile-tab="'+id+'"'));
- assert.ok(sw.includes('ava-v2-static-31'));
+ assert.ok(sw.includes('ava-v2-static-32'));
  assert.ok(sw.includes('studio.css?v=4'));
  assert.ok(sw.includes('studio.js?v=3'));
  assert.ok(!sw.includes('archive.ibboabdoli.com'),'No recorded audio pre-cache');
@@ -545,9 +545,9 @@ test('Approved full-screen music and live player uses existing audio sources wit
  for(const tag of ['liveAudio','recordingAudio','audiusAudio']){
    assert.equal((html.match(new RegExp('id="'+tag+'"','g'))||[]).length,1,'Single original audio element: '+tag);
  }
- assert.match(html,/expanded-player\.js\?v=2/);
+ assert.match(html,/expanded-player\.js\?v=3/);
  assert.match(html,/expanded-player\.css\?v=2/);
- assert.ok(sw.includes("./expanded-player.js?v=2"));
+ assert.ok(sw.includes("./expanded-player.js?v=3"));
  assert.ok(sw.includes("./expanded-player.css?v=2"));
  assert.ok(!js.includes("createElement('audio')"),'No duplicated audio engine');
  assert.ok(!js.includes("new Audio("),'No duplicated playback source');
@@ -587,10 +587,10 @@ test('Full-screen controls are unambiguous and fit the approved mobile design',(
  assert.match(next||'',/<svg viewBox="0 0 24 24"/);
  assert.ok(!prev.includes('⏮')&&!next.includes('⏭'),'Avoid platform-dependent blue emoji');
  assert.ok(html.includes('id="expandedDetailsLabel"'));
- assert.ok(js.includes("'منبع موسیقی'"));
+ assert.ok(js.includes("'بازگشت به موسیقی'"));
  assert.ok(js.includes("'فهرست برنامه‌ها'"));
  assert.ok(js.includes("'قطعه بدون عنوان'"));
- assert.ok(js.includes('safeProvider'));
+ assert.ok(!js.includes('safeProvider'));
  assert.ok(js.includes('liveListening&&audio.readyState')===false,'No redundant live state check');
  assert.ok(js.includes('audio.readyState>=2'));
  assert.ok(js.includes("badge.classList.toggle('is-listening',liveListening)"));
@@ -601,4 +601,27 @@ test('Full-screen controls are unambiguous and fit the approved mobile design',(
  assert.ok(css.includes('.expanded-transport .expanded-transport-skip svg'));
  assert.ok(css.includes('@media(max-width:700px) and (max-height:560px)'));
  assert.ok(css.includes('.expanded-live-badge:not(.is-listening)'));
+});
+
+test('Share control always distributes our own radio website',()=>{
+ const js=get('expanded-player.js');
+ assert.ok(js.includes("const url='https://radio.ibboabdoli.com/v2/'"));
+ assert.ok(js.includes("const title='رادیو آوا و نوا'"));
+ assert.ok(!js.includes('const mode=getMode(),url=new URL(source.href,location.href).href'));
+ assert.match(js,/navigator\.share\(\{title,url\}\)/);
+ assert.match(js,/navigator\.clipboard\.writeText\(url\)/);
+});
+test('Music cards stay in-site and the external Audius arrow controls are gone',()=>{
+ const provider=get('audius.js');
+ assert.ok(!provider.includes("element('a','audius-source'"));
+ assert.ok(!html.includes('class="audius-provider-link"'));
+ assert.ok(!html.includes('id="audiusSourceLink"'));
+ assert.ok(!html.includes('href="https://audius.co/"'));
+ assert.ok(html.includes('audius-provider-name'));
+ assert.ok(html.includes('audius-source-attribution'));
+ assert.match(provider,/choose\.addEventListener\('click'/);
+ assert.match(provider,/audio\.src=urlFor\(track\.id\)/);
+ assert.ok(get('expanded-player.js').includes("source.href=isLive?'#listen':mode==='recording'?'#episodes':'#music'"));
+ assert.ok(!get('expanded-player.js').includes("url.hostname==='audius.co'"));
+ assert.match(css,/\.audius-track-actions\{grid-template-columns:minmax\(0,1fr\)\}/);
 });

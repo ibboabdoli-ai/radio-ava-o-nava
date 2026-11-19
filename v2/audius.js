@@ -130,8 +130,7 @@
       const actions=element('div','audius-track-actions');
       const choose=element('button','audius-choose','♫ نمایش قطعات');
       choose.type='button';choose.addEventListener('click',()=>loadAlbumTracks(album));
-      const link=element('a','audius-source','↗');link.href=album.source;link.target='_blank';link.rel='noopener noreferrer';link.setAttribute('aria-label','باز کردن '+album.title+' در آدیوس');
-      actions.append(choose,link);body.append(actions);card.append(img,body);discoveryGrid.append(card);
+      actions.append(choose);body.append(actions);card.append(img,body);discoveryGrid.append(card);
     });
   }
   async function apiGet(path,params,signal){
@@ -266,8 +265,7 @@
         else if(selected()?.id===track.id)playCurrent();
         else {player.tracks=[...discovery.results];chooseTrack(i,true);}
       });
-      const source=element('a','audius-source','↗');source.href=track.source;source.rel='noopener noreferrer';source.target='_blank';source.title='منبع رسمی: '+track.title;source.setAttribute('aria-label','مشاهده '+track.title+' در آدیوس');
-      actions.append(choose,source);body.append(actions);card.append(img,body);grid.append(card);
+      actions.append(choose);body.append(actions);card.append(img,body);grid.append(card);
     });
     updateButtons();
   }
@@ -283,7 +281,6 @@
     player.index=i;
     const cover=$('audiusCover');makeCover(cover,track.artwork,'کاور '+track.title);
     set('audiusTitleNow',track.title);set('audiusArtistNow',track.artist);
-    $('audiusSourceLink').href=track.source;
     $('audiusSeek').value=0;$('audiusSeek').disabled=true;
     set('audiusElapsed','0:00');set('audiusTotal',fmt(track.duration));
     panel.hidden=false;
