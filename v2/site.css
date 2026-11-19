@@ -872,3 +872,12 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{o
 @media(max-width:700px){
  .community-card a.community-action{min-height:48px;font-size:13px}
 }
+
+/* In-site music browsing: one clear listen action; no external outbound arrow. */
+.audius-track-actions{grid-template-columns:minmax(0,1fr)}
+.audius-album .audius-track-actions{grid-template-columns:minmax(0,1fr)}
+.audius-provider-name,.audius-source-attribution{color:var(--muted);font-size:12px;line-height:1.8}
+.audius-source-attribution{display:inline-block;margin-top:3px}
+@media(max-width:700px){
+ .audius-track-actions,.audius-album .audius-track-actions{grid-template-columns:minmax(0,1fr)}
+}
