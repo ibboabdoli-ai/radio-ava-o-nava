@@ -89,11 +89,12 @@ test('approved queue displays plain text only when explicitly enabled', async ()
       }) };
     }
   };
+  document.getElementById('requestSubmit').disabled = true;
   vm.runInNewContext(script, context);
   await new Promise(setImmediate);
   assert.deepEqual(calls, ['./request-config.json', 'https://example.org/api/queue']);
   assert.equal(document.getElementById('queueCount').textContent, '1');
   const li = document.getElementById('queueList').children[0];
   assert.equal(li.children[1].children[0].textContent, '<img src=x onerror=alert(1)>');
-  assert.equal(document.getElementById('requestSubmit').disabled, false === true);
+  assert.equal(document.getElementById('requestSubmit').disabled, true);
 });
