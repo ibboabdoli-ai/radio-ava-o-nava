@@ -129,7 +129,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-32/);
+  assert.match(sw,/ava-v2-static-33/);
   assert.match(sw,/install-guide\.js\?v=7/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -494,7 +494,7 @@ test('Desktop tablet and mobile reproduce the approved responsive navigation',()
   assert.ok(design.includes(rule),'Expected responsive design rule: '+rule);
  assert.equal((html.match(/data-mobile-tab="/g)||[]).length,4);
  for(const id of ['home','episodes','music','listen'])assert.ok(html.includes('data-mobile-tab="'+id+'"'));
- assert.ok(sw.includes('ava-v2-static-32'));
+ assert.ok(sw.includes('ava-v2-static-33'));
  assert.ok(sw.includes('studio.css?v=4'));
  assert.ok(sw.includes('studio.js?v=3'));
  assert.ok(!sw.includes('archive.ibboabdoli.com'),'No recorded audio pre-cache');
@@ -546,9 +546,9 @@ test('Approved full-screen music and live player uses existing audio sources wit
    assert.equal((html.match(new RegExp('id="'+tag+'"','g'))||[]).length,1,'Single original audio element: '+tag);
  }
  assert.match(html,/expanded-player\.js\?v=3/);
- assert.match(html,/expanded-player\.css\?v=2/);
+ assert.match(html,/expanded-player\.css\?v=3/);
  assert.ok(sw.includes("./expanded-player.js?v=3"));
- assert.ok(sw.includes("./expanded-player.css?v=2"));
+ assert.ok(sw.includes("./expanded-player.css?v=3"));
  assert.ok(!js.includes("createElement('audio')"),'No duplicated audio engine');
  assert.ok(!js.includes("new Audio("),'No duplicated playback source');
  assert.ok(!js.includes("audio.load()"),'Opening full player must not reload media');
@@ -624,4 +624,22 @@ test('Music cards stay in-site and the external Audius arrow controls are gone',
  assert.ok(get('expanded-player.js').includes("source.href=isLive?'#listen':mode==='recording'?'#episodes':'#music'"));
  assert.ok(!get('expanded-player.js').includes("url.hostname==='audius.co'"));
  assert.match(css,/\.audius-track-actions\{grid-template-columns:minmax\(0,1fr\)\}/);
+});
+
+test('Expanded desktop player uses the complete width without touching the approved mobile layout',()=>{
+ const css=get('expanded-player.css');
+ assert.ok(css.includes('@media(min-width:901px)'));
+ assert.ok(css.includes('width:min(1260px,calc(100% - 70px))'));
+ assert.ok(css.includes('grid-template-columns:minmax(0,1fr) minmax(0,.95fr)'));
+ assert.ok(css.includes('grid-column:1;grid-row:1 / -1'));
+ assert.ok(css.includes('.expanded-track-details{grid-column:2;grid-row:2'));
+ assert.ok(css.includes('grid-column:2;grid-row:3'));
+ assert.ok(css.includes('grid-column:2;grid-row:4'));
+ assert.ok(css.includes('grid-column:2;grid-row:5'));
+ assert.ok(css.includes('overflow:hidden'));
+ assert.ok(css.includes('@media(min-width:701px) and (max-width:900px)'));
+ assert.ok(css.includes('@media(max-width:700px)'));
+ assert.ok(css.includes('width:min(100%,31dvh,315px)'));
+ assert.ok(html.includes('expanded-player.css?v=3'));
+ assert.ok(sw.includes('expanded-player.css?v=3'));
 });
