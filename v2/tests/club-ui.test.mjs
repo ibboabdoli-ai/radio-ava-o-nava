@@ -19,5 +19,6 @@ test('club page has every referenced control, Persian RTL and responsive styling
 });
 test('site club API remains disabled until a staging URL is explicitly configured', () => {
   assert.equal(JSON.parse(read('request-config.json')).apiBase, '');
+  assert.equal(JSON.parse(read('request-config.json')).clubEnabled, false);
   assert.match(read('request-song.html'), /radio-club\.html/);
 });

@@ -14,6 +14,8 @@ self.addEventListener('fetch',event=>{
   if(req.method!=='GET'||new URL(req.url).origin!==self.location.origin)return;
   const url=new URL(req.url);
   if(!url.pathname.includes('/v2/')&&!url.pathname.endsWith('/radio-neon-logo.webp'))return;
+  // Never cache runtime API configuration or other sensitive session data.
+  if(url.pathname.endsWith('/request-config.json'))return;
   event.respondWith(fetch(req).then(res=>{
     if(res.ok&&res.type==='basic'){const copy=res.clone();caches.open(CACHE).then(cache=>cache.put(req,copy)).catch(()=>{});}
     return res;

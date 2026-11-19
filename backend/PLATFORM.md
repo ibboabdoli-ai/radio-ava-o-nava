@@ -1,6 +1,6 @@
 # Radio Ava o Nava platform candidate (local branch only)
 
-This branch extends PR #27 without changing the live radio player, production database, Clubhouse account or deployed Worker. `v2/radio-club.html` is the Persian user/admin interface. `v2/request-song.html` points to it. `v2/request-config.json` has an empty `apiBase`, so the page remains disabled until a reviewed staging API is configured.
+This branch integrates the local candidate with current PR #27 without changing the live radio player, production database, Clubhouse account or deployed Worker. The PR #27 landing page remains at `v2/request-song.html`; it links to the authenticated Persian user/admin interface at `v2/radio-club.html`. `v2/request-config.json` has an empty `apiBase` and `clubEnabled=false`, so the account page remains disabled until a reviewed staging API is configured.
 
 ## Database and API
 

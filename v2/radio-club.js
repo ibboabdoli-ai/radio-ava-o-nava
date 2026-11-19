@@ -12,7 +12,7 @@ async function api(path,{method='GET',data,key}={}){
  let result={};try{result=await res.json()}catch{}if(!res.ok)throw Error(errors[result.error]||`خطای سرویس (${res.status})`);return result;
 }
 async function initialize(){
- try{const config=await fetch('./request-config.json',{cache:'no-store'}).then(r=>r.json());const base=new URL(config.apiBase);if(base.protocol!=='https:'||base.username||base.password||base.search||base.hash)throw Error();state.api=base.href.replace(/\/$/,'');await refresh()}catch{notice('سامانهٔ باشگاه هنوز برای استفاده فعال نشده است.',true);show('auth',false);show('account',false);$('search').disabled=true;$('catalog-form').querySelector('button').disabled=true;empty('catalog','فهرست در دسترس نیست.');empty('queue','صف در دسترس نیست.');empty('leaders','جدول در دسترس نیست.')}
+ try{const config=await fetch('./request-config.json',{cache:'no-store'}).then(r=>r.json());if(config.clubEnabled!==true)throw Error();const base=new URL(config.apiBase);if(base.protocol!=='https:'||base.username||base.password||base.search||base.hash||base.pathname!=='/')throw Error();state.api=base.origin;await refresh()}catch{notice('سامانهٔ باشگاه هنوز برای استفاده فعال نشده است.',true);show('auth',false);show('account',false);$('search').disabled=true;$('catalog-form').querySelector('button').disabled=true;empty('catalog','فهرست در دسترس نیست.');empty('queue','صف در دسترس نیست.');empty('leaders','جدول در دسترس نیست.')}
 }
 async function refresh(){
  try{state.user=(await api('/api/me')).user}catch{state.user=null}

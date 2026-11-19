@@ -1,0 +1,99 @@
+/* Radio Ava o Nava - Club listener hub. Scoped to prevent player regressions. */
+.club-body{background:radial-gradient(ellipse at 55% -15%,#32133e 0%,#150f23 40%,#0b0a13 100%);padding:0;color:#fff5fa}
+.club-header{border-bottom:1px solid #ffffff16;background:#100c18d9;backdrop-filter:blur(16px)}
+.club-header-inner,.club-layout,.club-footer{width:min(1120px,calc(100% - 40px));margin-inline:auto}
+.club-header-inner{min-height:84px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.club-brand{display:flex;align-items:center;gap:12px;color:#faf4fb;text-decoration:none;line-height:1.35}
+.club-brand img{border-radius:13px;object-fit:cover}
+.club-brand strong{display:block;font-size:20px;font-weight:800}
+.club-brand small{display:block;color:#cebdd8;font-size:11px}
+.club-back{border:1px solid #e7c28a70;border-radius:100px;padding:8px 16px;font-size:13px;text-decoration:none;color:#f4d2a1;white-space:nowrap}
+.club-back:focus-visible,.club-button:focus-visible,.club-alternate a:focus-visible,.club-footer a:focus-visible,.club-brand:focus-visible{outline:3px solid #ffe1af;outline-offset:3px}
+.club-layout{padding-block:32px 72px}
+.club-hero{display:flex;gap:22px;align-items:center;justify-content:space-between;background:linear-gradient(120deg,#371d47 0%,#201226 58%,#17121f 100%);border:1px solid #e4bd854f;border-radius:28px;padding:clamp(24px,5vw,52px);position:relative;overflow:hidden}
+.club-hero:before{content:"";position:absolute;inset:auto -60px -110px auto;width:300px;height:300px;border:1px solid #edc88b2c;border-radius:50%;pointer-events:none}
+.club-hero-copy{z-index:1;max-width:640px;min-width:0}
+.club-eyebrow,.club-section-kicker{font:700 11px/1.4 Arial,sans-serif;direction:ltr;letter-spacing:2px;color:#e8c28f}
+.club-hero h1{font-size:clamp(27px,4.5vw,45px);line-height:1.4;margin:10px 0 12px;font-weight:800}
+.club-hero p{font-size:15px;max-width:590px;line-height:2;color:#dccfe0;margin:0 0 23px}
+.club-hero-actions{display:flex;flex-wrap:wrap;gap:10px}
+.club-button{display:inline-flex;justify-content:center;align-items:center;gap:10px;min-height:45px;padding:10px 18px;border-radius:11px;font:700 13px/1.6 Vazirmatn,Tahoma,sans-serif;text-decoration:none;cursor:pointer;transition:background .16s,border-color .16s}
+.club-button-gold{border:1px solid #f5d7a7;background:#edc58e;color:#251725}
+.club-button-gold:not(:disabled):hover{background:#ffe0b2}
+.club-button-outline{background:#ffffff08;border:1px solid #d5b6b27a;color:#f7e9ed}
+.club-button-outline:not(:disabled):hover{background:#ffffff16}
+.club-button:disabled{opacity:.5;cursor:not-allowed}
+.club-hero-mark{flex:0 1 210px;min-width:135px;z-index:1}
+.club-hero-mark img{display:block;width:100%;height:auto;filter:drop-shadow(0 0 25px #d8998244)}
+.club-notice{margin-block:22px;display:flex;align-items:center;gap:11px;border:1px solid #bd9e6a55;background:#3026368c;padding:12px 17px;border-radius:12px;color:#f2dfc6;font-size:13px;line-height:1.8}
+.club-status-dot{width:9px;height:9px;flex:0 0 9px;background:#f0bd75;border-radius:50%}
+.club-stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:22px}
+.club-stat{background:#1f182a;border:1px solid #ffffff24;border-radius:17px;padding:18px 22px;min-width:0}
+.club-stat span,.club-stat small{display:block;color:#cbbdd2;font-size:12px}
+.club-stat strong{font:800 35px/1.8 Vazirmatn,Tahoma,sans-serif;display:block;color:#f4cf99}
+.club-main-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch}
+.club-panel{min-width:0;background:linear-gradient(150deg,#241b30,#1a1525);border:1px solid #ffffff23;border-radius:22px;padding:clamp(19px,3vw,28px);box-shadow:0 14px 30px #0002}
+.club-panel-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:13px}
+.club-panel h2{font-size:22px;margin:5px 0 0;line-height:1.5}
+.club-chip{background:#e1b9811c;border:1px solid #e4bf8557;border-radius:100px;font-size:11px;font-weight:700;color:#e7c997;padding:5px 11px;white-space:nowrap}
+.club-intro{font-size:13px;line-height:1.9;color:#d2c5d7;margin:0 0 18px}
+.club-form{display:grid;gap:7px}
+.club-form label{font-size:12px;font-weight:700;margin-top:8px;color:#f5e8f3}
+.club-form input{height:46px;min-width:0;width:100%;background:#100f1b;border:1px solid #b8a2bd7a;border-radius:11px;color:#fff;padding:9px 14px;font:500 13px/1.7 Vazirmatn,Tahoma,sans-serif}
+.club-form input:focus{border-color:#f2ca8a;outline:2px solid #e5bf8566;outline-offset:1px}
+.club-form input::placeholder{color:#a99ab2;opacity:1}
+.club-form-note{font-size:11px;line-height:1.8;color:#bdb0c6;margin:6px 0 0}
+.club-submit{width:100%;margin-top:8px}
+.club-feedback{font-size:12px;line-height:1.9;min-height:25px;color:#f2d29a;margin:4px 0 0}
+.club-alternate{margin-top:18px;padding:13px 15px;background:#130f1d;border-radius:12px;display:flex;gap:6px 15px;justify-content:space-between;align-items:center;flex-wrap:wrap;font-size:11px;color:#d0c4d9}
+.club-alternate a{color:#f0c78b;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.club-queue,.club-leaderboard{list-style:none;counter-reset:club;display:grid;gap:10px;margin:0;padding:0}
+.club-queue li,.club-leaderboard li{display:flex;align-items:center;gap:12px;min-width:0;border:1px solid #ffffff1f;border-radius:12px;background:#ffffff06;padding:13px}
+.club-item-num{display:grid;place-items:center;width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:#ecc48e20;color:#f0c996;font:800 13px Vazirmatn,Tahoma,sans-serif}
+.club-item-text{flex:1;min-width:0}
+.club-item-text strong{display:block;font-size:13px;overflow-wrap:anywhere}
+.club-item-text small{font-size:11px;color:#bfafcb;overflow-wrap:anywhere}
+.club-item-points{color:#f1c993;font-weight:800;font-size:13px}
+.club-empty{border:1px dashed #b79eaf5d;background:#130f1b;border-radius:12px;min-height:110px;display:grid;place-items:center;text-align:center;padding:20px;font-size:13px;color:#c9bbcd;line-height:2}
+.club-refresh{width:100%;margin-top:15px}
+.club-points-section,.club-board-section{margin-top:20px}
+.club-points-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:15px}
+.club-points-explainer,.club-account-preview{border-radius:15px;padding:20px;background:#130f1e;border:1px solid #ffffff1b}
+.club-points-explainer strong,.club-account-preview strong{font-size:15px}
+.club-points-explainer p,.club-account-preview p{font-size:12px;line-height:2;color:#d7c8dd;margin:8px 0 0}
+.club-points-explainer .club-muted{color:#ac9ebb}
+.club-account-preview{display:flex;gap:15px;align-items:flex-start}
+.club-account-icon{font-size:32px;color:#f1c68d}
+.club-help{margin-top:22px;border-right:3px solid #cfab72;padding:14px 18px;background:#271e2c;border-radius:8px;color:#eadbce}
+.club-help strong{font-size:13px}
+.club-help p{font-size:12px;line-height:2;margin:5px 0 0}
+.club-footer{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:9px 24px;border-top:1px solid #ffffff20;padding-block:22px 42px;color:#bfb2cb;font-size:11px}
+.club-footer a{color:#d6b78f}
+[hidden]{display:none!important}
+@media(max-width:760px){
+ .club-layout,.club-header-inner,.club-footer{width:min(100% - 28px,600px)}
+ .club-header-inner{min-height:70px}
+ .club-brand img{width:42px;height:42px}
+ .club-brand strong{font-size:16px}
+ .club-back{font-size:11px;padding:7px 10px}
+ .club-layout{padding-block:20px 48px}
+ .club-hero{border-radius:20px;padding:24px}
+ .club-hero-mark{flex:0 0 85px;min-width:85px}
+ .club-hero h1{font-size:29px}
+ .club-hero p{font-size:12px}
+ .club-main-grid,.club-points-grid{grid-template-columns:1fr}
+ .club-stat-grid{gap:8px}
+ .club-stat{padding:14px 11px;border-radius:13px}
+ .club-stat span,.club-stat small{font-size:10px;line-height:1.6}
+ .club-stat strong{font-size:29px}
+}
+@media(max-width:430px){
+ .club-hero-mark{position:absolute;opacity:.17;left:7px;top:20px;width:125px}
+ .club-hero-copy{max-width:100%}
+ .club-hero h1{font-size:27px}
+ .club-hero-actions .club-button{flex:1 1 auto}
+ .club-panel h2{font-size:20px}
+ .club-panel-heading{gap:8px}
+ .club-chip{white-space:normal}
+}
+@media(prefers-reduced-motion:reduce){.club-button{transition:none}}

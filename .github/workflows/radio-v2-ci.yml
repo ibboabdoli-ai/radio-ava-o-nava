@@ -22,5 +22,7 @@ jobs:
           node-version: '22'
       - name: Static and logic regression tests
         run: node --test v2/tests/smoke.test.mjs
+      - name: Listener club form, queue and security tests
+        run: node --test v2/tests/listener-hub.test.mjs v2/tests/listener-hub-flows.test.mjs v2/tests/club-ui.test.mjs
       - name: Check public archive file availability (HEAD only)
         run: node --test v2/tests/media-health.test.mjs
