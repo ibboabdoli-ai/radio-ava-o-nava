@@ -39,7 +39,7 @@
       let image='../radio-neon-logo.webp';
       if(type==='recording'){
         const selected=[...document.querySelectorAll('#recordingGrid button')].findIndex(button=>button.getAttribute('aria-pressed')==='true');
-        const pics=['studio-violin.svg','studio-sunset.svg','studio-poetry.svg','studio-vinyl.svg','studio-retro.svg'];
+        const pics=['gallery/recording-1.webp','gallery/recording-2.webp','gallery/recording-3.webp','gallery/recording-4.webp','gallery/recording-5.webp'];
         if(selected>=0&&selected<pics.length)image='./'+pics[selected];
       }else if(type==='audius'){
         const selected=document.querySelector('.audius-track.selected .audius-track-photo');
@@ -117,7 +117,7 @@
   document.querySelectorAll('.studio-side-link').forEach(a=>a.addEventListener('click',()=>{
     document.querySelectorAll('.studio-side-link').forEach(n=>n.classList.toggle('active',n===a));
   }));
-  const observable=['home','listen','episodes','music','community','about'];
+  const observable=['home','listen','episodes','music','audiusGenres','schedule','community','install','about'];
   if('IntersectionObserver' in window){
     const obs=new IntersectionObserver(entries=>{
       for(const entry of entries){

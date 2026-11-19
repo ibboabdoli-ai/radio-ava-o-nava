@@ -14,6 +14,7 @@
   const setText=(id,text)=>{const n=$(id);if(n)n.textContent=String(text);};
   const fmtDuration = n => {if(!Number.isFinite(n)||n<0)return '--:--';const sec=Math.floor(n);const h=Math.floor(sec/3600),m=String(Math.floor((sec%3600)/60)).padStart(2,'0'),s=String(sec%60).padStart(2,'0');return h?h+':'+m+':'+s:m+':'+s;};
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+  if(isIOS)document.documentElement.classList.add('ios-volume-native');
   let deferredInstall=null, toastTimeout=null, currentLiveToken=0;
   const safeHttps=(url,hostnames)=>{try{const u=new URL(url);return u.protocol==='https:'&&(!hostnames||hostnames.some(h=>u.hostname===h||u.hostname.endsWith('.'+h)))?u.href:null;}catch{return null;}};
   function toast(message){const t=$('toast');t.textContent=message;t.hidden=false;clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.hidden=true,5500);}
@@ -238,6 +239,19 @@
   $('recordingPlay').addEventListener('click',toggleRecording);
   $('recordingPrev').addEventListener('click',()=>chooseRecording(state.recordingIndex-1,!recAudio.paused));
   $('recordingNext').addEventListener('click',()=>chooseRecording(state.recordingIndex+1,!recAudio.paused));
+  $('recordingShuffle').addEventListener('click',()=>{
+    const tracks=state.shows.recordings||[];
+    if(!tracks.length){setText('recordingMessage','برنامه‌ای برای پخش موجود نیست.');return;}
+    let index=Math.floor(Math.random()*tracks.length);
+    if(tracks.length>1&&index===state.recordingIndex)index=(index+1)%tracks.length;
+    chooseRecording(index,true);
+  });
+  $('recordingRepeat').addEventListener('click',()=>{
+    recAudio.loop=!recAudio.loop;
+    $('recordingRepeat').setAttribute('aria-pressed',String(recAudio.loop));
+    $('recordingRepeat').classList.toggle('active',recAudio.loop);
+    $('recordingRepeat').setAttribute('aria-label',recAudio.loop?'توقف تکرار برنامه':'تکرار برنامه');
+  });
   $('recordingRetry').addEventListener('click',()=>{if(state.recordingIndex>=0)chooseRecording(state.recordingIndex,true);});
   $('recordingSeek').addEventListener('input',e=>{if(Number.isFinite(recAudio.duration)&&recAudio.duration>0)recAudio.currentTime=Number(e.target.value)/1000*recAudio.duration;});
   recAudio.addEventListener('play',()=>{suspendOtherModes('recording');setText('recordingPlay','Ⅱ');$('recordingPlay').classList.add('is-playing');const item=state.shows.recordings[state.recordingIndex];setDock(item.title,'در حال پخش آرشیو',true,'#episodes');setMediaSession(item.title,'آرشیو آوا و نوا',()=>recAudio.play(),()=>recAudio.pause());});
@@ -252,6 +266,7 @@
   recAudio.addEventListener('playing',()=>{setText('recordingMessage','در حال پخش برنامه');$('recordingRetry').hidden=true;});
   recAudio.addEventListener('waiting',()=>{if(!recAudio.paused)setText('recordingMessage','در حال دریافت صدا…');});
   recAudio.addEventListener('ended',()=>{
+    if(recAudio.loop)return;
     if(state.recordingIndex+1<state.shows.recordings.length)chooseRecording(state.recordingIndex+1,true);
     else setText('recordingMessage','به پایان آرشیو رسیدی.');
   });
