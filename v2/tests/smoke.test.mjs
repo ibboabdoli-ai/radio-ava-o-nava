@@ -86,7 +86,7 @@ test('One unified accessible responsive design, no obsolete style layers',()=>{
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
   assert.match(html,/href="\.\/site\.css\?v=24"/);
   assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,2);
-  assert.ok(html.includes('href="./studio.css?v=2"'));
+  assert.ok(html.includes('href="./studio.css?v=4"'));
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
   for(const text of ['.main-play::before','.rec-play::before','.audius-primary::before','.mobile-bottom-nav','@media(max-width:700px)','prefers-reduced-motion:reduce','.up-next','.audius-grid','.recording-grid','.install-step-card'])
@@ -129,7 +129,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-28/);
+  assert.match(sw,/ava-v2-static-29/);
   assert.match(sw,/install-guide\.js\?v=7/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -445,7 +445,7 @@ test('Approved responsive studio updates the original website without removing s
  for(const id of requiredIDs)assert.ok(html.includes('id="'+id+'"'),id);
  for(const item of ['class="hero studio-home container" id="home"','id="heroTitle">رادیو آوا و نوا',
   'موسیقی زنده، شعر و آواز با آرش','id="listenTitle">پخش زنده رادیو آوا و نوا با آرش',
-  'src="./studio-hero.svg"','src="./studio.js?v=1"'])
+  'class="studio-hero-logo" src="../radio-neon-logo.webp"','src="./studio.js?v=3"'])
   assert.ok(html.includes(item),item);
  for(const id of ['listen','schedule','music','episodes','community','install','about'])
   assert.ok(html.includes('id="'+id+'"'),'Preserved original section '+id);
@@ -454,21 +454,36 @@ test('Approved responsive studio updates the original website without removing s
   assert.ok(studio.includes(token),'Studio controller maintains functional flow: '+token);
  assert.ok(app.includes("$('playerDock').classList.add('dock-active')"));
 });
-test('Approved card artwork exists and no shelf has blank image placeholders',()=>{
- const covers=['studio-hero','studio-violin','studio-sunset','studio-poetry','studio-vinyl','studio-retro',
- 'studio-pomegranate','studio-guitar','studio-jazz','studio-piano','studio-headphones','studio-singer'];
- for(const name of covers){
-   const svg=get(name+'.svg');
-   assert.ok(svg.includes('<svg xmlns="http://www.w3.org/2000/svg"'),'Valid SVG: '+name);
-   assert.ok(svg.length>1000,'Artwork must not be empty: '+name);
-   assert.ok(!svg.includes('<script'),'No scripts inside art');
-   assert.ok(sw.includes('./'+name+'.svg'),'Artwork in service worker: '+name);
+
+test('Ten gallery covers match the exact user-approved photographic art',()=>{
+ const expected={
+  'recording-1':'248c79b2901b23061399bda5c0b60501c64afa59',
+  'recording-2':'89c0fed8278765ba3e284011f1b941f7dc9377e8',
+  'recording-3':'87ba9d5826a990a4f8ad03b397b885a7b7007781',
+  'recording-4':'5837909cc072b575806333aa024ba321f9fcc28b',
+  'recording-5':'40603eee22cc3bb629f40d181e02a0746b847dad',
+  'genre-traditional':'8c2fe10e4deee4089f59ca34899c9fecdcd822ed',
+  'genre-pop':'cde773c36e0ec60bf4b5704bdf0f8cd1f6e4cd02',
+  'genre-jazz':'eb9b291c280d9c0b294c76abe7684d0c7bc5084f',
+  'genre-instrumental':'db47fcf26550e55326a6bf7747133ebce965a78e',
+  'genre-electronic':'d2468c9731e5eb20e228622ae6d4ee1898ac3db1'
+ };
+ for(const [name,sha] of Object.entries(expected)){
+   const path='gallery/'+name+'.webp';
+   const binary=readFileSync(join(root,path));
+   assert.ok(binary.length>10000,'Full cover present: '+name);
+   assert.equal(binary.subarray(0,4).toString('ascii'),'RIFF');
+   assert.equal(binary.subarray(8,12).toString('ascii'),'WEBP');
+   const hash=createHash('sha1').update('blob '+binary.length+'\\0').update(binary).digest('hex');
+   assert.equal(hash,sha,'Pixel-authenticated approved crop: '+name);
+   assert.ok(html.includes('src="./'+path+'"'),name);
+   assert.ok(sw.includes('./'+path),'PWA keeps correct artwork: '+name);
  }
  assert.equal((html.match(/data-studio-recording="[0-4]"/g)||[]).length,5);
- assert.equal((html.match(/data-studio-genre="/g)||[]).length,6);
+ assert.equal((html.match(/data-studio-genre="/g)||[]).length,5);
  assert.equal((html.match(/class="studio-cover-card studio-recording-tile"/g)||[]).length,5);
+ assert.equal((html.match(/class="studio-cover-card studio-genre-tile"/g)||[]).length,5);
  assert.equal((html.match(/class="studio-cover-art"/g)||[]).length,5);
- assert.equal((html.match(/class="studio-cover-card studio-genre-tile"/g)||[]).length,6);
 });
 test('Desktop tablet and mobile reproduce the approved responsive navigation',()=>{
  const design=get('studio.css');
@@ -479,8 +494,38 @@ test('Desktop tablet and mobile reproduce the approved responsive navigation',()
   assert.ok(design.includes(rule),'Expected responsive design rule: '+rule);
  assert.equal((html.match(/data-mobile-tab="/g)||[]).length,4);
  for(const id of ['home','episodes','music','listen'])assert.ok(html.includes('data-mobile-tab="'+id+'"'));
- assert.ok(sw.includes('ava-v2-static-28'));
- assert.ok(sw.includes('studio.css?v=2'));
- assert.ok(sw.includes('studio.js?v=1'));
+ assert.ok(sw.includes('ava-v2-static-29'));
+ assert.ok(sw.includes('studio.css?v=4'));
+ assert.ok(sw.includes('studio.js?v=3'));
  assert.ok(!sw.includes('archive.ibboabdoli.com'),'No recorded audio pre-cache');
+});
+
+test('Approved player, equalizer, iPhone volume and section order are integrated',()=>{
+ const studio=get('studio.css');
+ assert.ok(html.includes('class="studio-feature-logo" src="../radio-neon-logo.webp"'));
+ assert.ok(!html.includes('class="studio-feature-background"'));
+ assert.ok(studio.includes('.studio-feature-art'));
+ const start=html.indexOf('<section class="container live-section" id="listen"');
+ const episodes=html.indexOf('<section class="container section-block" id="episodes"');
+ const music=html.indexOf('id="music"');
+ const schedule=html.indexOf('<section class="container section-block" id="schedule"');
+ const community=html.indexOf('<section class="container section-block" id="community"');
+ assert.ok(start>=0 && start<episodes && episodes<music && music<schedule && schedule<community);
+ const sidebar=html.slice(html.indexOf('<nav class="studio-side-nav"'),html.indexOf('</nav>',html.indexOf('<nav class="studio-side-nav"')));
+ const positions=['#home','#listen','#episodes','#music','#audiusGenres','#schedule','#community','#install','#about'].map(x=>sidebar.indexOf('href="'+x+'"'));
+ assert.ok(positions.every(x=>x>=0),'All navigation targets exist');
+ assert.deepEqual([...positions].sort((a,b)=>a-b),positions,'Menu matches site order');
+ assert.ok(html.includes('id="recordingShuffle"') && html.includes('id="recordingRepeat"'));
+ assert.ok(app.includes("recAudio.loop=!recAudio.loop"));
+ assert.ok(app.includes("chooseRecording(index,true)"));
+ assert.ok(studio.includes('.approved-recording-controls'));
+ assert.ok(studio.includes('.studio-dock-controls #dockPlay'));
+ assert.ok(studio.includes('#waveform.is-active span'));
+ assert.ok(studio.includes('@keyframes studioRadioEQ'));
+ assert.equal((html.match(/--eq-h:/g)||[]).length,62);
+ assert.ok(studio.includes('@media(prefers-reduced-motion:reduce)'));
+ assert.ok(app.includes("classList.add('ios-volume-native')"));
+ assert.ok(studio.includes('.ios-volume-native .live-panel .volume-control'));
+ assert.ok(studio.includes('.ios-volume-native #studioDockVolume'));
+ assert.ok(html.includes('id="liveVolume"'),'Desktop slider remains');
 });
