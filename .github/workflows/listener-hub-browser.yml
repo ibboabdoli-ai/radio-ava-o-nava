@@ -29,5 +29,6 @@ jobs:
           path: |
             .qa-listener-390.png
             .qa-listener-1440.png
-          if-no-files-found: ignore
+          if-no-files-found: error
+          include-hidden-files: true
           retention-days: 7
