@@ -1,3 +1,5 @@
+import { productionRadioOrigin } from '../v2/radio-api-origin.js';
+
 const clock = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Stockholm', year: 'numeric', month: '2-digit', day: '2-digit' });
 const dayKey = (now) => {
   const values = Object.fromEntries(clock.formatToParts(now).map(part => [part.type, part.value]));
@@ -26,6 +28,7 @@ export async function dailyRadioGenre(db, now, first) {
 export async function radioDjRoute({ req, env, headers, user, first, run, changed, j, readBody, token, hash, uuid, audit }) {
   const path = new URL(req.url).pathname, method = req.method;
   const admin = path.startsWith('/api/admin/dj/');
+  const production = env.ALLOWED_ORIGIN === productionRadioOrigin;
   const now = Date.now(), db = env.DB;
   const ok = (body, status = 200) => j(body, status, headers);
   const fail = (error, status) => ok({ error }, status);
@@ -67,7 +70,7 @@ export async function radioDjRoute({ req, env, headers, user, first, run, change
       return ok({ day, genre: null });
     }
     if (path === '/api/admin/dj/pair' && method === 'POST') {
-      const value = token();
+      const value = (production ? 'prod_' : '') + token();
       const existing = await run(db, `UPDATE radio_dj_runtime SET token_hash=?,token_expires_ms=?,issued_by=?,${resetLease}
         WHERE slot=1 AND (lease_expires_ms<=? OR phase IN ('idle','completed'))`, await hash(value), now + tokenMs, user.id, now);
       if (!changed(existing)) return fail('radio_dj_busy', 409);
@@ -84,7 +87,8 @@ export async function radioDjRoute({ req, env, headers, user, first, run, change
     return fail('not_found', 404);
   }
 
-  const bearer = req.headers.get('Authorization')?.match(/^Bearer ([a-f0-9]{64})$/)?.[1];
+  const format = production ? /^Bearer (prod_[a-f0-9]{64})$/ : /^Bearer ([a-f0-9]{64})$/;
+  const bearer = req.headers.get('Authorization')?.match(format)?.[1];
   if (!bearer) return fail('unauthorized', 401);
   const digest = await hash(bearer);
   if (!await first(db, `SELECT 1 FROM radio_dj_runtime WHERE ${authorizedSlot}`, digest, now)) return fail('unauthorized', 401);

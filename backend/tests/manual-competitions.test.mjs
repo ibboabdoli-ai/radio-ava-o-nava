@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import worker from '../worker.js';
 import {testDatabase} from './helpers.mjs';
 
-const base='https://api.example.test',site='https://radio.ibboabdoli.com';
+const base='https://api.example.test',site='https://staging.example.test';
 const make=()=>({DB:testDatabase(),RADIO_FEATURES_ENABLED:'true',REGISTRATION_ENABLED:'true',ATTENDANCE_OBSERVER_ENABLED:'false',ALLOWED_ORIGIN:site,AUTH_RATE_SECRET:'mock-only-secret'});
 async function call(env,path,method='GET',data,cookie,key){
  const headers={Origin:site};if(cookie)headers.Cookie=cookie;if(data!==undefined)headers['content-type']='application/json';if(key)headers['Idempotency-Key']=key;

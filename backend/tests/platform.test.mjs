@@ -4,7 +4,7 @@ import worker from '../worker.js';
 import { testDatabase } from './helpers.mjs';
 
 const base = 'https://api.example.test';
-const site = 'https://radio.ibboabdoli.com';
+const site = 'https://staging.example.test';
 const make = () => ({ DB: testDatabase(), RADIO_FEATURES_ENABLED: 'true', REGISTRATION_ENABLED: 'true', ALLOWED_ORIGIN: site, AUTH_RATE_SECRET: 'mock-only-secret' });
 async function call(env, path, method = 'GET', data, cookie, extra = {}) {
   const headers = { Origin: site, ...extra };

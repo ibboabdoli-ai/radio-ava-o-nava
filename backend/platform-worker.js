@@ -1,6 +1,7 @@
 import { normalizeObservation } from './attendance-engine.js';
 import { dailyRadioGenre, radioDjRoute, radioGenre } from './radio-dj-worker.js';
 import { scrypt as nodeScrypt } from 'node:crypto';
+import { productionRadioOrigin } from '../v2/radio-api-origin.js';
 
 const j=(data,status=200,headers={})=>new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store',...headers}});
 const clean=(v,n)=>typeof v==='string'?v.trim().replace(/[\u0000-\u001f\u007f]/g,'').slice(0,n):'';
@@ -20,21 +21,58 @@ const run=(db,sql,...args)=>db.prepare(sql).bind(...args).run();
 const changed=r=>Number(r?.meta?.changes||0);
 const uuid=v=>typeof v==='string'&&/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(v);
 const balance=async(db,id)=>Number((await first(db,'SELECT COALESCE(SUM(delta),0) AS balance FROM point_transactions WHERE user_id=?',id))?.balance||0);
-const origin=env=>env.ALLOWED_ORIGIN||'https://radio.ibboabdoli.com';
+const origin=env=>env.ALLOWED_ORIGIN||productionRadioOrigin;
 const cors=(req,env)=>req.headers.get('Origin')===origin(env)?{'access-control-allow-origin':origin(env),'access-control-allow-credentials':'true','access-control-allow-methods':'GET, POST, PATCH, PUT, DELETE, OPTIONS','access-control-allow-headers':'Content-Type, Idempotency-Key, Authorization','vary':'Origin'}:{};
 const cookie=t=>`radio_session=${t}; HttpOnly; Secure; SameSite=Lax; Path=/api; Max-Age=604800`;
-const readBody=async req=>{if(!req.headers.get('content-type')?.startsWith('application/json'))throw{status:415,code:'json_required'};if(Number(req.headers.get('content-length')||0)>8192)throw{status:413,code:'too_large'};const raw=await req.text();if(raw.length>8192)throw{status:413,code:'too_large'};try{const body=JSON.parse(raw);if(!body||typeof body!=='object'||Array.isArray(body))throw Error();return body}catch{throw{status:400,code:'invalid_json'}}};
+async function readBody(req) {
+ const maxBytes=8192;
+ if(req.headers.get('content-type')?.split(';',1)[0].trim().toLowerCase()!=='application/json')throw{status:415,code:'json_required'};
+ if(Number(req.headers.get('content-length')||0)>maxBytes)throw{status:413,code:'too_large'};
+ const reader=req.body?.getReader();
+ const bytes=new Uint8Array(maxBytes);
+ let length=0;
+ if(reader){
+  try{
+   for(;;){
+    const {done,value}=await reader.read();
+    if(done)break;
+    if(length+value.byteLength>maxBytes){
+     void reader.cancel().catch(()=>{});
+     throw{status:413,code:'too_large'};
+    }
+    bytes.set(value,length);
+    length+=value.byteLength;
+   }
+  }finally{reader.releaseLock();}
+ }
+ try{
+  const body=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes.subarray(0,length)));
+  if(!body||typeof body!=='object'||Array.isArray(body))throw Error();
+  return body;
+ }catch{throw{status:400,code:'invalid_json'}}
+}
 const session=async(req,db)=>{const t=req.headers.get('Cookie')?.match(/(?:^|;\s*)radio_session=([a-f0-9]{64})(?:;|$)/)?.[1];return t?first(db,'SELECT u.id,u.username,u.role,u.leaderboard_opt_in FROM user_sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at_ms>?',await hash(t),Date.now()):null};
 const profile=async(db,u)=>({id:u.id,username:u.username,role:u.role,leaderboardOptIn:!!u.leaderboard_opt_in,balance:await balance(db,u.id)});
 const audit=(db,u,action,target,note='')=>run(db,'INSERT INTO admin_events(id,actor_user_id,action,target_id,note,created_at_ms) VALUES(?,?,?,?,?,?)',crypto.randomUUID(),u.id,action,target,note,Date.now());
-const rate=async(req,db,env)=>{const key=await hash(`${env.AUTH_RATE_SECRET||'local'}|${req.headers.get('CF-Connecting-IP')||'unknown'}`),now=Date.now();await run(db,'INSERT INTO auth_limits(client_hash,window_start_ms,attempts) VALUES(?,?,1) ON CONFLICT(client_hash) DO UPDATE SET window_start_ms=CASE WHEN window_start_ms<? THEN excluded.window_start_ms ELSE window_start_ms END,attempts=CASE WHEN window_start_ms<? THEN 1 ELSE attempts+1 END',key,now,now-900000,now-900000);return Number((await first(db,'SELECT attempts FROM auth_limits WHERE client_hash=?',key))?.attempts||0)<=20};
-const accountRate=async(db,env,username)=>{const key=await hash(`${env.AUTH_RATE_SECRET}|account|${username}`),now=Date.now();await run(db,'INSERT INTO auth_limits(client_hash,window_start_ms,attempts) VALUES(?,?,1) ON CONFLICT(client_hash) DO UPDATE SET window_start_ms=CASE WHEN window_start_ms<? THEN excluded.window_start_ms ELSE window_start_ms END,attempts=CASE WHEN window_start_ms<? THEN 1 ELSE attempts+1 END',key,now,now-900000,now-900000);return Number((await first(db,'SELECT attempts FROM auth_limits WHERE client_hash=?',key))?.attempts||0)<=10};
+async function authRate(db, key, limit) {
+ const now=Date.now(), start=now-900000;
+ const result=await first(db,`INSERT INTO auth_limits(client_hash,window_start_ms,attempts) VALUES(?,?,1)
+  ON CONFLICT(client_hash) DO UPDATE SET window_start_ms=CASE WHEN window_start_ms<? THEN excluded.window_start_ms ELSE window_start_ms END,
+  attempts=CASE WHEN window_start_ms<? THEN 1 ELSE attempts+1 END
+  RETURNING attempts`,await hash(key),now,start,start);
+ return result!=null&&result.attempts<=limit;
+}
+const rate=(req,db,env)=>authRate(db,`${env.AUTH_RATE_SECRET}|${req.headers.get('CF-Connecting-IP')||'unknown'}`,20);
+const accountRate=(db,env,username)=>authRate(db,`${env.AUTH_RATE_SECRET}|account|${username}`,10);
 const clearCookie='radio_session=; HttpOnly; Secure; SameSite=Lax; Path=/api; Max-Age=0';
 
 export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),p=url.pathname,m=req.method;try{
+ const production=origin(env)===productionRadioOrigin;
+ const registrationEnabled=!production&&env.REGISTRATION_ENABLED==='true';
+ const attendanceObserverEnabled=!production&&env.ATTENDANCE_OBSERVER_ENABLED==='true';
  if(req.headers.get('Origin')&&req.headers.get('Origin')!==origin(env))return j({error:'origin_not_allowed'},403,h);
  if(m==='OPTIONS')return new Response(null,{status:204,headers:h});
- if(p==='/health'&&m==='GET')return j({ok:true,configured:!!env.DB,featuresEnabled:env.RADIO_FEATURES_ENABLED==='true',registrationEnabled:env.REGISTRATION_ENABLED==='true',attendanceObserverEnabled:env.ATTENDANCE_OBSERVER_ENABLED==='true'},200,h);
+ if(p==='/health'&&m==='GET')return j({ok:true,configured:!!env.DB,featuresEnabled:env.RADIO_FEATURES_ENABLED==='true',registrationEnabled,attendanceObserverEnabled},200,h);
  if(!env.DB||env.RADIO_FEATURES_ENABLED!=='true')return j({error:'service_disabled'},503,h);
  if(!env.ALLOWED_ORIGIN||!env.AUTH_RATE_SECRET)return j({error:'service_unconfigured'},503,h);
  if(!['GET','HEAD'].includes(m)&&req.headers.get('Origin')!==origin(env))return j({error:'origin_required'},403,h);
@@ -43,7 +81,7 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
  const djRoute=user=>radioDjRoute({req,env,headers:h,user,first,run,changed,j,readBody,token,hash,uuid,audit});
  if(p.startsWith('/api/dj/'))return await djRoute(null);
  if(p==='/api/auth/register'&&m==='POST'){
-  if(env.REGISTRATION_ENABLED!=='true')return j({error:'registration_disabled'},503,h);
+  if(!registrationEnabled)return j({error:'registration_disabled'},503,h);
   if(!await rate(req,db,env))return j({error:'rate_limited'},429,h);
   const b=await readBody(req),username=clean(b.username,40).toLowerCase();
   if(!/^[a-z0-9_]{3,40}$/.test(username)||typeof b.password!=='string'||b.password.length<12||b.password.length>128)return j({error:'invalid_credentials'},400,h);
@@ -97,7 +135,7 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
  }
  if(p==='/api/admin/attendance')return j({error:'legacy_attendance_disabled'},410,h);
  if(p==='/api/internal/attendance'&&m==='POST'){
-  if(env.ATTENDANCE_OBSERVER_ENABLED!=='true'||!env.OBSERVER_TOKEN)return j({error:'observer_disabled'},503,h);
+  if(!attendanceObserverEnabled||!env.OBSERVER_TOKEN)return j({error:'observer_disabled'},503,h);
   const bearer=req.headers.get('Authorization')?.match(/^Bearer (.+)$/)?.[1]||'';if(!eq(await hash(bearer),await hash(env.OBSERVER_TOKEN)))return j({error:'unauthorized'},401,h);
   const b=await readBody(req),o=normalizeObservation(b);if(!o)return j({error:'invalid_observation'},400,h);
   const mapping=await first(db,'SELECT user_id FROM listener_identities WHERE clubhouse_user_id=?',o.clubhouseUserId);if(!mapping)return j({error:'unmapped_identity'},404,h);
