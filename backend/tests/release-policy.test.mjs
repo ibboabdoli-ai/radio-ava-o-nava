@@ -15,7 +15,7 @@ const environment = (origin = staging) => ({
 test('the production club accepts same-site HTTPS and refuses the staging API', async () => {
   assert.equal(radioApiOrigin(productionApi, productionRadioOrigin), productionApi);
   assert.equal(radioApiOrigin(staging, staging), staging);
-  for (const url of [staging, 'http://api.radio.ibboabdoli.com', productionApi + ':8080', productionApi + '/api', 'https://api.radio.ibboabdoli.com.example.test']) {
+  for (const url of [staging, 'http://api.radio.ibboabdoli.com', productionApi + ':8080', productionApi + '/api', 'https://api.radio.ibboabdoli.com.example.test', 'https://other.radio.ibboabdoli.com']) {
     assert.throws(() => radioApiOrigin(url, productionRadioOrigin), TypeError);
   }
   let invoked = false;

@@ -1,4 +1,5 @@
 export const productionRadioOrigin = 'https://radio.ibboabdoli.com';
+export const productionRadioApiOrigin = 'https://api.radio.ibboabdoli.com';
 
 export function radioApiOrigin(value, siteOrigin) {
   if (typeof value !== 'string') throw new TypeError('The radio API origin is missing');
@@ -7,10 +8,9 @@ export function radioApiOrigin(value, siteOrigin) {
     throw new TypeError('The radio API needs an HTTPS origin');
   }
   if (siteOrigin === productionRadioOrigin) {
-    const siteHost = new URL(productionRadioOrigin).hostname;
-    if (url.port || (url.hostname !== siteHost && !url.hostname.endsWith('.' + siteHost))) {
-      throw new TypeError('Production requires an API under the radio domain');
-    }
+    if (url.origin === productionRadioOrigin) return productionRadioOrigin;
+    if (url.origin === productionRadioApiOrigin) return productionRadioApiOrigin;
+    throw new TypeError('Production requires a recognized radio API origin');
   }
   return url.origin;
 }

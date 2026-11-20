@@ -1,10 +1,11 @@
 import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { join, resolve } from 'node:path';
-import { productionRadioOrigin, radioApiOrigin } from '../../v2/radio-api-origin.js';
+import { productionRadioApiOrigin, productionRadioOrigin, radioApiOrigin } from '../../v2/radio-api-origin.js';
 
 export async function verifyProductionClubApi(value, request = fetch) {
-  const api = radioApiOrigin(value, productionRadioOrigin);
+  const selected = radioApiOrigin(value, productionRadioOrigin);
+  const api = selected === productionRadioOrigin ? productionRadioOrigin : productionRadioApiOrigin;
   const options = {
     headers: { Origin: productionRadioOrigin },
     redirect: 'error',
