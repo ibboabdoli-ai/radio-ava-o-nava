@@ -20,6 +20,32 @@ async function api(path,{method='GET',data,key}={}){
  let result={};try{result=await res.json()}catch{}if(!res.ok)throw Error(errors[result.error]||`خطای سرویس (${res.status})`);return result;
 }
 const competitionUi=mountCompetitionUi({api,notice,onChange:()=>refresh()});
+const clubLinks=document.querySelectorAll('.club-mobile-nav a,.club-nav a');
+const contestsLinks=document.querySelectorAll('[data-admin-competition-link],.club-nav a[href="#competitions"]');
+function syncClubNavigation(hash=location.hash){
+ const admin=state.user?.role==='admin';
+ const contests=admin?'#competition-admin':'#competitions';
+ contestsLinks.forEach(link=>{link.href=contests});
+ const section=hash||(admin?contests:'#overview');
+ const adminView=admin&&/^#competition-(admin|.*-form)$/.test(section);
+ document.body.dataset.view=adminView?'admin-competitions':'dashboard';
+ $('club-header-subtitle').textContent=adminView?'مدیریت مسابقه‌ها':'باشگاه شنوندگان';
+ for(const link of clubLinks){
+  if(link.hash===(adminView?contests:section))link.setAttribute('aria-current','true');
+  else link.removeAttribute('aria-current');
+ }
+}
+document.addEventListener('click',event=>{
+ const link=event.target.closest('a[href^="#"]');
+ if(!link)return;
+ syncClubNavigation(link.hash);
+ $('club-menu').open=false;
+});
+addEventListener('hashchange',()=>syncClubNavigation());
+async function attendanceIndicator(){
+ try{const health=await api('/health');show('attendance-indicator',!!state.user&&health.attendanceObserverEnabled===false)}
+ catch{show('attendance-indicator',false)}
+}
 async function initialize(){
  const register=$('auth-form').querySelector('[value=register]');register.hidden=true;register.disabled=true;
  try{const config=await fetch('./request-config.json',{cache:'no-store'}).then(r=>r.json());if(config.clubEnabled!==true)throw Error();const base=new URL(config.apiBase);if(base.protocol!=='https:'||base.username||base.password||base.search||base.hash||base.pathname!=='/')throw Error();state.api=base.origin;await refresh()}catch{notice('سامانهٔ باشگاه هنوز برای استفاده فعال نشده است.',true);show('auth',false);show('account',false);$('search').disabled=true;$('catalog-form').querySelector('button').disabled=true;empty('catalog','فهرست در دسترس نیست.');empty('queue','صف در دسترس نیست.');empty('leaders','جدول در دسترس نیست.')}
@@ -28,8 +54,13 @@ async function refresh(){
  try{state.user=(await api('/api/me')).user}catch{state.user=null}
  if(!state.user)$('recovery-code').textContent='';
  show('auth',!state.user);show('account',!!state.user);show('my-data',!!state.user);show('dashboard',!!state.user);show('points-summary',!!state.user);show('admin',state.user?.role==='admin');show('admin-activity',state.user?.role==='admin');show('competition-admin',state.user?.role==='admin');
- $('welcome-name').textContent=state.user?.username||'شنوندهٔ عزیز';$('account-status').textContent=state.user?'حساب شما فعال است. آمار زیر از داده‌های ثبت‌شدهٔ سرویس خوانده می‌شود.':'برای دیدن امتیاز و درخواست‌ها وارد شوید.';
- if(state.user){$('account-summary').textContent=`${state.user.username} — موجودی: ${state.user.balance} امتیاز`;$('ranking-opt-in').checked=state.user.leaderboardOptIn;await Promise.allSettled([myData(),dashboardData(),adminData(),adminActivity(),identityStatus(),competitionUi.refreshMine()])}else{state.activeSongIds.clear();$('my-competition-results').replaceChildren()}
+ document.body.toggleAttribute('data-member',!!state.user);
+ $('welcome-name').textContent=state.user?.displayName||(state.user?'خوش آمدید':'شنوندهٔ عزیز');
+ $('member-handle').textContent=state.user?`@${state.user.username}`:'';
+ $('account-status').textContent=state.user?'حساب فعال':'برای دیدن امتیاز و درخواست‌ها وارد شوید.';
+ show('member-handle',!!state.user);show('member-settings',!!state.user);show('competition-spotlight',!!state.user);
+ show('club-menu-admin',state.user?.role==='admin');syncClubNavigation();
+ if(state.user){$('account-summary').textContent=`${state.user.username} — موجودی: ${state.user.balance} امتیاز`;$('ranking-opt-in').checked=state.user.leaderboardOptIn;await Promise.allSettled([myData(),dashboardData(),adminData(),adminActivity(),identityStatus(),competitionUi.refreshMine(),attendanceIndicator()])}else{state.activeSongIds.clear();$('my-competition-results').replaceChildren();show('attendance-indicator',false)}
  await Promise.allSettled([catalog(),queue(),leaders(),competitionUi.refreshPublic()]);
  if(state.user){await queuePositions();if(state.user.role==='admin')await Promise.allSettled([identityUsers(),competitionUi.refreshAdmin()])}
 }
@@ -41,7 +72,25 @@ async function identityStatus(){try{const data=await api('/api/me/clubhouse-iden
 async function catalog(){const q=$('search').value.trim();try{const {songs}=await api('/api/catalog?q='+encodeURIComponent(q));const host=$('catalog');host.replaceChildren();if(!songs.length)return empty('catalog','آهنگی یافت نشد.');for(const song of songs){const row=document.createElement('div');const art=text('span','♫','song-art');art.setAttribute('aria-hidden','true');row.append(art,text('strong',song.title),text('span',song.artist,'meta'),text('span',`${number(song.cost)} امتیاز · کسر هنگام تأیید`,'meta'));const active=state.activeSongIds.has(song.id),low=state.user&&state.user.balance<song.cost;const button=text('button',active?'درخواست فعال دارید':low?'امتیاز کافی نیست':'درخواست آهنگ');button.type='button';button.disabled=!state.user||active||low;button.addEventListener('click',async()=>{button.disabled=true;try{await api('/api/requests',{method:'POST',data:{catalogSongId:song.id},key:crypto.randomUUID()});notice('درخواست ثبت شد و منتظر بررسی مدیر است.');await refresh()}catch(e){notice(e.message,true);await myData();await catalog()}});row.append(button);host.append(row)}}catch{empty('catalog','فهرست در دسترس نیست.')}}
 async function queue(){try{const {queue}=await api('/api/queue');const host=$('queue');host.replaceChildren();if(!queue.length)return empty('queue','صف فعلاً خالی است.');for(const [index,item] of queue.entries())host.append(text('li',`${index+1}. ${item.title} — ${item.artist}`))}catch{empty('queue','صف در دسترس نیست.')}}
 async function leaders(){try{const {leaders}=await api('/api/leaderboard');const host=$('leaders');host.replaceChildren();if(!leaders.length)return empty('leaders','هنوز کسی نمایش عمومی امتیاز را فعال نکرده است.');for(const [index,item] of leaders.entries())host.append(text('li',`رتبهٔ ${number(index+1)} · ${item.name} · ${number(item.points)} امتیاز`))}catch{empty('leaders','جدول در دسترس نیست.')}}
-async function myData(){if(!state.user)return;try{const [requests,attendance,transactions]=await Promise.all([api('/api/me/requests'),api('/api/me/attendance'),api('/api/me/transactions')]);state.activeSongIds=new Set(requests.requests.filter(item=>['pending','approved'].includes(item.status)&&item.catalog_song_id).map(item=>item.catalog_song_id));const r=$('my-requests');r.replaceChildren();if(!requests.requests.length)empty('my-requests','درخواستی ثبت نشده است.');for(const item of requests.requests){const row=document.createElement('div');row.append(text('strong',`${item.title} — ${item.artist}`),text('span',`${statusLabel[item.status]||item.status} · ${number(item.cost)} امتیاز · ${formatTime(item.created_at)}`,'meta'));if(['pending','approved'].includes(item.status)){const button=text('button','لغو درخواست');button.type='button';button.addEventListener('click',async()=>{button.disabled=true;try{await api(`/api/me/requests/${item.id}`,{method:'PATCH',data:{}});notice('درخواست لغو شد.');await refresh()}catch(e){notice(e.message,true);button.disabled=false}});row.append(button)}r.append(row)}const a=$('attendance');a.replaceChildren();if(!attendance.sessions.length)empty('attendance','حضور تأییدشده‌ای ثبت نشده است.');for(const item of attendance.sessions)a.append(text('div',`${item.room_id} · ${formatTime(item.start_ms)} · ${duration(item.credited_seconds)}`));const t=$('transactions');t.replaceChildren();if(!transactions.transactions.length)empty('transactions','گردش امتیازی وجود ندارد.');for(const item of transactions.transactions)t.append(text('div',formatTransaction(item)));const recent=$('recent-activity');recent.replaceChildren();const activity=[...transactions.transactions.slice(0,5).map(item=>({when:item.created_at_ms,label:`${transactionLabel(item)} · ${item.delta>0?'+':''}${number(item.delta)} امتیاز`})),...requests.requests.slice(0,5).map(item=>({when:Date.parse(item.created_at),label:`${statusLabel[item.status]||item.status} · ${item.title}`}))].filter(item=>Number.isFinite(Number(item.when))).sort((a,b)=>b.when-a.when).slice(0,5);if(!activity.length)empty('recent-activity','هنوز فعالیتی ثبت نشده است.');for(const item of activity)recent.append(text('div',`${item.label} · ${formatTime(item.when)}`))}catch(e){notice(e.message,true)}}
+async function myData(){if(!state.user)return;try{const [requests,attendance,transactions]=await Promise.all([api('/api/me/requests'),api('/api/me/attendance'),api('/api/me/transactions')]);state.activeSongIds=new Set(requests.requests.filter(item=>['pending','approved'].includes(item.status)&&item.catalog_song_id).map(item=>item.catalog_song_id));const r=$('my-requests');r.replaceChildren();if(!requests.requests.length)empty('my-requests','درخواستی ثبت نشده است.');for(const item of requests.requests){const row=document.createElement('div');row.append(text('strong',`${item.title} — ${item.artist}`),text('span',`${statusLabel[item.status]||item.status} · ${number(item.cost)} امتیاز · ${formatTime(item.created_at)}`,'meta'));if(['pending','approved'].includes(item.status)){const button=text('button','لغو درخواست');button.type='button';button.addEventListener('click',async()=>{button.disabled=true;try{await api(`/api/me/requests/${item.id}`,{method:'PATCH',data:{}});notice('درخواست لغو شد.');await refresh()}catch(e){notice(e.message,true);button.disabled=false}});row.append(button)}r.append(row)}const a=$('attendance');a.replaceChildren();if(!attendance.sessions.length)empty('attendance','حضور تأییدشده‌ای ثبت نشده است.');for(const item of attendance.sessions)a.append(text('div',`${item.room_id} · ${formatTime(item.start_ms)} · ${duration(item.credited_seconds)}`));const t=$('transactions');t.replaceChildren();if(!transactions.transactions.length)empty('transactions','گردش امتیازی وجود ندارد.');for(const item of transactions.transactions)t.append(text('div',formatTransaction(item)));renderRecentActivity(requests.requests,transactions.transactions)}catch(e){notice(e.message,true)}}
+function renderRecentActivity(requests,transactions){
+ const host=$('recent-activity');
+ host.replaceChildren();
+ const activity=[
+  ...transactions.slice(0,5).map(item=>({when:item.created_at_ms,title:transactionLabel(item),delta:item.delta,icon:item.source_type==='competition_prize'?'trophy':'coins'})),
+  ...requests.slice(0,5).map(item=>({when:Date.parse(item.created_at),title:item.title,caption:statusLabel[item.status]||item.status,icon:'queue'}))
+ ].filter(item=>Number.isFinite(Number(item.when))).sort((a,b)=>b.when-a.when).slice(0,4);
+ if(!activity.length){empty('recent-activity','هنوز فعالیتی ثبت نشده است.');return}
+ for(const item of activity){
+  const row=text('div','','recent-item'),glyph=text('span','','club-icon icon-'+item.icon),copy=text('div','');
+  glyph.setAttribute('aria-hidden','true');
+  copy.append(text('strong',item.title),text('time',formatTime(item.when)));
+  row.append(glyph,copy);
+  const badge=item.delta===undefined?item.caption:`${item.delta>0?'+':''}${number(item.delta)} امتیاز`;
+  if(badge)row.append(text('span',badge,'recent-badge'));
+  host.append(row);
+ }
+}
 async function adminData(){
  if(state.user?.role!=='admin')return;
  try{
@@ -73,7 +122,7 @@ async function adminData(){
   }
  }catch(error){notice(error.message,true)}
 }
-$('auth-form').addEventListener('submit',async e=>{e.preventDefault();const submit=e.submitter?.value||'login',form=e.currentTarget;try{const b={username:form.elements.namedItem('username').value,password:form.elements.namedItem('password').value};await api(`/api/auth/${submit}`,{method:'POST',data:b});if(submit==='register')await api('/api/auth/login',{method:'POST',data:b});form.reset();notice('ورود انجام شد.');await refresh()}catch(err){notice(err.message,true)}});
+$('auth-form').addEventListener('submit',async e=>{e.preventDefault();const submit=e.submitter?.value||'login',form=e.currentTarget;try{const b={username:form.elements.namedItem('username').value,password:form.elements.namedItem('password').value};await api(`/api/auth/${submit}`,{method:'POST',data:b});if(submit==='register')await api('/api/auth/login',{method:'POST',data:b});form.reset();notice('');await refresh()}catch(err){notice(err.message,true)}});
 $('recover-form').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;try{await api('/api/auth/recover',{method:'POST',data:{username:form.elements.namedItem('username').value,recoveryCode:form.elements.namedItem('recoveryCode').value,newPassword:form.elements.namedItem('newPassword').value}});form.reset();notice('گذرواژه تغییر کرد. اکنون وارد شوید.')}catch(err){notice(err.message,true)}});
 $('recovery-code-form').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;try{const {recoveryCode}=await api('/api/me/recovery-code',{method:'POST',data:{currentPassword:form.elements.namedItem('currentPassword').value}});form.reset();$('recovery-code').textContent=recoveryCode;notice('کد بازیابی ساخته شد. آن را در جای امن ذخیره کنید.')}catch(err){notice(err.message,true)}});
 $('password-form').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;try{await api('/api/me/password',{method:'POST',data:{currentPassword:form.elements.namedItem('currentPassword').value,newPassword:form.elements.namedItem('newPassword').value}});form.reset();state.user=null;await refresh();notice('گذرواژه تغییر کرد؛ همهٔ نشست‌ها بسته شدند.')}catch(err){notice(err.message,true)}});

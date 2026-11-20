@@ -3,13 +3,48 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#100e1c"><meta name="robots" content="noindex">
 <title>باشگاه شنوندگان | رادیو آوا و نوا</title>
-<link rel="icon" href="../radio-neon-logo.webp"><link rel="stylesheet" href="./site.css?v=25"><link rel="stylesheet" href="./radio-club.css"><link rel="stylesheet" href="./club-purple.css?v=1">
+<link rel="icon" href="../radio-neon-logo.webp"><link rel="stylesheet" href="./site.css?v=25"><link rel="stylesheet" href="./radio-club.css"><link rel="stylesheet" href="./club-purple.css?v=2">
 </head><body>
 <div class="club-shell"><aside class="club-sidebar" aria-label="ناوبری باشگاه"><a class="club-brand" href="./"><span class="brand-mark" aria-hidden="true">♫</span><span><strong>رادیو آوا و نوا</strong><small>باشگاه شنوندگان</small></span></a><nav class="club-nav" aria-label="بخش‌های صفحه"><a href="#overview">نمای کلی</a><a href="#catalog-title">کشف آهنگ</a><a href="#my-data">درخواست‌های من</a><a href="#queue-title">صف پخش</a><a href="#competitions">مسابقه‌ها</a><a href="#leaders-title">جدول امتیازها</a><a href="#account">تنظیمات حساب</a><a href="#admin">مدیریت</a></nav><p class="sidebar-note">امتیاز حضور تنها با منبع معتبر ثبت می‌شود.</p><a class="back-link" href="./">بازگشت به رادیو ←</a></aside><main class="club-wrap">
-<header class="club-header"><div><p class="eyebrow">RADIO AVA O NAVA · LISTENER CLUB</p><h1>رادیو آوا و نوا · باشگاه شنوندگان</h1><p>موسیقی دلخواهت را پیدا کن، درخواست بده و وضعیت امتیازها را ببین.</p></div><a href="./">بازگشت به رادیو ←</a></header>
+<header class="club-header">
+ <details id="club-menu" class="club-menu"><summary aria-label="منوی باشگاه"><span class="club-icon icon-menu" aria-hidden="true"></span></summary>
+  <nav aria-label="منوی باشگاه"><a href="#overview">وضعیت حساب</a><a href="#account">تنظیمات حساب</a><a href="#admin" id="club-menu-admin" hidden>مدیریت رادیو</a><a href="./">بازگشت به رادیو</a></nav>
+ </details>
+ <div class="club-lockup">
+  <span class="club-icon icon-headphones" aria-hidden="true"></span>
+  <div><h1>رادیو آوا و نوا</h1><p id="club-header-subtitle">باشگاه شنوندگان</p></div>
+ </div>
+</header>
 <p id="notice" role="status" aria-live="polite"></p>
-<section id="overview" class="club-hero" aria-labelledby="overview-title"><div><p class="eyebrow">نمای کلی حساب</p><h2 id="overview-title">خوش آمدید <span id="welcome-name">شنوندهٔ عزیز</span></h2><p id="account-status">برای دیدن امتیاز و درخواست‌ها وارد شوید.</p></div><div class="hero-orbit" aria-hidden="true">♫</div></section>
-<section id="dashboard" class="metric-grid" hidden aria-label="خلاصهٔ حساب"><div class="metric"><span>موجودی فعلی</span><strong id="stat-balance">—</strong><small>امتیاز</small></div><div class="metric"><span>حضور تأییدشده</span><strong id="stat-attendance">—</strong><small>بر اساس داده‌های معتبر</small></div><div class="metric"><span>درخواست منتظر</span><strong id="stat-pending">—</strong><small>در انتظار بررسی</small></div><div class="metric"><span>در صف پخش</span><strong id="stat-approved">—</strong><small>درخواست تأییدشده</small></div></section>
+<section id="overview" class="club-hero club-member" aria-labelledby="overview-title">
+ <span class="member-avatar" aria-hidden="true"><span class="club-icon icon-user"></span></span>
+ <div class="member-details">
+  <h2 id="overview-title"><span id="welcome-name">شنوندهٔ عزیز</span></h2>
+  <bdi id="member-handle" hidden></bdi><p id="account-status">برای دیدن امتیاز و درخواست‌ها وارد شوید.</p>
+ </div>
+ <a class="member-settings" id="member-settings" href="#account" hidden><span class="club-icon icon-gear" aria-hidden="true"></span> تنظیمات حساب</a>
+</section>
+<section id="dashboard" class="listener-dashboard" hidden aria-label="خلاصهٔ حساب">
+ <div class="balance-card">
+  <p>موجودی امتیاز <span class="club-icon icon-coins" aria-hidden="true"></span></p>
+  <div class="balance-value"><strong id="stat-balance">—</strong> امتیاز</div>
+  <small>قابل استفاده برای درخواست آهنگ</small>
+ </div>
+ <div class="listener-stats">
+  <div class="listener-stat"><span class="club-icon icon-star" aria-hidden="true"></span><span>امتیاز کسب‌شده</span><strong id="stat-earned">—</strong></div>
+  <div class="listener-stat"><span class="club-icon icon-paper-plane" aria-hidden="true"></span><span>امتیاز مصرف‌شده</span><strong id="stat-spent">—</strong></div>
+  <div class="listener-stat"><span class="club-icon icon-users" aria-hidden="true"></span><span>حضور تأییدشده</span><strong id="stat-attendance">—</strong><small class="attendance-badge" id="attendance-indicator" hidden>حضور خودکار غیرفعال</small></div>
+ </div>
+</section>
+<section id="competition-spotlight" class="dashboard-section" hidden aria-labelledby="competition-spotlight-title">
+ <h2 id="competition-spotlight-title"><span class="club-icon icon-trophy" aria-hidden="true"></span> مسابقهٔ فعال</h2>
+ <a href="#competitions" class="spotlight-card"><span class="spotlight-icon"><span class="club-icon icon-trophy" aria-hidden="true"></span></span><span><strong id="spotlight-name">در حال بررسی مسابقه‌ها…</strong><small id="spotlight-description"></small></span><span class="club-icon icon-chevron" aria-hidden="true"></span></a>
+</section>
+<section id="points-summary" class="dashboard-section" hidden aria-labelledby="points-summary-title">
+ <h2 id="points-summary-title"><span class="club-icon icon-clock" aria-hidden="true"></span> فعالیت‌های اخیر</h2>
+ <div id="recent-activity" class="recent-ledger" aria-live="polite"></div>
+ <a class="dashboard-link" href="#my-data">مشاهدهٔ گردش امتیاز و درخواست‌ها</a>
+</section>
 <section id="auth" class="club-card" aria-labelledby="auth-title"><h2 id="auth-title">ورود</h2>
 <form id="auth-form"><label>نام کاربری <input name="username" required minlength="3" maxlength="40" pattern="[a-zA-Z0-9_]+" autocomplete="username"></label><label>گذرواژه <input name="password" type="password" required minlength="12" autocomplete="current-password"></label><div class="club-actions"><button type="submit" name="action" value="login">ورود</button><button type="submit" name="action" value="register" class="secondary" hidden disabled>ثبت‌نام</button></div></form>
 <details class="recovery-details"><summary>بازیابی با کد ذخیره‌شده</summary><form id="recover-form"><p class="hint">اگر گذرواژه و کد را با هم گم کرده‌اید، بازیابی خودکار ممکن نیست.</p><label>نام کاربری <input name="username" required minlength="3" maxlength="40" autocomplete="username"></label><label>کد بازیابی <input name="recoveryCode" required pattern="[a-f0-9]{64}" autocomplete="off"></label><label>گذرواژهٔ تازه <input name="newPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password"></label><button type="submit" class="secondary">بازیابی حساب</button></form></details>
@@ -17,23 +52,59 @@
 
 <div class="club-grid"><section class="club-card" aria-labelledby="catalog-title"><h2 id="catalog-title">درخواست آهنگ</h2><p class="hint">فقط آهنگ‌های تأییدشده در فهرست قابل درخواست‌اند. تأیید درخواست به معنی پخش قطعی نیست.</p><label>جست‌وجو <input id="search" type="search" placeholder="نام آهنگ یا هنرمند"></label><div id="catalog" class="club-list"></div></section>
 <section class="club-card" aria-labelledby="queue-title"><h2 id="queue-title">صف آهنگ‌ها</h2><ol id="queue" class="club-list"></ol></section>
-<section id="my-data" class="club-card" hidden aria-labelledby="my-title"><h2 id="my-title">درخواست‌ها و حضور من</h2><h3>درخواست‌ها</h3><div id="my-requests" class="club-list"></div><h3>سابقهٔ حضور</h3><div id="attendance" class="club-list"></div><h3>گردش امتیاز</h3><div id="transactions" class="club-list"></div><h3>نتیجه‌ها و رضایت انتشار نام من</h3><div id="my-competition-results" class="club-list"></div></section>
+<section id="my-data" class="club-card" hidden aria-labelledby="my-title"><h2 id="my-title">درخواست‌ها و حضور من</h2><div class="request-totals"><span>در انتظار <strong id="stat-pending">—</strong></span><span>در صف <strong id="stat-approved">—</strong></span><span id="my-rank">—</span></div><h3>درخواست‌ها</h3><div id="my-requests" class="club-list"></div><h3>سابقهٔ حضور</h3><div id="attendance" class="club-list"></div><h3>گردش امتیاز</h3><div id="transactions" class="club-list"></div><h3>نتیجه‌ها و رضایت انتشار نام من</h3><div id="my-competition-results" class="club-list"></div></section>
 <section class="club-card" aria-labelledby="leaders-title"><h2 id="leaders-title">جدول امتیازها</h2><p class="hint">فقط کسانی که خودشان اجازه داده‌اند نمایش داده می‌شوند.</p><ol id="leaders" class="club-list"></ol></section></div>
 <section id="competitions" class="club-card" aria-labelledby="competitions-title"><h2 id="competitions-title">مسابقه‌ها و نتیجه‌ها</h2><p class="hint">ثبت‌نام از مسیر تأییدشدهٔ مسابقه انجام می‌شود. فقط نتیجه‌هایی که انتشار نامشان تأیید شده نمایش داده می‌شوند.</p><div id="competition-public-list" class="club-list" aria-live="polite"></div></section>
 
 
 
-<section id="points-summary" class="club-card" hidden aria-labelledby="points-summary-title"><div class="section-head"><p class="eyebrow">شفافیت امتیاز</p><h2 id="points-summary-title">کارنامهٔ من</h2></div><div class="points-summary"><p>دریافت‌شده <strong id="stat-earned">—</strong></p><p>خرج‌شده <strong id="stat-spent">—</strong></p><p>رتبهٔ من <strong id="my-rank">—</strong></p></div><p class="hint">هر دقیقهٔ حضور تأییدشده یک امتیاز دارد. درخواست هنگام تأیید مدیر هزینه دارد؛ لغو یا رد درخواست تأییدشده، امتیاز را برمی‌گرداند. مشاهدهٔ حضور فعلاً غیرفعال است.</p><h3>فعالیت اخیر</h3><div id="recent-activity" class="club-list"></div></section>
 <section id="account" class="club-card" hidden aria-labelledby="account-title"><h2 id="account-title">حساب من</h2><p id="account-summary"></p><p id="identity-status"></p><button id="identity-unlink" class="secondary" type="button" hidden>قطع اتصال شناسهٔ Clubhouse</button><label class="check"><input id="ranking-opt-in" type="checkbox"> نمایش نام من در جدول امتیازها</label><form id="recovery-code-form"><h3>کد بازیابی</h3><p class="hint">کد فقط یک بار نمایش داده می‌شود. آن را در جای امن نگه دارید؛ کد تازه، کد قبلی را باطل می‌کند.</p><label>گذرواژهٔ فعلی <input name="currentPassword" type="password" required autocomplete="current-password"></label><button type="submit" class="secondary">ساخت کد بازیابی</button><output id="recovery-code" aria-live="polite"></output></form><form id="password-form"><h3>تغییر گذرواژه</h3><label>گذرواژهٔ فعلی <input name="currentPassword" type="password" required autocomplete="current-password"></label><label>گذرواژهٔ تازه <input name="newPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password"></label><button type="submit" class="secondary">تغییر گذرواژه و خروج از همهٔ نشست‌ها</button></form><button id="logout" class="secondary" type="button">خروج</button></section>
 <section id="admin" class="club-card" hidden aria-labelledby="admin-title"><h2 id="admin-title">مدیریت</h2><div class="club-grid">
 <div><h3>افزودن آهنگ مجاز</h3><form id="catalog-form"><label>نام آهنگ <input name="title" required maxlength="120"></label><label>هنرمند <input name="artist" required maxlength="120"></label><label>پیوند Audius <input name="sourceUrl" type="url" required placeholder="https://audius.co/…"></label><label>یادداشت مجوز <input name="rightsNote" required maxlength="500"></label><label>هزینهٔ امتیاز <input name="cost" type="number" min="1" max="1000" value="1" required></label><label class="check"><input name="rightsConfirmed" type="checkbox" required> مجوز استفاده را بررسی کردم</label><label class="check"><input name="playableConfirmed" type="checkbox" required> امکان پخش را بررسی کردم</label><button type="submit">افزودن آهنگ</button></form></div>
 <div><h3>درخواست‌های منتظر</h3><div id="pending" class="club-list"></div><h3>صف تأییدشده</h3><div id="approved" class="club-list"></div></div>
 <div><h3>کاربران و امتیازها</h3><div id="users" class="club-list"></div><h3>اتصال شناسهٔ Clubhouse</h3><form id="identity-form"><label>کاربر <select id="identity-user" required></select></label><label>شناسهٔ پایدار Clubhouse <input id="identity-clubhouse" required maxlength="100" autocomplete="off"></label><label class="check"><input id="identity-consent" type="checkbox" required> رضایت کاربر ثبت و بررسی شده است</label><button type="submit">ثبت اتصال</button></form></div></div></section>
-<section id="competition-admin" class="club-card" hidden aria-labelledby="competition-admin-title"><h2 id="competition-admin-title">مدیریت مسابقه‌ها</h2><nav class="club-admin-shortcuts" aria-label="اقدام‌های سریع مسابقه"><a href="#competition-create-form">ایجاد مسابقه</a><a href="#competition-edit-form">ویرایش</a><a href="#competition-participant-form">تأیید شرکت‌کننده</a><a href="#competition-result-form">ثبت نتیجه</a><a href="#competition-award-form">اعطای جایزه</a></nav><p class="hint">ثبت‌نام در فرم تأییدشده انجام می‌شود. فقط حسابی را که ثبت‌نامش بررسی شده به مسابقه وصل کنید. جایزه‌ها امتیاز حضور نیستند.</p><div class="club-grid">
+<section id="competition-admin" class="competition-desk" hidden aria-labelledby="competition-admin-title">
+ <div class="competition-desk-heading">
+  <h2 id="competition-admin-title"><span class="club-icon icon-trophy" aria-hidden="true"></span> مدیریت مسابقه‌ها</h2>
+  <button class="competition-create" type="button" data-competition-tool="create" aria-controls="competition-create-form" aria-expanded="false"><span class="club-icon icon-plus" aria-hidden="true"></span> ایجاد مسابقه</button>
+ </div>
+ <div class="competition-filters" role="group" aria-label="وضعیت مسابقه‌ها">
+  <button type="button" data-competition-filter="draft" aria-pressed="true"><span class="club-icon icon-file" aria-hidden="true"></span> پیش‌نویس</button>
+  <button type="button" data-competition-filter="published" aria-pressed="false"><span class="club-icon icon-activity" aria-hidden="true"></span> فعال</button>
+  <button type="button" data-competition-filter="closed" aria-pressed="false"><span class="club-icon icon-flag" aria-hidden="true"></span> پایان‌یافته</button>
+ </div>
+ <div id="competition-admin-list" class="competition-cards" aria-live="polite"></div>
+ <div class="competition-workbench club-card">
+  <div class="competition-actions" role="group" aria-label="نتیجه و جایزه">
+   <button type="button" data-competition-tool="result" aria-controls="competition-result-form" aria-pressed="false"><span class="club-icon icon-file" aria-hidden="true"></span> ثبت نتیجه</button>
+   <button type="button" data-competition-tool="award" aria-controls="competition-award-form" aria-pressed="true"><span class="club-icon icon-gift" aria-hidden="true"></span> اعطای جایزه</button>
+  </div>
+  <div class="competition-forms">
 <form id="competition-create-form"><h3>مسابقهٔ تازه</h3><label>عنوان <input name="title" required maxlength="120"></label><label>توضیح <textarea name="description" required maxlength="1000"></textarea></label><label>قوانین، هر سطر یک قانون <textarea name="rules" maxlength="4000"></textarea></label><button type="submit">ساخت پیش‌نویس</button></form>
 <form id="competition-edit-form"><h3>ویرایش و انتشار</h3><label>مسابقه <select name="competitionId" required></select></label><label>عنوان <input name="title" required maxlength="120"></label><label>توضیح <textarea name="description" required maxlength="1000"></textarea></label><label>قوانین <textarea name="rules" maxlength="4000"></textarea></label><label>وضعیت <select name="status"><option value="draft">پیش‌نویس</option><option value="published">منتشرشده</option><option value="closed">بسته</option></select></label><label class="check"><input name="resultsPublic" type="checkbox"> نمایش نتیجه‌های دارای تأیید و رضایت</label><button type="submit">ذخیره</button></form>
 <form id="competition-participant-form"><h3>تأیید شرکت‌کننده</h3><label>مسابقه <select name="competitionId" required></select></label><label>حساب کاربر <select name="userId" required></select></label><label class="check"><input name="verifiedFromApprovedForm" type="checkbox" required> ثبت‌نام این حساب در فرم تأییدشده بررسی شد</label><button type="submit">ثبت تأیید</button></form>
 <form id="competition-result-form"><h3>ثبت نتیجه و برنده</h3><label>مسابقه <select name="competitionId" required></select></label><label>شرکت‌کنندهٔ تأییدشده <select name="userId" required></select></label><label>رتبه (برای برنده لازم است) <input name="placement" type="number" min="1" max="100000"></label><label>شرح نتیجه <input name="resultText" required maxlength="500"></label><label class="check"><input name="isWinner" type="checkbox"> برنده است</label><label class="check"><input name="publicApproved" type="checkbox"> نتیجه برای انتشار تأیید شده است؛ کاربر باید جداگانه رضایت دهد</label><button type="submit">ثبت نتیجه</button></form>
-<form id="competition-award-form"><h3>جایزهٔ امتیازی</h3><label>مسابقه <select name="competitionId" required></select></label><label>برندهٔ ثبت‌شده <select name="userId" required></select></label><label>امتیاز <input name="points" type="number" min="1" max="1000" required></label><label>دلیل <input name="reason" required maxlength="300"></label><button type="submit">اعطای یک‌بارهٔ جایزه</button></form></div><h3>وضعیت مسابقه‌ها</h3><div id="competition-admin-list" class="club-list"></div></section>
-<section id="admin-activity" class="club-card" hidden aria-labelledby="admin-activity-title"><div class="section-head"><p class="eyebrow">نظارت مدیر</p><h2 id="admin-activity-title">گردش و رویدادها</h2></div><p id="system-status" class="hint">در حال بررسی وضعیت سرویس…</p><div class="club-grid"><div><h3>گردش امتیاز</h3><div id="admin-transactions" class="club-list"></div></div><div><h3>رویدادهای مدیریت</h3><div id="admin-events" class="club-list"></div></div></div></section>
-<footer class="club-footer">رادیو آوا و نوا · باشگاه شنوندگان</footer></main></div><nav class="club-mobile-nav" aria-label="دسترسی سریع"><a href="#catalog-title"><span aria-hidden="true">⌕</span>جست‌وجو</a><a href="#queue-title"><span aria-hidden="true">♫</span>صف</a><a href="#my-data"><span aria-hidden="true">≋</span>فعالیت</a><a href="#overview"><span aria-hidden="true">♙</span>وضعیت</a><a href="#competitions"><span aria-hidden="true">♕</span>مسابقات</a></nav><script type="module" src="./radio-club.js"></script></body></html>
+<form id="competition-award-form"><label class="award-competition-picker">مسابقه <select name="competitionId" required></select></label><label>برندهٔ ثبت‌شده <select name="userId" required></select></label><label>مقدار جایزه <input name="points" type="number" min="1" max="1000" required></label><label>دلیل <input name="reason" required maxlength="300"></label><p class="award-once"><span class="club-icon icon-shield" aria-hidden="true"></span> جایزه برای هر برنده فقط یک‌بار ثبت می‌شود.</p><p id="competition-consent-status" class="consent-readout"><span class="club-icon icon-lock" aria-hidden="true"></span> رضایت نمایش نام را فقط خود کاربر تعیین می‌کند.</p><button type="submit"><span class="club-icon icon-gift" aria-hidden="true"></span> اعطای یک‌بارهٔ جایزه</button></form>
+  </div>
+  <div class="competition-tools-footer">
+   <div class="competition-extra" role="group" aria-label="تنظیمات مسابقه">
+    <button type="button" data-competition-tool="edit" aria-controls="competition-edit-form" aria-expanded="false">ویرایش مسابقه</button>
+    <button type="button" data-competition-tool="participant" aria-controls="competition-participant-form" aria-expanded="false">تأیید شرکت‌کننده</button>
+   </div>
+   <details class="competition-results-detail"><summary>نتیجه‌ها و جوایز ثبت‌شده</summary><div id="competition-selected-results"></div></details>
+  </div>
+ </div>
+</section>
+<section id="admin-activity" class="club-card" hidden aria-labelledby="admin-activity-title">
+ <details><summary><h2 id="admin-activity-title"><span class="club-icon icon-clock" aria-hidden="true"></span> سوابق عملیات و تراکنش‌ها</h2><span class="club-icon icon-chevron" aria-hidden="true"></span></summary>
+  <p id="system-status" class="hint">در حال بررسی وضعیت سرویس…</p><div class="club-grid"><div><h3>گردش امتیاز</h3><div id="admin-transactions" class="club-list"></div></div><div><h3>رویدادهای مدیریت</h3><div id="admin-events" class="club-list"></div></div></div>
+ </details>
+</section>
+<footer class="club-footer">رادیو آوا و نوا · باشگاه شنوندگان</footer></main></div>
+<nav class="club-mobile-nav" aria-label="دسترسی سریع">
+ <a href="#catalog-title"><span class="club-icon icon-search" aria-hidden="true"></span>جست‌وجو</a>
+ <a href="#queue-title"><span class="club-icon icon-queue" aria-hidden="true"></span>صف</a>
+ <a href="#my-data"><span class="club-icon icon-activity" aria-hidden="true"></span>فعالیت</a>
+ <a href="#overview"><span class="club-icon icon-user" aria-hidden="true"></span>وضعیت</a>
+ <a href="#competitions" data-admin-competition-link><span class="club-icon icon-trophy" aria-hidden="true"></span>مسابقات</a>
+</nav><script type="module" src="./radio-club.js"></script></body></html>

@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {chromium} from 'playwright';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
-const mime={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.webp':'image/webp'};
+const mime={'.html':'text/html; charset=utf-8','.js':'application/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.webp':'image/webp','.svg':'image/svg+xml','.woff2':'font/woff2'};
 const server=createServer(async(req,res)=>{
  let path;try{path=resolve(root,'.'+decodeURIComponent(new URL(req.url,'http://127.0.0.1').pathname))}catch{res.writeHead(400).end();return}
  if(path!==root&&!path.startsWith(root+sep)){res.writeHead(403).end();return}
@@ -57,20 +57,24 @@ try{
  });
  await page.goto(base+'/v2/radio-club.html',{waitUntil:'domcontentloaded'});
  await page.waitForFunction(()=>document.querySelector('#competition-admin')?.hidden===false);
+ await page.locator('[data-competition-tool=create]').click();
  await page.locator('#competition-create-form [name=title]').fill('مسابقهٔ ساختگی');
  await page.locator('#competition-create-form [name=description]').fill('فقط برای آزمون');
  await page.locator('#competition-create-form [name=rules]').fill('قانون یک');
  await page.locator('#competition-create-form button').click();
  await page.waitForFunction(()=>document.querySelector('#competition-edit-form [name=competitionId]')?.options.length===1);
+ await page.locator('[data-competition-tool=edit]').click();
  await page.locator('#competition-edit-form [name=status]').selectOption('published');
  await page.locator('#competition-edit-form [name=resultsPublic]').check();
  await page.locator('#competition-edit-form button').click();
  await page.waitForFunction(()=>document.querySelector('#competition-public-list')?.textContent?.includes('مسابقهٔ ساختگی'));
  assert.equal(await page.locator('#competition-public-list img').count(),0);
+ await page.locator('[data-competition-tool=participant]').click();
  await page.locator('#competition-participant-form [name=userId]').selectOption(ids.listener);
  await page.locator('#competition-participant-form [name=verifiedFromApprovedForm]').check();
  await page.locator('#competition-participant-form button').click();
  await page.waitForFunction(()=>document.querySelector('#competition-result-form [name=userId]')?.options.length===1);
+ await page.locator('[data-competition-tool=result]').click();
  await page.locator('#competition-result-form [name=placement]').fill('1');
  await page.locator('#competition-result-form [name=resultText]').fill('نتیجهٔ ساختگی');
  await page.locator('#competition-result-form [name=isWinner]').check();
@@ -78,11 +82,14 @@ try{
  await page.locator('#competition-result-form button').click();
  await page.waitForFunction(()=>document.querySelector('#competition-public-list')?.textContent?.includes('نتیجهٔ ساختگی'));
  assert.equal(await page.locator('#competition-public-list img').count(),0);
+ await page.locator('[data-competition-tool=award]').click();
  await page.locator('#competition-award-form [name=points]').fill('4');
  await page.locator('#competition-award-form [name=reason]').fill('جایزهٔ ساختگی');
  await page.locator('#competition-award-form button').click();
  await page.waitForFunction(()=>document.querySelector('#notice')?.textContent?.includes('جایزه ثبت شد'));
  assert.equal(awardCalls,1);
+ await page.locator('#club-menu summary').click();
+ await page.locator('#club-menu-admin').click();
  const row=page.locator('#users > div').filter({hasText:'qauser'});
  await row.locator('input[type=number]').fill('2');await row.locator('input:not([type=number])').fill('بررسی آزمایشی');await row.locator('button').click();
  await page.waitForFunction(()=>document.querySelector('#notice')?.textContent?.includes('تغییر امتیاز ثبت شد'));

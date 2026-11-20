@@ -6,6 +6,36 @@ export function mountCompetitionUi({api,notice,onChange}){
  const field=(form,name)=>form.elements.namedItem(name);
  const rules=value=>value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
  let competitions=[],users=[];
+ const statusLabels={draft:'پیش‌نویس',published:'فعال',closed:'پایان‌یافته'};
+ const toolNames=['create','edit','participant','result','award'];
+ const toolButtons=document.querySelectorAll('[data-competition-tool]');
+ const filters=document.querySelectorAll('[data-competition-filter]');
+ let adminFilter='draft',selectedId='',activeTool='award';
+
+ function icon(name){
+  const el=document.createElement('span');
+  el.className='club-icon icon-'+name;
+  el.setAttribute('aria-hidden','true');
+  return el;
+ }
+ function showTool(name){
+  activeTool=name;
+  for(const tool of toolNames)$('competition-'+tool+'-form').hidden=tool!==name;
+  for(const button of toolButtons){
+   const attribute=button.hasAttribute('aria-expanded')?'aria-expanded':'aria-pressed';
+   button.setAttribute(attribute,String(button.dataset.competitionTool===name));
+  }
+ }
+ for(const button of toolButtons)button.addEventListener('click',()=>{
+  const tool=button.dataset.competitionTool;
+  showTool(tool===activeTool&&['create','edit','participant'].includes(tool)?'award':tool);
+ });
+ for(const button of filters)button.addEventListener('click',()=>{
+  adminFilter=button.dataset.competitionFilter;
+  renderAdminCards();
+ });
+ showTool(activeTool);
+
  function options(select,rows,value,label){
   const selected=select.value;select.replaceChildren();
   for(const row of rows){const option=document.createElement('option');option.value=row[value];option.textContent=row[label];select.append(option)}
@@ -15,6 +45,9 @@ export function mountCompetitionUi({api,notice,onChange}){
   const host=$('competition-public-list');host.replaceChildren();
   try{
    const data=await api('/api/competitions');
+   const active=data.competitions.find(competition=>competition.status==='published');
+   $('spotlight-name').textContent=active?.title||'مسابقهٔ فعالی نیست';
+   $('spotlight-description').textContent=active?.description||'مشاهدهٔ مسابقه‌ها و نتیجه‌های منتشرشده';
    if(!data.competitions.length){host.append(text('p','مسابقهٔ منتشرشده‌ای وجود ندارد.'));return}
    for(const competition of data.competitions){
     const row=document.createElement('div');row.append(text('h3',competition.title),text('p',competition.description));
@@ -25,7 +58,11 @@ export function mountCompetitionUi({api,notice,onChange}){
     else{const list=document.createElement('ol');for(const result of competition.results)list.append(text('li',`${result.placement===null?'—':result.placement+'. '} ${result.displayName} · ${result.result_text}`));row.append(list)}
     host.append(row);
    }
-  }catch{host.append(text('p','مسابقه‌ها فعلاً در دسترس نیستند.'))}
+  }catch{
+   host.append(text('p','مسابقه‌ها فعلاً در دسترس نیستند.'));
+   $('spotlight-name').textContent='وضعیت مسابقه در دسترس نیست';
+   $('spotlight-description').textContent='';
+  }
  }
  async function refreshMine(){
   const host=$('my-competition-results');host.replaceChildren();
@@ -50,7 +87,57 @@ export function mountCompetitionUi({api,notice,onChange}){
   const selected=competitions.find(x=>x.id===field(result,'competitionId').value);
   options(field(result,'userId'),selected?.participants||[],'user_id','username');
   const awardCompetition=competitions.find(x=>x.id===field(award,'competitionId').value);
-  options(field(award,'userId'),(awardCompetition?.results||[]).filter(x=>x.is_winner&&!x.awarded_points),'user_id','username');
+  const eligible=(awardCompetition?.results||[]).filter(x=>x.is_winner&&!x.awarded_points);
+  const picker=field(award,'userId');
+  options(picker,eligible,'user_id','username');
+  if(!eligible.length){
+   const option=text('option','برندهٔ واجد شرایطی وجود ندارد');
+   option.value='';option.disabled=true;option.selected=true;picker.append(option);
+  }
+  updateConsent();
+ }
+ function updateConsent(){
+  const form=$('competition-award-form');
+  const competition=competitions.find(item=>item.id===field(form,'competitionId').value);
+  const winner=competition?.results.find(item=>item.user_id===field(form,'userId').value);
+  const label=winner?(winner.public_name_consent?'رضایت نمایش نام: ثبت شده':'رضایت نمایش نام: ثبت نشده'):'رضایت نمایش نام را فقط خود کاربر تعیین می‌کند.';
+  $('competition-consent-status').replaceChildren(icon('lock'),document.createTextNode(' '+label));
+ }
+ function selectCompetition(id){
+  selectedId=id;
+  for(const name of ['edit','participant','result','award'])field($('competition-'+name+'-form'),'competitionId').value=id;
+  fillEdit();updateParticipants();
+  for(const card of $('competition-admin-list').querySelectorAll('button[data-competition-id]')){
+   card.setAttribute('aria-pressed',String(card.dataset.competitionId===id));
+  }
+  $('competition-award-form').classList.toggle('has-current-card',competitions.some(item=>item.id===id&&item.status===adminFilter));
+  const results=$('competition-selected-results');
+  results.replaceChildren();
+  const competition=competitions.find(item=>item.id===id);
+  if(!competition?.results.length){results.append(text('p','هنوز نتیجه‌ای ثبت نشده است.'));return}
+  for(const row of competition.results){
+   const award=row.awarded_points?`${row.awarded_points} امتیاز جایزه`:'بدون جایزه';
+   const privacy=row.public_approved&&row.public_name_consent?'تأیید و رضایت ثبت شده':'خصوصی';
+   results.append(text('p',`${row.username} · ${row.is_winner?'برنده':'شرکت‌کننده'} · ${award} · ${privacy}`));
+  }
+ }
+ function renderAdminCards(){
+  const host=$('competition-admin-list');
+  host.replaceChildren();
+  for(const button of filters)button.setAttribute('aria-pressed',String(button.dataset.competitionFilter===adminFilter));
+  const filtered=competitions.filter(competition=>competition.status===adminFilter);
+  $('competition-award-form').classList.toggle('has-current-card',filtered.some(competition=>competition.id===selectedId));
+  if(!filtered.length){host.append(text('p','مسابقه‌ای با این وضعیت وجود ندارد.'));return}
+  for(const competition of filtered){
+   const button=document.createElement('button'),glyph=document.createElement('span'),content=document.createElement('span');
+   const badge=text('span',statusLabels[competition.status]);
+   button.type='button';button.className='competition-tile';button.dataset.competitionId=competition.id;button.setAttribute('aria-pressed',String(competition.id===selectedId));
+   glyph.className='competition-card-icon';glyph.append(icon('trophy'));
+   content.append(text('strong',competition.title),text('small',competition.description));
+   badge.className='competition-state';button.append(glyph,content,badge,icon('chevron'));
+   button.addEventListener('click',()=>selectCompetition(competition.id));
+   host.append(button);
+  }
  }
  async function refreshAdmin(){
   const host=$('competition-admin-list');host.replaceChildren();
@@ -58,13 +145,10 @@ export function mountCompetitionUi({api,notice,onChange}){
    const [data,accounts]=await Promise.all([api('/api/admin/competitions'),api('/api/admin/users')]);
    competitions=data.competitions;users=accounts.users;
    for(const id of ['competition-edit-form','competition-participant-form','competition-result-form','competition-award-form'])options(field($(id),'competitionId'),competitions,'id','title');
-   options(field($('competition-participant-form'),'userId'),users,'id','username');fillEdit();updateParticipants();
-   if(!competitions.length){host.append(text('p','هنوز مسابقه‌ای ساخته نشده است.'));return}
-   for(const c of competitions){
-    const row=document.createElement('div');row.append(text('strong',`${c.title} · ${c.status}`),text('p',`${c.participants.length} حساب تأییدشده در سامانه · ${c.results.length} نتیجهٔ ثبت‌شده`));
-    for(const r of c.results)row.append(text('p',`${r.username} · ${r.is_winner?'برنده':'شرکت‌کننده'} · ${r.awarded_points?`${r.awarded_points} امتیاز جایزه`:'بدون جایزه'} · ${r.public_approved&&r.public_name_consent?'قابل نمایش':'خصوصی'}`));
-    host.append(row);
-   }
+   options(field($('competition-participant-form'),'userId'),users,'id','username');
+   const selected=competitions.find(item=>item.id===selectedId)||competitions.find(item=>item.status===adminFilter)||competitions[0];
+   selectCompetition(selected?.id||'');
+   renderAdminCards();
   }catch{host.append(text('p','مدیریت مسابقه‌ها فعلاً در دسترس نیست.'))}
  }
  async function submit(form,action,success){
@@ -73,8 +157,10 @@ export function mountCompetitionUi({api,notice,onChange}){
   catch(error){notice(error.message,true)}finally{button.disabled=false}
  }
  for(const id of ['competition-create-form','competition-edit-form','competition-participant-form','competition-result-form','competition-award-form'])$(id).addEventListener('input',event=>{if(event.target.name!=='competitionId')delete event.currentTarget.dataset.retryKey});
- $('competition-edit-form').addEventListener('change',event=>{if(event.target.name==='competitionId')fillEdit()});
- for(const id of ['competition-result-form','competition-award-form'])$(id).addEventListener('change',event=>{if(event.target.name==='competitionId')updateParticipants()});
+ for(const name of ['edit','participant','result','award'])$('competition-'+name+'-form').addEventListener('change',event=>{
+  if(event.target.name==='competitionId')selectCompetition(event.target.value);
+ });
+ $('competition-award-form').addEventListener('change',event=>{if(event.target.name==='userId')updateConsent()});
  $('competition-create-form').addEventListener('submit',event=>{event.preventDefault();const form=event.currentTarget;void submit(form,()=>api('/api/admin/competitions',{method:'POST',data:{title:field(form,'title').value,description:field(form,'description').value,rules:rules(field(form,'rules').value)}}),'پیش‌نویس مسابقه ساخته شد.')});
  $('competition-edit-form').addEventListener('submit',event=>{event.preventDefault();const form=event.currentTarget;void submit(form,()=>api(`/api/admin/competitions/${field(form,'competitionId').value}`,{method:'PATCH',data:{title:field(form,'title').value,description:field(form,'description').value,rules:rules(field(form,'rules').value),status:field(form,'status').value,resultsPublic:field(form,'resultsPublic').checked}}),'مسابقه ذخیره شد.')});
  $('competition-participant-form').addEventListener('submit',event=>{event.preventDefault();const form=event.currentTarget;void submit(form,()=>api(`/api/admin/competitions/${field(form,'competitionId').value}/participants`,{method:'POST',data:{userId:field(form,'userId').value,verifiedFromApprovedForm:field(form,'verifiedFromApprovedForm').checked}}),'شرکت‌کنندهٔ بررسی‌شده ثبت شد.')});
