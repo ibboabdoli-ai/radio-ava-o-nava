@@ -207,3 +207,24 @@ body::before{background-image:radial-gradient(#b47bc81b .75px,transparent .75px)
  .club-mobile-nav a{font-size:10.5px}
 }
 @media(prefers-reduced-motion:reduce){.club-mobile-nav a{transition:none}}
+
+/* Quick actions use the existing accessible administration forms. */
+.club-admin-shortcuts{
+ display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:14px 0 17px;
+ padding:0
+}
+.club-admin-shortcuts a{
+ display:inline-flex;align-items:center;justify-content:center;min-height:40px;
+ padding:7px 13px;border:1px solid #a878bc76;border-radius:999px;
+ background:#3a2249;color:#f6e1ff;text-decoration:none;font-size:12px;font-weight:750;
+ transition:background .18s,border-color .18s
+}
+.club-admin-shortcuts a:is(:hover,:focus-visible){
+ background:#65357b;border-color:#d6a5ee;color:white
+}
+.club-admin-shortcuts a:focus-visible{outline:2px solid #dfb3f5;outline-offset:3px}
+@media(max-width:520px){
+ .club-admin-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .club-admin-shortcuts a{padding:9px 6px;font-size:11px;text-align:center}
+ .club-admin-shortcuts a:first-child{grid-column:1/-1}
+}
