@@ -1,0 +1,209 @@
+/* Radio Ava o Nava — approved purple listener-club design.
+   Presentation only: no synthetic points, attendance, contestants or winners. */
+:root{
+ --club-bg:#100b1b;--club-panel:#21152e;--club-panel-high:#30203f;
+ --club-stroke:#a274c74d;--club-accent:#c58af2;--club-accent-light:#eccbff;
+ --club-text:#f7f0ff;--club-muted:#c4b2d2;--club-gold:#edc58e;
+}
+html{scroll-padding-top:90px}
+body{
+ background:radial-gradient(ellipse at 78% -120px,#442056 0%,#21102e 28%,#100b1b 63%,#0d0915 100%) fixed;
+ color:var(--club-text)
+}
+body::before{background-image:radial-gradient(#b47bc81b .75px,transparent .75px);opacity:.6}
+.club-shell{isolation:isolate}
+.club-sidebar{
+ background:linear-gradient(170deg,#1e112c,#120d1d 68%);
+ border-color:var(--club-stroke);
+ box-shadow:inset -1px 0 #d9aeef12
+}
+.club-brand{gap:13px;font-size:19px}
+.club-brand strong{color:var(--club-text)}
+.club-brand small{color:#c5a9d7}
+.club-brand .brand-mark{
+ border:1px solid #d5a3ed85;border-radius:16px;color:#f5deff;
+ background:linear-gradient(135deg,#753b91,#351749);
+ box-shadow:0 0 24px #b475dd38;
+}
+.club-nav a{border:1px solid transparent;transition:background .18s,border-color .18s}
+.club-nav a:is(:hover,:focus-visible){
+ background:#713c8c40;border-color:#ae76c86b;color:#fff
+}
+.club-sidebar .sidebar-note,.club-sidebar .back-link{color:#c1a5d1}
+.club-wrap{max-width:1230px;padding-bottom:115px}
+.club-header{
+ position:relative;align-items:center;padding:19px 24px;margin-bottom:20px;
+ border:1px solid #bc82d43c;border-radius:22px;
+ background:linear-gradient(105deg,#24132d,#160e22);
+ box-shadow:0 8px 28px #09030d60
+}
+.club-header::before{
+ content:"";position:absolute;left:9%;right:9%;bottom:0;height:1px;
+ background:linear-gradient(90deg,transparent,#d49bef99,transparent)
+}
+.club-header .eyebrow{color:#c691e2!important;letter-spacing:.09em}
+.club-header h1{font-size:clamp(24px,3vw,32px);line-height:1.5}
+.club-header p:not(.eyebrow){color:#c6b5d0}
+.club-header>a{border-color:#ae78ca7d;background:#4a2a5a55;color:#f3d9ff}
+.club-header>a:hover{background:#78449388}
+.club-hero{
+ min-height:180px;border-color:#c18fda85;border-radius:25px;
+ background:radial-gradient(circle at 9% 24%,#7b36905a,transparent 35%),
+   linear-gradient(115deg,#42204e,#24162e 52%,#170e22);
+ box-shadow:0 18px 40px #08040e85,inset 0 1px #ffeaff20;
+}
+.club-hero::after{
+ content:"";position:absolute;inset:auto 0 0;height:3px;
+ background:linear-gradient(90deg,transparent,#d7a1f1,#8753be,transparent);
+ opacity:.67
+}
+.club-hero h2{color:#fff;line-height:1.5}
+.club-hero .eyebrow{color:#ddb4f1!important}
+.club-hero p:last-child{color:#d8c7e2}
+.hero-orbit{
+ display:grid;place-items:center;flex:0 0 120px;width:120px;height:120px;
+ border:1px solid #e6b9fb5d;border-radius:50%;font-size:56px;
+ color:#f0cafa;transform:none;
+ background:radial-gradient(circle,#9f62b942 0%,#3a1c4e80 50%,transparent 72%);
+ box-shadow:0 0 0 10px #a667bd12,0 0 38px #be6ee552
+}
+.metric-grid{gap:14px}
+.metric{
+ position:relative;overflow:hidden;min-width:0;min-height:124px;
+ border:1px solid #b48bc74d;border-radius:20px;
+ background:linear-gradient(150deg,#32203e,#201528);
+ box-shadow:inset 0 1px #ffffff0c,0 9px 23px #07030c55
+}
+.metric span{color:#e1c9ef;font-weight:650}
+.metric strong{color:#f5dbff;font-size:clamp(24px,3vw,35px)}
+.metric small{color:#bda8cb}
+.metric:first-child{
+ background:radial-gradient(circle at 5% 60%,#b665d350,transparent 48%),
+ linear-gradient(125deg,#482056,#291534);
+ border-color:#d28cee8a
+}
+.metric:first-child strong{font-size:clamp(33px,4vw,46px);color:#fff}
+.metric:first-child::after{
+ content:"♫";position:absolute;left:22px;top:12px;font-size:58px;
+ font-weight:400;color:#eab6ff45;pointer-events:none
+}
+.club-card{
+ border:1px solid #b681cf4a;border-radius:21px;
+ background:linear-gradient(155deg,#26182f,#1a1325 74%);
+ box-shadow:0 14px 30px #09041266,inset 0 1px #ffffff0b
+}
+.club-card h2{color:#f0d3ff;letter-spacing:-.3px}
+.club-card h3{color:#e0b9f5}
+.club-card .hint{color:#c5b6d0}
+.club-card button{
+ background:linear-gradient(130deg,#d9a4f6,#a96fcf);
+ border:1px solid #f0ccff7a;color:#211029;box-shadow:0 4px 14px #6e2f903d;
+ font-weight:800
+}
+.club-card button:is(:hover,:focus-visible):not(:disabled){
+ background:linear-gradient(130deg,#ebc7fb,#c28de4);
+ border-color:#f4ddff
+}
+.club-card button.secondary{
+ background:#4f315f;color:#f8e9ff;border-color:#a575bc8a;box-shadow:none
+}
+.club-card button.secondary:is(:hover,:focus-visible):not(:disabled){background:#674079}
+.club-card input:not([type=checkbox]),.club-card select,.club-card textarea{
+ border:1px solid #986eaa8f;background:#160e21;color:#f8ecff;
+ border-radius:12px;min-height:46px
+}
+.club-card :is(input,textarea,select):focus-visible,.club-card button:focus-visible,
+.club-nav a:focus-visible,.club-mobile-nav a:focus-visible{
+ outline:2px solid #e0a8f7;outline-offset:3px
+}
+.club-card :is(input[type=checkbox],input[type=radio]){accent-color:#ad68d7}
+.status-pill{background:#543361;color:#f1d5ff;border:1px solid #a778c25e}
+.catalog-list>div{
+ background:#2c1b39;border:1px solid #a877ba69;border-radius:16px
+}
+.song-art{background:linear-gradient(135deg,#a365c8,#502863);color:#fff}
+.club-list>div,.club-list>li{border-color:#d2a6e226}
+.points-summary p{background:#342040;border:1px solid #a877ba50}
+.points-summary strong{color:#f1d1ff}
+.club-card :is(#transactions,#recent-activity,#my-competition-results,#competition-public-list)>div{
+ border-radius:12px;padding:13px;margin-bottom:7px;background:#321e402f;
+ border:1px solid #b37ac532
+}
+#competition-admin{
+ border-color:#b988d976;
+ background:radial-gradient(circle at 0% 0%,#723c8b37,transparent 40%),
+ linear-gradient(145deg,#24152f,#171022);
+}
+#competition-admin .club-grid{gap:14px}
+#competition-admin .club-grid>form{
+ padding:20px;border:1px solid #9f71bb72;border-radius:18px;
+ background:linear-gradient(160deg,#382146,#241630);
+ min-width:0;box-shadow:inset 0 1px #f4d7ff0d
+}
+#competition-admin .club-grid>form h3{
+ margin:0 0 14px;padding:0 0 13px;border-bottom:1px solid #b77cce3d;
+ color:#f2d7ff
+}
+#competition-admin .club-grid>form button[type=submit]{width:100%;margin:16px 0 0}
+#competition-admin #competition-award-form{border-color:#edc58e78}
+#competition-admin #competition-award-form h3{color:#f6d49e}
+#competition-admin .club-grid>form:target{
+ outline:2px solid #cf93eb;outline-offset:4px;scroll-margin-top:25px
+}
+#competition-admin-list>div{
+ padding:13px 15px;margin-bottom:10px;border:1px solid #a576c274;
+ border-radius:13px;background:#2c1c38
+}
+.club-footer{color:#b39ec2}
+.club-mobile-nav{display:none}
+@media(min-width:901px){
+ .club-sidebar{height:100dvh}
+ .metric-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .metric:first-child{grid-column:span 2}
+ .metric-grid .metric:nth-child(4){grid-column:span 2}
+}
+@media(max-width:900px){
+ .club-shell{padding-bottom:0}
+ .club-sidebar{padding:12px 15px;background:#1a1027;border-bottom-color:#a779c14d}
+ .club-sidebar .club-nav{display:none}
+ .club-brand{font-size:18px}
+ .club-brand .brand-mark{width:40px;height:40px}
+ .club-header{margin-bottom:14px;padding:17px 19px}
+ .metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .metric:first-child{grid-column:1/-1}
+ .club-mobile-nav{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:stretch;
+  position:fixed;z-index:110;bottom:0;left:0;right:0;
+  padding:8px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));
+  border-top:1px solid #ca91e77d;
+  background:#160f23f4;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  box-shadow:0 -8px 27px #0a0315a8
+ }
+ .club-mobile-nav a{
+  min-width:0;display:flex;flex-direction:column;align-items:center;
+  gap:3px;padding:7px 2px;text-decoration:none;text-align:center;
+  font-size:11px;font-weight:700;line-height:1.55;color:#d5c0e2;border-radius:12px
+ }
+ .club-mobile-nav a span{font-size:19px;line-height:1.2;color:#ca9ae5}
+ .club-mobile-nav a:is(:hover,:focus-visible,.is-current){
+  background:#633a7d;color:#fff
+ }
+ .club-wrap{padding-bottom:calc(90px + env(safe-area-inset-bottom))}
+}
+@media(max-width:520px){
+ .club-header{background:transparent;border:0;box-shadow:none;padding:9px 3px}
+ .club-header h1{font-size:24px}.club-header p:not(.eyebrow){font-size:12px}
+ .club-hero{padding:20px 17px;min-height:150px;border-radius:20px;gap:10px}
+ .club-hero h2{font-size:21px}
+ .hero-orbit{flex-basis:65px;width:65px;height:65px;font-size:38px;box-shadow:0 0 18px #b47bdd48}
+ .metric-grid{gap:9px}
+ .metric{min-height:105px;padding:16px 13px}
+ .metric strong{font-size:26px}
+ .metric:first-child{min-height:132px}
+ .metric:first-child strong{font-size:38px}
+ .club-card{padding:18px 15px;border-radius:18px}
+ .club-card h2{font-size:20px}
+ #competition-admin .club-grid>form{padding:16px 14px}
+ .club-mobile-nav a{font-size:10.5px}
+}
+@media(prefers-reduced-motion:reduce){.club-mobile-nav a{transition:none}}
