@@ -1,12 +1,17 @@
 import { normalizeObservation } from './attendance-engine.js';
+import { scrypt as nodeScrypt } from 'node:crypto';
 
 const j=(data,status=200,headers={})=>new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store',...headers}});
 const clean=(v,n)=>typeof v==='string'?v.trim().replace(/[\u0000-\u001f\u007f]/g,'').slice(0,n):'';
 const hex=b=>[...b].map(x=>x.toString(16).padStart(2,'0')).join('');
 const hash=async v=>hex(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v))));
 const token=()=>hex(crypto.getRandomValues(new Uint8Array(32)));
-// Cloudflare Workers Web Crypto rejects PBKDF2 iteration counts above 100000.
-const pbkdf=async(pass,salt)=>{const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(pass),'PBKDF2',false,['deriveBits']);return hex(new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',salt:new TextEncoder().encode(salt),iterations:100000,hash:'SHA-256'},k,256)))};
+// OWASP Password Storage Cheat Sheet: scrypt N=2^13, r=8, p=10.
+const PASSWORD_SCHEME='scrypt_n8192_r8_p10$';
+const passwordHash=async(pass,salt)=>PASSWORD_SCHEME+await new Promise((resolve,reject)=>nodeScrypt(pass,salt,32,{N:8192,r:8,p:10,maxmem:32*1024*1024},(error,key)=>error?reject(error):resolve(key.toString('hex'))));
+// Read-only verifier for the two staging accounts created before the stronger KDF.
+const legacyPbkdf=async(pass,salt)=>{const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(pass),'PBKDF2',false,['deriveBits']);return hex(new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',salt:new TextEncoder().encode(salt),iterations:100000,hash:'SHA-256'},k,256)))};
+const verifyPassword=async(pass,u)=>{if(u?.password_hash?.startsWith(PASSWORD_SCHEME))return eq(await passwordHash(pass,u.password_salt),u.password_hash);if(/^[a-f0-9]{64}$/.test(u?.password_hash||''))return eq(await legacyPbkdf(pass,u.password_salt),u.password_hash);await passwordHash(pass,'invalid-salt');return false};
 const eq=(a,b)=>{if(typeof a!=='string'||typeof b!=='string'||a.length!==b.length)return false;let d=0;for(let i=0;i<a.length;i++)d|=a.charCodeAt(i)^b.charCodeAt(i);return d===0};
 const first=(db,sql,...args)=>db.prepare(sql).bind(...args).first();
 const all=async(db,sql,...args)=>(await db.prepare(sql).bind(...args).all()).results;
@@ -16,11 +21,13 @@ const balance=async(db,id)=>Number((await first(db,'SELECT COALESCE(SUM(delta),0
 const origin=env=>env.ALLOWED_ORIGIN||'https://radio.ibboabdoli.com';
 const cors=(req,env)=>req.headers.get('Origin')===origin(env)?{'access-control-allow-origin':origin(env),'access-control-allow-credentials':'true','access-control-allow-methods':'GET, POST, PATCH, PUT, DELETE, OPTIONS','access-control-allow-headers':'Content-Type, Idempotency-Key, Authorization','vary':'Origin'}:{};
 const cookie=t=>`radio_session=${t}; HttpOnly; Secure; SameSite=Lax; Path=/api; Max-Age=604800`;
-const readBody=async req=>{if(!req.headers.get('content-type')?.startsWith('application/json'))throw{status:415,code:'json_required'};if(Number(req.headers.get('content-length')||0)>8192)throw{status:413,code:'too_large'};const raw=await req.text();if(raw.length>8192)throw{status:413,code:'too_large'};try{return JSON.parse(raw)}catch{throw{status:400,code:'invalid_json'}}};
+const readBody=async req=>{if(!req.headers.get('content-type')?.startsWith('application/json'))throw{status:415,code:'json_required'};if(Number(req.headers.get('content-length')||0)>8192)throw{status:413,code:'too_large'};const raw=await req.text();if(raw.length>8192)throw{status:413,code:'too_large'};try{const body=JSON.parse(raw);if(!body||typeof body!=='object'||Array.isArray(body))throw Error();return body}catch{throw{status:400,code:'invalid_json'}}};
 const session=async(req,db)=>{const t=req.headers.get('Cookie')?.match(/(?:^|;\s*)radio_session=([a-f0-9]{64})(?:;|$)/)?.[1];return t?first(db,'SELECT u.id,u.username,u.role,u.leaderboard_opt_in FROM user_sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at_ms>?',await hash(t),Date.now()):null};
 const profile=async(db,u)=>({id:u.id,username:u.username,role:u.role,leaderboardOptIn:!!u.leaderboard_opt_in,balance:await balance(db,u.id)});
 const audit=(db,u,action,target,note='')=>run(db,'INSERT INTO admin_events(id,actor_user_id,action,target_id,note,created_at_ms) VALUES(?,?,?,?,?,?)',crypto.randomUUID(),u.id,action,target,note,Date.now());
 const rate=async(req,db,env)=>{const key=await hash(`${env.AUTH_RATE_SECRET||'local'}|${req.headers.get('CF-Connecting-IP')||'unknown'}`),now=Date.now();await run(db,'INSERT INTO auth_limits(client_hash,window_start_ms,attempts) VALUES(?,?,1) ON CONFLICT(client_hash) DO UPDATE SET window_start_ms=CASE WHEN window_start_ms<? THEN excluded.window_start_ms ELSE window_start_ms END,attempts=CASE WHEN window_start_ms<? THEN 1 ELSE attempts+1 END',key,now,now-900000,now-900000);return Number((await first(db,'SELECT attempts FROM auth_limits WHERE client_hash=?',key))?.attempts||0)<=20};
+const accountRate=async(db,env,username)=>{const key=await hash(`${env.AUTH_RATE_SECRET}|account|${username}`),now=Date.now();await run(db,'INSERT INTO auth_limits(client_hash,window_start_ms,attempts) VALUES(?,?,1) ON CONFLICT(client_hash) DO UPDATE SET window_start_ms=CASE WHEN window_start_ms<? THEN excluded.window_start_ms ELSE window_start_ms END,attempts=CASE WHEN window_start_ms<? THEN 1 ELSE attempts+1 END',key,now,now-900000,now-900000);return Number((await first(db,'SELECT attempts FROM auth_limits WHERE client_hash=?',key))?.attempts||0)<=10};
+const clearCookie='radio_session=; HttpOnly; Secure; SameSite=Lax; Path=/api; Max-Age=0';
 
 export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),p=url.pathname,m=req.method;try{
  if(req.headers.get('Origin')&&req.headers.get('Origin')!==origin(env))return j({error:'origin_not_allowed'},403,h);
@@ -35,18 +42,36 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
   if(!await rate(req,db,env))return j({error:'rate_limited'},429,h);
   const b=await readBody(req),username=clean(b.username,40).toLowerCase();
   if(!/^[a-z0-9_]{3,40}$/.test(username)||typeof b.password!=='string'||b.password.length<12||b.password.length>128)return j({error:'invalid_credentials'},400,h);
-  const salt=token(),passwordHash=await pbkdf(b.password,salt);
-  try{await run(db,'INSERT INTO users(id,username,password_salt,password_hash,created_at_ms) VALUES(?,?,?,?,?)',crypto.randomUUID(),username,salt,passwordHash,Date.now())}catch(e){if((await first(db,'SELECT id FROM users WHERE username=?',username)))return j({error:'username_unavailable'},409,h);throw e}
+  const salt=token(),derived=await passwordHash(b.password,salt);
+  try{await run(db,'INSERT INTO users(id,username,password_salt,password_hash,created_at_ms) VALUES(?,?,?,?,?)',crypto.randomUUID(),username,salt,derived,Date.now())}catch(e){if((await first(db,'SELECT id FROM users WHERE username=?',username)))return j({error:'username_unavailable'},409,h);throw e}
   return j({ok:true},201,h);
  }
  if(p==='/api/auth/login'&&m==='POST'){
   if(!await rate(req,db,env))return j({error:'rate_limited'},429,h);
-  const b=await readBody(req),u=await first(db,'SELECT * FROM users WHERE username=?',clean(b.username,40).toLowerCase());
-  const candidate=await pbkdf(typeof b.password==='string'?b.password.slice(0,128):'',u?.password_salt||'invalid-salt');
-  if(!u||!eq(candidate,u.password_hash))return j({error:'invalid_credentials'},401,h);
+  const b=await readBody(req),username=clean(b.username,40).toLowerCase();
+  if(!await accountRate(db,env,username))return j({error:'rate_limited'},429,h);
+  const u=await first(db,'SELECT * FROM users WHERE username=?',username);
+  const pass=typeof b.password==='string'?b.password:'';
+  if(pass.length>128||!await verifyPassword(pass,u))return j({error:'invalid_credentials'},401,h);
+  if(!u.password_hash.startsWith(PASSWORD_SCHEME)){
+   const upgraded=await passwordHash(pass,u.password_salt);
+   await run(db,'UPDATE users SET password_hash=? WHERE id=? AND password_hash=?',upgraded,u.id,u.password_hash);
+  }
   const t=token();await run(db,'INSERT INTO user_sessions(token_hash,user_id,expires_at_ms,created_at_ms) VALUES(?,?,?,?)',await hash(t),u.id,Date.now()+604800000,Date.now());return j({user:await profile(db,u)},200,{...h,'set-cookie':cookie(t)});
  }
- if(p==='/api/auth/logout'&&m==='POST'){const t=req.headers.get('Cookie')?.match(/(?:^|;\s*)radio_session=([a-f0-9]{64})(?:;|$)/)?.[1];if(t)await run(db,'DELETE FROM user_sessions WHERE token_hash=?',await hash(t));return j({ok:true},200,{...h,'set-cookie':'radio_session=; HttpOnly; Secure; SameSite=Lax; Path=/api; Max-Age=0'})}
+ if(p==='/api/auth/logout'&&m==='POST'){const t=req.headers.get('Cookie')?.match(/(?:^|;\s*)radio_session=([a-f0-9]{64})(?:;|$)/)?.[1];if(t)await run(db,'DELETE FROM user_sessions WHERE token_hash=?',await hash(t));return j({ok:true},200,{...h,'set-cookie':clearCookie})}
+ if(p==='/api/auth/recover'&&m==='POST'){
+  if(!await rate(req,db,env))return j({error:'rate_limited'},429,h);
+  const b=await readBody(req),username=clean(b.username,40).toLowerCase();
+  if(!await accountRate(db,env,username))return j({error:'rate_limited'},429,h);
+  const code=typeof b.recoveryCode==='string'?b.recoveryCode:'',pass=b.newPassword;
+  if(!/^[a-f0-9]{64}$/.test(code)||typeof pass!=='string'||pass.length<12||pass.length>128)return j({error:'invalid_recovery'},400,h);
+  const u=await first(db,'SELECT id FROM users WHERE username=?',username);
+  const salt=token(),newHash=await passwordHash(pass,salt);
+  const updated=u&&await run(db,'UPDATE users SET password_salt=?,password_hash=? WHERE id=? AND EXISTS (SELECT 1 FROM account_recovery WHERE user_id=? AND code_hash=?)',salt,newHash,u.id,u.id,await hash(code));
+  if(!changed(updated))return j({error:'invalid_recovery'},401,h);
+  return j({ok:true},200,{...h,'set-cookie':clearCookie});
+ }
  if(p==='/api/catalog'&&m==='GET'){const q=`%${clean(url.searchParams.get('q'),80).replace(/[%_]/g,'')}%`;return j({songs:await all(db,'SELECT id,title,artist,cost FROM song_catalog WHERE active=1 AND (title LIKE ? OR artist LIKE ?) ORDER BY title LIMIT 50',q,q)},200,h)}
  if(p==='/api/queue'&&m==='GET')return j({queue:await all(db,"SELECT id,title,artist,queue_priority,created_at FROM song_requests WHERE status='approved' ORDER BY queue_priority DESC,created_at,id LIMIT 100")},200,h);
  if(p==='/api/leaderboard'&&m==='GET')return j({leaders:await all(db,'SELECT u.username AS name,COALESCE(SUM(t.delta),0) AS points FROM users u LEFT JOIN point_transactions t ON t.user_id=u.id WHERE u.leaderboard_opt_in=1 GROUP BY u.id ORDER BY points DESC,u.username LIMIT 50')},200,h);
@@ -61,6 +86,22 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
  }
  const u=await session(req,db);if(!u)return j({error:'unauthorized'},401,h);
  if(p==='/api/me'&&m==='GET')return j({user:await profile(db,u)},200,h);
+ if(p==='/api/me/password'&&m==='POST'){
+  if(!await accountRate(db,env,u.username))return j({error:'rate_limited'},429,h);
+  const b=await readBody(req),pass=b.newPassword;
+  if(typeof pass!=='string'||pass.length<12||pass.length>128)return j({error:'invalid_credentials'},400,h);
+  const current=await first(db,'SELECT password_salt,password_hash FROM users WHERE id=?',u.id);
+  if(!await verifyPassword(typeof b.currentPassword==='string'?b.currentPassword:'',current))return j({error:'invalid_credentials'},401,h);
+  const salt=token();await run(db,'UPDATE users SET password_salt=?,password_hash=? WHERE id=?',salt,await passwordHash(pass,salt),u.id);
+  return j({ok:true},200,{...h,'set-cookie':clearCookie});
+ }
+ if(p==='/api/me/recovery-code'&&m==='POST'){
+  if(!await accountRate(db,env,u.username))return j({error:'rate_limited'},429,h);
+  const b=await readBody(req),current=await first(db,'SELECT password_salt,password_hash FROM users WHERE id=?',u.id);
+  if(!await verifyPassword(typeof b.currentPassword==='string'?b.currentPassword:'',current))return j({error:'invalid_credentials'},401,h);
+  const code=token();await run(db,'INSERT INTO account_recovery(user_id,code_hash,created_at_ms) VALUES(?,?,?) ON CONFLICT(user_id) DO UPDATE SET code_hash=excluded.code_hash,created_at_ms=excluded.created_at_ms',u.id,await hash(code),Date.now());
+  return j({recoveryCode:code},200,h);
+ }
  if(p==='/api/me'&&m==='PATCH'){const b=await readBody(req);if(typeof b.leaderboardOptIn!=='boolean')return j({error:'invalid_opt_in'},400,h);await run(db,'UPDATE users SET leaderboard_opt_in=? WHERE id=?',Number(b.leaderboardOptIn),u.id);return j({ok:true},200,h)}
  if(p==='/api/me/clubhouse-identity'&&m==='GET'){const linked=await first(db,'SELECT clubhouse_user_id FROM listener_identities WHERE user_id=?',u.id);return j({linked:!!linked,clubhouseUserId:linked?.clubhouse_user_id||null},200,h)}
  if(p==='/api/me/clubhouse-identity'&&m==='DELETE'){await run(db,'DELETE FROM listener_identities WHERE user_id=?',u.id);return j({ok:true},200,h)}

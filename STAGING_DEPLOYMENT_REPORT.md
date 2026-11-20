@@ -1,5 +1,7 @@
 # Cloudflare staging deployment — 20 November 2026
 
+This is the initial deployment snapshot. The subsequent authentication fix, D1 migrations `0003` and `0004`, and current Worker version are recorded in [AUTH_STAGING_VALIDATION_REPORT.md](AUTH_STAGING_VALIDATION_REPORT.md).
+
 ## Actual resources
 
 - Authenticated account: `6df4c7d2129ca857885972ef0028c280`; dashboard displayed **Workers Free** as the current plan, 0/100,000 Worker requests before testing, and D1 usage of 1/10 databases, 0/5 million rows read and 0/100,000 rows written before migration. Billable D1 usage showed $0.00 before deployment. No plan upgrade or paid product was enabled.

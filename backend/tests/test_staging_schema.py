@@ -56,9 +56,16 @@ class StagingSchemaTests(unittest.TestCase):
         self.db.execute('INSERT INTO listener_scores(clubhouse_user_id,display_name,first_seen_ms,last_seen_ms,last_room_id,total_seconds) '
                         'VALUES (?,?,?,?,?,?)', ('legacy-user', 'Guest', 1, 600001, 'old-room', 600))
         self.db.executescript((BACKEND / 'migrations' / '0002_radio_platform.sql').read_text(encoding='utf-8'))
+        auth_migration = (BACKEND / 'migrations' / '0003_auth_recovery.sql').read_text(encoding='utf-8')
+        self.db.executescript(auth_migration)
+        self.db.executescript(auth_migration)
+        atomic_migration = (BACKEND / 'migrations' / '0004_auth_atomic_recovery.sql').read_text(encoding='utf-8')
+        self.db.executescript(atomic_migration)
+        self.db.executescript(atomic_migration)
         request = self.db.execute('SELECT title,status,cost,user_id FROM song_requests WHERE id=?', ('legacy-request',)).fetchone()
         self.assertEqual(request, ('Old Song', 'pending', 0, None))
         self.assertEqual(self.db.execute('SELECT count(*) FROM point_transactions').fetchone()[0], 0)
+        self.assertEqual(self.db.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='account_recovery'").fetchone()[0], 1)
 
     def test_staging_template_is_isolated_and_disabled(self):
         with (BACKEND / 'wrangler.staging.toml.example').open('rb') as config_file:
