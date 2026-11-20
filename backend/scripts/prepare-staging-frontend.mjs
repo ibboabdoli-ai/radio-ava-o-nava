@@ -23,6 +23,8 @@ await cp(source, site, { recursive: true, filter: src => {
   return relative !== 'tests' && !relative.startsWith('tests/') && relative !== 'CNAME' && relative !== 'install-images.js';
 } });
 await cp(path.resolve(backend, '../radio-neon-logo.webp'), path.join(target, 'radio-neon-logo.webp'));
+const registrationHtml = await readFile(path.resolve(backend, '../competition.html'), 'utf8');
+await writeFile(path.join(target, 'competition.html'), registrationHtml.replace(/<head(\s[^>]*)?>/i, match => `${match}\n<meta name="robots" content="noindex, nofollow">`));
 const imageSource = path.resolve(backend, '../assets');
 const imageTarget = path.join(target, 'assets');
 await mkdir(imageTarget);

@@ -16,3 +16,7 @@ html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 1
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.club-card button{transition:none}}
 .club-wrap>.club-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media(max-width:700px){.club-wrap>.club-grid{grid-template-columns:1fr}}
+.club-card textarea{display:block;width:100%;min-height:100px;resize:vertical;box-sizing:border-box;padding:12px;margin-top:6px;border:1px solid #776980;border-radius:10px;background:#141020;color:#fff;font:inherit}
+.club-card textarea:focus-visible,.club-card select:focus-visible{outline:3px solid #f0c984;outline-offset:2px}
+#competition-admin .club-grid>form{min-width:0;padding:14px;border:1px solid #e9c78d2d;border-radius:14px;background:#251d35}
+#competition-public-list>div{padding:15px 0;border-bottom:1px solid #ffffff26}

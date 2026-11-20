@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 
 export function testDatabase() {
   const sqlite = new DatabaseSync(':memory:');
-  for (const name of ['schema.sql', 'attendance.sql', 'migrations/0002_radio_platform.sql', 'migrations/0003_auth_recovery.sql', 'migrations/0004_auth_atomic_recovery.sql']) {
+  for (const name of ['schema.sql', 'attendance.sql', 'migrations/0002_radio_platform.sql', 'migrations/0003_auth_recovery.sql', 'migrations/0004_auth_atomic_recovery.sql', 'migrations/0005_manual_competitions.sql']) {
     sqlite.exec(readFileSync(new URL(`../${name}`, import.meta.url), 'utf8'));
   }
   return {

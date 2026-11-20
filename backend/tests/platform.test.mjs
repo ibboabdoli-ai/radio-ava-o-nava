@@ -57,7 +57,7 @@ test('auth, catalog, request idempotency, atomic spending, refund and privacy', 
   assert.equal((await request(env, alice, song, key)).body.duplicate, true);
   assert.equal((await request(env, alice, song)).status, 409);
   assert.equal((await call(env, `/api/admin/requests/${first.body.id}`, 'PATCH', { status: 'approved' }, admin.cookie)).status, 409);
-  assert.equal((await call(env, `/api/admin/users/${alice.user.id}/adjust-points`, 'POST', { delta: 2, note: 'Mock test credit' }, admin.cookie)).status, 200);
+  assert.equal((await call(env, `/api/admin/users/${alice.user.id}/adjust-points`, 'POST', { delta: 2, note: 'Mock test credit' }, admin.cookie, { 'Idempotency-Key': crypto.randomUUID() })).status, 200);
   const approvals = await Promise.all([call(env, `/api/admin/requests/${first.body.id}`, 'PATCH', { status: 'approved' }, admin.cookie), call(env, `/api/admin/requests/${first.body.id}`, 'PATCH', { status: 'approved' }, admin.cookie)]);
   assert.deepEqual(approvals.map(x => x.status).sort(), [200, 409]);
   assert.equal((await call(env, '/api/me', 'GET', undefined, alice.cookie)).body.user.balance, 0);
@@ -110,7 +110,7 @@ test('two pending requests cannot spend the same balance twice', async () => {
   const song1=await catalog(env,admin,2),song2=await catalog(env,admin,2);
   const a=await request(env,user,song1),b=await request(env,user,song2);
   assert.equal(a.status,201);assert.equal(b.status,201);
-  assert.equal((await call(env,`/api/admin/users/${user.user.id}/adjust-points`,'POST',{delta:2,note:'Mock credit'},admin.cookie)).status,200);
+  assert.equal((await call(env,`/api/admin/users/${user.user.id}/adjust-points`,'POST',{delta:2,note:'Mock credit'},admin.cookie,{ 'Idempotency-Key': crypto.randomUUID() })).status,200);
   const results=await Promise.all([a,b].map(x=>call(env,`/api/admin/requests/${x.body.id}`,'PATCH',{status:'approved'},admin.cookie)));
   assert.deepEqual(results.map(x=>x.status).sort(),[200,409]);
   assert.equal((await call(env,'/api/me','GET',undefined,user.cookie)).body.user.balance,0);

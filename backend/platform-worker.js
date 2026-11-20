@@ -17,6 +17,7 @@ const first=(db,sql,...args)=>db.prepare(sql).bind(...args).first();
 const all=async(db,sql,...args)=>(await db.prepare(sql).bind(...args).all()).results;
 const run=(db,sql,...args)=>db.prepare(sql).bind(...args).run();
 const changed=r=>Number(r?.meta?.changes||0);
+const uuid=v=>typeof v==='string'&&/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(v);
 const balance=async(db,id)=>Number((await first(db,'SELECT COALESCE(SUM(delta),0) AS balance FROM point_transactions WHERE user_id=?',id))?.balance||0);
 const origin=env=>env.ALLOWED_ORIGIN||'https://radio.ibboabdoli.com';
 const cors=(req,env)=>req.headers.get('Origin')===origin(env)?{'access-control-allow-origin':origin(env),'access-control-allow-credentials':'true','access-control-allow-methods':'GET, POST, PATCH, PUT, DELETE, OPTIONS','access-control-allow-headers':'Content-Type, Idempotency-Key, Authorization','vary':'Origin'}:{};
@@ -79,6 +80,11 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
  if(p==='/api/catalog'&&m==='GET'){const q=`%${clean(url.searchParams.get('q'),80).replace(/[%_]/g,'')}%`;return j({songs:await all(db,'SELECT id,title,artist,cost FROM song_catalog WHERE active=1 AND (title LIKE ? OR artist LIKE ?) ORDER BY title LIMIT 50',q,q)},200,h)}
  if(p==='/api/queue'&&m==='GET')return j({queue:await all(db,"SELECT id,title,artist,queue_priority,created_at FROM song_requests WHERE status='approved' ORDER BY queue_priority DESC,created_at,id LIMIT 100")},200,h);
  if(p==='/api/leaderboard'&&m==='GET')return j({leaders:await all(db,'SELECT u.username AS name,COALESCE(SUM(t.delta),0) AS points FROM users u LEFT JOIN point_transactions t ON t.user_id=u.id WHERE u.leaderboard_opt_in=1 GROUP BY u.id ORDER BY points DESC,u.username COLLATE NOCASE LIMIT 50')},200,h);
+ if(p==='/api/competitions'&&m==='GET'){
+  const competitions=await all(db,"SELECT id,title,description,rules,status,results_public FROM competitions WHERE status IN ('published','closed') ORDER BY updated_at_ms DESC LIMIT 30");
+  for(const c of competitions){c.results=c.results_public?await all(db,"SELECT r.placement,r.result_text,u.username AS displayName FROM competition_results r JOIN users u ON u.id=r.user_id WHERE r.competition_id=? AND r.public_approved=1 AND r.public_name_consent=1 ORDER BY r.placement IS NULL,r.placement,u.username LIMIT 50",c.id):[];c.rules=JSON.parse(c.rules);delete c.results_public}
+  return j({competitions},200,h);
+ }
  if(p==='/api/admin/attendance')return j({error:'legacy_attendance_disabled'},410,h);
  if(p==='/api/internal/attendance'&&m==='POST'){
   if(env.ATTENDANCE_OBSERVER_ENABLED!=='true'||!env.OBSERVER_TOKEN)return j({error:'observer_disabled'},503,h);
@@ -122,7 +128,10 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
  if(p==='/api/me'&&m==='PATCH'){const b=await readBody(req);if(typeof b.leaderboardOptIn!=='boolean')return j({error:'invalid_opt_in'},400,h);await run(db,'UPDATE users SET leaderboard_opt_in=? WHERE id=?',Number(b.leaderboardOptIn),u.id);return j({ok:true},200,h)}
  if(p==='/api/me/clubhouse-identity'&&m==='GET'){const linked=await first(db,'SELECT clubhouse_user_id FROM listener_identities WHERE user_id=?',u.id);return j({linked:!!linked,clubhouseUserId:linked?.clubhouse_user_id||null},200,h)}
  if(p==='/api/me/clubhouse-identity'&&m==='DELETE'){await run(db,'DELETE FROM listener_identities WHERE user_id=?',u.id);return j({ok:true},200,h)}
- if(p==='/api/me/transactions'&&m==='GET')return j({transactions:await all(db,'SELECT id,delta,kind,note,created_at_ms FROM point_transactions WHERE user_id=? ORDER BY created_at_ms DESC LIMIT 100',u.id)},200,h);
+ if(p==='/api/me/transactions'&&m==='GET')return j({transactions:await all(db,'SELECT id,delta,kind,source_type,note,created_at_ms FROM point_transactions WHERE user_id=? ORDER BY created_at_ms DESC LIMIT 100',u.id)},200,h);
+ if(p==='/api/me/competition-results'&&m==='GET')return j({results:await all(db,'SELECT c.id AS competition_id,c.title,r.placement,r.result_text,r.is_winner,r.public_approved,r.public_name_consent,a.points AS awarded_points FROM competition_results r JOIN competitions c ON c.id=r.competition_id LEFT JOIN competition_awards a ON a.competition_id=r.competition_id AND a.user_id=r.user_id WHERE r.user_id=? ORDER BY r.recorded_at_ms DESC LIMIT 100',u.id)},200,h);
+ const consent=p.match(/^\/api\/me\/competitions\/([a-f0-9-]{36})\/consent$/i);
+ if(consent&&m==='PATCH'){const b=await readBody(req);if(typeof b.publicNameConsent!=='boolean')return j({error:'invalid_consent'},400,h);const r=await run(db,'UPDATE competition_results SET public_name_consent=? WHERE competition_id=? AND user_id=?',Number(b.publicNameConsent),consent[1],u.id);return changed(r)?j({ok:true},200,h):j({error:'result_not_found'},404,h)}
  if(p==='/api/me/attendance'&&m==='GET')return j({sessions:await all(db,'SELECT room_id,start_ms,last_seen_ms,end_ms,credited_seconds FROM attendance_sessions WHERE user_id=? ORDER BY start_ms DESC LIMIT 100',u.id)},200,h);
  if(p==='/api/me/requests'&&m==='GET')return j({requests:await all(db,'SELECT id,title,artist,status,cost,catalog_song_id,created_at FROM song_requests WHERE user_id=? ORDER BY created_at DESC LIMIT 100',u.id)},200,h);
  const cancel=p.match(/^\/api\/me\/requests\/([a-f0-9-]{36})$/i);if(cancel&&m==='PATCH'){const r=await run(db,"UPDATE song_requests SET status='cancelled',updated_at=strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id=? AND user_id=? AND status IN ('pending','approved')",cancel[1],u.id);return changed(r)?j({ok:true},200,h):j({error:'not_cancellable'},409,h)}
@@ -134,7 +143,7 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
  }
  if(u.role!=='admin')return j({error:'forbidden'},403,h);
  if(p==='/api/admin/events'&&m==='GET')return j({events:await all(db,'SELECT e.action,e.target_id,e.note,e.created_at_ms,u.username AS actor FROM admin_events e JOIN users u ON u.id=e.actor_user_id ORDER BY e.created_at_ms DESC LIMIT 50')},200,h);
- if(p==='/api/admin/transactions'&&m==='GET')return j({transactions:await all(db,'SELECT t.delta,t.kind,t.note,t.created_at_ms,u.username FROM point_transactions t JOIN users u ON u.id=t.user_id ORDER BY t.created_at_ms DESC LIMIT 50')},200,h);
+ if(p==='/api/admin/transactions'&&m==='GET')return j({transactions:await all(db,'SELECT t.delta,t.kind,t.source_type,t.note,t.created_at_ms,u.username,a.username AS actor FROM point_transactions t JOIN users u ON u.id=t.user_id LEFT JOIN users a ON a.id=t.actor_user_id ORDER BY t.created_at_ms DESC LIMIT 50')},200,h);
  if(p==='/api/admin/catalog'&&m==='POST'){const b=await readBody(req),title=clean(b.title,120),artist=clean(b.artist,120),source=clean(b.sourceUrl,500),note=clean(b.rightsNote,500),cost=Number(b.cost);let sourceOk=false;try{const parsed=new URL(source);sourceOk=parsed.protocol==='https:'&&parsed.hostname==='audius.co'&&!parsed.username&&!parsed.password}catch{}if(!title||!artist||!sourceOk||!note||b.rightsConfirmed!==true||b.playableConfirmed!==true||!Number.isInteger(cost)||cost<1||cost>1000)return j({error:'invalid_catalog_entry'},400,h);const id=crypto.randomUUID();await run(db,'INSERT INTO song_catalog(id,title,artist,source_url,rights_note,cost,playable_checked_at_ms,created_by_user_id,created_at_ms) VALUES(?,?,?,?,?,?,?,?,?)',id,title,artist,source,note,cost,Date.now(),u.id,Date.now());await audit(db,u,'catalog_create',id);return j({id},201,h)}
  const catalog=p.match(/^\/api\/admin\/catalog\/([a-f0-9-]{36})$/i);if(catalog&&m==='PATCH'){const b=await readBody(req);if(typeof b.active!=='boolean')return j({error:'invalid_active'},400,h);const r=await run(db,'UPDATE song_catalog SET active=? WHERE id=?',Number(b.active),catalog[1]);if(!changed(r))return j({error:'not_found'},404,h);await audit(db,u,'catalog_active',catalog[1],String(b.active));return j({ok:true},200,h)}
  if(p==='/api/admin/requests'&&m==='GET'){const status=url.searchParams.get('status')||'pending';if(!['pending','approved','rejected','cancelled','played'].includes(status))return j({error:'invalid_status'},400,h);return j({requests:await all(db,'SELECT id,title,artist,requested_by,status,cost,queue_priority,created_at FROM song_requests WHERE status=? ORDER BY queue_priority DESC,created_at LIMIT 100',status)},200,h)}
@@ -145,7 +154,55 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
  }
  if(p==='/api/admin/users'&&m==='GET')return j({users:await all(db,'SELECT u.id,u.username,u.role,u.leaderboard_opt_in,COALESCE(SUM(t.delta),0) AS balance FROM users u LEFT JOIN point_transactions t ON t.user_id=u.id GROUP BY u.id ORDER BY u.created_at_ms DESC LIMIT 100')},200,h);
  const identity=p.match(/^\/api\/admin\/users\/([a-f0-9-]{36})\/clubhouse-identity$/i);if(identity&&m==='PUT'){const b=await readBody(req),id=clean(b.clubhouseUserId,100);if(b.consentConfirmed!==true||!/^[a-zA-Z0-9_:-]{2,100}$/.test(id))return j({error:'consent_or_id_required'},400,h);if(!await first(db,'SELECT id FROM users WHERE id=?',identity[1]))return j({error:'user_not_found'},404,h);try{await run(db,'INSERT INTO listener_identities(clubhouse_user_id,user_id,consent_at_ms,mapped_by_user_id) VALUES(?,?,?,?)',id,identity[1],Date.now(),u.id)}catch{return j({error:'identity_already_mapped'},409,h)}await audit(db,u,'identity_map',identity[1]);return j({ok:true},200,h)}
- const adjust=p.match(/^\/api\/admin\/users\/([a-f0-9-]{36})\/adjust-points$/i);if(adjust&&m==='POST'){const b=await readBody(req),delta=Number(b.delta),note=clean(b.note,300),id=crypto.randomUUID();if(!Number.isInteger(delta)||!delta||Math.abs(delta)>1000||!note)return j({error:'invalid_adjustment'},400,h);const r=await run(db,"INSERT INTO point_transactions(id,user_id,delta,kind,source_id,note,created_at_ms) SELECT ?,u.id,?,'admin_adjustment',?,?,? FROM users u WHERE u.id=? AND (SELECT COALESCE(SUM(delta),0) FROM point_transactions WHERE user_id=u.id)+?>=0",id,delta,id,note,Date.now(),adjust[1],delta);if(!changed(r))return j({error:'user_missing_or_negative_balance'},409,h);await audit(db,u,'points_adjust',adjust[1],`${delta}: ${note}`);return j({ok:true},200,h)}
+ const adjust=p.match(/^\/api\/admin\/users\/([a-f0-9-]{36})\/adjust-points$/i);if(adjust&&m==='POST'){
+  const b=await readBody(req),delta=b.delta,note=clean(b.note,300),key=req.headers.get('Idempotency-Key')?.toLowerCase();
+  if(!Number.isInteger(delta)||!delta||Math.abs(delta)>1000||!note)return j({error:'invalid_adjustment'},400,h);
+  if(!uuid(key))return j({error:'idempotency_key_required'},400,h);
+  const prior=await first(db,"SELECT user_id,delta,note,actor_user_id FROM point_transactions WHERE kind='admin_adjustment' AND source_id=?",key);
+  if(prior)return prior.user_id===adjust[1]&&prior.delta===delta&&prior.note===note&&prior.actor_user_id===u.id?j({ok:true,duplicate:true,balance:await balance(db,adjust[1])},200,h):j({error:'idempotency_conflict'},409,h);
+  const r=await run(db,"INSERT OR IGNORE INTO point_transactions(id,user_id,delta,kind,source_id,note,created_at_ms,actor_user_id,source_type) SELECT ?,u.id,?,'admin_adjustment',?,?,?,?, 'manual' FROM users u WHERE u.id=? AND (SELECT COALESCE(SUM(delta),0) FROM point_transactions WHERE user_id=u.id)+?>=0",crypto.randomUUID(),delta,key,note,Date.now(),u.id,adjust[1],delta);
+  if(!changed(r)){const duplicate=await first(db,"SELECT user_id,delta,note,actor_user_id FROM point_transactions WHERE kind='admin_adjustment' AND source_id=?",key);return duplicate&&duplicate.user_id===adjust[1]&&duplicate.delta===delta&&duplicate.note===note&&duplicate.actor_user_id===u.id?j({ok:true,duplicate:true,balance:await balance(db,adjust[1])},200,h):j({error:duplicate?'idempotency_conflict':'user_missing_or_negative_balance'},409,h)}
+  return j({ok:true,balance:await balance(db,adjust[1])},200,h);
+ }
+ if(p==='/api/admin/competitions'&&m==='GET'){
+  const competitions=await all(db,'SELECT id,title,description,rules,status,results_public,created_at_ms,updated_at_ms FROM competitions ORDER BY updated_at_ms DESC LIMIT 100');
+  for(const c of competitions){c.rules=JSON.parse(c.rules);c.participants=await all(db,'SELECT p.user_id,u.username FROM competition_participants p JOIN users u ON u.id=p.user_id WHERE p.competition_id=? ORDER BY p.verified_at_ms DESC LIMIT 100',c.id);c.results=await all(db,'SELECT r.user_id,u.username,r.placement,r.result_text,r.is_winner,r.public_approved,r.public_name_consent,a.points AS awarded_points FROM competition_results r JOIN users u ON u.id=r.user_id LEFT JOIN competition_awards a ON a.competition_id=r.competition_id AND a.user_id=r.user_id WHERE r.competition_id=? ORDER BY r.placement IS NULL,r.placement,u.username LIMIT 100',c.id)}
+  return j({competitions},200,h);
+ }
+ if(p==='/api/admin/competitions'&&m==='POST'){
+  const b=await readBody(req),title=clean(b.title,120),description=clean(b.description,1000),rules=Array.isArray(b.rules)?b.rules.map(x=>clean(x,300)):null;
+  if(!title||!description||!rules||rules.length>12||rules.some(x=>!x)||JSON.stringify(rules).length>4000)return j({error:'invalid_competition'},400,h);
+  const id=crypto.randomUUID(),now=Date.now();await run(db,"INSERT INTO competitions(id,title,description,rules,status,results_public,created_by_user_id,updated_by_user_id,created_at_ms,updated_at_ms) VALUES(?,?,?,?,'draft',0,?,?,?,?)",id,title,description,JSON.stringify(rules),u.id,u.id,now,now);await audit(db,u,'competition_create',id);return j({id},201,h);
+ }
+ const competition=p.match(/^\/api\/admin\/competitions\/([a-f0-9-]{36})$/i);
+ if(competition&&m==='PATCH'){
+  const b=await readBody(req),title=clean(b.title,120),description=clean(b.description,1000),rules=Array.isArray(b.rules)?b.rules.map(x=>clean(x,300)):null;
+  if(!title||!description||!rules||rules.length>12||rules.some(x=>!x)||JSON.stringify(rules).length>4000||!['draft','published','closed'].includes(b.status)||typeof b.resultsPublic!=='boolean')return j({error:'invalid_competition'},400,h);
+  const r=await run(db,'UPDATE competitions SET title=?,description=?,rules=?,status=?,results_public=?,updated_by_user_id=?,updated_at_ms=? WHERE id=?',title,description,JSON.stringify(rules),b.status,Number(b.resultsPublic),u.id,Date.now(),competition[1]);if(!changed(r))return j({error:'not_found'},404,h);await audit(db,u,'competition_edit',competition[1]);return j({ok:true},200,h);
+ }
+ const participant=p.match(/^\/api\/admin\/competitions\/([a-f0-9-]{36})\/participants$/i);
+ if(participant&&m==='POST'){
+  const b=await readBody(req);if(!uuid(b.userId)||b.verifiedFromApprovedForm!==true)return j({error:'verification_required'},400,h);
+  const r=await run(db,'INSERT OR IGNORE INTO competition_participants(competition_id,user_id,verified_by_user_id,verified_at_ms) SELECT c.id,u.id,?,? FROM competitions c JOIN users u ON u.id=? WHERE c.id=?',u.id,Date.now(),b.userId,participant[1]);
+  if(!changed(r))return j({error:'participant_exists_or_missing'},409,h);await audit(db,u,'competition_participant',participant[1]);return j({ok:true},201,h);
+ }
+ const result=p.match(/^\/api\/admin\/competitions\/([a-f0-9-]{36})\/results$/i);
+ if(result&&m==='POST'){
+  const b=await readBody(req),description=clean(b.resultText,500),placement=b.placement===null?null:b.placement;
+  if(!uuid(b.userId)||!description||!(placement===null||(Number.isInteger(placement)&&placement>=1&&placement<=100000))||typeof b.isWinner!=='boolean'||typeof b.publicApproved!=='boolean'||'publicNameConsent' in b||(b.isWinner&&placement===null))return j({error:'invalid_result'},400,h);
+  let r;try{r=await run(db,'INSERT INTO competition_results(competition_id,user_id,placement,result_text,is_winner,public_approved,public_name_consent,recorded_by_user_id,recorded_at_ms) SELECT p.competition_id,p.user_id,?,?,?,?,0,?,? FROM competition_participants p WHERE p.competition_id=? AND p.user_id=? ON CONFLICT(competition_id,user_id) DO UPDATE SET placement=excluded.placement,result_text=excluded.result_text,is_winner=excluded.is_winner,public_approved=excluded.public_approved,recorded_by_user_id=excluded.recorded_by_user_id,recorded_at_ms=excluded.recorded_at_ms WHERE NOT EXISTS (SELECT 1 FROM competition_awards a WHERE a.competition_id=excluded.competition_id AND a.user_id=excluded.user_id) OR (competition_results.placement IS excluded.placement AND competition_results.result_text=excluded.result_text AND competition_results.is_winner=excluded.is_winner)',placement,description,Number(b.isWinner),Number(b.publicApproved),u.id,Date.now(),result[1],b.userId)}catch{return j({error:'result_conflict'},409,h)}
+  if(!changed(r))return j({error:'participant_missing_or_awarded'},409,h);await audit(db,u,'competition_result',result[1]);return j({ok:true},200,h);
+ }
+ const award=p.match(/^\/api\/admin\/competitions\/([a-f0-9-]{36})\/awards$/i);
+ if(award&&m==='POST'){
+  const b=await readBody(req),reason=clean(b.reason,300),key=req.headers.get('Idempotency-Key')?.toLowerCase();
+  if(!uuid(b.userId)||!Number.isInteger(b.points)||b.points<1||b.points>1000||!reason)return j({error:'invalid_award'},400,h);
+  if(!uuid(key))return j({error:'idempotency_key_required'},400,h);
+  const prior=await first(db,'SELECT competition_id,user_id,points,reason,awarded_by_user_id FROM competition_awards WHERE id=?',key);
+  if(prior)return prior.competition_id===award[1]&&prior.user_id===b.userId&&prior.points===b.points&&prior.reason===reason&&prior.awarded_by_user_id===u.id?j({ok:true,duplicate:true},200,h):j({error:'idempotency_conflict'},409,h);
+  const r=await run(db,'INSERT OR IGNORE INTO competition_awards(id,competition_id,user_id,points,reason,awarded_by_user_id,created_at_ms) SELECT ?,r.competition_id,r.user_id,?,?,?,? FROM competition_results r WHERE r.competition_id=? AND r.user_id=? AND r.is_winner=1',key,b.points,reason,u.id,Date.now(),award[1],b.userId);
+  if(!changed(r))return j({error:'award_exists_or_ineligible'},409,h);return j({ok:true,balance:await balance(db,b.userId)},201,h);
+ }
  if(p==='/api/admin/leaderboard'&&m==='GET')return j({leaders:await all(db,'SELECT u.id,u.username,COALESCE(SUM(t.delta),0) AS points FROM users u LEFT JOIN point_transactions t ON t.user_id=u.id GROUP BY u.id ORDER BY points DESC LIMIT 100')},200,h);
  if(p==='/api/admin/maintenance'&&m==='POST'){const now=Date.now();await run(db,'DELETE FROM user_sessions WHERE expires_at_ms<?',now);await run(db,'DELETE FROM attendance_observations WHERE received_ms<?',now-90*86400000);await run(db,'DELETE FROM attendance_sessions WHERE start_ms<? AND end_ms IS NOT NULL',now-365*86400000);await run(db,'DELETE FROM auth_limits WHERE window_start_ms<?',now-86400000);await run(db,'DELETE FROM request_limits WHERE last_request_at<?',now-86400000);await audit(db,u,'maintenance','retention');return j({ok:true},200,h)}
  return j({error:'not_found'},404,h);
