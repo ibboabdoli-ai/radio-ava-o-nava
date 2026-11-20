@@ -1,0 +1,27 @@
+name: Radio staging schema checks
+on:
+  pull_request:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/radio-staging-schema.yml'
+permissions:
+  contents: read
+jobs:
+  offline-d1-checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate existing D1 schemas using isolated SQLite
+        run: python -m unittest discover -s backend/tests -p 'test_staging_schema.py' -v
+      - name: Validate integrated migration, Worker and points transactions offline
+        run: |
+          cd backend
+          npm run check
+          npm test

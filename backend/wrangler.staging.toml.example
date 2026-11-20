@@ -1,0 +1,31 @@
+# Explicitly isolated STAGING worker, NOT the production radio.
+# Copy to wrangler.staging.toml (gitignored); replace the placeholders.
+name = "ava-radio-staging"
+account_id = "REPLACE_WITH_VERIFIED_ACCOUNT_ID"
+main = "worker.js"
+compatibility_date = "2026-11-01"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+preview_urls = false
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ava-radio-staging"
+database_id = "REPLACE_WITH_VERIFIED_EXISTING_STAGING_D1_ID"
+
+[assets]
+directory = "./.wrangler/staging-frontend"
+run_worker_first = ["/api/*", "/health"]
+
+[vars]
+# Must be this staging Worker's verified workers.dev HTTPS origin, never the live radio.
+ALLOWED_ORIGIN = "https://REPLACE_WITH_STAGING_FRONTEND_HOST"
+RADIO_FEATURES_ENABLED = "false"
+REGISTRATION_ENABLED = "false"
+ATTENDANCE_OBSERVER_ENABLED = "false"
+RADIO_DJ_ENABLED = "false"
+ACCESS_PILOT_ENABLED = "false"
+# Set ACCESS_PILOT_AUD to the exact path-scoped staging application audience only after verification.
+
+# Store AUTH_RATE_SECRET via 'wrangler secret put' after account verification.
+# OBSERVER_TOKEN must remain unset; there is no verified Clubhouse presence source.

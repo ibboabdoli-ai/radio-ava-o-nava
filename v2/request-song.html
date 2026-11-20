@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#100e1c">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="درخواست آهنگ، صف موسیقی و امتیازهای شنوندگان رادیو آوا و نوا.">
+<title>باشگاه شنوندگان | رادیو آوا و نوا</title>
+<link rel="icon" href="../radio-neon-logo.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./site.css?v=25">
+<link rel="stylesheet" href="./request-song.css?v=1">
+<script defer src="./request-song.js?v=1"></script>
+</head>
+<body class="club-body">
+<a class="skip" href="#clubMain">رفتن به محتوای باشگاه</a>
+<header class="club-header">
+  <div class="club-header-inner">
+    <a class="club-brand" href="./" aria-label="بازگشت به خانه رادیو آوا و نوا">
+      <img src="../radio-neon-logo.webp" alt="" width="50" height="50">
+      <span><strong>آوا و نوا</strong><small>باشگاه شنوندگان</small></span>
+    </a>
+    <a class="club-back" href="./">بازگشت به رادیو <span aria-hidden="true">←</span></a>
+  </div>
+</header>
+<main class="club-layout" id="clubMain">
+  <section class="club-hero" aria-labelledby="clubTitle">
+    <div class="club-hero-copy">
+      <span class="club-eyebrow">RADIO AVA O NAVA</span>
+      <h1 id="clubTitle">باشگاه شنوندگان</h1>
+      <p>آهنگ دلخواهت را پیشنهاد بده، صف درخواست‌ها را ببین و بعد از فعال‌شدن امتیازدهی، امتیاز حضور خودت را دنبال کن.</p>
+      <div class="club-hero-actions">
+        <a class="club-button club-button-gold" href="#request">درخواست آهنگ <span aria-hidden="true">↙</span></a>
+        <a class="club-button club-button-outline" href="#queue">دیدن صف آهنگ‌ها</a>
+      </div>
+    </div>
+    <div class="club-hero-mark" aria-hidden="true"><img src="../radio-neon-logo.webp" alt="" width="180" height="180"></div>
+  </section>
+
+  <div id="clubSystemStatus" class="club-notice" role="status" aria-live="polite">
+    <span class="club-status-dot" aria-hidden="true"></span>
+    <span id="clubStatusText">در حال بررسی وضعیت سیستم درخواست آهنگ…</span>
+  </div>
+
+  <section class="club-stat-grid" aria-label="خلاصه باشگاه">
+    <article class="club-stat"><span>امتیاز من</span><strong id="myPoints" aria-label="هنوز در دسترس نیست">—</strong><small id="myPointsHint">پس از اتصال حساب کاربری</small></article>
+    <article class="club-stat"><span>آهنگ‌های در صف</span><strong id="queueCount" aria-label="هنوز در دسترس نیست">—</strong><small id="queueCountHint">در انتظار راه‌اندازی صف</small></article>
+    <article class="club-stat"><span>مدت حضور من</span><strong id="myAttendance" aria-label="هنوز در دسترس نیست">—</strong><small>پس از اتصال امن کلاب‌هاوس</small></article>
+  </section>
+
+  <div class="club-main-grid">
+    <section class="club-panel" id="request" aria-labelledby="requestTitle">
+      <div class="club-panel-heading">
+        <div><span class="club-section-kicker">SONG REQUEST</span><h2 id="requestTitle">درخواست آهنگ</h2></div>
+        <span class="club-chip" id="requestAvailability">در حال راه‌اندازی</span>
+      </div>
+      <p class="club-intro">نام آهنگ، خواننده و نام نمایشی خودت را بنویس. درخواست ابتدا برای بررسی مدیر ارسال می‌شود؛ ثبت آن به معنی پخش قطعی نیست.</p>
+      <form id="requestForm" class="club-form" novalidate>
+        <label for="songTitle">نام آهنگ</label>
+        <input id="songTitle" name="title" type="text" maxlength="120" autocomplete="off" placeholder="مثلاً سلطان قلب‌ها" required>
+        <label for="songArtist">نام خواننده</label>
+        <input id="songArtist" name="artist" type="text" maxlength="120" autocomplete="off" placeholder="نام هنرمند" required>
+        <label for="requester">نام نمایشی شما</label>
+        <input id="requester" name="requestedBy" type="text" maxlength="60" autocomplete="nickname" placeholder="نامی برای شناسایی درخواست توسط مدیر" required>
+        <p class="club-form-note">شماره تلفن یا رمز عبور وارد نکن. فعلاً درخواست‌ها با امتیاز کسر نمی‌شوند.</p>
+        <button id="requestSubmit" class="club-button club-button-gold club-submit" type="submit" disabled>ثبت درخواست آهنگ</button>
+        <p id="requestFeedback" class="club-feedback" role="status" aria-live="polite">ارسال مستقیم هنوز فعال نشده است.</p>
+      </form>
+      <div class="club-alternate">
+        <span>تا راه‌اندازی درخواست مستقیم</span>
+        <a id="clubTelegramLink" href="https://t.me/+bSKXuElY13I3NWY0" target="_blank" rel="noopener noreferrer">درخواست از طریق تلگرام ↗</a>
+      </div>
+    </section>
+
+    <section class="club-panel" id="queue" aria-labelledby="queueTitle">
+      <div class="club-panel-heading"><div><span class="club-section-kicker">NEXT TRACKS</span><h2 id="queueTitle">صف درخواست‌ها</h2></div><span class="club-chip">پس از تأیید مدیر</span></div>
+      <p class="club-intro">فقط آهنگ‌های تأییدشده در این فهرست قرار می‌گیرند. این صف، پخش خودکار را تضمین نمی‌کند.</p>
+      <ol id="queueList" class="club-queue" aria-live="polite"></ol>
+      <p id="queueStatus" class="club-empty" role="status">صف پس از راه‌اندازی سرویس نمایش داده می‌شود.</p>
+      <button id="refreshQueue" class="club-button club-button-outline club-refresh" type="button" disabled>به‌روزرسانی صف</button>
+    </section>
+  </div>
+
+  <section class="club-panel club-points-section" id="points" aria-labelledby="pointsTitle">
+    <div class="club-panel-heading"><div><span class="club-section-kicker">LISTENER POINTS</span><h2 id="pointsTitle">امتیاز حضور در روم</h2></div><span class="club-chip">در حال توسعه</span></div>
+    <div class="club-points-grid">
+      <div class="club-points-explainer">
+        <strong>چطور امتیاز می‌گیری؟</strong>
+        <p>قانون پیشنهادی باشگاه: هر یک دقیقه حضور <em>تأییدشده</em> در روم، یک امتیاز. اگر خارج شوی و دوباره برگردی، زمان‌های ثبت‌شده جمع می‌شوند.</p>
+        <p class="club-muted">تا زمانی که ربات بتواند حضور افراد را به‌صورت معتبر تشخیص دهد، امتیازی به‌طور خودکار ثبت نمی‌شود.</p>
+      </div>
+      <div class="club-account-preview">
+        <span class="club-account-icon" aria-hidden="true">★</span>
+        <div><strong>امتیاز و پروفایل شخصی</strong><p id="profileStatus">ورود امن و مشاهده امتیازها بعد از اتصال بک‌اند فعال می‌شود.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="club-panel club-board-section" id="leaderboard" aria-labelledby="leaderboardTitle">
+    <div class="club-panel-heading"><div><span class="club-section-kicker">TOP LISTENERS</span><h2 id="leaderboardTitle">برترین شنوندگان</h2></div><span class="club-chip">نمایش با رضایت کاربران</span></div>
+    <p class="club-intro">پس از فعال‌شدن سیستم، فقط کاربران دارای رضایت برای نمایش عمومی در رتبه‌بندی دیده می‌شوند.</p>
+    <ol id="leaderboardList" class="club-leaderboard" aria-live="polite"></ol>
+    <p id="leaderboardStatus" class="club-empty" role="status">رتبه‌بندی عمومی هنوز فعال نشده است.</p>
+  </section>
+
+  <section class="club-help" aria-label="اطلاعات مهم">
+    <strong>توجه</strong>
+    <p>این بخش در حال تکمیل است. امتیازها و درخواست آهنگ هنوز به پخش مستقیم کلاب‌هاوس متصل نیستند. اطلاعات مربوط به حضور کاربران تنها پس از تأیید امکان اتصال و رعایت حریم خصوصی فعال می‌شود.</p>
+    <a class="club-button club-button-outline" href="./radio-club.html">ورود به حساب و درخواست با امتیاز آزمایشی</a>
+  </section>
+</main>
+<footer class="club-footer"><span>رادیو آوا و نوا · موسیقی، شعر و آواز</span><a href="./">صفحه اصلی</a><a href="./privacy.html">حریم خصوصی</a></footer>
+</body>
+</html>

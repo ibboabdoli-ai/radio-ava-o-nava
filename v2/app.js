@@ -308,6 +308,21 @@
     // The short public contest card contains only the approved title and registration link.
     setText('contestTitle',state.shows.competition?.title||'مسابقه آوا و نوا');
   }
+  async function renderCompetitionResults(){
+    // The live config remains disabled. Only the same-origin staging portal can
+    // add organizer-approved, consented public results to this card.
+    try{
+      const config=await fetch('./request-config.json',{cache:'no-store'}).then(r=>r.json());
+      if(config.clubEnabled!==true||new URL(config.apiBase).origin!==location.origin)return;
+      const response=await fetch('/api/competitions',{cache:'no-store'});if(!response.ok)return;
+      const data=await response.json(),host=$('contestResults');host.replaceChildren();
+      const published=(Array.isArray(data.competitions)?data.competitions:[]).flatMap(c=>(Array.isArray(c.results)?c.results:[]).map(r=>({title:c.title,result:r}))).slice(0,5);
+      if(!published.length)return;
+      const heading=document.createElement('strong');heading.textContent='نتیجه‌های تأییدشده';host.append(heading);
+      for(const item of published){const row=document.createElement('p');row.textContent=`${item.title}: ${item.result.displayName} · ${item.result.result_text}`;host.append(row)}
+      host.hidden=false;
+    }catch{/* No approved results available; keep the existing card unchanged. */}
+  }
   window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;$('installButton').hidden=false;});
   $('installButton').addEventListener('click',async()=>{if(!deferredInstall)return;deferredInstall.prompt();await deferredInstall.userChoice.catch(()=>{});deferredInstall=null;$('installButton').hidden=true;});
   async function init(){
@@ -323,7 +338,7 @@
     setLink('houseLink',state.shows.program.roomUrl||state.shows.links.clubhouse);
     setLink('contestLink',state.shows.links.contest);setLink('telegramLink',state.shows.links.telegram);setLink('whatsappLink',state.shows.links.whatsapp);setLink('requestSongLink',state.shows.links.requestSong||'https://t.me/+bSKXuElY13I3NWY0');
     setText('liveProgram',state.shows.program.title||'آوا و نوا');setText('liveHost',state.shows.program.subtitle||'موسیقی، شعر و آواز');
-    renderSchedule();updateClocks();renderCompetition();renderRecordings();
+    renderSchedule();updateClocks();renderCompetition();void renderCompetitionResults();renderRecordings();
     // Do not download archived audio metadata until the visitor chooses a recording.
     state.mode='idle';setDock('رادیو آوا و نوا','آماده پخش',false,'#listen');
     pollStats();

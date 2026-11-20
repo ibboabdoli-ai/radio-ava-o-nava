@@ -1,0 +1,37 @@
+# Radio Ava o Nava — source security review and release gate
+
+20 November 2026. Codex manually traced the current Worker, D1 schema/triggers, portal DOM sinks, configuration and tests. This is a code-level review with offline reproductions and bounded staging checks, **not an independent third-party certification or a penetration test**. Scope excludes the original Clubhouse bot and production radio resources.
+
+## Confirmed vulnerabilities and fixes
+
+| Finding and evidence | Impact | Fix and validation |
+| --- | --- | --- |
+| Login verified a password, then inserted a session in a separate D1 statement. A concurrent password reset could occur between them. `auth-races.test.mjs` initially returned 200 where 401 was required. | A stale password could create a new valid session after reset. | Session insertion now selects the user only when the stored hash is unchanged. The legacy-hash upgrade also checks its compare-and-swap result. The race test passes. |
+| Password change checked the current password, then updated the user without checking the hash again. The offline race test initially returned 200 where 409 was required. | A stale request could overwrite a newer reset. | The update now requires the verified hash to still match. D1's password-change trigger invalidates older sessions and recovery codes atomically. The race test passes. |
+| Recovery-code issuance checked the password, then wrote the code separately. The offline race test initially returned 200 where 409 was required. | A stale session could issue a code after a password reset. | The insert/upsert now requires the verified hash in the same D1 statement. The race test passes. |
+
+## Reviewed controls and limits
+
+- **Hashing:** New hashes use built-in scrypt with random 256-bit salts and OWASP-listed `N=8192, r=8, p=10`. The old PBKDF2 verifier only migrates a valid legacy login; staging has 2/2 scrypt users and no legacy user. The actual Workers Free staging runtime accepted low-volume scrypt logins. Capacity under attack is unverified.
+- **Sessions:** Random 256-bit tokens are stored only as SHA-256 hashes, expire after seven days, use `HttpOnly`, `Secure`, `SameSite=Lax` and `/api` cookies, and are revoked by logout or password change. The race fix prevents insertion after reset. A stolen cookie remains usable until logout, reset or expiry; device binding and anomaly alerts are absent.
+- **Recovery:** Codes are 256-bit random, stored hashed, rotated on issue and consumed in a single password-update statement. The D1 trigger revokes all sessions and codes. If the user still knows the password, they can sign in and issue a new code. If both password and code are lost, there is **no safe automated recovery path** because no previously verified contact or identity channel exists. Keep registration disabled. A future process must enroll a verified channel before account loss, require independent proof and a second reviewer for exceptions, notify the old channel, add a cooling-off period, audit the decision, revoke sessions, and require new recovery enrollment. Never reset from a username, display name or Clubhouse handle alone.
+- **Brute force and enumeration:** D1 limits authentication by hashed IP (20/15 minutes) and normalized username (10/15 minutes). Local tests verify 429; distributed-IP and quota-exhaustion resistance have not been load tested. Registration is disabled in staging. If enabled as written, its 201/409 responses reveal registered usernames; the production registration and identity-verification design remains a release blocker.
+- **CSRF/CORS:** Mutations require the exact configured `Origin`; CORS grants credentials only to that origin. Local tests and staging wrong-origin 403 verify the boundary. Same-origin script injection would bypass Origin checks, so XSS remains relevant.
+- **Authorization/data:** Admin routes follow a live D1 session/role lookup and return 403 for listeners. SQL uses bound parameters; branch-selected SQL strings are static. The portal renders API strings with `textContent` and contains no `innerHTML` sink. The public queue omits requester names; leaderboard is opt-in. Old `listener_scores` retention and a production privacy notice remain unresolved.
+- **Points/concurrency:** D1 constraints/triggers and tests cover one spend under concurrent approvals, no negative balance, single refunds, and idempotent requests. The remote test uses invented data only.
+- **Secrets:** Staging Worker secret is in Cloudflare; local QA credentials and D1 exports are gitignored. A tracked-filename scan found no `.env`, credential, token or backup file. No secret value was included in the PR.
+
+## Performance and release interpretation
+
+The bounded offline benchmark (`node backend/scripts/benchmark-auth.mjs`) measured one mock login at 90 ms wall / 94 ms process CPU and four concurrent logins at 109 ms wall / 437 ms process CPU, with local Node RSS rising from 50 to 83 MiB. These are **Node process measurements**, not Cloudflare Worker CPU or isolate memory. [Cloudflare's Free limits](https://developers.cloudflare.com/workers/platform/limits/) are 10 ms CPU per HTTP request and 128 MiB isolate memory; [Worker metrics](https://developers.cloudflare.com/workers/observability/metrics-and-analytics/) are needed to judge production capacity. No paid feature or large remote load test was used.
+
+A read-only Cloudflare dashboard snapshot before the final deployment showed 319 invocations in the preceding 24 hours, 0 invocation errors and 0 exceeded-CPU/memory outcomes. Its active-version median CPU was 0.81 ms; across the 24-hour chart CPU P90 was 26.37 ms and P99 48.12 ms, while isolate-memory P99 was 1.86 MB. These aggregates include older Worker versions and non-authentication requests; they do not establish per-login CPU or a safe production concurrency level. On final staging, exactly two concurrent synthetic logins returned 200/200 in 539 ms wall time.
+
+## Final validation after the fix
+
+- Commit `f9682e7` is on the existing Draft PR #28 branch. Four GitHub workflows passed, including Node 22 backend/schema and browser CI. Local backend tests passed 18/18, frontend/player tests 65/65, SQLite migration tests 6/6. Three race tests failed before the fix and passed after it.
+- Existing staging Worker `ava-radio-staging` version `11a16d8b-825a-4191-96bc-f710b25f01ea` was deployed under verified account `6df4c7d2129ca857885972ef0028c280`, bound only to existing D1 `abe077d0-b360-4beb-864a-0e3ab354cfd0`. No new migration or database was created.
+- Final HTTPS checks: health 200, closed registration 503, disabled attendance observer 503, wrong origin 403. Full invented-account API QA passed. Two concurrent D1 approvals returned 200/409; refund restored the baseline balance. Chrome listener login/logout passed at 390 and 1440 px, admin controls at 1440 px, and mobile homepage/install images passed.
+- Final D1 readback: 2 existing users, both on scrypt; 0 unused recovery codes, active songs, approved requests, Clubhouse identities and attendance observations. No production route, live radio site, or Clubhouse account changed.
+
+The code is a production-review candidate only. Keep PR #28 Draft, registration and attendance disabled, and the live radio site unchanged. Before release, obtain independent human security review, establish verified account recovery and registration, measure auth-specific Worker CPU/memory and Free-quota headroom under bounded authorized tests, and approve privacy and music-rights controls.

@@ -1,0 +1,9 @@
+{
+  "apiBase": "",
+  "clubEnabled": false,
+  "features": {
+    "requests": false,
+    "queue": false,
+    "leaderboard": false
+  }
+}
