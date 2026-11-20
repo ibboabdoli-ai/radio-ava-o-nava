@@ -32,7 +32,7 @@ const clearCookie='radio_session=; HttpOnly; Secure; SameSite=Lax; Path=/api; Ma
 export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),p=url.pathname,m=req.method;try{
  if(req.headers.get('Origin')&&req.headers.get('Origin')!==origin(env))return j({error:'origin_not_allowed'},403,h);
  if(m==='OPTIONS')return new Response(null,{status:204,headers:h});
- if(p==='/health'&&m==='GET')return j({ok:true,configured:!!env.DB,featuresEnabled:env.RADIO_FEATURES_ENABLED==='true'},200,h);
+ if(p==='/health'&&m==='GET')return j({ok:true,configured:!!env.DB,featuresEnabled:env.RADIO_FEATURES_ENABLED==='true',registrationEnabled:env.REGISTRATION_ENABLED==='true',attendanceObserverEnabled:env.ATTENDANCE_OBSERVER_ENABLED==='true'},200,h);
  if(!env.DB||env.RADIO_FEATURES_ENABLED!=='true')return j({error:'service_disabled'},503,h);
  if(!env.ALLOWED_ORIGIN||!env.AUTH_RATE_SECRET)return j({error:'service_unconfigured'},503,h);
  if(!['GET','HEAD'].includes(m)&&req.headers.get('Origin')!==origin(env))return j({error:'origin_required'},403,h);
@@ -78,7 +78,7 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
  }
  if(p==='/api/catalog'&&m==='GET'){const q=`%${clean(url.searchParams.get('q'),80).replace(/[%_]/g,'')}%`;return j({songs:await all(db,'SELECT id,title,artist,cost FROM song_catalog WHERE active=1 AND (title LIKE ? OR artist LIKE ?) ORDER BY title LIMIT 50',q,q)},200,h)}
  if(p==='/api/queue'&&m==='GET')return j({queue:await all(db,"SELECT id,title,artist,queue_priority,created_at FROM song_requests WHERE status='approved' ORDER BY queue_priority DESC,created_at,id LIMIT 100")},200,h);
- if(p==='/api/leaderboard'&&m==='GET')return j({leaders:await all(db,'SELECT u.username AS name,COALESCE(SUM(t.delta),0) AS points FROM users u LEFT JOIN point_transactions t ON t.user_id=u.id WHERE u.leaderboard_opt_in=1 GROUP BY u.id ORDER BY points DESC,u.username LIMIT 50')},200,h);
+ if(p==='/api/leaderboard'&&m==='GET')return j({leaders:await all(db,'SELECT u.username AS name,COALESCE(SUM(t.delta),0) AS points FROM users u LEFT JOIN point_transactions t ON t.user_id=u.id WHERE u.leaderboard_opt_in=1 GROUP BY u.id ORDER BY points DESC,u.username COLLATE NOCASE LIMIT 50')},200,h);
  if(p==='/api/admin/attendance')return j({error:'legacy_attendance_disabled'},410,h);
  if(p==='/api/internal/attendance'&&m==='POST'){
   if(env.ATTENDANCE_OBSERVER_ENABLED!=='true'||!env.OBSERVER_TOKEN)return j({error:'observer_disabled'},503,h);
@@ -90,6 +90,16 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
  }
  const u=await session(req,db);if(!u)return j({error:'unauthorized'},401,h);
  if(p==='/api/me'&&m==='GET')return j({user:await profile(db,u)},200,h);
+ if(p==='/api/me/dashboard'&&m==='GET'){
+  const [points,attendance,requests]=await Promise.all([
+   first(db,"SELECT COALESCE(SUM(delta),0) AS balance,COALESCE(SUM(CASE WHEN delta>0 THEN delta ELSE 0 END),0) AS earned,COALESCE(SUM(CASE WHEN delta<0 THEN -delta ELSE 0 END),0) AS spent FROM point_transactions WHERE user_id=?",u.id),
+   first(db,'SELECT COALESCE(SUM(credited_seconds),0) AS verifiedSeconds FROM attendance_sessions WHERE user_id=?',u.id),
+   first(db,"SELECT COALESCE(SUM(CASE WHEN status='pending' THEN 1 ELSE 0 END),0) AS pending,COALESCE(SUM(CASE WHEN status='approved' THEN 1 ELSE 0 END),0) AS approved FROM song_requests WHERE user_id=?",u.id)
+  ]);
+  let rank=null;
+  if(u.leaderboard_opt_in){const ranked=await first(db,"WITH totals AS (SELECT users.id,users.username,COALESCE(SUM(point_transactions.delta),0) AS points FROM users LEFT JOIN point_transactions ON point_transactions.user_id=users.id WHERE users.leaderboard_opt_in=1 GROUP BY users.id) SELECT 1+COUNT(*) AS rank FROM totals WHERE points>? OR (points=? AND username COLLATE NOCASE<? COLLATE NOCASE)",points.balance,points.balance,u.username);rank=ranked.rank}
+  return j({dashboard:{balance:points.balance,earned:points.earned,spent:points.spent,verifiedSeconds:attendance.verifiedSeconds,pending:requests.pending,approved:requests.approved,rank}},200,h);
+ }
  if(p==='/api/me/password'&&m==='POST'){
   if(!await accountRate(db,env,u.username))return j({error:'rate_limited'},429,h);
   const b=await readBody(req),pass=b.newPassword;
@@ -114,7 +124,7 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
  if(p==='/api/me/clubhouse-identity'&&m==='DELETE'){await run(db,'DELETE FROM listener_identities WHERE user_id=?',u.id);return j({ok:true},200,h)}
  if(p==='/api/me/transactions'&&m==='GET')return j({transactions:await all(db,'SELECT id,delta,kind,note,created_at_ms FROM point_transactions WHERE user_id=? ORDER BY created_at_ms DESC LIMIT 100',u.id)},200,h);
  if(p==='/api/me/attendance'&&m==='GET')return j({sessions:await all(db,'SELECT room_id,start_ms,last_seen_ms,end_ms,credited_seconds FROM attendance_sessions WHERE user_id=? ORDER BY start_ms DESC LIMIT 100',u.id)},200,h);
- if(p==='/api/me/requests'&&m==='GET')return j({requests:await all(db,'SELECT id,title,artist,status,cost,created_at FROM song_requests WHERE user_id=? ORDER BY created_at DESC LIMIT 100',u.id)},200,h);
+ if(p==='/api/me/requests'&&m==='GET')return j({requests:await all(db,'SELECT id,title,artist,status,cost,catalog_song_id,created_at FROM song_requests WHERE user_id=? ORDER BY created_at DESC LIMIT 100',u.id)},200,h);
  const cancel=p.match(/^\/api\/me\/requests\/([a-f0-9-]{36})$/i);if(cancel&&m==='PATCH'){const r=await run(db,"UPDATE song_requests SET status='cancelled',updated_at=strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id=? AND user_id=? AND status IN ('pending','approved')",cancel[1],u.id);return changed(r)?j({ok:true},200,h):j({error:'not_cancellable'},409,h)}
  if(p==='/api/requests'&&m==='POST'){
   const b=await readBody(req),songId=clean(b.catalogSongId,100),key=req.headers.get('Idempotency-Key')||'';if(!/^[a-f0-9-]{36}$/i.test(key))return j({error:'idempotency_key_required'},400,h);
@@ -123,6 +133,8 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
   const id=crypto.randomUUID();try{await run(db,'INSERT INTO song_requests(id,title,artist,requested_by,user_id,catalog_song_id,cost,idempotency_key) VALUES(?,?,?,?,?,?,?,?)',id,song.title,song.artist,u.username,u.id,song.id,song.cost,key)}catch{return j({error:'duplicate_active_request'},409,h)}return j({id,status:'pending',cost:song.cost},201,h);
  }
  if(u.role!=='admin')return j({error:'forbidden'},403,h);
+ if(p==='/api/admin/events'&&m==='GET')return j({events:await all(db,'SELECT e.action,e.target_id,e.note,e.created_at_ms,u.username AS actor FROM admin_events e JOIN users u ON u.id=e.actor_user_id ORDER BY e.created_at_ms DESC LIMIT 50')},200,h);
+ if(p==='/api/admin/transactions'&&m==='GET')return j({transactions:await all(db,'SELECT t.delta,t.kind,t.note,t.created_at_ms,u.username FROM point_transactions t JOIN users u ON u.id=t.user_id ORDER BY t.created_at_ms DESC LIMIT 50')},200,h);
  if(p==='/api/admin/catalog'&&m==='POST'){const b=await readBody(req),title=clean(b.title,120),artist=clean(b.artist,120),source=clean(b.sourceUrl,500),note=clean(b.rightsNote,500),cost=Number(b.cost);let sourceOk=false;try{const parsed=new URL(source);sourceOk=parsed.protocol==='https:'&&parsed.hostname==='audius.co'&&!parsed.username&&!parsed.password}catch{}if(!title||!artist||!sourceOk||!note||b.rightsConfirmed!==true||b.playableConfirmed!==true||!Number.isInteger(cost)||cost<1||cost>1000)return j({error:'invalid_catalog_entry'},400,h);const id=crypto.randomUUID();await run(db,'INSERT INTO song_catalog(id,title,artist,source_url,rights_note,cost,playable_checked_at_ms,created_by_user_id,created_at_ms) VALUES(?,?,?,?,?,?,?,?,?)',id,title,artist,source,note,cost,Date.now(),u.id,Date.now());await audit(db,u,'catalog_create',id);return j({id},201,h)}
  const catalog=p.match(/^\/api\/admin\/catalog\/([a-f0-9-]{36})$/i);if(catalog&&m==='PATCH'){const b=await readBody(req);if(typeof b.active!=='boolean')return j({error:'invalid_active'},400,h);const r=await run(db,'UPDATE song_catalog SET active=? WHERE id=?',Number(b.active),catalog[1]);if(!changed(r))return j({error:'not_found'},404,h);await audit(db,u,'catalog_active',catalog[1],String(b.active));return j({ok:true},200,h)}
  if(p==='/api/admin/requests'&&m==='GET'){const status=url.searchParams.get('status')||'pending';if(!['pending','approved','rejected','cancelled','played'].includes(status))return j({error:'invalid_status'},400,h);return j({requests:await all(db,'SELECT id,title,artist,requested_by,status,cost,queue_priority,created_at FROM song_requests WHERE status=? ORDER BY queue_priority DESC,created_at LIMIT 100',status)},200,h)}

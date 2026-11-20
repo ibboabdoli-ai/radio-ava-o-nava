@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createServer } from 'node:http';
+import { createServer, get } from 'node:http';
 import worker from '../worker.js';
 import { testDatabase } from './helpers.mjs';
 
@@ -19,11 +19,16 @@ test('local HTTP adapter starts and answers health without external network acce
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   try {
     const base = `http://127.0.0.1:${server.address().port}`;
-    const health = await fetch(base + '/health');
+    const local = path => new Promise((resolve, reject) => get(base + path, response => {
+      const chunks = []; response.on('data', chunk => chunks.push(chunk));
+      response.on('end', () => resolve({ status: response.statusCode, body: JSON.parse(Buffer.concat(chunks).toString()) }));
+      response.on('error', reject);
+    }).on('error', reject));
+    const health = await local('/health');
     assert.equal(health.status, 200);
-    assert.deepEqual(await health.json(), { ok: true, configured: true, featuresEnabled: false });
-    const disabled = await fetch(base + '/api/queue');
+    assert.deepEqual(health.body, { ok: true, configured: true, featuresEnabled: false, registrationEnabled: false, attendanceObserverEnabled: false });
+    const disabled = await local('/api/queue');
     assert.equal(disabled.status, 503);
-    assert.equal((await disabled.json()).error, 'service_disabled');
+    assert.equal(disabled.body.error, 'service_disabled');
   } finally { await new Promise(resolve => server.close(resolve)); env.DB.sqlite.close(); }
 });

@@ -101,6 +101,7 @@ try{
   await page.close();
   const accountPage=await browser.newPage({viewport:{width:390,height:844}});
   let loggedIn=false;
+  const accountRequests=[];
   const accountErrors=[];
   accountPage.on('pageerror',error=>accountErrors.push(error.message));
   await accountPage.route('https://fonts.googleapis.com/**',route=>route.abort());
@@ -116,11 +117,17 @@ try{
     const user={id:'mock-user',username:'testuser',role:'listener',balance:3,leaderboardOptIn:false};
     if(path==='/api/auth/login'){loggedIn=true;return route.fulfill({status:200,headers,body:JSON.stringify({user})});}
     if(path==='/api/me')return route.fulfill({status:loggedIn?200:401,headers,body:JSON.stringify(loggedIn?{user}:{error:'unauthorized'})});
-    if(path==='/api/catalog')return route.fulfill({status:200,headers,body:JSON.stringify({songs:[{id:'song1',title:'آهنگ آزمایشی',artist:'هنرمند',cost:2}]})});
+    if(path==='/api/me/dashboard')return route.fulfill({status:200,headers,body:JSON.stringify({dashboard:{balance:3,earned:3,spent:0,verifiedSeconds:0,pending:accountRequests.length,approved:0,rank:null}})});
+    if(path==='/api/catalog')return route.fulfill({status:200,headers,body:JSON.stringify({songs:[{id:'song1',title:'آهنگ آزمایشی',artist:'هنرمند',cost:2},{id:'song2',title:'آهنگ گران',artist:'هنرمند دوم',cost:5}]})});
     if(path==='/api/queue')return route.fulfill({status:200,headers,body:JSON.stringify({queue:[]})});
     if(path==='/api/leaderboard')return route.fulfill({status:200,headers,body:JSON.stringify({leaders:[]})});
     if(path==='/api/me/clubhouse-identity')return route.fulfill({status:200,headers,body:JSON.stringify({linked:false,clubhouseUserId:null})});
-    if(path==='/api/me/requests')return route.fulfill({status:200,headers,body:JSON.stringify({requests:[]})});
+    if(path==='/api/me/requests')return route.fulfill({status:200,headers,body:JSON.stringify({requests:accountRequests})});
+    if(path==='/api/requests'&&req.method()==='POST'){
+      const input=JSON.parse(req.postData());
+      accountRequests.push({id:'00000000-0000-4000-8000-000000000001',title:'آهنگ آزمایشی',artist:'هنرمند',status:'pending',cost:2,catalog_song_id:input.catalogSongId,created_at:new Date().toISOString()});
+      return route.fulfill({status:201,headers,body:JSON.stringify({id:accountRequests[0].id,status:'pending'})});
+    }
     if(path==='/api/me/attendance')return route.fulfill({status:200,headers,body:JSON.stringify({sessions:[]})});
     if(path==='/api/me/transactions')return route.fulfill({status:200,headers,body:JSON.stringify({transactions:[]})});
     return route.fulfill({status:404,headers,body:'{}'});
@@ -132,14 +139,24 @@ try{
   await accountPage.locator('#auth-form [name=password]').fill('mock-long-password');
   await accountPage.locator('#auth-form [value=login]').click();
   await accountPage.waitForFunction(()=>document.querySelector('#account-summary')?.textContent?.includes('3 امتیاز'));
-  for(const width of [390,1440]){
+  await accountPage.waitForFunction(()=>document.querySelector('#stat-balance')?.textContent==='۳');
+  assert.equal(await accountPage.locator('#stat-balance').textContent(),'۳');
+  assert.equal(await accountPage.locator('#stat-attendance').textContent(),'۰ دقیقه');
+  assert.equal(await accountPage.getByRole('button',{name:'امتیاز کافی نیست'}).isDisabled(),true);
+  await accountPage.getByRole('button',{name:'درخواست آهنگ'}).click();
+  await accountPage.waitForFunction(()=>document.querySelector('#stat-pending')?.textContent==='۱');
+  assert.equal(await accountPage.getByRole('button',{name:'درخواست فعال دارید'}).isDisabled(),true);
+  assert.match(await accountPage.locator('#my-requests').textContent(),/منتظر بررسی/);
+  for(const width of [360,390,768,1440]){
     await accountPage.setViewportSize({width,height:900});
     const size=await accountPage.evaluate(()=>({viewport:innerWidth,scrollWidth:document.documentElement.scrollWidth}));
     assert.ok(size.scrollWidth<=size.viewport+1,'account portal overflow at '+width+'px');
-    await accountPage.screenshot({path:'.qa-radio-club-'+width+'.png',fullPage:true,animations:'disabled'});
+    const unnamed=await accountPage.evaluate(()=>[...document.querySelectorAll('input,select,button')].filter(el=>el.getClientRects().length&&!el.labels?.length&&!el.getAttribute('aria-label')&&!el.textContent.trim()).map(el=>el.outerHTML.slice(0,120)));
+    assert.deepEqual(unnamed,[],'unlabeled visible controls at '+width+'px');
+    if(width===390||width===1440)await accountPage.screenshot({path:'.qa-radio-club-'+width+'.png',fullPage:true,animations:'disabled'});
   }
   assert.deepEqual(accountErrors,[]);
-  results.push({scenario:'account portal catalog, mocked login and 390/1440 layouts',ok:true});
+  results.push({scenario:'dashboard summary, mocked login and 360/390/768/1440 layouts',ok:true});
   await accountPage.close();
   console.log(JSON.stringify({browser:'Chromium',results},null,2));
 }finally{
