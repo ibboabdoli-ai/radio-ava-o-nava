@@ -57,6 +57,15 @@ export async function radioDjRoute({ req, env, headers, user, first, run, change
       await audit(db, user, 'radio_daily_genre', day, genre);
       return ok({ day, genre });
     }
+    if (path === '/api/admin/dj/genre' && method === 'DELETE') {
+      const genre = radioGenre((await readBody(req)).genre);
+      if (genre == null) return fail('invalid_genre', 400);
+      const day = dayKey(now);
+      const removed = await run(db, 'DELETE FROM radio_daily_genres WHERE day=? AND genre=?', day, genre);
+      if (!changed(removed)) return fail('radio_dj_genre_changed', 409);
+      await audit(db, user, 'radio_daily_genre_clear', day, genre);
+      return ok({ day, genre: null });
+    }
     if (path === '/api/admin/dj/pair' && method === 'POST') {
       const value = token();
       const existing = await run(db, `UPDATE radio_dj_runtime SET token_hash=?,token_expires_ms=?,issued_by=?,${resetLease}

@@ -23,6 +23,7 @@ async function api(path,{method='GET',data,key}={}){
 const competitionUi=mountCompetitionUi({api,notice,onChange:()=>refresh()});
 errors.genre_mismatch='این آهنگ با ژانر امروز هم‌خوانی ندارد.';
 errors.invalid_genre='ژانر را با حروف یا عدد و حداکثر ۴۰ نویسه وارد کنید.';
+errors.radio_dj_genre_changed='ژانر امروز عوض شده است. صفحه را تازه کنید.';
 errors.radio_dj_busy='ابتدا پخش فعلی را متوقف کنید.';
 const djUi=mountRadioDj({api,notice,refreshCatalog:catalog});
 const clubLinks=document.querySelectorAll('.club-mobile-nav a,.club-nav a');
@@ -137,7 +138,7 @@ $('password-form').addEventListener('submit',async e=>{e.preventDefault();const 
 $('logout').addEventListener('click',async()=>{try{await api('/api/auth/logout',{method:'POST',data:{}});state.user=null;await refresh();notice('خارج شدید.')}catch(e){notice(e.message,true)}});
 $('ranking-opt-in').addEventListener('change',async e=>{try{await api('/api/me',{method:'PATCH',data:{leaderboardOptIn:e.target.checked}});notice('تنظیم نمایش امتیاز ذخیره شد.');await refresh()}catch(err){notice(err.message,true)}});
 let searchTimer;$('search').addEventListener('input',()=>{clearTimeout(searchTimer);searchTimer=setTimeout(catalog,250)});
-$('catalog-form').addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget,x=name=>f.elements.namedItem(name);try{await api('/api/admin/catalog',{method:'POST',data:{title:x('title').value,artist:x('artist').value,sourceUrl:x('sourceUrl').value,rightsNote:x('rightsNote').value,cost:Number(x('cost').value),rightsConfirmed:x('rightsConfirmed').checked,playableConfirmed:x('playableConfirmed').checked}});f.reset();notice('آهنگ به فهرست اضافه شد.');await Promise.all([catalog(),djUi.refresh(state.user?.role)])}catch(err){notice(err.message,true)}});
+$('catalog-form').addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget,x=name=>f.elements.namedItem(name),localAudio=!x('localAudio').disabled&&x('localAudio').checked;try{await api('/api/admin/catalog',{method:'POST',data:{title:x('title').value,artist:x('artist').value,localAudio,sourceUrl:localAudio?'':x('sourceUrl').value,rightsNote:x('rightsNote').value,cost:Number(x('cost').value),rightsConfirmed:x('rightsConfirmed').checked,playableConfirmed:x('playableConfirmed').checked}});f.reset();notice('آهنگ به فهرست اضافه شد.');await Promise.all([catalog(),djUi.refresh(state.user?.role)])}catch(err){notice(err.message,true)}});
 $('identity-form').addEventListener('submit',async e=>{e.preventDefault();try{await api(`/api/admin/users/${$('identity-user').value}/clubhouse-identity`,{method:'PUT',data:{clubhouseUserId:$('identity-clubhouse').value.trim(),consentConfirmed:$('identity-consent').checked}});$('identity-form').reset();notice('اتصال شناسه ثبت شد.')}catch(err){notice(err.message,true)}});
 $('identity-unlink').addEventListener('click',async()=>{try{await api('/api/me/clubhouse-identity',{method:'DELETE'});notice('اتصال شناسه قطع شد؛ حضور جدید دیگر ثبت نمی‌شود.');await identityStatus()}catch(err){notice(err.message,true)}});
 void initialize();

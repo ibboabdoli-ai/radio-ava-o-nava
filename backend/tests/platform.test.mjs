@@ -26,6 +26,28 @@ async function catalog(env, admin, cost = 2) {
 }
 const request = (env, user, songId, key = crypto.randomUUID()) => call(env, '/api/requests', 'POST', { catalogSongId: songId }, user.cookie, { 'Idempotency-Key': key });
 
+test('locally licensed catalog entries require DJ, an administrator and explicit confirmations', async () => {
+  const env = make();
+  const admin = await account(env, 'local_catalog_admin', true);
+  const listener = await account(env, 'local_catalog_listener');
+  const fixture = {
+    title: 'Original QA tone', artist: 'Radio QA', localAudio: true, genre: 'آزمایشی',
+    rightsNote: 'Original audio verified on the operator computer', cost: 1, rightsConfirmed: true, playableConfirmed: true
+  };
+  const add = (data = fixture, cookie = admin.cookie) => call(env, '/api/admin/catalog', 'POST', data, cookie);
+  assert.equal((await add()).status, 400);
+  env.RADIO_DJ_ENABLED = 'true';
+  assert.equal((await add(fixture, listener.cookie)).status, 403);
+  assert.equal((await add({ ...fixture, sourceUrl: 'https://audius.co/example' })).status, 400);
+  assert.equal((await add({ ...fixture, rightsConfirmed: false })).status, 400);
+  assert.equal((await add({ ...fixture, playableConfirmed: false })).status, 400);
+  const entry = await add();
+  assert.equal(entry.status, 201);
+  assert.equal(env.DB.sqlite.prepare('SELECT source_url FROM song_catalog WHERE id=?').get(entry.body.id).source_url, 'local:');
+  const { songs } = (await call(env, '/api/catalog')).body;
+  assert.deepEqual(songs, [{ id: entry.body.id, title: fixture.title, artist: fixture.artist, cost: 1, genre: fixture.genre }]);
+});
+
 test('daily genre, ordered playback lease, pause and completion preserve points and hide identities', async () => {
   const env = make();
   assert.deepEqual((await call(env, '/api/dj/status')).body, { enabled: false, genre: null, playback: null });
@@ -42,6 +64,11 @@ test('daily genre, ordered playback lease, pause and completion preserve points 
   assert.equal((await adminCall('dj/genre', 'PUT', { genre: ' جاز ' })).status, 200);
   assert.equal((await call(env, '/api/catalog')).body.songs.length, 2);
   assert.equal((await request(env, listener, thirdSong)).body.error, 'genre_mismatch');
+  assert.equal((await call(env, '/api/admin/dj/genre', 'DELETE', { genre: 'جاز' }, listener.cookie)).status, 403);
+  assert.equal((await adminCall('dj/genre', 'DELETE', { genre: 'سنتی' })).status, 409);
+  assert.equal((await adminCall('dj/genre', 'DELETE', { genre: 'جاز' })).status, 200);
+  assert.equal((await call(env, '/api/catalog')).body.songs.length, 3);
+  assert.equal((await adminCall('dj/genre', 'PUT', { genre: 'جاز' })).status, 200);
   assert.equal((await adminCall('users/' + listener.user.id + '/adjust-points', 'POST', { delta: 10, note: 'Synthetic test' }, { 'Idempotency-Key': crypto.randomUUID() })).status, 200);
   const eventKey = crypto.randomUUID();
   const submissions = await Promise.all([request(env, listener, firstSong, eventKey), request(env, listener, firstSong, eventKey)]);

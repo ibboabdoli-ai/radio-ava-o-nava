@@ -3,7 +3,21 @@ export function mountRadioDj({ api, notice, refreshCatalog }) {
   const admin = get('dj-admin'), status = get('dj-status'), genreForm = get('dj-genre-form');
   const trackForm = get('dj-track-form'), trackSelect = trackForm.elements.track;
   const secret = get('dj-token'), secretField = get('dj-token-field'), copy = get('dj-copy');
-  let role, generation = 0, enabled = false, trackGenres = new Map();
+  const clearGenre = get('dj-genre-clear');
+  const catalog = get('catalog-form'), localAudio = catalog.elements.localAudio, sourceUrl = catalog.elements.sourceUrl;
+  let role, generation = 0, enabled = false, todayGenre = null, trackGenres = new Map();
+  function syncCatalogSource() {
+    const allowed = enabled && role === 'admin';
+    get('catalog-local-audio').hidden = !allowed;
+    localAudio.disabled = !allowed;
+    if (!allowed) localAudio.checked = false;
+    const local = allowed && localAudio.checked;
+    get('catalog-source-field').hidden = local;
+    sourceUrl.disabled = local;
+    sourceUrl.required = !local;
+  }
+  localAudio.addEventListener('change', syncCatalogSource);
+  catalog.addEventListener('reset', () => { queueMicrotask(syncCatalogSource); });
   function clearToken() {
     secret.value = '';
     secretField.hidden = copy.hidden = true;
@@ -12,8 +26,11 @@ export function mountRadioDj({ api, notice, refreshCatalog }) {
     try {
       const data = await api('/api/dj/status');
       enabled = data.enabled === true;
+      todayGenre = data.genre;
+      clearGenre.hidden = !todayGenre;
       status.hidden = !enabled;
       admin.hidden = !enabled || role !== 'admin';
+      syncCatalogSource();
       if (!enabled) clearToken();
       get('dj-genre').textContent = data.genre ? 'ژانر امروز · ' + data.genre : 'ژانر امروز هنوز تعیین نشده است.';
       const track = data.playback;
@@ -35,6 +52,7 @@ export function mountRadioDj({ api, notice, refreshCatalog }) {
     role = nextRole;
     if (role !== 'admin') {
       admin.hidden = true;
+      syncCatalogSource();
       trackSelect.replaceChildren();
       trackGenres.clear();
     }
@@ -61,6 +79,12 @@ export function mountRadioDj({ api, notice, refreshCatalog }) {
   genreForm.addEventListener('submit', act(genreForm.querySelector('button'), async () => {
     await api('/api/admin/dj/genre', { method: 'PUT', data: { genre: genreForm.elements.genre.value } });
     notice('ژانر امروز ثبت شد.');
+    await Promise.all([poll(), refreshCatalog()]);
+  }));
+  clearGenre.addEventListener('click', act(clearGenre, async () => {
+    if (!todayGenre) return;
+    await api('/api/admin/dj/genre', { method: 'DELETE', data: { genre: todayGenre } });
+    notice('محدودیت ژانر برداشته شد.');
     await Promise.all([poll(), refreshCatalog()]);
   }));
   trackSelect.addEventListener('change', selectTrack);

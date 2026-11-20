@@ -171,12 +171,15 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
  if(p==='/api/admin/catalog'&&m==='POST'){
   const b=await readBody(req),title=clean(b.title,120),artist=clean(b.artist,120),source=clean(b.sourceUrl,500),note=clean(b.rightsNote,500),cost=Number(b.cost);
   const genre=b.genre==null||b.genre===''?'':radioGenre(b.genre);
-  let sourceOk=false;
-  try{const parsed=new URL(source);sourceOk=parsed.protocol==='https:'&&parsed.hostname==='audius.co'&&!parsed.username&&!parsed.password}catch{}
+  const localAudio=b.localAudio===true;
+  let sourceOk=localAudio&&djEnabled&&!source;
+  if(!localAudio){
+   try{const parsed=new URL(source);sourceOk=parsed.protocol==='https:'&&parsed.hostname==='audius.co'&&!parsed.username&&!parsed.password}catch{}
+  }
   if(genre===null)return j({error:'invalid_genre'},400,h);
   if(!title||!artist||!sourceOk||!note||b.rightsConfirmed!==true||b.playableConfirmed!==true||!Number.isInteger(cost)||cost<1||cost>1000)return j({error:'invalid_catalog_entry'},400,h);
   const id=crypto.randomUUID();
-  await run(db,`INSERT INTO song_catalog(id,title,artist,source_url,rights_note,cost,playable_checked_at_ms,created_by_user_id,created_at_ms${djEnabled?',genre':''}) VALUES(?,?,?,?,?,?,?,?,?${djEnabled?',?':''})`,id,title,artist,source,note,cost,Date.now(),u.id,Date.now(),...(djEnabled?[genre]:[]));
+  await run(db,`INSERT INTO song_catalog(id,title,artist,source_url,rights_note,cost,playable_checked_at_ms,created_by_user_id,created_at_ms${djEnabled?',genre':''}) VALUES(?,?,?,?,?,?,?,?,?${djEnabled?',?':''})`,id,title,artist,localAudio?'local:':source,note,cost,Date.now(),u.id,Date.now(),...(djEnabled?[genre]:[]));
   await audit(db,u,'catalog_create',id);return j({id},201,h);
  }
  const catalog=p.match(/^\/api\/admin\/catalog\/([a-f0-9-]{36})$/i);

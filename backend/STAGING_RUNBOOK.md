@@ -41,4 +41,19 @@ Disable the staging Worker or revert its staging version if a check fails. Recor
 4. Use the UUID displayed for each catalog entry as the track ID in the local DJ catalog. Keep a locally licensed audio copy beside that catalog. The files stay on the operator's computer. If the first eligible request lacks a local file, the DJ reports it and keeps the request in the queue for the operator to resolve.
 5. The administrator creates a four-hour player code and pastes it into the local DJ before starting. The code is scoped to the staging queue. The dashboard shows progress for claimed website requests after the audio starts. It labels a paused track and clears the status on stop, lease expiry or natural completion. Approval charges the existing ledger once. A skipped track or file error leaves the request approved for operator review. A confirmed rejection or cancellation uses the existing refund rules.
 
+Use **فایل مجاز روی رایانهٔ میز پخش است** for audio licensed for local playback. Confirm the rights and availability and add the matching file to the DJ catalog using the displayed UUID. The site holds metadata. The DJ checks the file before claiming the request. The manager can remove today's genre restriction without changing older days or prior requests.
+
+### Staging DJ acceptance
+
+Run `node backend/scripts/dj-staging-qa.mjs` with Playwright installed. Set `RADIO_STAGING_RUN_DJ_QA=1`, `RADIO_STAGING_QA_CREDENTIALS` to the locally protected file for the two existing synthetic accounts, `RADIO_DJ_BUILD_DIR` to the compiled local bot, and optionally `RADIO_TEST_CHROME` and `RADIO_STAGING_QA_EVIDENCE`. Run only when the verified staging queue and active catalog are empty and there is no DJ pairing or genre selection. The test generates original audio, charges one point to the synthetic listener for the completed request, and deactivates its catalog entries and revokes its pairing. The completed request and its audited debit remain in staging.
+
+### Production approval checklist
+
+- Review Draft PR #28 and the recorded staging acceptance. Confirm GitHub CI and SonarCloud are green before approving the release.
+- Verify the destination account, Worker, D1 and HTTPS origin independently. Take the production D1 backup and confirm the migrations already present before any separate production approval.
+- Verify the catalog rights and local files for the first show. Validate a rehearsal using the actual output device and confirm who can approve requests, pair the player, stop it and refund points.
+- Approve and configure a separate production player target before enabling the DJ in production. The current Windows player accepts staging credentials and connects to the staging origin.
+- Keep public registration and automatic Clubhouse attendance off until separately approved. Keep challenge secrets, connection codes and recovery credentials out of logs and commits.
+- Prepare the prior Worker version and the feature-off procedure. Check health, login, logout, privacy, queue and the original radio player after release.
+
 Official reference: Cloudflare D1 Wrangler commands and Free-plan limits should be rechecked before provisioning. Account-specific quotas and billing state cannot be inferred from public documentation.
