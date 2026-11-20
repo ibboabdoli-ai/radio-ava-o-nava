@@ -1,5 +1,7 @@
 # Authentication fix and staging validation — 20 November 2026
 
+The subsequent source-level security review and race-condition fixes are documented in [SECURITY_RELEASE_AUDIT_20261120.md](SECURITY_RELEASE_AUDIT_20261120.md).
+
 ## Root cause and decision
 
 The original Worker used Web Crypto PBKDF2-HMAC-SHA256. Its Cloudflare runtime rejected more than 100,000 iterations (`NotSupportedError` at 310,000); staging temporarily used 100,000, below OWASP's 600,000-round PBKDF2-SHA256 guidance. A local Wrangler probe accepted `node:crypto.pbkdf2` at 600,000, but the actual staging Worker returned HTTP 500 with `NotSupportedError` on login. Local runtime success did not establish Free-plan compatibility.

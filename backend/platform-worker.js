@@ -55,9 +55,13 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
   if(pass.length>128||!await verifyPassword(pass,u))return j({error:'invalid_credentials'},401,h);
   if(!u.password_hash.startsWith(PASSWORD_SCHEME)){
    const upgraded=await passwordHash(pass,u.password_salt);
-   await run(db,'UPDATE users SET password_hash=? WHERE id=? AND password_hash=?',upgraded,u.id,u.password_hash);
+   if(!changed(await run(db,'UPDATE users SET password_hash=? WHERE id=? AND password_hash=?',upgraded,u.id,u.password_hash)))return j({error:'invalid_credentials'},401,h);
+   u.password_hash=upgraded;
   }
-  const t=token();await run(db,'INSERT INTO user_sessions(token_hash,user_id,expires_at_ms,created_at_ms) VALUES(?,?,?,?)',await hash(t),u.id,Date.now()+604800000,Date.now());return j({user:await profile(db,u)},200,{...h,'set-cookie':cookie(t)});
+  const t=token(),now=Date.now();
+  const inserted=await run(db,'INSERT INTO user_sessions(token_hash,user_id,expires_at_ms,created_at_ms) SELECT ?,id,?,? FROM users WHERE id=? AND password_hash=?',await hash(t),now+604800000,now,u.id,u.password_hash);
+  if(!changed(inserted))return j({error:'invalid_credentials'},401,h);
+  return j({user:await profile(db,u)},200,{...h,'set-cookie':cookie(t)});
  }
  if(p==='/api/auth/logout'&&m==='POST'){const t=req.headers.get('Cookie')?.match(/(?:^|;\s*)radio_session=([a-f0-9]{64})(?:;|$)/)?.[1];if(t)await run(db,'DELETE FROM user_sessions WHERE token_hash=?',await hash(t));return j({ok:true},200,{...h,'set-cookie':clearCookie})}
  if(p==='/api/auth/recover'&&m==='POST'){
@@ -92,14 +96,17 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
   if(typeof pass!=='string'||pass.length<12||pass.length>128)return j({error:'invalid_credentials'},400,h);
   const current=await first(db,'SELECT password_salt,password_hash FROM users WHERE id=?',u.id);
   if(!await verifyPassword(typeof b.currentPassword==='string'?b.currentPassword:'',current))return j({error:'invalid_credentials'},401,h);
-  const salt=token();await run(db,'UPDATE users SET password_salt=?,password_hash=? WHERE id=?',salt,await passwordHash(pass,salt),u.id);
+  const salt=token(),derived=await passwordHash(pass,salt);
+  if(!changed(await run(db,'UPDATE users SET password_salt=?,password_hash=? WHERE id=? AND password_hash=?',salt,derived,u.id,current.password_hash)))return j({error:'credentials_changed'},409,h);
   return j({ok:true},200,{...h,'set-cookie':clearCookie});
  }
  if(p==='/api/me/recovery-code'&&m==='POST'){
   if(!await accountRate(db,env,u.username))return j({error:'rate_limited'},429,h);
   const b=await readBody(req),current=await first(db,'SELECT password_salt,password_hash FROM users WHERE id=?',u.id);
   if(!await verifyPassword(typeof b.currentPassword==='string'?b.currentPassword:'',current))return j({error:'invalid_credentials'},401,h);
-  const code=token();await run(db,'INSERT INTO account_recovery(user_id,code_hash,created_at_ms) VALUES(?,?,?) ON CONFLICT(user_id) DO UPDATE SET code_hash=excluded.code_hash,created_at_ms=excluded.created_at_ms',u.id,await hash(code),Date.now());
+  const code=token();
+  const issued=await run(db,'INSERT INTO account_recovery(user_id,code_hash,created_at_ms) SELECT id,?,? FROM users WHERE id=? AND password_hash=? ON CONFLICT(user_id) DO UPDATE SET code_hash=excluded.code_hash,created_at_ms=excluded.created_at_ms',await hash(code),Date.now(),u.id,current.password_hash);
+  if(!changed(issued))return j({error:'credentials_changed'},409,h);
   return j({recoveryCode:code},200,h);
  }
  if(p==='/api/me'&&m==='PATCH'){const b=await readBody(req);if(typeof b.leaderboardOptIn!=='boolean')return j({error:'invalid_opt_in'},400,h);await run(db,'UPDATE users SET leaderboard_opt_in=? WHERE id=?',Number(b.leaderboardOptIn),u.id);return j({ok:true},200,h)}
