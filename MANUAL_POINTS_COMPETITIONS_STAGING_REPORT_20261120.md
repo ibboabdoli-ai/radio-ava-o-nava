@@ -10,7 +10,7 @@
 
 - Verified Wrangler account `6df4c7d2129ca857885972ef0028c280` and the existing D1 `ava-radio-staging`, UUID `abe077d0-b360-4beb-864a-0e3ab354cfd0`. The account was reported on Workers Free earlier the same day; this run did not independently recheck the dashboard's billing panel. No new Cloudflare resource or paid feature was created.
 - Checked remote `sqlite_master` before applying the one-time additive `backend/migrations/0005_manual_competitions.sql`. Created a local, gitignored staging D1 export before migration. The migration processed 12 SQL statements successfully. Old data stayed at 2 users, 21 transactions and net 6 points; the four competition tables and three new triggers appeared.
-- Deployed only existing Worker `ava-radio-staging`, final version `c061adbe-7059-4ca3-a9ee-0f002555ccad`, to `https://ava-radio-staging.ibbo-abdoli.workers.dev`. Its `/health` reports `registrationEnabled=false` and `attendanceObserverEnabled=false`.
+- Deployed only existing Worker `ava-radio-staging`, final version `59241d9a-f54a-408f-a7cf-5d94a34cf5e8`, to `https://ava-radio-staging.ibbo-abdoli.workers.dev`. Its `/health` reports `registrationEnabled=false` and `attendanceObserverEnabled=false`.
 - Bounded HTTPS QA used the two existing invented accounts. Its credit and matching debit restored the starting user balance; retries made additional zero-net audit entries. Two hidden synthetic QA drafts were created during the initial test retry; they have no participants, results or prizes and are not publicly shown. After QA, D1 had 2 users, 27 point transactions, net 6 points, 2 draft competitions, 0 competition participants, 0 awards and 0 attendance observations. These synthetic records were preserved.
 
 ## Tests and evidence

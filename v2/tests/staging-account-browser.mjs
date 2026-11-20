@@ -35,5 +35,5 @@ try{
   await context.close();
  }
  assert.ok(roles.includes('admin')&&roles.includes('listener'));
- console.log(JSON.stringify({staging:origin,accounts:roles.length,roles:roles.sort(),widths:[390,1440],adminControls:true,publicRegistration:false,attendanceObserver:false,logout:true,externalRequests:'blocked'}));
+ console.log(JSON.stringify({staging:origin,accounts:roles.length,roles:roles.sort((a,b)=>a.localeCompare(b)),widths:[390,1440],adminControls:true,publicRegistration:false,attendanceObserver:false,logout:true,externalRequests:'blocked'}));
 }finally{if(browser)await browser.close()}

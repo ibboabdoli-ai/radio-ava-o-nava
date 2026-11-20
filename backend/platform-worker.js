@@ -7,11 +7,11 @@ const hex=b=>[...b].map(x=>x.toString(16).padStart(2,'0')).join('');
 const hash=async v=>hex(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v))));
 const token=()=>hex(crypto.getRandomValues(new Uint8Array(32)));
 // OWASP Password Storage Cheat Sheet: scrypt N=2^13, r=8, p=10.
-const PASSWORD_SCHEME='scrypt_n8192_r8_p10$';
-const passwordHash=async(pass,salt)=>PASSWORD_SCHEME+await new Promise((resolve,reject)=>nodeScrypt(pass,salt,32,{N:8192,r:8,p:10,maxmem:32*1024*1024},(error,key)=>error?reject(error):resolve(key.toString('hex'))));
+const HASH_FORMAT_PREFIX='scrypt_n8192_r8_p10$';
+const passwordHash=async(pass,salt)=>HASH_FORMAT_PREFIX+await new Promise((resolve,reject)=>nodeScrypt(pass,salt,32,{N:8192,r:8,p:10,maxmem:32*1024*1024},(error,key)=>error?reject(error):resolve(key.toString('hex'))));
 // Read-only verifier for the two staging accounts created before the stronger KDF.
 const legacyPbkdf=async(pass,salt)=>{const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(pass),'PBKDF2',false,['deriveBits']);return hex(new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',salt:new TextEncoder().encode(salt),iterations:100000,hash:'SHA-256'},k,256)))};
-const verifyPassword=async(pass,u)=>{if(u?.password_hash?.startsWith(PASSWORD_SCHEME))return eq(await passwordHash(pass,u.password_salt),u.password_hash);if(/^[a-f0-9]{64}$/.test(u?.password_hash||''))return eq(await legacyPbkdf(pass,u.password_salt),u.password_hash);await passwordHash(pass,'invalid-salt');return false};
+const verifyPassword=async(pass,u)=>{if(u?.password_hash?.startsWith(HASH_FORMAT_PREFIX))return eq(await passwordHash(pass,u.password_salt),u.password_hash);if(/^[a-f0-9]{64}$/.test(u?.password_hash||''))return eq(await legacyPbkdf(pass,u.password_salt),u.password_hash);await passwordHash(pass,'invalid-salt');return false};
 const eq=(a,b)=>{if(typeof a!=='string'||typeof b!=='string'||a.length!==b.length)return false;let d=0;for(let i=0;i<a.length;i++)d|=a.charCodeAt(i)^b.charCodeAt(i);return d===0};
 const first=(db,sql,...args)=>db.prepare(sql).bind(...args).first();
 const all=async(db,sql,...args)=>(await db.prepare(sql).bind(...args).all()).results;
@@ -54,7 +54,7 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
   const u=await first(db,'SELECT * FROM users WHERE username=?',username);
   const pass=typeof b.password==='string'?b.password:'';
   if(pass.length>128||!await verifyPassword(pass,u))return j({error:'invalid_credentials'},401,h);
-  if(!u.password_hash.startsWith(PASSWORD_SCHEME)){
+  if(!u.password_hash.startsWith(HASH_FORMAT_PREFIX)){
    const upgraded=await passwordHash(pass,u.password_salt);
    if(!changed(await run(db,'UPDATE users SET password_hash=? WHERE id=? AND password_hash=?',upgraded,u.id,u.password_hash)))return j({error:'invalid_credentials'},401,h);
    u.password_hash=upgraded;

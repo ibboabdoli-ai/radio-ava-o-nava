@@ -14,8 +14,11 @@ if(!process.argv.includes('--mutate-synthetic'))throw Error('Pass --mutate-synth
 const accounts=JSON.parse(await readFile(new URL('../.wrangler/staging-qa-credentials.json',import.meta.url),'utf8'));
 assert.ok(Array.isArray(accounts)&&accounts.length>=2);
 async function call(path,{method='GET',data,cookie,key,requestOrigin=origin}={}){
+ if(!/^\/(?:health|api\/[a-z0-9/-]+)$/.test(path))throw Error('Invalid QA endpoint');
+ const endpoint=new URL(path,origin);
+ if(endpoint.origin!==origin||endpoint.pathname!==path||endpoint.search||endpoint.hash)throw Error('QA endpoint left the staging origin');
  const headers={Origin:requestOrigin};if(cookie)headers.Cookie=cookie;if(key)headers['Idempotency-Key']=key;if(data!==undefined)headers['Content-Type']='application/json';
- let res;try{res=await fetch(origin+path,{method,headers,body:data===undefined?undefined:JSON.stringify(data),redirect:'error'})}catch{throw Error('Staging request failed at '+method+' '+path)}
+ let res;try{res=await fetch(endpoint,{method,headers,body:data===undefined?undefined:JSON.stringify(data),redirect:'error'})}catch{throw Error('Staging request failed at '+method+' '+path)}
  let body={};try{body=await res.json()}catch{}return {status:res.status,body,cookie:res.headers.get('set-cookie')};
 }
 const health=await call('/health');assert.equal(health.status,200);assert.equal(health.body.configured,true);assert.equal(health.body.registrationEnabled,false);assert.equal(health.body.attendanceObserverEnabled,false);
@@ -27,7 +30,7 @@ const publicBefore=await call('/api/competitions');assert.equal(publicBefore.sta
 const signed=[];
 for(const record of accounts){
  const response=await call('/api/auth/login',{method:'POST',data:{username:record.username,password:record.password}});
- assert.equal(response.status,200);assert.ok(response.cookie?.startsWith('radio_session='));
+ assert.equal(response.status,200);assert.ok(response.cookie?.startsWith('radio_session='));assert.match(response.body.user.id,/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i);
  signed.push({id:response.body.user.id,username:record.username,role:response.body.user.role,cookie:response.cookie.split(';')[0]});
 }
 const admin=signed.find(x=>x.role==='admin'),listener=signed.find(x=>x.role==='listener');assert.ok(admin&&listener);

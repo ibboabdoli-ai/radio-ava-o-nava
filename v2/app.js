@@ -338,7 +338,7 @@
     setLink('houseLink',state.shows.program.roomUrl||state.shows.links.clubhouse);
     setLink('contestLink',state.shows.links.contest);setLink('telegramLink',state.shows.links.telegram);setLink('whatsappLink',state.shows.links.whatsapp);setLink('requestSongLink',state.shows.links.requestSong||'https://t.me/+bSKXuElY13I3NWY0');
     setText('liveProgram',state.shows.program.title||'آوا و نوا');setText('liveHost',state.shows.program.subtitle||'موسیقی، شعر و آواز');
-    renderSchedule();updateClocks();renderCompetition();renderCompetitionResults();renderRecordings();
+    renderSchedule();updateClocks();renderCompetition();void renderCompetitionResults();renderRecordings();
     // Do not download archived audio metadata until the visitor chooses a recording.
     state.mode='idle';setDock('رادیو آوا و نوا','آماده پخش',false,'#listen');
     pollStats();
