@@ -13,6 +13,7 @@ const catalogPath = '/api/admin/catalog';
 const genrePath = '/api/admin/dj/genre';
 const pairPath = '/api/admin/dj/pair';
 const evidence = { checks: [] };
+const cleanupFailures = [];
 let step = 'preconditions';
 const pass = (message) => { evidence.checks.push(message); console.log('PASS ' + message); };
 const send = (path, init) => fetch(stage + path, { redirect: 'error', signal: AbortSignal.timeout(8000), ...init });
@@ -238,9 +239,8 @@ async function main() {
     await listenerPage.locator('#transactions').getByText(/هزینهٔ درخواست/).first().waitFor();
     pass('natural 14-second end, staging request played, queue empty, one charge, zero refunds');
   } finally {
-    const failures = [];
     async function cleanup(name, task) {
-      try { await task(); } catch { failures.push(name); }
+      try { await task(); } catch { cleanupFailures.push(name); }
     }
     await cleanup('local player', closeDeck);
     if (token) await cleanup('pairing', async () => { await expectStatus(await admin(pairPath, 'DELETE'), 200); });
@@ -257,17 +257,18 @@ async function main() {
     await browser.close();
     for (const path of [join(base, file), manifest]) await unlink(path).catch(() => {});
     await rmdir(base);
-    if (failures.length) throw new Error('Fixture cleanup failed for ' + failures.join(', '));
-    if (token) pass('pairing revoked; fixture songs deactivated; genre and QA sessions cleaned up');
+    if (token && !cleanupFailures.length) pass('pairing revoked; fixture songs deactivated; genre and QA sessions cleaned up');
   }
 }
 
 try {
   await main();
+  assert.equal(cleanupFailures.length, 0, 'Fixture cleanup did not complete');
   if (process.env.RADIO_STAGING_QA_EVIDENCE) await writeFile(process.env.RADIO_STAGING_QA_EVIDENCE, JSON.stringify(evidence, null, 2) + '\n');
 } catch (error) {
   // Browser errors can include fill arguments. Print only the stage and local source line.
   const line = String(error.stack ?? '').match(/dj-staging-qa\.mjs:\d+:\d+/)?.[0] ?? '';
   console.error('FAIL ' + step + ' ' + line + (error.code === 'ERR_ASSERTION' ? ' ' + error.message : ''));
+  if (cleanupFailures.length) console.error('Incomplete fixture cleanup: ' + cleanupFailures.join(', '));
   process.exitCode = 1;
 }
