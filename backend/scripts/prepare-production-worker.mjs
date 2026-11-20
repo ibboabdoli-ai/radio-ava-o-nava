@@ -28,7 +28,7 @@ export function renderProductionWorkerConfig(template, accountId, databaseId) {
   const closedSettings = [
     /^workers_dev = false\r?$/m, /^preview_urls = false\r?$/m,
     /^RADIO_FEATURES_ENABLED = "false"\r?$/m, /^REGISTRATION_ENABLED = "false"\r?$/m,
-    /^ATTENDANCE_OBSERVER_ENABLED = "false"\r?$/m, /^RADIO_DJ_ENABLED = "false"\r?$/m
+    /^ATTENDANCE_OBSERVER_ENABLED = "false"\r?$/m, /^RADIO_DJ_ENABLED = "false"\r?$/m, /^ACCESS_PILOT_ENABLED = "false"\r?$/m
   ];
   if (/^\s*(?:routes?|triggers)\b/m.test(output) || !closedSettings.every(setting => setting.test(output))) {
     throw new Error('Production preparation requires a private Worker with all features disabled');

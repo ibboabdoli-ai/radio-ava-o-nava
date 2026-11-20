@@ -26,6 +26,7 @@ errors.genre_mismatch='این آهنگ با ژانر امروز هم‌خوان�
 errors.invalid_genre='ژانر را با حروف یا عدد و حداکثر ۴۰ نویسه وارد کنید.';
 errors.radio_dj_genre_changed='ژانر امروز عوض شده است. صفحه را تازه کنید.';
 errors.radio_dj_busy='ابتدا پخش فعلی را متوقف کنید.';
+errors.access_pilot_disabled='ورود با دعوت‌نامه فعلاً فعال نیست.';
 const djUi=mountRadioDj({api,notice,refreshCatalog:catalog});
 const clubLinks=document.querySelectorAll('.club-mobile-nav a,.club-nav a');
 const contestsLinks=document.querySelectorAll('[data-admin-competition-link],.club-nav a[href="#competitions"]');
@@ -53,9 +54,14 @@ async function attendanceIndicator(){
  try{const health=await api('/health');show('attendance-indicator',!!state.user&&health.attendanceObserverEnabled===false)}
  catch{show('attendance-indicator',false)}
 }
+const accessPilotHost='https://ava-radio-staging.ibbo-abdoli.workers.dev';
+async function loadAccessPilot(){
+ if(state.api!==accessPilotHost||location.origin!==accessPilotHost)return;
+ try{show('access-pilot-login',(await api('/api/auth/access/status')).enabled===true)}catch{show('access-pilot-login',false)}
+}
 async function initialize(){
  const register=$('auth-form').querySelector('[value=register]');register.hidden=true;register.disabled=true;
- try{const config=await fetch('./request-config.json',{cache:'no-store'}).then(r=>r.json());if(config.clubEnabled!==true)throw Error();state.api=radioApiOrigin(config.apiBase,location.origin);await refresh()}catch{notice('سامانهٔ باشگاه هنوز برای استفاده فعال نشده است.',true);show('auth',false);show('account',false);$('search').disabled=true;$('catalog-form').querySelector('button').disabled=true;empty('catalog','فهرست در دسترس نیست.');empty('queue','صف در دسترس نیست.');empty('leaders','جدول در دسترس نیست.')}
+ try{const config=await fetch('./request-config.json',{cache:'no-store'}).then(r=>r.json());if(config.clubEnabled!==true)throw Error();state.api=radioApiOrigin(config.apiBase,location.origin);await refresh();await loadAccessPilot()}catch{notice('سامانهٔ باشگاه هنوز برای استفاده فعال نشده است.',true);show('auth',false);show('account',false);$('search').disabled=true;$('catalog-form').querySelector('button').disabled=true;empty('catalog','فهرست در دسترس نیست.');empty('queue','صف در دسترس نیست.');empty('leaders','جدول در دسترس نیست.')}
 }
 async function refresh(){
  try{state.user=(await api('/api/me')).user}catch{state.user=null}
@@ -132,6 +138,14 @@ async function adminData(){
   }
  }catch(error){notice(error.message,true)}
 }
+$('access-pilot-login').addEventListener('click',async event=>{
+ if(state.api!==accessPilotHost||location.origin!==accessPilotHost)return;
+ const button=event.currentTarget;button.disabled=true;
+ try{
+  await api('/api/auth/access/start',{method:'POST',data:{}});
+  location.assign('/api/auth/access/complete');
+ }catch(error){notice(error.message,true);button.disabled=false}
+});
 $('auth-form').addEventListener('submit',async e=>{e.preventDefault();const submit=e.submitter?.value||'login',form=e.currentTarget;try{const b={username:form.elements.namedItem('username').value,password:form.elements.namedItem('password').value};await api(`/api/auth/${submit}`,{method:'POST',data:b});if(submit==='register')await api('/api/auth/login',{method:'POST',data:b});form.reset();notice('');await refresh()}catch(err){notice(err.message,true)}});
 $('recover-form').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;try{await api('/api/auth/recover',{method:'POST',data:{username:form.elements.namedItem('username').value,recoveryCode:form.elements.namedItem('recoveryCode').value,newPassword:form.elements.namedItem('newPassword').value}});form.reset();notice('گذرواژه تغییر کرد. اکنون وارد شوید.')}catch(err){notice(err.message,true)}});
 $('recovery-code-form').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget;try{const {recoveryCode}=await api('/api/me/recovery-code',{method:'POST',data:{currentPassword:form.elements.namedItem('currentPassword').value}});form.reset();$('recovery-code').textContent=recoveryCode;notice('کد بازیابی ساخته شد. آن را در جای امن ذخیره کنید.')}catch(err){notice(err.message,true)}});

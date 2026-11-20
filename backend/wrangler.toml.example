@@ -18,5 +18,6 @@ RADIO_FEATURES_ENABLED = "false"
 REGISTRATION_ENABLED = "false"
 ATTENDANCE_OBSERVER_ENABLED = "false"
 RADIO_DJ_ENABLED = "false"
+ACCESS_PILOT_ENABLED = "false"
 # Set AUTH_RATE_SECRET with wrangler secret put after staging review.
 # Set OBSERVER_TOKEN only after an independent, validated presence source exists.

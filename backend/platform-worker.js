@@ -2,6 +2,7 @@ import { normalizeObservation } from './attendance-engine.js';
 import { dailyRadioGenre, radioDjRoute, radioGenre } from './radio-dj-worker.js';
 import { scrypt as nodeScrypt } from 'node:crypto';
 import { productionRadioOrigin } from '../v2/radio-api-origin.js';
+import { accessPilotEnabled, accessPilotOrigin, accessPilotRoute, accessSessionPrefix, accessSessionQuery } from './access-pilot.js';
 
 const j=(data,status=200,headers={})=>new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store',...headers}});
 const clean=(v,n)=>typeof v==='string'?v.trim().replace(/[\u0000-\u001f\u007f]/g,'').slice(0,n):'';
@@ -23,7 +24,7 @@ const uuid=v=>typeof v==='string'&&/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[8
 const balance=async(db,id)=>Number((await first(db,'SELECT COALESCE(SUM(delta),0) AS balance FROM point_transactions WHERE user_id=?',id))?.balance||0);
 const origin=env=>env.ALLOWED_ORIGIN||productionRadioOrigin;
 const cors=(req,env)=>req.headers.get('Origin')===origin(env)?{'access-control-allow-origin':origin(env),'access-control-allow-credentials':'true','access-control-allow-methods':'GET, POST, PATCH, PUT, DELETE, OPTIONS','access-control-allow-headers':'Content-Type, Idempotency-Key, Authorization','vary':'Origin'}:{};
-const cookie=t=>`radio_session=${t}; HttpOnly; Secure; SameSite=Lax; Path=/api; Max-Age=604800`;
+const cookie=(t,seconds=604800)=>`radio_session=${t}; HttpOnly; Secure; SameSite=Lax; Path=/api; Max-Age=${seconds}`;
 async function readBody(req) {
  const maxBytes=8192;
  if(req.headers.get('content-type')?.split(';',1)[0].trim().toLowerCase()!=='application/json')throw{status:415,code:'json_required'};
@@ -51,7 +52,16 @@ async function readBody(req) {
   return body;
  }catch{throw{status:400,code:'invalid_json'}}
 }
-const session=async(req,db)=>{const t=req.headers.get('Cookie')?.match(/(?:^|;\s*)radio_session=([a-f0-9]{64})(?:;|$)/)?.[1];return t?first(db,'SELECT u.id,u.username,u.role,u.leaderboard_opt_in FROM user_sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at_ms>?',await hash(t),Date.now()):null};
+const sessionToken=req=>req.headers.get('Cookie')?.match(/(?:^|;\s*)radio_session=((?:acc_)?[a-f0-9]{64})(?:;|$)/)?.[1];
+const onAccessPilot=(req,env)=>accessPilotEnabled(env)&&new URL(req.url).origin===accessPilotOrigin;
+async function session(req,db,env){
+ const t=sessionToken(req);
+ if(!t)return null;
+ if(t.startsWith(accessSessionPrefix)){
+  return onAccessPilot(req,env)?await accessSessionQuery(first,db,await hash(t),env,Date.now()):null;
+ }
+ return first(db,'SELECT u.id,u.username,u.role,u.leaderboard_opt_in FROM user_sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at_ms>?',await hash(t),Date.now());
+}
 const profile=async(db,u)=>({id:u.id,username:u.username,role:u.role,leaderboardOptIn:!!u.leaderboard_opt_in,balance:await balance(db,u.id)});
 const audit=(db,u,action,target,note='')=>run(db,'INSERT INTO admin_events(id,actor_user_id,action,target_id,note,created_at_ms) VALUES(?,?,?,?,?,?)',crypto.randomUUID(),u.id,action,target,note,Date.now());
 async function authRate(db, key, limit) {
@@ -80,6 +90,7 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
  const djEnabled=env.RADIO_DJ_ENABLED==='true';
  const djRoute=user=>radioDjRoute({req,env,headers:h,user,first,run,changed,j,readBody,token,hash,uuid,audit});
  if(p.startsWith('/api/dj/'))return await djRoute(null);
+ if(p.startsWith('/api/auth/access/'))return await accessPilotRoute({req,env,headers:h,j,rate,first,run,token,hash,cookie});
  if(p==='/api/auth/register'&&m==='POST'){
   if(!registrationEnabled)return j({error:'registration_disabled'},503,h);
   if(!await rate(req,db,env))return j({error:'rate_limited'},429,h);
@@ -106,7 +117,13 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
   if(!changed(inserted))return j({error:'invalid_credentials'},401,h);
   return j({user:await profile(db,u)},200,{...h,'set-cookie':cookie(t)});
  }
- if(p==='/api/auth/logout'&&m==='POST'){const t=req.headers.get('Cookie')?.match(/(?:^|;\s*)radio_session=([a-f0-9]{64})(?:;|$)/)?.[1];if(t)await run(db,'DELETE FROM user_sessions WHERE token_hash=?',await hash(t));return j({ok:true},200,{...h,'set-cookie':clearCookie})}
+ if(p==='/api/auth/logout'&&m==='POST'){
+  const t=sessionToken(req);
+  if(t?.startsWith(accessSessionPrefix)){
+   if(onAccessPilot(req,env))await run(db,'DELETE FROM staging_access_sessions WHERE token_hash=?',await hash(t));
+  }else if(t)await run(db,'DELETE FROM user_sessions WHERE token_hash=?',await hash(t));
+  return j({ok:true},200,{...h,'set-cookie':clearCookie});
+ }
  if(p==='/api/auth/recover'&&m==='POST'){
   if(!await rate(req,db,env))return j({error:'rate_limited'},429,h);
   const b=await readBody(req),username=clean(b.username,40).toLowerCase();
@@ -142,7 +159,7 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
   const id=clean(b.observationId,100);if(!/^[a-zA-Z0-9_:-]{8,100}$/.test(id))return j({error:'invalid_observation_id'},400,h);
   const r=await run(db,"INSERT OR IGNORE INTO attendance_observations(observation_id,user_id,clubhouse_user_id,room_id,state,received_ms,source_kind) VALUES(?,?,?,?,?,?,'trusted_presence')",id,mapping.user_id,o.clubhouseUserId,o.roomId,o.state,Date.now());return j({accepted:!!changed(r),duplicate:!changed(r)},200,h);
  }
- const u=await session(req,db);if(!u)return j({error:'unauthorized'},401,h);
+ const u=await session(req,db,env);if(!u)return j({error:'unauthorized'},401,h);
  if(p==='/api/me'&&m==='GET')return j({user:await profile(db,u)},200,h);
  if(p==='/api/me/dashboard'&&m==='GET'){
   const [points,attendance,requests]=await Promise.all([
@@ -298,6 +315,12 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
   if(!changed(r))return j({error:'award_exists_or_ineligible'},409,h);return j({ok:true,balance:await balance(db,b.userId)},201,h);
  }
  if(p==='/api/admin/leaderboard'&&m==='GET')return j({leaders:await all(db,'SELECT u.id,u.username,COALESCE(SUM(t.delta),0) AS points FROM users u LEFT JOIN point_transactions t ON t.user_id=u.id GROUP BY u.id ORDER BY points DESC LIMIT 100')},200,h);
- if(p==='/api/admin/maintenance'&&m==='POST'){const now=Date.now();await run(db,'DELETE FROM user_sessions WHERE expires_at_ms<?',now);await run(db,'DELETE FROM attendance_observations WHERE received_ms<?',now-90*86400000);await run(db,'DELETE FROM attendance_sessions WHERE start_ms<? AND end_ms IS NOT NULL',now-365*86400000);await run(db,'DELETE FROM auth_limits WHERE window_start_ms<?',now-86400000);await run(db,'DELETE FROM request_limits WHERE last_request_at<?',now-86400000);await audit(db,u,'maintenance','retention');return j({ok:true},200,h)}
+ if(p==='/api/admin/maintenance'&&m==='POST'){const now=Date.now();await run(db,'DELETE FROM user_sessions WHERE expires_at_ms<?',now);await run(db,'DELETE FROM attendance_observations WHERE received_ms<?',now-90*86400000);await run(db,'DELETE FROM attendance_sessions WHERE start_ms<? AND end_ms IS NOT NULL',now-365*86400000);await run(db,'DELETE FROM auth_limits WHERE window_start_ms<?',now-86400000);await run(db,'DELETE FROM request_limits WHERE last_request_at<?',now-86400000);
+  if(onAccessPilot(req,env)){
+   await run(db,'DELETE FROM staging_access_challenges WHERE expires_at_ms<?',now);
+   await run(db,'DELETE FROM staging_access_sessions WHERE expires_at_ms<?',now);
+  }
+  await audit(db,u,'maintenance','retention');return j({ok:true},200,h)
+ }
  return j({error:'not_found'},404,h);
  }catch(e){if(e?.status)return j({error:e.code},e.status,h);console.error('radio_worker_error',{method:m,path:p,name:e?.name||'Error'});return j({error:'internal_error'},500,h)}}};

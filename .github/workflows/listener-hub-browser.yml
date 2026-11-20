@@ -3,6 +3,10 @@ on:
   pull_request:
     paths:
       - 'v2/**'
+      - 'backend/access-pilot.js'
+      - 'backend/platform-worker.js'
+      - 'backend/migrations/**'
+      - 'backend/tests/access-fixture.mjs'
       - '.github/workflows/listener-hub-browser.yml'
 permissions:
   contents: read
@@ -21,6 +25,8 @@ jobs:
           ./node_modules/.bin/playwright install chromium
       - name: Test RTL UI at phone/tablet/desktop and mocked request flow
         run: node v2/tests/listener-hub-browser.mjs
+      - name: Test offline invite-only Access flow
+        run: node v2/tests/access-pilot-browser.mjs
       - name: Upload QA screenshots for manual visual review
         if: always()
         uses: actions/upload-artifact@v4

@@ -81,3 +81,26 @@ Current scrypt invocations consumed 143 and 188 ms of Worker CPU on two successf
 | Firebase Authentication | Managed identity, verified email recovery and signed ID tokens. Validate project issuer, audience, expiry and subject. | Firebase lists non-phone authentication on Spark. A Radio-owned Spark project and applicable quotas are unverified. | Requires a verified project and protected enrollment. Uses Google for identity and keeps the radio ledger in D1. [Spark pricing](https://firebase.google.com/pricing) · [Token verification](https://firebase.google.com/docs/auth/admin/verify-id-tokens) |
 
 For a verified provider, bind each approved identity by issuer and immutable subject to its D1 user and read roles from D1. Link the original synthetic QA users only in staging after a verified enrollment step and use distinct production identities. Keep public signup closed. Test enrollment, recovery, lockout, revocation, authorization and credentialed CORS. Measure actual Worker CPU for the managed flow with margin below 10 ms before advancing the release.
+
+### Cloudflare Access pilot on the existing staging hostname
+
+The owner verified the `lingering-waterfall-4739` Zero Trust Free team. Its public certificate endpoint serves RS256 keys. Cloudflare describes Zero Trust Free as $0 for small teams and publishes a 50-user allowance. Its Access pricing page lists a separate paid option at $7 per user per month when billed annually. Verify free seat headroom for the two QA mailboxes in the team dashboard. The pilot uses one path and an exact email allowlist. [Pricing](https://www.cloudflare.com/sase/products/access/) · [Free allowance](https://www.cloudflare.com/) · [Worker path protection](https://developers.cloudflare.com/workers/configuration/cloudflare-access/#protect-a-specific-hostname-custom-domain-or-path)
+
+The account API returned HTTP 200 for the application and provider listings, with zero entries in both. The seat usage API returned HTTP 401 with the available OAuth scope. The write path, actual seat headroom and invite addresses require separate verification before activation.
+
+In Cloudflare One, go to **Access controls → Applications → Add an application → Self-hosted**. Use these values:
+
+| Setting | Value |
+| --- | --- |
+| Application name | `Radio Ava o Nava - staging pilot` |
+| Public hostname | `ava-radio-staging.ibbo-abdoli.workers.dev` |
+| Path | `/api/auth/access/complete` |
+| Application session duration | `1 hour` |
+| Policy | `Radio staging QA`, action `Allow`, Include `Emails` with the original consenting QA testers' verified addresses only |
+| Identity provider | `One-time PIN`, if that provider is already configured |
+
+When One-time PIN is absent, configure it for this team before inviting testers. Verify the app settings and record the application Audience (AUD) alone in the environment reviewed for staging. [Application setup](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/) · [One-time PIN setup](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/one-time-pin/)
+
+The staging code starts disabled. Activation requires the verified path policy, adequate seats, approval of the two staging identity bindings and the distinct staging D1 target. Apply `0008_staging_access_pilot.sql` only there after verifying the previous schema and recording its recovery bookmark. The migration creates empty tables. The operator matches the verified Access subject to the original QA D1 account and inserts that approved pair into `staging_access_identities`. Roles stay in D1. Email addresses, JWTs and raw session tokens stay out of the identity table. After verification, set `ACCESS_PILOT_AUD` to the app audience and `ACCESS_PILOT_ENABLED` to true in the isolated staging config.
+
+Test a valid invitation, a denied address, bypass attempts without a valid assertion, session expiry, application logout, and unlinking with only the original QA accounts. The app session lasts up to 15 minutes. Cloudflare controls its own sign-in session, and the application's Logout revokes its D1 session. Disable `ACCESS_PILOT_ENABLED` to stop the flow and invalidate pilot sessions immediately. Revoke the affected QA bindings or sessions before any re-enable. Leave public registration and attendance off. Sample Worker CPU on the actual staged Access exchange and required API calls before claiming a Free-budget pass.

@@ -46,6 +46,7 @@
  <a class="dashboard-link" href="#my-data">مشاهدهٔ گردش امتیاز و درخواست‌ها</a>
 </section>
 <section id="auth" class="club-card" aria-labelledby="auth-title"><h2 id="auth-title">ورود</h2>
+<button type="button" id="access-pilot-login" class="secondary" hidden>ورود با دعوت‌نامهٔ آزمایشی</button>
 <form id="auth-form"><label>نام کاربری <input name="username" required minlength="3" maxlength="40" pattern="[a-zA-Z0-9_]+" autocomplete="username"></label><label>گذرواژه <input name="password" type="password" required minlength="12" autocomplete="current-password"></label><div class="club-actions"><button type="submit" name="action" value="login">ورود</button><button type="submit" name="action" value="register" class="secondary" hidden disabled>ثبت‌نام</button></div></form>
 <details class="recovery-details"><summary>بازیابی با کد ذخیره‌شده</summary><form id="recover-form"><p class="hint">اگر گذرواژه و کد را با هم گم کرده‌اید، بازیابی خودکار ممکن نیست.</p><label>نام کاربری <input name="username" required minlength="3" maxlength="40" autocomplete="username"></label><label>کد بازیابی <input name="recoveryCode" required pattern="[a-f0-9]{64}" autocomplete="off"></label><label>گذرواژهٔ تازه <input name="newPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password"></label><button type="submit" class="secondary">بازیابی حساب</button></form></details>
 <p class="hint">برای دریافت امتیاز حضور، اتصال شناسهٔ Clubhouse پس از رضایت شما و تأیید منبع حضور لازم است.</p></section>

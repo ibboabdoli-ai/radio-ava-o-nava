@@ -24,6 +24,8 @@ RADIO_FEATURES_ENABLED = "false"
 REGISTRATION_ENABLED = "false"
 ATTENDANCE_OBSERVER_ENABLED = "false"
 RADIO_DJ_ENABLED = "false"
+ACCESS_PILOT_ENABLED = "false"
+# Set ACCESS_PILOT_AUD to the exact path-scoped staging application audience only after verification.
 
 # Store AUTH_RATE_SECRET via 'wrangler secret put' after account verification.
 # OBSERVER_TOKEN must remain unset; there is no verified Clubhouse presence source.
