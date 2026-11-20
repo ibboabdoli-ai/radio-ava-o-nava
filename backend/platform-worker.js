@@ -1,4 +1,5 @@
 import { normalizeObservation } from './attendance-engine.js';
+import { dailyRadioGenre, radioDjRoute, radioGenre } from './radio-dj-worker.js';
 import { scrypt as nodeScrypt } from 'node:crypto';
 
 const j=(data,status=200,headers={})=>new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store',...headers}});
@@ -38,6 +39,9 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
  if(!env.ALLOWED_ORIGIN||!env.AUTH_RATE_SECRET)return j({error:'service_unconfigured'},503,h);
  if(!['GET','HEAD'].includes(m)&&req.headers.get('Origin')!==origin(env))return j({error:'origin_required'},403,h);
  const db=env.DB;
+ const djEnabled=env.RADIO_DJ_ENABLED==='true';
+ const djRoute=user=>radioDjRoute({req,env,headers:h,user,first,run,changed,j,readBody,token,hash,uuid,audit});
+ if(p.startsWith('/api/dj/'))return await djRoute(null);
  if(p==='/api/auth/register'&&m==='POST'){
   if(env.REGISTRATION_ENABLED!=='true')return j({error:'registration_disabled'},503,h);
   if(!await rate(req,db,env))return j({error:'rate_limited'},429,h);
@@ -77,7 +81,13 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
   if(!changed(updated))return j({error:'invalid_recovery'},401,h);
   return j({ok:true},200,{...h,'set-cookie':clearCookie});
  }
- if(p==='/api/catalog'&&m==='GET'){const q=`%${clean(url.searchParams.get('q'),80).replace(/[%_]/g,'')}%`;return j({songs:await all(db,'SELECT id,title,artist,cost FROM song_catalog WHERE active=1 AND (title LIKE ? OR artist LIKE ?) ORDER BY title LIMIT 50',q,q)},200,h)}
+ if(p==='/api/catalog'&&m==='GET'){
+  const q=`%${clean(url.searchParams.get('q'),80).replace(/[%_]/g,'')}%`;
+  const daily=djEnabled?await dailyRadioGenre(db,Date.now(),first):null;
+  const songs=daily?await all(db,'SELECT id,title,artist,cost,genre FROM song_catalog WHERE active=1 AND (title LIKE ? OR artist LIKE ?) AND (? IS NULL OR genre=?) ORDER BY title,id LIMIT 50',q,q,daily.genre,daily.genre)
+    :await all(db,'SELECT id,title,artist,cost FROM song_catalog WHERE active=1 AND (title LIKE ? OR artist LIKE ?) ORDER BY title LIMIT 50',q,q);
+  return j({songs},200,h);
+ }
  if(p==='/api/queue'&&m==='GET')return j({queue:await all(db,"SELECT id,title,artist,queue_priority,created_at FROM song_requests WHERE status='approved' ORDER BY queue_priority DESC,created_at,id LIMIT 100")},200,h);
  if(p==='/api/leaderboard'&&m==='GET')return j({leaders:await all(db,'SELECT u.username AS name,COALESCE(SUM(t.delta),0) AS points FROM users u LEFT JOIN point_transactions t ON t.user_id=u.id WHERE u.leaderboard_opt_in=1 GROUP BY u.id ORDER BY points DESC,u.username COLLATE NOCASE LIMIT 50')},200,h);
  if(p==='/api/competitions'&&m==='GET'){
@@ -139,17 +149,60 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
   const b=await readBody(req),songId=clean(b.catalogSongId,100),key=req.headers.get('Idempotency-Key')||'';if(!/^[a-f0-9-]{36}$/i.test(key))return j({error:'idempotency_key_required'},400,h);
   const prior=await first(db,'SELECT id,status,catalog_song_id FROM song_requests WHERE user_id=? AND idempotency_key=?',u.id,key);if(prior)return prior.catalog_song_id===songId?j({id:prior.id,status:prior.status,duplicate:true},200,h):j({error:'idempotency_conflict'},409,h);
   const song=await first(db,'SELECT * FROM song_catalog WHERE id=? AND active=1',songId);if(!song)return j({error:'song_unavailable'},404,h);
-  const id=crypto.randomUUID();try{await run(db,'INSERT INTO song_requests(id,title,artist,requested_by,user_id,catalog_song_id,cost,idempotency_key) VALUES(?,?,?,?,?,?,?,?)',id,song.title,song.artist,u.username,u.id,song.id,song.cost,key)}catch{return j({error:'duplicate_active_request'},409,h)}return j({id,status:'pending',cost:song.cost},201,h);
+  const daily=djEnabled?await dailyRadioGenre(db,Date.now(),first):null;
+  const id=crypto.randomUUID();
+  try{
+   const inserted=await run(db,`INSERT INTO song_requests(id,title,artist,requested_by,user_id,catalog_song_id,cost,idempotency_key)
+     SELECT ?,title,artist,?,?,id,cost,? FROM song_catalog WHERE id=? AND active=1${daily?' AND NOT EXISTS (SELECT 1 FROM radio_daily_genres WHERE day=? AND radio_daily_genres.genre<>song_catalog.genre)':''}`,
+   id,u.username,u.id,key,song.id,...(daily?[daily.day]:[]));
+   if(!changed(inserted))return j({error:daily?'genre_mismatch':'song_unavailable'},409,h);
+  }catch(error){
+   const original=await first(db,'SELECT id,status,catalog_song_id FROM song_requests WHERE user_id=? AND idempotency_key=?',u.id,key);
+   if(original)return original.catalog_song_id===songId?j({id:original.id,status:original.status,duplicate:true},200,h):j({error:'idempotency_conflict'},409,h);
+   if(await first(db,"SELECT id FROM song_requests WHERE user_id=? AND catalog_song_id=? AND status IN ('pending','approved')",u.id,song.id))return j({error:'duplicate_active_request'},409,h);
+   throw error;
+  }
+  return j({id,status:'pending',cost:song.cost},201,h);
  }
  if(u.role!=='admin')return j({error:'forbidden'},403,h);
+ if(p.startsWith('/api/admin/dj/'))return await djRoute(u);
  if(p==='/api/admin/events'&&m==='GET')return j({events:await all(db,'SELECT e.action,e.target_id,e.note,e.created_at_ms,u.username AS actor FROM admin_events e JOIN users u ON u.id=e.actor_user_id ORDER BY e.created_at_ms DESC LIMIT 50')},200,h);
  if(p==='/api/admin/transactions'&&m==='GET')return j({transactions:await all(db,'SELECT t.delta,t.kind,t.source_type,t.note,t.created_at_ms,u.username,a.username AS actor FROM point_transactions t JOIN users u ON u.id=t.user_id LEFT JOIN users a ON a.id=t.actor_user_id ORDER BY t.created_at_ms DESC LIMIT 50')},200,h);
- if(p==='/api/admin/catalog'&&m==='POST'){const b=await readBody(req),title=clean(b.title,120),artist=clean(b.artist,120),source=clean(b.sourceUrl,500),note=clean(b.rightsNote,500),cost=Number(b.cost);let sourceOk=false;try{const parsed=new URL(source);sourceOk=parsed.protocol==='https:'&&parsed.hostname==='audius.co'&&!parsed.username&&!parsed.password}catch{}if(!title||!artist||!sourceOk||!note||b.rightsConfirmed!==true||b.playableConfirmed!==true||!Number.isInteger(cost)||cost<1||cost>1000)return j({error:'invalid_catalog_entry'},400,h);const id=crypto.randomUUID();await run(db,'INSERT INTO song_catalog(id,title,artist,source_url,rights_note,cost,playable_checked_at_ms,created_by_user_id,created_at_ms) VALUES(?,?,?,?,?,?,?,?,?)',id,title,artist,source,note,cost,Date.now(),u.id,Date.now());await audit(db,u,'catalog_create',id);return j({id},201,h)}
- const catalog=p.match(/^\/api\/admin\/catalog\/([a-f0-9-]{36})$/i);if(catalog&&m==='PATCH'){const b=await readBody(req);if(typeof b.active!=='boolean')return j({error:'invalid_active'},400,h);const r=await run(db,'UPDATE song_catalog SET active=? WHERE id=?',Number(b.active),catalog[1]);if(!changed(r))return j({error:'not_found'},404,h);await audit(db,u,'catalog_active',catalog[1],String(b.active));return j({ok:true},200,h)}
- if(p==='/api/admin/requests'&&m==='GET'){const status=url.searchParams.get('status')||'pending';if(!['pending','approved','rejected','cancelled','played'].includes(status))return j({error:'invalid_status'},400,h);return j({requests:await all(db,'SELECT id,title,artist,requested_by,status,cost,queue_priority,created_at FROM song_requests WHERE status=? ORDER BY queue_priority DESC,created_at LIMIT 100',status)},200,h)}
+ if(p==='/api/admin/catalog'&&m==='POST'){
+  const b=await readBody(req),title=clean(b.title,120),artist=clean(b.artist,120),source=clean(b.sourceUrl,500),note=clean(b.rightsNote,500),cost=Number(b.cost);
+  const genre=b.genre==null||b.genre===''?'':radioGenre(b.genre);
+  let sourceOk=false;
+  try{const parsed=new URL(source);sourceOk=parsed.protocol==='https:'&&parsed.hostname==='audius.co'&&!parsed.username&&!parsed.password}catch{}
+  if(genre===null)return j({error:'invalid_genre'},400,h);
+  if(!title||!artist||!sourceOk||!note||b.rightsConfirmed!==true||b.playableConfirmed!==true||!Number.isInteger(cost)||cost<1||cost>1000)return j({error:'invalid_catalog_entry'},400,h);
+  const id=crypto.randomUUID();
+  await run(db,`INSERT INTO song_catalog(id,title,artist,source_url,rights_note,cost,playable_checked_at_ms,created_by_user_id,created_at_ms${djEnabled?',genre':''}) VALUES(?,?,?,?,?,?,?,?,?${djEnabled?',?':''})`,id,title,artist,source,note,cost,Date.now(),u.id,Date.now(),...(djEnabled?[genre]:[]));
+  await audit(db,u,'catalog_create',id);return j({id},201,h);
+ }
+ const catalog=p.match(/^\/api\/admin\/catalog\/([a-f0-9-]{36})$/i);
+ if(catalog&&m==='PATCH'){
+  const b=await readBody(req),id=catalog[1];
+  if(djEnabled&&b.genre!==undefined){
+   const genre=radioGenre(b.genre);
+   if(genre===null)return j({error:'invalid_genre'},400,h);
+   if(!changed(await run(db,'UPDATE song_catalog SET genre=? WHERE id=?',genre,id)))return j({error:'not_found'},404,h);
+   await audit(db,u,'catalog_genre',id,genre);return j({ok:true},200,h);
+  }
+  if(typeof b.active!=='boolean')return j({error:'invalid_active'},400,h);
+  const r=await run(db,'UPDATE song_catalog SET active=? WHERE id=?',Number(b.active),id);
+  if(!changed(r))return j({error:'not_found'},404,h);
+  await audit(db,u,'catalog_active',id,String(b.active));return j({ok:true},200,h);
+ }
+ if(p==='/api/admin/requests'&&m==='GET'){const status=url.searchParams.get('status')||'pending';if(!['pending','approved','rejected','cancelled','played'].includes(status))return j({error:'invalid_status'},400,h);return j({requests:await all(db,`SELECT id,title,artist,requested_by,status,cost,queue_priority,created_at${djEnabled?',catalog_song_id IS NOT NULL AS playback_managed':''} FROM song_requests WHERE status=? ORDER BY queue_priority DESC,created_at,id LIMIT 100`,status)},200,h)}
  const request=p.match(/^\/api\/admin\/requests\/([a-f0-9-]{36})$/i);if(request&&m==='PATCH'){
   const b=await readBody(req),id=request[1];if(b.status==='approved'){const legacy=await run(db,"UPDATE song_requests SET status='approved',updated_at=strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id=? AND status='pending' AND user_id IS NULL AND cost=0",id);if(changed(legacy)){await audit(db,u,'legacy_request_approve',id);return j({ok:true,status:'approved',legacy:true},200,h)}const r=await run(db,"INSERT OR IGNORE INTO point_transactions(id,user_id,delta,kind,source_id,request_id,created_at_ms) SELECT ?,r.user_id,-r.cost,'request_spend',r.id,r.id,? FROM song_requests r WHERE r.id=? AND r.status='pending' AND r.user_id IS NOT NULL AND r.cost>0 AND (SELECT COALESCE(SUM(delta),0) FROM point_transactions WHERE user_id=r.user_id)>=r.cost",crypto.randomUUID(),Date.now(),id);if(!changed(r))return j({error:'insufficient_points_or_invalid_state'},409,h);await audit(db,u,'request_approve',id);return j({ok:true,status:'approved'},200,h)}
-  if(b.status==='rejected'||b.status==='played'){const sql=b.status==='rejected'?"UPDATE song_requests SET status='rejected',updated_at=strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id=? AND status IN ('pending','approved')":"UPDATE song_requests SET status='played',updated_at=strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id=? AND status='approved'";const r=await run(db,sql,id);if(!changed(r))return j({error:'invalid_state'},409,h);await audit(db,u,`request_${b.status}`,id);return j({ok:true,status:b.status},200,h)}
+  if(b.status==='rejected'||b.status==='played'){
+   const sql=b.status==='rejected'
+    ?"UPDATE song_requests SET status='rejected',updated_at=strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id=? AND status IN ('pending','approved')"
+    :`UPDATE song_requests SET status='played',updated_at=strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id=? AND status='approved'${djEnabled?' AND catalog_song_id IS NULL':''}`;
+   const r=await run(db,sql,id);if(!changed(r))return j({error:'invalid_state'},409,h);
+   await audit(db,u,`request_${b.status}`,id);return j({ok:true,status:b.status},200,h)
+  }
   if(Number.isInteger(b.queuePriority)&&b.queuePriority>=-100&&b.queuePriority<=100){const r=await run(db,"UPDATE song_requests SET queue_priority=? WHERE id=? AND status='approved'",b.queuePriority,id);if(!changed(r))return j({error:'invalid_state'},409,h);await audit(db,u,'request_priority',id,String(b.queuePriority));return j({ok:true},200,h)}return j({error:'invalid_action'},400,h);
  }
  if(p==='/api/admin/users'&&m==='GET')return j({users:await all(db,'SELECT u.id,u.username,u.role,u.leaderboard_opt_in,COALESCE(SUM(t.delta),0) AS balance FROM users u LEFT JOIN point_transactions t ON t.user_id=u.id GROUP BY u.id ORDER BY u.created_at_ms DESC LIMIT 100')},200,h);

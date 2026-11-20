@@ -31,6 +31,14 @@ This runbook applies to the integrated Worker in `backend/worker.js`. It superse
 
 ## Rollback and boundaries
 
-Disable the staging Worker or revert its staging version if a check fails; do not delete or change production resources. Record staging test-data retention. The existing request-song page from PR #27 retains its safe placeholder form and styling; its old submission contract must remain off. The linked `radio-club.html` account portal uses the integrated authenticated API. No automatic song playback is promised.
+Disable the staging Worker or revert its staging version if a check fails. Record staging test-data retention. Keep the legacy request-song submission contract disabled. The linked `radio-club.html` account portal uses the integrated authenticated API.
+
+### Local DJ and website queue
+
+1. Verify that the named staging D1 already has the prior radio and competition schema. Check `song_catalog.genre` and `radio_dj_runtime` before applying `migrations/0007_radio_dj_queue.sql`. Apply it once after `0005_manual_competitions.sql`. The unused number 0006 is reserved for separate profile work.
+2. With the migration present, set `RADIO_DJ_ENABLED = "true"` only in the verified staging config and deploy the Worker. Verify that `/api/dj/status` responds, registration and attendance remain disabled, and requests with the wrong origin are rejected. To stop the feature, revoke the player pairing and deploy with the flag false.
+3. An administrator can assign a genre to each licensed catalog song and set today's genre in the management area. The day changes at midnight in Europe/Stockholm. Previously approved songs retain their place. New requests must match the selected genre.
+4. Use the UUID displayed for each catalog entry as the track ID in the local DJ catalog. Keep a locally licensed audio copy beside that catalog. The files stay on the operator's computer. If the first eligible request lacks a local file, the DJ reports it and keeps the request in the queue for the operator to resolve.
+5. The administrator creates a four-hour player code and pastes it into the local DJ before starting. The code is scoped to the staging queue. The dashboard shows progress for claimed website requests after the audio starts. It labels a paused track and clears the status on stop, lease expiry or natural completion. Approval charges the existing ledger once. A skipped track or file error leaves the request approved for operator review. A confirmed rejection or cancellation uses the existing refund rules.
 
 Official reference: Cloudflare D1 Wrangler commands and Free-plan limits should be rechecked before provisioning. Account-specific quotas and billing state cannot be inferred from public documentation.

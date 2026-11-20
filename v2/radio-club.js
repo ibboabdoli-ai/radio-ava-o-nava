@@ -1,4 +1,5 @@
 import {mountCompetitionUi} from './competition-ui.js';
+import {mountRadioDj} from './radio-dj-ui.js';
 const $=id=>document.getElementById(id);
 const state={api:'',user:null,activeSongIds:new Set()};
 const errors={unauthorized:'برای ادامه وارد حساب خود شوید.',forbidden:'اجازهٔ انجام این کار را ندارید.',invalid_credentials:'نام کاربری یا گذرواژه درست نیست.',credentials_changed:'گذرواژه هم‌زمان تغییر کرده است؛ دوباره وارد شوید.',invalid_recovery:'کد بازیابی معتبر نیست یا قبلاً استفاده شده است.',username_unavailable:'این نام کاربری قبلاً ثبت شده است.',registration_disabled:'ثبت‌نام هنوز فعال نیست.',rate_limited:'تلاش‌های زیادی انجام شده؛ بعداً دوباره امتحان کنید.',song_unavailable:'این آهنگ در فهرست فعال نیست.',duplicate_active_request:'این آهنگ را قبلاً درخواست کرده‌اید.',insufficient_points_or_invalid_state:'امتیاز کافی نیست یا وضعیت درخواست تغییر کرده است.',not_cancellable:'این درخواست دیگر قابل لغو نیست.',invalid_adjustment:'مقدار و دلیل تغییر امتیاز را بررسی کنید.',idempotency_key_required:'کلید ثبت تکراری لازم است.',idempotency_conflict:'این درخواست با دادهٔ دیگری قبلاً ثبت شده است.',user_missing_or_negative_balance:'کاربر پیدا نشد یا موجودی برای کسر کافی نیست.',invalid_competition:'اطلاعات مسابقه معتبر نیست.',verification_required:'تأیید ثبت‌نام لازم است.',participant_exists_or_missing:'شرکت‌کننده قبلاً ثبت شده یا پیدا نشد.',invalid_result:'نتیجه معتبر نیست.',result_conflict:'رتبه تکراری است یا نتیجهٔ جایزه‌دار قابل تغییر نیست.',participant_missing_or_awarded:'شرکت‌کننده پیدا نشد یا نتیجهٔ جایزه‌دار قابل تغییر نیست.',invalid_award:'اطلاعات جایزه معتبر نیست.',award_exists_or_ineligible:'جایزه قبلاً ثبت شده یا برنده واجد شرایط نیست.',service_disabled:'سرویس باشگاه هنوز فعال نیست.',internal_error:'سرویس موقتاً در دسترس نیست.'};
@@ -20,6 +21,10 @@ async function api(path,{method='GET',data,key}={}){
  let result={};try{result=await res.json()}catch{}if(!res.ok)throw Error(errors[result.error]||`خطای سرویس (${res.status})`);return result;
 }
 const competitionUi=mountCompetitionUi({api,notice,onChange:()=>refresh()});
+errors.genre_mismatch='این آهنگ با ژانر امروز هم‌خوانی ندارد.';
+errors.invalid_genre='ژانر را با حروف یا عدد و حداکثر ۴۰ نویسه وارد کنید.';
+errors.radio_dj_busy='ابتدا پخش فعلی را متوقف کنید.';
+const djUi=mountRadioDj({api,notice,refreshCatalog:catalog});
 const clubLinks=document.querySelectorAll('.club-mobile-nav a,.club-nav a');
 const contestsLinks=document.querySelectorAll('[data-admin-competition-link],.club-nav a[href="#competitions"]');
 function syncClubNavigation(hash=location.hash){
@@ -60,7 +65,9 @@ async function refresh(){
  $('account-status').textContent=state.user?'حساب فعال':'برای دیدن امتیاز و درخواست‌ها وارد شوید.';
  show('member-handle',!!state.user);show('member-settings',!!state.user);show('competition-spotlight',!!state.user);
  show('club-menu-admin',state.user?.role==='admin');syncClubNavigation();
+ const djRefresh=djUi.refresh(state.user?.role);
  if(state.user){$('account-summary').textContent=`${state.user.username} — موجودی: ${state.user.balance} امتیاز`;$('ranking-opt-in').checked=state.user.leaderboardOptIn;await Promise.allSettled([myData(),dashboardData(),adminData(),adminActivity(),identityStatus(),competitionUi.refreshMine(),attendanceIndicator()])}else{state.activeSongIds.clear();$('my-competition-results').replaceChildren();show('attendance-indicator',false)}
+ await djRefresh;
  await Promise.allSettled([catalog(),queue(),leaders(),competitionUi.refreshPublic()]);
  if(state.user){await queuePositions();if(state.user.role==='admin')await Promise.allSettled([identityUsers(),competitionUi.refreshAdmin()])}
 }
@@ -99,7 +106,8 @@ async function adminData(){
    const host=$(id);host.replaceChildren();if(!rows.length)empty(id,'موردی وجود ندارد.');
    for(const item of rows){
     const row=document.createElement('div');row.append(text('strong',item.title+' — '+item.artist),text('span',item.requested_by+' | '+item.cost+' امتیاز','meta'));
-    for(const action of id==='pending'?['approved','rejected']:['played','rejected']){
+    const actions=id==='pending'?['approved','rejected']:item.playback_managed?['rejected']:['played','rejected'];
+    for(const action of actions){
      const button=text('button',({approved:'تأیید و کسر امتیاز',rejected:'رد',played:'پخش شد'})[action]);button.type='button';
      button.addEventListener('click',async()=>{button.disabled=true;try{await api('/api/admin/requests/'+item.id,{method:'PATCH',data:{status:action}});notice('وضعیت ثبت شد.');await refresh()}catch(error){notice(error.message,true);button.disabled=false}});row.append(button);
     }
@@ -129,7 +137,7 @@ $('password-form').addEventListener('submit',async e=>{e.preventDefault();const 
 $('logout').addEventListener('click',async()=>{try{await api('/api/auth/logout',{method:'POST',data:{}});state.user=null;await refresh();notice('خارج شدید.')}catch(e){notice(e.message,true)}});
 $('ranking-opt-in').addEventListener('change',async e=>{try{await api('/api/me',{method:'PATCH',data:{leaderboardOptIn:e.target.checked}});notice('تنظیم نمایش امتیاز ذخیره شد.');await refresh()}catch(err){notice(err.message,true)}});
 let searchTimer;$('search').addEventListener('input',()=>{clearTimeout(searchTimer);searchTimer=setTimeout(catalog,250)});
-$('catalog-form').addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget,x=name=>f.elements.namedItem(name);try{await api('/api/admin/catalog',{method:'POST',data:{title:x('title').value,artist:x('artist').value,sourceUrl:x('sourceUrl').value,rightsNote:x('rightsNote').value,cost:Number(x('cost').value),rightsConfirmed:x('rightsConfirmed').checked,playableConfirmed:x('playableConfirmed').checked}});f.reset();notice('آهنگ به فهرست اضافه شد.');await catalog()}catch(err){notice(err.message,true)}});
+$('catalog-form').addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget,x=name=>f.elements.namedItem(name);try{await api('/api/admin/catalog',{method:'POST',data:{title:x('title').value,artist:x('artist').value,sourceUrl:x('sourceUrl').value,rightsNote:x('rightsNote').value,cost:Number(x('cost').value),rightsConfirmed:x('rightsConfirmed').checked,playableConfirmed:x('playableConfirmed').checked}});f.reset();notice('آهنگ به فهرست اضافه شد.');await Promise.all([catalog(),djUi.refresh(state.user?.role)])}catch(err){notice(err.message,true)}});
 $('identity-form').addEventListener('submit',async e=>{e.preventDefault();try{await api(`/api/admin/users/${$('identity-user').value}/clubhouse-identity`,{method:'PUT',data:{clubhouseUserId:$('identity-clubhouse').value.trim(),consentConfirmed:$('identity-consent').checked}});$('identity-form').reset();notice('اتصال شناسه ثبت شد.')}catch(err){notice(err.message,true)}});
 $('identity-unlink').addEventListener('click',async()=>{try{await api('/api/me/clubhouse-identity',{method:'DELETE'});notice('اتصال شناسه قطع شد؛ حضور جدید دیگر ثبت نمی‌شود.');await identityStatus()}catch(err){notice(err.message,true)}});
 initialize();

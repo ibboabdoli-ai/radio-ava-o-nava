@@ -63,6 +63,7 @@ class StagingSchemaTests(unittest.TestCase):
         self.db.executescript(atomic_migration)
         self.db.executescript(atomic_migration)
         self.db.executescript((BACKEND / 'migrations' / '0005_manual_competitions.sql').read_text(encoding='utf-8'))
+        self.db.executescript((BACKEND / 'migrations' / '0007_radio_dj_queue.sql').read_text(encoding='utf-8'))
         request = self.db.execute('SELECT title,status,cost,user_id FROM song_requests WHERE id=?', ('legacy-request',)).fetchone()
         self.assertEqual(request, ('Old Song', 'pending', 0, None))
         self.assertEqual(self.db.execute('SELECT count(*) FROM point_transactions').fetchone()[0], 0)
@@ -70,6 +71,7 @@ class StagingSchemaTests(unittest.TestCase):
         self.assertEqual(self.db.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='competitions'").fetchone()[0], 1)
         columns = {row[1] for row in self.db.execute('PRAGMA table_info(point_transactions)')}
         self.assertTrue({'actor_user_id', 'source_type'} <= columns)
+        self.assertEqual(self.db.execute('SELECT phase, token_hash FROM radio_dj_runtime').fetchone(), ('idle', None))
 
     def test_staging_template_is_isolated_and_disabled(self):
         with (BACKEND / 'wrangler.staging.toml.example').open('rb') as config_file:
@@ -79,7 +81,7 @@ class StagingSchemaTests(unittest.TestCase):
         self.assertTrue(config['workers_dev'])
         self.assertNotIn('routes', config)
         self.assertNotIn('radio.ibboabdoli.com', config['vars']['ALLOWED_ORIGIN'])
-        for key in ('RADIO_FEATURES_ENABLED', 'REGISTRATION_ENABLED', 'ATTENDANCE_OBSERVER_ENABLED'):
+        for key in ('RADIO_FEATURES_ENABLED', 'REGISTRATION_ENABLED', 'ATTENDANCE_OBSERVER_ENABLED', 'RADIO_DJ_ENABLED'):
             self.assertEqual(config['vars'][key], 'false')
 
 

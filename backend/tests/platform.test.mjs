@@ -26,6 +26,69 @@ async function catalog(env, admin, cost = 2) {
 }
 const request = (env, user, songId, key = crypto.randomUUID()) => call(env, '/api/requests', 'POST', { catalogSongId: songId }, user.cookie, { 'Idempotency-Key': key });
 
+test('daily genre, ordered playback lease, pause and completion preserve points and hide identities', async () => {
+  const env = make();
+  assert.deepEqual((await call(env, '/api/dj/status')).body, { enabled: false, genre: null, playback: null });
+  env.RADIO_DJ_ENABLED = 'true';
+  const admin = await account(env, 'dj_admin', true);
+  const listener = await account(env, 'dj_listener');
+  function adminCall(path, method, data, extra) { return call(env, '/api/admin/' + path, method, data, admin.cookie, extra); }
+  const firstSong = await catalog(env, admin);
+  const secondSong = await catalog(env, admin);
+  const thirdSong = await catalog(env, admin);
+  for (const id of [firstSong, secondSong]) assert.equal((await adminCall('catalog/' + id, 'PATCH', { genre: 'جاز' })).status, 200);
+  assert.equal((await call(env, '/api/admin/dj/genre', 'PUT', { genre: 'جاز' }, listener.cookie)).status, 403);
+  assert.equal((await adminCall('dj/genre', 'PUT', { genre: '<img>' })).status, 400);
+  assert.equal((await adminCall('dj/genre', 'PUT', { genre: ' جاز ' })).status, 200);
+  assert.equal((await call(env, '/api/catalog')).body.songs.length, 2);
+  assert.equal((await request(env, listener, thirdSong)).body.error, 'genre_mismatch');
+  assert.equal((await adminCall('users/' + listener.user.id + '/adjust-points', 'POST', { delta: 10, note: 'Synthetic test' }, { 'Idempotency-Key': crypto.randomUUID() })).status, 200);
+  const eventKey = crypto.randomUUID();
+  const submissions = await Promise.all([request(env, listener, firstSong, eventKey), request(env, listener, firstSong, eventKey)]);
+  assert.equal(submissions[0].body.id, submissions[1].body.id);
+  assert.deepEqual(submissions.map(item => item.status).sort(), [200, 201]);
+  const firstRequest = submissions[0].body.id;
+  const secondRequest = (await request(env, listener, secondSong)).body.id;
+  const approvals = await Promise.all([0, 1].map(() => adminCall('requests/' + firstRequest, 'PATCH', { status: 'approved' })));
+  assert.deepEqual(approvals.map(item => item.status).sort(), [200, 409]);
+  assert.equal((await adminCall('requests/' + secondRequest, 'PATCH', { status: 'approved' })).status, 200);
+  assert.equal((await adminCall('requests/' + firstRequest, 'PATCH', { status: 'played' })).status, 409);
+  env.DB.sqlite.prepare('UPDATE song_requests SET created_at=? WHERE id=?').run('2024-01-01', firstRequest);
+  assert.equal((await call(env, '/api/me', 'GET', undefined, listener.cookie)).body.user.balance, 6);
+  assert.equal((await call(env, '/api/dj/next', 'GET', undefined, admin.cookie)).status, 401);
+  assert.equal((await call(env, '/api/admin/dj/pair', 'POST', {}, listener.cookie)).status, 403);
+  const pairing = await adminCall('dj/pair', 'POST', {});
+  assert.equal(pairing.status, 201);
+  const extra = { Authorization: 'Bearer ' + pairing.body.token };
+  function djCall(path, method = 'GET', data) { return call(env, '/api/dj/' + path, method, data, undefined, extra); }
+  assert.equal((await djCall('next')).body.next.requestId, firstRequest);
+  assert.equal((await djCall('claim', 'POST', { requestId: secondRequest })).status, 409);
+  const attempts = await Promise.all([0, 1].map(() => djCall('claim', 'POST', { requestId: firstRequest })));
+  assert.deepEqual(attempts.map(item => item.status).sort(), [200, 409]);
+  const { leaseId } = attempts.find(item => item.status === 200).body.claim;
+  const report = (event, positionMs) => djCall('playback', 'POST', { leaseId, event, positionMs });
+  assert.equal((await call(env, '/api/dj/status')).body.playback, null);
+  assert.equal((await report('complete', 1000)).status, 409);
+  assert.equal((await report('playing', 0)).status, 400);
+  assert.equal((await report('playing', 500)).status, 200);
+  assert.deepEqual((await call(env, '/api/dj/status')).body.playback, { title: 'Test Track', artist: 'Test Artist', state: 'playing', positionMs: 500 });
+  assert.equal((await report('paused', 510)).status, 200);
+  assert.equal((await call(env, '/api/dj/status')).body.playback.state, 'paused');
+  assert.equal((await adminCall('dj/pair', 'POST', {})).status, 409);
+  assert.equal((await report('complete', 520)).status, 200);
+  assert.equal((await report('complete', 520)).status, 200);
+  assert.equal((await djCall('next')).body.next.requestId, secondRequest);
+  assert.equal((await call(env, '/api/dj/status')).body.playback, null);
+  const secondLease = (await djCall('claim', 'POST', { requestId: secondRequest })).body.claim.leaseId;
+  assert.equal((await djCall('playback', 'POST', { leaseId: secondLease, event: 'playing', positionMs: 100 })).status, 200);
+  assert.equal((await adminCall('requests/' + secondRequest, 'PATCH', { status: 'rejected' })).status, 200);
+  assert.equal((await djCall('playback', 'POST', { leaseId: secondLease, event: 'complete', positionMs: 500 })).status, 409);
+  assert.equal((await call(env, '/api/me', 'GET', undefined, listener.cookie)).body.user.balance, 8);
+  assert.equal(env.DB.sqlite.prepare("SELECT count(*) AS n FROM point_transactions WHERE kind='refund'").get().n, 1);
+  assert.equal((await adminCall('dj/pair', 'DELETE')).status, 200);
+  assert.equal((await djCall('next')).status, 401);
+});
+
 test('features and registration default disabled, origins and authorization enforced', async () => {
   const env = make(); delete env.RADIO_FEATURES_ENABLED;
   assert.equal((await call(env, '/health')).body.featuresEnabled, false);
