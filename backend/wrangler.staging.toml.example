@@ -1,9 +1,11 @@
 # Explicitly isolated STAGING worker, NOT the production radio.
 # Copy to wrangler.staging.toml (gitignored); replace the placeholders.
 name = "ava-radio-staging"
+account_id = "REPLACE_WITH_VERIFIED_ACCOUNT_ID"
 main = "worker.js"
 compatibility_date = "2026-11-01"
 workers_dev = true
+preview_urls = false
 
 [[d1_databases]]
 binding = "DB"

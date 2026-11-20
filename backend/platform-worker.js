@@ -5,7 +5,8 @@ const clean=(v,n)=>typeof v==='string'?v.trim().replace(/[\u0000-\u001f\u007f]/g
 const hex=b=>[...b].map(x=>x.toString(16).padStart(2,'0')).join('');
 const hash=async v=>hex(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v))));
 const token=()=>hex(crypto.getRandomValues(new Uint8Array(32)));
-const pbkdf=async(pass,salt)=>{const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(pass),'PBKDF2',false,['deriveBits']);return hex(new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',salt:new TextEncoder().encode(salt),iterations:310000,hash:'SHA-256'},k,256)))};
+// Cloudflare Workers Web Crypto rejects PBKDF2 iteration counts above 100000.
+const pbkdf=async(pass,salt)=>{const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(pass),'PBKDF2',false,['deriveBits']);return hex(new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',salt:new TextEncoder().encode(salt),iterations:100000,hash:'SHA-256'},k,256)))};
 const eq=(a,b)=>{if(typeof a!=='string'||typeof b!=='string'||a.length!==b.length)return false;let d=0;for(let i=0;i<a.length;i++)d|=a.charCodeAt(i)^b.charCodeAt(i);return d===0};
 const first=(db,sql,...args)=>db.prepare(sql).bind(...args).first();
 const all=async(db,sql,...args)=>(await db.prepare(sql).bind(...args).all()).results;
@@ -34,7 +35,8 @@ export default {async fetch(req,env){const h=cors(req,env),url=new URL(req.url),
   if(!await rate(req,db,env))return j({error:'rate_limited'},429,h);
   const b=await readBody(req),username=clean(b.username,40).toLowerCase();
   if(!/^[a-z0-9_]{3,40}$/.test(username)||typeof b.password!=='string'||b.password.length<12||b.password.length>128)return j({error:'invalid_credentials'},400,h);
-  const salt=token();try{await run(db,'INSERT INTO users(id,username,password_salt,password_hash,created_at_ms) VALUES(?,?,?,?,?)',crypto.randomUUID(),username,salt,await pbkdf(b.password,salt),Date.now())}catch{return j({error:'username_unavailable'},409,h)}
+  const salt=token(),passwordHash=await pbkdf(b.password,salt);
+  try{await run(db,'INSERT INTO users(id,username,password_salt,password_hash,created_at_ms) VALUES(?,?,?,?,?)',crypto.randomUUID(),username,salt,passwordHash,Date.now())}catch(e){if((await first(db,'SELECT id FROM users WHERE username=?',username)))return j({error:'username_unavailable'},409,h);throw e}
   return j({ok:true},201,h);
  }
  if(p==='/api/auth/login'&&m==='POST'){

@@ -1,5 +1,7 @@
 # Radio Ava o Nava integration and staging verification — 20 November 2026
 
+Historical pre-deployment snapshot. For the verified live Cloudflare staging state, see [STAGING_DEPLOYMENT_REPORT.md](./STAGING_DEPLOYMENT_REPORT.md).
+
 ## Scope and state
 
 - Integration branch: `feature/radio-staging-integration-20261120`, merging local candidate `4d41848` with PR #27 head `280ad4514fb7ae42c60bd25ce8522d5cd50a3183`.

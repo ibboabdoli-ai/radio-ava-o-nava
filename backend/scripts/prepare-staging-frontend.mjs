@@ -20,9 +20,18 @@ const site = path.join(target, 'v2');
 await mkdir(site, { recursive: true });
 await cp(source, site, { recursive: true, filter: src => {
   const relative = path.relative(source, src).replaceAll('\\', '/');
-  return relative !== 'tests' && !relative.startsWith('tests/') && relative !== 'CNAME';
+  return relative !== 'tests' && !relative.startsWith('tests/') && relative !== 'CNAME' && relative !== 'install-images.js';
 } });
 await cp(path.resolve(backend, '../radio-neon-logo.webp'), path.join(target, 'radio-neon-logo.webp'));
+const imageSource = path.resolve(backend, '../assets');
+const imageTarget = path.join(target, 'assets');
+await mkdir(imageTarget);
+for (const platform of ['ios', 'android']) {
+  for (let step = 1; step <= 4; step++) {
+    const filename = `${platform}-install-${step}.jpg`;
+    await cp(path.join(imageSource, filename), path.join(imageTarget, filename));
+  }
+}
 await writeFile(path.join(target, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
 await writeFile(path.join(target, 'index.html'), '<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><meta http-equiv="refresh" content="0;url=/v2/"><title>رادیو آوا و نوا — staging</title></head><body><a href="/v2/">ورود به نسخهٔ آزمایشی</a></body></html>\n');
 for (const name of await readdir(site)) {

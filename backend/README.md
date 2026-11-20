@@ -1,6 +1,6 @@
 # Radio Ava o Nava — song request backend (not deployed)
 
-> The PR #27 staging API has been superseded on this local feature branch. See [PLATFORM.md](./PLATFORM.md) for the new API, migration and disabled-by-default deployment configuration. The older notes below describe the historical PR and should not be used as deployment instructions.
+> The PR #27 token-based API has been superseded. See [PLATFORM.md](./PLATFORM.md) and [STAGING_DEPLOYMENT_REPORT.md](../STAGING_DEPLOYMENT_REPORT.md) for the integrated API and current isolated staging state. The older notes below describe the historical PR and must not be used as deployment instructions.
 
 Cloudflare Workers + D1. This is a separate staging implementation; the current radio stream and GitHub Pages site are unchanged.
 
