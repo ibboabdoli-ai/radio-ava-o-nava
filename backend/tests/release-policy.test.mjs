@@ -1,15 +1,33 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import worker from '../worker.js';
 import { testDatabase } from './helpers.mjs';
 import { productionRadioOrigin, radioApiOrigin } from '../../v2/radio-api-origin.js';
 import { productionClubAssets, verifyProductionClubApi } from '../scripts/prepare-production-club.mjs';
+import { renderProductionWorkerConfig } from '../scripts/prepare-production-worker.mjs';
 
 const productionApi = 'https://api.radio.ibboabdoli.com';
 const staging = 'https://ava-radio-staging.ibbo-abdoli.workers.dev';
 const environment = (origin = staging) => ({
   DB: testDatabase(), ALLOWED_ORIGIN: origin, RADIO_FEATURES_ENABLED: 'true',
   REGISTRATION_ENABLED: 'true', ATTENDANCE_OBSERVER_ENABLED: 'true', OBSERVER_TOKEN: 'only-test', AUTH_RATE_SECRET: 'local-test-only'
+});
+
+test('production Worker preparation requires a separate D1 and a closed configuration', async () => {
+  const template = await readFile(new URL('../wrangler.toml.example', import.meta.url), 'utf8');
+  const accountId = '1'.repeat(32), independent = '34266595-3d88-4e6a-a793-04250d92533f';
+  assert.throws(() => renderProductionWorkerConfig(template, accountId, 'ABE077D0-B360-4BEB-864A-0E3AB354CFD0'), /independent/);
+  assert.throws(() => renderProductionWorkerConfig(template, accountId, ''), /independent/);
+  assert.throws(() => renderProductionWorkerConfig(template, 'invalid', independent), /account ID/);
+  assert.throws(() => renderProductionWorkerConfig(template.replace('workers_dev = false', 'workers_dev = true'), accountId, independent), /private/);
+  assert.throws(() => renderProductionWorkerConfig(template.replace('workers_dev = false', ''), accountId, independent), /private/);
+  assert.throws(() => renderProductionWorkerConfig(template.replace('RADIO_DJ_ENABLED = "false"', 'RADIO_DJ_ENABLED = "true"'), accountId, independent), /private/);
+  const config = renderProductionWorkerConfig(template, accountId, independent);
+  assert.match(config, /^name = "ava-radio-production"$/m);
+  assert.match(config, /^database_name = "ava-radio-production"$/m);
+  assert.ok(config.includes(independent));
+  assert.doesNotMatch(config, /"ava-radio-staging"|REPLACE_WITH/);
 });
 
 test('the production club accepts same-site HTTPS and refuses the staging API', async () => {
