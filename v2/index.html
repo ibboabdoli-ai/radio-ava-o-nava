@@ -24,6 +24,8 @@
 <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap">
   <link rel="stylesheet" href="radio-preview.css">
+  <link rel="stylesheet" href="more-preview.css">
+  <script src="radio-menu.js" defer></script>
   <script src="radio-preview.js" defer></script>
 </head>
 <body>
@@ -45,14 +47,29 @@
         </div>
         <div class="heading"><h2>آخرین برنامه‌ها</h2><a href="#archive">همه ‹</a></div>
         <div id="recent"></div>
-        <details><summary>دربارهٔ برنامه</summary><p>موسیقی زنده، شعر و آواز با آرش در رادیو آوا و نوا.</p></details>
+        <details id="about"><summary>دربارهٔ برنامه</summary><p>موسیقی زنده، شعر و آواز با آرش در رادیو آوا و نوا.</p></details>
 
-        <details class="station-links"><summary>بیشتر از رادیو</summary>
-          <a href="studio.html#schedule">جدول پخش</a>
-          <a href="studio.html#community">درخواست آهنگ و مسابقه</a>
-          <a href="studio.html#install">نصب روی گوشی</a>
-          <a href="studio.html">استودیوی کامل رادیو</a>
-        </details>
+      <details class="more" id="more">
+        <summary>بیشتر از رادیو</summary>
+        <div class="menu">
+          <details id="schedule" name="radio-menu"><summary><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v5m10-5v5M3 11h18"/></svg>جدول پخش</summary>
+            <div class="panel"><small>برنامهٔ بعدی به وقت تهران</small><p id="next">در حال دریافت…</p>
+              <details class="week"><summary>برنامهٔ این هفته</summary><ul id="days"></ul></details></div>
+          </details>
+          <details id="song-request" name="radio-menu"><summary><svg viewBox="0 0 24 24"><path d="M9 17V5l11-2v12M9 9l11-2"/><ellipse cx="6" cy="18" rx="3" ry="2.5"/><ellipse cx="17" cy="16" rx="3" ry="2.5"/></svg>درخواست آهنگ</summary>
+            <div class="panel"><p>نام آهنگ و خواننده را برای رادیو بفرست.</p><a id="request" hidden target="_blank" rel="noopener noreferrer">ارسال درخواست در تلگرام ↗</a></div>
+          </details>
+          <details id="competition" name="radio-menu"><summary><svg viewBox="0 0 24 24"><path d="M7 4h10v5a5 5 0 0 1-10 0zm0 2H3v2a4 4 0 0 0 5 4m9-6h4v2a4 4 0 0 1-5 4m-4 2v5m-4 2h8"/></svg>مسابقه</summary>
+            <div class="panel"><p id="contestStatus">در حال دریافت…</p><a id="contest" hidden target="_blank" rel="noopener noreferrer">مشاهدهٔ فرم مسابقه ↗</a></div>
+          </details>
+          <details id="install" name="radio-menu"><summary><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 18h4"/></svg>نصب روی گوشی</summary>
+            <div class="panel"><div class="choices" aria-label="نوع گوشی"><button data-platform="ios" aria-pressed="true">آیفون</button><button data-platform="android" aria-pressed="false">اندروید</button></div>
+              <ol id="ios"><li>سایت رادیو را در Safari باز کن.</li><li>از منوی اشتراک‌گذاری، «افزودن به صفحهٔ اصلی» را بزن.</li><li>«افزودن» را تأیید کن.</li></ol>
+              <ol id="android" hidden><li>سایت رادیو را در Chrome باز کن.</li><li>از منوی سه‌نقطه، «نصب برنامه» یا «افزودن به صفحهٔ اصلی» را بزن.</li><li>نصب را تأیید کن.</li></ol>
+              </div>
+          </details>
+        </div>
+      </details>
       </section>
       <section id="discover" hidden>
         <h1>کشف موسیقی</h1>
@@ -66,12 +83,18 @@
       </section>
     </main>
     <footer><div class="mini">
-      <img id="cover" src="gallery/player-tar.jpg" alt="">
-      <div class="mini-copy"><strong id="now">رادیو آوا و نوا</strong><small id="state" aria-live="polite">پخش زنده</small></div>
+      <button class="open-player" aria-haspopup="dialog" aria-controls="player" aria-label="باز کردن پلیر کامل"><img id="cover" src="gallery/player-tar.jpg" alt="">
+      <span class="mini-copy"><strong id="now">رادیو آوا و نوا</strong><small id="state" aria-live="polite">پخش زنده</small></span><span class="up" aria-hidden="true">⌃</span></button>
       <button id="toggle" aria-label="پخش"><svg><use href="#i-play"/></svg></button>
     </div>
     <nav aria-label="بخش‌های رادیو"><a href="#home" aria-current="page"><svg><use href="#i-home"/></svg>خانه</a><a href="#discover"><svg><use href="#i-search"/></svg>کشف موسیقی</a><a href="#archive"><svg><use href="#i-archive"/></svg>آرشیو</a></nav></footer>
   </div>
+  <dialog id="player" aria-labelledby="playerTitle">
+    <form method="dialog"><button aria-label="بستن پلیر">⌄</button></form>
+    <img class="art" id="fullCover" src="gallery/player-tar.jpg" alt="">
+    <h2 id="playerTitle">رادیو آوا و نوا</h2><p id="fullStatus">پخش زنده</p>
+    <button class="round" id="fullToggle" aria-label="پخش"><svg aria-hidden="true"><use href="#i-play"/></svg></button>
+  </dialog>
   <audio id="audio" preload="none"></audio>
 </body>
 </html>
