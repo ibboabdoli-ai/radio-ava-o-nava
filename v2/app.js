@@ -19,7 +19,65 @@
   const safeHttps=(url,hostnames)=>{try{const u=new URL(url);return u.protocol==='https:'&&(!hostnames||hostnames.some(h=>u.hostname===h||u.hostname.endsWith('.'+h)))?u.href:null;}catch{return null;}};
   function toast(message){const t=$('toast');t.textContent=message;t.hidden=false;clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.hidden=true,5500);}
   function setLink(id,url){const n=$(id),v=safeHttps(url);if(!n)return;if(v)n.href=v;else n.removeAttribute('href');}
-  function setDock(title,subtitle,playState,href){setText('dockTitle',title);setText('dockSubtitle',subtitle);setText('dockPlay',playState?'Ⅱ':'▶');$('dockPlay').classList.toggle('is-playing',!!playState);$('dockPlay').setAttribute('aria-pressed',String(!!playState));$('dockDetail').href=href;$('playerDock').classList.add('dock-active');let action=state.mode==='recording'?'پخش یا مکث برنامه':state.mode==='audius'?'کنترل موسیقی آدیوس':'پخش یا توقف زنده';$('dockPlay').setAttribute('aria-label',action);}
+  const homePlay = $('homePlay');
+  let homeVisible = true;
+  let playbackStarted = false;
+
+  function updateHomePlayer() {
+    const fresh = state.lastStats && Date.now() - state.lastStatsTime <= 95000;
+    const offline = fresh && !state.lastStats.live && !state.liveWanted;
+    const latest = offline && state.shows.recordings.length > 0;
+    const replayPlaying = state.mode === 'recording' && state.recordingIndex === 0 && !recAudio.paused;
+    const label = state.liveWanted ? 'توقف پخش زنده'
+      : latest ? (replayPlaying ? 'مکث برنامه' : 'شنیدن آخرین برنامه') : 'شنیدن پخش زنده';
+    if (homePlay.textContent !== label) homePlay.textContent = label;
+    homePlay.disabled = !!offline && !latest;
+    const status = state.liveWanted ? $('liveAction').textContent
+      : offline ? 'خارج از پخش زنده' : fresh ? 'روی آنتن' : 'رادیو اینترنتی';
+    if ($('homeStatus').textContent !== status) setText('homeStatus', status);
+    $('playerDock').hidden = !playbackStarted || (homeVisible && (state.mode === 'live' || state.mode === 'idle' || (latest && state.recordingIndex === 0 && state.mode === 'recording')));
+  }
+
+  homePlay.addEventListener('click', () => {
+    if (!state.liveWanted && state.lastStats?.live === false && Date.now() - state.lastStatsTime <= 95000) {
+      if (state.recordingIndex === 0) toggleRecording();
+      else chooseRecording(0, true);
+    } else toggleLive();
+  });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([entry]) => {
+      homeVisible = entry.isIntersecting;
+      updateHomePlayer();
+    }).observe(homePlay);
+  } else homeVisible = false;
+
+  function renderRecentRecordings() {
+    const list = $('studioArchive');
+    list.replaceChildren();
+    state.shows.recordings.slice(0, 3).forEach((track, index) => {
+      const row = host('button');
+      row.type = 'button';
+      row.className = 'recent-recording';
+      const cover = host('img');
+      cover.src = './gallery/recording-' + (index + 1) + '.webp';
+      cover.alt = '';
+      cover.width = cover.height = 48;
+      const copy = host('span');
+      copy.append(elText('strong', track.title), elText('small',
+        track.title?.includes(track.date) ? 'ساعت ' + track.time : [track.date, track.time].filter(Boolean).join(' · ')));
+      const play = elText('span', '▶', 'recent-play');
+      play.setAttribute('aria-hidden', 'true');
+      row.append(cover, copy, play);
+      row.addEventListener('click', () => chooseRecording(index, true));
+      list.append(row);
+    });
+    if (!list.children.length) list.append(elText('p', 'برنامهٔ ضبط‌شده‌ای در دسترس نیست.'));
+  }
+
+  function setDock(title,subtitle,playState,href){
+    playbackStarted ||= playState || state.liveWanted;
+    updateHomePlayer();
+    setText('dockTitle',title);setText('dockSubtitle',subtitle);setText('dockPlay',playState?'Ⅱ':'▶');$('dockPlay').classList.toggle('is-playing',!!playState);$('dockPlay').setAttribute('aria-pressed',String(!!playState));$('dockDetail').href=href;$('playerDock').classList.add('dock-active');let action=state.mode==='recording'?'پخش یا مکث برنامه':state.mode==='audius'?'کنترل موسیقی آدیوس':'پخش یا توقف زنده';$('dockPlay').setAttribute('aria-label',action);}
   const timeFormatters=new Map();
   const fmtTime=(date,tz)=>{
     if(!timeFormatters.has(tz))timeFormatters.set(tz,new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}));
@@ -62,11 +120,13 @@
   function updateClocks(){
     const now=new Date();
     setText('clockIran',fmtTime(now,'Asia/Tehran'));setText('clockSweden',fmtTime(now,'Europe/Stockholm'));setText('clockUk',fmtTime(now,'Europe/London'));
-    const next=showCandidates(now)[0];if(!next){setText('nextShowDay','برنامه بعدی مشخص نیست');setText('nextCountdown','--:--:--');setText('nextShowTime','اطلاعات برنامه موجود نیست');setText('nextShowTitle','برنامه بعدی نامشخص');setText('nextShowDetails','');return;}
+    const next=showCandidates(now)[0];if(!next){setText('homeSchedule','جدول برنامه‌ها');setText('nextShowDay','برنامه بعدی مشخص نیست');setText('nextCountdown','--:--:--');setText('nextShowTime','اطلاعات برنامه موجود نیست');setText('nextShowTitle','برنامه بعدی نامشخص');setText('nextShowDetails','');return;}
+    setText('homeSchedule','برنامهٔ بعدی · '+days[next.day]+'، '+fmtTime(next.at,'Asia/Tehran')+' به وقت ایران');
     setText('nextShowDay',days[next.day]+' · '+iranDate.format(next.at));setText('nextShowTitle',titleForDay(next.day));setText('nextShowDetails',state.shows.schedule?.description||state.shows.program?.subtitle||'');setText('nextShowTime','شروع '+fmtTime(next.at,'Asia/Tehran')+' ایران · '+fmtTime(next.at,'Europe/Stockholm')+' سوئد · '+fmtTime(next.at,'Europe/London')+' انگلیس');
     const left=Math.max(0,Math.ceil((next.at.getTime()-now.getTime())/1000));setText('nextCountdown',[Math.floor(left/3600),Math.floor(left%3600/60),left%60].map(v=>String(v).padStart(2,'0')).join(':'));
   }
   function updateStatsUI(){
+    updateHomePlayer();
     const stale=Date.now()-state.lastStatsTime>95000,stats=state.lastStats;
     const localPlaying=state.liveWanted&&!liveAudio.paused&&liveAudio.readyState>=2;
     if(!stats||stale||(localPlaying&&!stats.live)){
@@ -323,9 +383,9 @@
     setLink('houseLink',state.shows.program.roomUrl||state.shows.links.clubhouse);
     setLink('contestLink',state.shows.links.contest);setLink('telegramLink',state.shows.links.telegram);setLink('whatsappLink',state.shows.links.whatsapp);setLink('requestSongLink',state.shows.links.requestSong||'https://t.me/+bSKXuElY13I3NWY0');
     setText('liveProgram',state.shows.program.title||'آوا و نوا');setText('liveHost',state.shows.program.subtitle||'موسیقی، شعر و آواز');
-    renderSchedule();updateClocks();renderCompetition();renderRecordings();
+    renderSchedule();updateClocks();renderCompetition();renderRecordings();renderRecentRecordings();
     // Do not download archived audio metadata until the visitor chooses a recording.
-    state.mode='idle';setDock('رادیو آوا و نوا','آماده پخش',false,'#listen');
+    updateHomePlayer();
     pollStats();
     setInterval(updateClocks,1000);setInterval(updateStatsUI,1000);setInterval(pollStats,15000);
     setInterval(renderSchedule,60000);
