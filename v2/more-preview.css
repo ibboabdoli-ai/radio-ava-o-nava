@@ -18,6 +18,8 @@ header img { width: 29px; height: 29px; border-radius: 50%; }
 .choices { display: flex; gap: 5px; }
 .choices button { border-radius: 12px; padding: 6px 13px; background: #30302e; }
 .choices [aria-pressed=true] { background: #f0d0a0; color: #231a10; }
+.install-shortcut { margin-inline-start: auto; padding: 8px 14px; background: #292721; color: #f3ca90; border-radius: 22px; font-size: .86rem; }
+#installStatus:empty { display: none; }
 footer { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
 .mini .open-player { display: flex; gap: 10px; width: auto; height: auto; min-height: 44px; min-width: 0; flex: 1; text-align: start; align-items: center; }
 .up { color: #e8d3ae; }

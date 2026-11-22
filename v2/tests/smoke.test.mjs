@@ -29,6 +29,30 @@ test('Public homepage serves the compact RTL radio with inline station menu and 
  new vm.Script(get('radio-menu.js'));
 });
 
+test('Install shortcut falls back to the guide, consumes each native prompt once, and hides after installation',async()=>{
+ const elements=new Map(), listeners={}, location={hash:''};
+ const getElementById=id=>{
+   if(!elements.has(id)) elements.set(id,{addEventListener(type,fn){this[type]=fn;}});
+   return elements.get(id);
+ };
+ const window={matchMedia:()=>({matches:false}),addEventListener:(name,fn)=>listeners[name]=fn};
+ vm.runInNewContext(get('phone-install.js'),{window,document:{getElementById},navigator:{},location});
+ const event={preventDefault(){}};
+ const shortcut=getElementById('installShortcut'),button=getElementById('nativeInstall');
+ await shortcut.click(event);
+ assert.equal(location.hash,'install');
+ let calls=0;
+ listeners.beforeinstallprompt({...event,prompt:async()=>{calls++;},userChoice:Promise.resolve({outcome:'dismissed'})});
+ assert.equal(button.hidden,false);
+ await Promise.all([button.click(event),shortcut.click(event)]);
+ assert.equal(calls,1);
+ assert.equal(getElementById('manualInstall').hidden,false);
+ listeners.appinstalled();
+ assert.equal(shortcut.hidden,true);
+ assert.equal(button.hidden,true);
+ for(const size of [192,512]) assert.ok(manifest.icons.some(i=>i.sizes===size+'x'+size && i.type==='image/png'));
+});
+
 test('All radio assets exist and executable JS parses',()=>{
  for(const f of ['index.html','app.js','site.css','interaction.js','audius.js','mobile-premium.js','audius-catalog.json','shows.json','sw.js','manifest.webmanifest','manage.html'])
    assert.ok(existsSync(join(root,f)),f);
@@ -146,7 +170,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-37/);
+  assert.match(sw,/ava-v2-static-38/);
   assert.match(sw,/install-guide\.js\?v=7/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -509,7 +533,7 @@ test('Desktop tablet and mobile reproduce the approved responsive navigation',()
   assert.ok(design.includes(rule),'Expected responsive design rule: '+rule);
  assert.equal((html.match(/data-mobile-tab="/g)||[]).length,4);
  for(const id of ['home','episodes','music','more'])assert.ok(html.includes('data-mobile-tab="'+id+'"'));
- assert.ok(sw.includes('ava-v2-static-37'));
+ assert.ok(sw.includes('ava-v2-static-38'));
  assert.ok(sw.includes('studio.css?v=6'));
  assert.ok(sw.includes('studio.js?v=4'));
  assert.ok(!sw.includes('archive.ibboabdoli.com'),'No recorded audio pre-cache');
