@@ -20,13 +20,14 @@
 <meta property="og:image" content="https://radio.ibboabdoli.com/radio-neon-logo.webp">
 <title>رادیو آوا و نوا | پخش زنده و آرشیو</title>
 <link rel="icon" href="../radio-neon-logo.webp" type="image/webp">
-<link rel="apple-touch-icon" href="../radio-neon-logo.webp">
+<link rel="apple-touch-icon" sizes="180x180" href="../radio-icon-180.png">
 <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap">
   <link rel="stylesheet" href="radio-preview.css">
   <link rel="stylesheet" href="more-preview.css">
   <script src="radio-menu.js" defer></script>
   <script src="radio-preview.js" defer></script>
+  <script src="phone-install.js" defer></script>
 </head>
 <body>
   <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -38,7 +39,7 @@
     <symbol id="i-pause" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M6 4h4v16H6zm8 0h4v16h-4z"/></symbol>
   </svg>
   <div class="shell">
-    <header><span class="mark"><svg><use href="#i-radio"/></svg></span><b>آوا و نوا</b></header>
+    <header><span class="mark"><svg><use href="#i-radio"/></svg></span><b>آوا و نوا</b><a class="install-shortcut" id="installShortcut" href="#install">نصب اپ</a></header>
     <main>
       <section id="home">
         <div class="hero">
@@ -63,10 +64,11 @@
             <div class="panel"><p id="contestStatus">در حال دریافت…</p><a id="contest" hidden target="_blank" rel="noopener noreferrer">مشاهدهٔ فرم مسابقه ↗</a></div>
           </details>
           <details id="install" name="radio-menu"><summary><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 18h4"/></svg>نصب روی گوشی</summary>
-            <div class="panel"><div class="choices" aria-label="نوع گوشی"><button data-platform="ios" aria-pressed="true">آیفون</button><button data-platform="android" aria-pressed="false">اندروید</button></div>
-              <ol id="ios"><li>سایت رادیو را در Safari باز کن.</li><li>از منوی اشتراک‌گذاری، «افزودن به صفحهٔ اصلی» را بزن.</li><li>«افزودن» را تأیید کن.</li></ol>
+            <div class="panel"><p id="installStatus" role="status"></p><button class="listen" id="nativeInstall" hidden>نصب اپ رادیو</button>
+              <div id="manualInstall"><div class="choices" aria-label="نوع گوشی"><button data-platform="ios" aria-pressed="true">آیفون</button><button data-platform="android" aria-pressed="false">اندروید</button></div>
+              <ol id="ios"><li>در Safari روی «اشتراک‌گذاری» (Share) بزن.</li><li>«افزودن به صفحهٔ اصلی» (Add to Home Screen) را انتخاب کن.</li><li>اگر «Open as Web App» را دیدی، روشنش کن و «افزودن» (Add) را بزن.</li></ol>
               <ol id="android" hidden><li>سایت رادیو را در Chrome باز کن.</li><li>از منوی سه‌نقطه، «نصب برنامه» یا «افزودن به صفحهٔ اصلی» را بزن.</li><li>نصب را تأیید کن.</li></ol>
-              </div>
+              </div></div>
           </details>
         </div>
       </details>
