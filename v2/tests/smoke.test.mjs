@@ -86,7 +86,7 @@ test('One unified accessible responsive design, no obsolete style layers',()=>{
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
   assert.match(html,/href="\.\/site\.css\?v=25"/);
   assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,3);
-  assert.ok(html.includes('href="./studio.css?v=5"'));
+  assert.ok(html.includes('href="./studio.css?v=6"'));
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
   for(const text of ['.main-play::before','.rec-play::before','.audius-primary::before','.mobile-bottom-nav','@media(max-width:700px)','prefers-reduced-motion:reduce','.up-next','.audius-grid','.recording-grid','.install-step-card'])
@@ -129,7 +129,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-34/);
+  assert.match(sw,/ava-v2-static-35/);
   assert.match(sw,/install-guide\.js\?v=7/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -224,7 +224,7 @@ test('Installation guide HTML has two matching platform containers',()=>{
  assert.ok(install.includes('data-install-slider="ios"'));
  assert.ok(install.includes('data-install-slider="android"'));
  assert.equal((install.match(/class="install-platform-title"/g)||[]).length,2);
- assert.equal((install.match(/<\/details>/g)||[]).length,0);
+ assert.equal((install.match(/<details class="radio-disclosure"><summary><h3 class="install-platform-title">/g)||[]).length,2);
  assert.match(css,/max-height:65dvh/);
 });
 test('Music searches do not destroy an active playback queue',()=>{
@@ -414,7 +414,7 @@ test('Archive play and pause icons remain visible with explicit solid borders',(
 
 test('Both tutorial platform cards are siblings inside the desktop grid',()=>{
  const from=html.indexOf('<div class="install-detail-grid">');
- const to=html.indexOf('<p class="install-scroll-help">',from);
+ const to=html.indexOf('<dialog id="installImageDialog"',from);
  assert.ok(from>0 && to>from,'Guide content must have its own grid');
  const block=html.slice(from,to);
  const tags=block.match(/<\/?div\b[^>]*>|<p class="install-tip">/g)||[];
@@ -492,8 +492,8 @@ test('Desktop tablet and mobile reproduce the approved responsive navigation',()
   assert.ok(design.includes(rule),'Expected responsive design rule: '+rule);
  assert.equal((html.match(/data-mobile-tab="/g)||[]).length,4);
  for(const id of ['home','episodes','music','more'])assert.ok(html.includes('data-mobile-tab="'+id+'"'));
- assert.ok(sw.includes('ava-v2-static-34'));
- assert.ok(sw.includes('studio.css?v=5'));
+ assert.ok(sw.includes('ava-v2-static-35'));
+ assert.ok(sw.includes('studio.css?v=6'));
  assert.ok(sw.includes('studio.js?v=4'));
  assert.ok(!sw.includes('archive.ibboabdoli.com'),'No recorded audio pre-cache');
 });

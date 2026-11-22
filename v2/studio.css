@@ -333,3 +333,38 @@ body::before{opacity:.055}
   .studio-feature-art { left: 16%; top: 50%; width: clamp(62px, 20vw, 94px); height: auto; aspect-ratio: 1; }
   #homePlay { margin-top: 9px; }
 }
+
+/* Secondary information opens in place, without moving the player. */
+.radio-disclosure > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 46px;
+  padding-block: 6px;
+  list-style: none;
+  cursor: pointer;
+  color: #f4e6f5;
+  font-weight: 650;
+  text-align: start;
+}
+.radio-disclosure > summary::-webkit-details-marker { display: none; }
+.radio-disclosure > summary::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  margin-inline: 6px;
+  border: solid var(--gold);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.radio-disclosure[open] > summary::after { transform: rotate(225deg); }
+.radio-disclosure > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.radio-disclosure > summary :is(h2, h3) { margin: 0; font-size: 1rem; }
+.radio-disclosure[open] > summary { margin-bottom: 8px; }
+.community-grid { align-items: start; grid-auto-rows: auto; }
+.community-grid .community-card { min-height: 0; height: auto; padding: 6px 14px; }
+.community-grid .radio-disclosure[open] { padding-bottom: 10px; }
+.install-detail-grid .install-slider { padding: 4px 14px; }
+#about.about-section { display: block; }
