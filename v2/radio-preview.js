@@ -93,7 +93,13 @@ function renderMusic() {
   if (!matches.length) notice(byId('music'), 'آهنگی پیدا نشد.');
 }
 function showTab() {
-  const target = ['discover','archive'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home';
+  const hash = location.hash.slice(1);
+  if (['schedule','community','contact','install','about','more'].includes(hash)) {
+    location.replace('studio.html#' + hash);
+    return;
+  }
+  const aliases = { music: 'discover', episodes: 'archive' };
+  const target = ['discover','archive'].includes(hash) ? hash : (Object.hasOwn(aliases, hash) ? aliases[hash] : 'home');
   document.querySelectorAll('main section').forEach(s => { s.hidden = s.id !== target; });
   document.querySelectorAll('nav a').forEach(a => {
     if (a.hash === '#' + target) a.setAttribute('aria-current','page');
@@ -103,6 +109,9 @@ function showTab() {
 }
 window.addEventListener('hashchange', showTab);
 showTab();
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(() => {});
+}
 async function loadJson(file) {
   const response = await fetch(file);
   if (!response.ok) throw new Error(response.statusText);

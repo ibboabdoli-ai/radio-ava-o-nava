@@ -40,6 +40,7 @@ summary::-webkit-details-marker { display: none; }
 summary::after { content: ''; width: 7px; height: 7px; margin-inline-end: 6px; border: solid #c5b39d; border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
 details[open] > summary::after { transform: rotate(225deg); }
 details p,.empty { font-size: .88rem; color: #c5c0b7; padding-bottom: 12px; }
+.station-links a { display: block; width: fit-content; padding: 8px 4px; color: #e8c18a; }
 .search { display: flex; gap: 8px; align-items: center; background: #272726; border-radius: 12px; padding: 0 12px; margin: 14px 0; }
 .search svg { width: 18px; color: #b6b3ad; }
 input { background: transparent; border: 0; min-width: 0; width: 100%; height: 44px; }
