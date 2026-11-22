@@ -12,18 +12,21 @@ const css=get('site.css'),audiusJs=get('audius.js');
 const audius=JSON.parse(get('audius-catalog.json'));
 const shows=JSON.parse(get('shows.json')),manifest=JSON.parse(get('manifest.webmanifest'));
 
-test('Public homepage serves the compact RTL radio and keeps the full studio reachable',()=>{
+test('Public homepage serves the compact RTL radio with inline station menu and shared player',()=>{
  const page=get('index.html'), js=get('radio-preview.js');
  new vm.Script(js);
  assert.match(page,/<html lang="fa" dir="rtl">/);
  assert.doesNotMatch(page,/noindex/);
  for(const id of ['home','discover','archive','toggle','liveButton','audio']) assert.ok(page.includes('id="'+id+'"'),id);
  for(const id of ['home','discover','archive']) assert.ok(page.includes('href="#'+id+'"'));
- for(const file of ['radio-preview.js','radio-preview.css','gallery/player-tar.jpg','studio.html']){
+ for(const file of ['radio-preview.js','radio-preview.css','gallery/player-tar.jpg','radio-menu.js','more-preview.css']){
    assert.ok(page.includes(file) && sw.includes(file) && existsSync(join(root,file)),file);
  }
  for(const [,id] of js.matchAll(/byId\('([^']+)'\)/g)) assert.ok(page.includes('id="'+id+'"'),id);
- for(const [,id] of page.matchAll(/href="studio\.html#([^"]+)"/g)) assert.ok(html.includes('id="'+id+'"'),id);
+ assert.doesNotMatch(page,/href="studio\.html/);
+ assert.equal((page.match(/<audio\b/g)||[]).length,1);
+ assert.equal((page.match(/name="radio-menu"/g)||[]).length,4);
+ new vm.Script(get('radio-menu.js'));
 });
 
 test('All radio assets exist and executable JS parses',()=>{
@@ -143,7 +146,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-36/);
+  assert.match(sw,/ava-v2-static-37/);
   assert.match(sw,/install-guide\.js\?v=7/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -506,7 +509,7 @@ test('Desktop tablet and mobile reproduce the approved responsive navigation',()
   assert.ok(design.includes(rule),'Expected responsive design rule: '+rule);
  assert.equal((html.match(/data-mobile-tab="/g)||[]).length,4);
  for(const id of ['home','episodes','music','more'])assert.ok(html.includes('data-mobile-tab="'+id+'"'));
- assert.ok(sw.includes('ava-v2-static-36'));
+ assert.ok(sw.includes('ava-v2-static-37'));
  assert.ok(sw.includes('studio.css?v=6'));
  assert.ok(sw.includes('studio.js?v=4'));
  assert.ok(!sw.includes('archive.ibboabdoli.com'),'No recorded audio pre-cache');

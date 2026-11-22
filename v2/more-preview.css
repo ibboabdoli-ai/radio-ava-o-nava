@@ -1,0 +1,33 @@
+header img { width: 29px; height: 29px; border-radius: 50%; }
+.hero { min-height: 180px; }
+.more { margin: 20px 0; border: 0; }
+.more > summary { font-size: 1.25rem; font-weight: 700; padding: 0 4px 6px; }
+.menu { padding: 0 14px; border: 1px solid #ffffff15; background: #201f1d; border-radius: 16px; }
+.menu details:first-child { border-top: 0; }
+.menu > details > summary { justify-content: start; gap: 12px; min-height: 55px; }
+.menu > details > summary::after { margin-inline-start: auto; }
+.menu svg { color: #daba8b; width: 20px; }
+.panel { margin: 0 32px 13px 4px; }
+.panel p { margin: 3px 0; padding: 0; color: #efe9df; }
+.panel small { color: #b4ada2; }
+.panel a,.week summary { display: inline-flex; align-items: center; min-height: 44px; color: #f3ca90; font-size: .9rem; }
+.week { border: 0; }
+.week summary { gap: 12px; }
+.panel ul,.panel ol { padding-inline-start: 19px; color: #dad4ca; font-size: .88rem; margin: 4px 0; }
+.panel li { padding-block: 4px; }
+.choices { display: flex; gap: 5px; }
+.choices button { border-radius: 12px; padding: 6px 13px; background: #30302e; }
+.choices [aria-pressed=true] { background: #f0d0a0; color: #231a10; }
+footer { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+.mini .open-player { display: flex; gap: 10px; width: auto; height: auto; min-height: 44px; min-width: 0; flex: 1; text-align: start; align-items: center; }
+.up { color: #e8d3ae; }
+dialog { width: min(100%, 500px); max-width: 100%; max-height: 92dvh; margin: auto auto 0; border: 1px solid #ffffff24; border-bottom: 0; border-radius: 24px 24px 0 0; text-align: center; padding: 10px 24px max(24px,env(safe-area-inset-bottom)); color: #fbf2e6; background: linear-gradient(#392a22,#1d1918); }
+dialog::backdrop { background: #000b; }
+dialog form button { min-width: 56px; min-height: 40px; font-size: 1.4rem; }
+.art { display: block; width: min(100%, 36dvh); margin: 6px auto 18px; aspect-ratio: 1; object-fit: cover; border-radius: 16px; }
+dialog p { color: #d2c1ab; margin: 4px 0 14px; }
+dialog .round { color: #241c14; background: #ffddab; border-radius: 50%; width: 54px; height: 54px; }
+@media (prefers-reduced-motion: no-preference) {
+  dialog[open] { animation: rise .22s ease-out; }
+  @keyframes rise { from { transform: translateY(55%); opacity: .4; } }
+}

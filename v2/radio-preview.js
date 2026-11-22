@@ -6,14 +6,30 @@ let recordings = [];
 let tracks = [];
 let genre = 'همه';
 let playRequest = 0;
+const playerSheet = byId('player');
+
+if (playerSheet) {
+  document.querySelector('.open-player').onclick = () => playerSheet.showModal();
+  playerSheet.addEventListener('click', event => {
+    if (event.target === playerSheet && event.clientY < playerSheet.getBoundingClientRect().top) playerSheet.close();
+  });
+  byId('fullToggle').onclick = () => play(selected);
+}
 
 function updatePlayer(status) {
   byId('now').textContent = selected.title;
   byId('state').textContent = status;
   setCover(byId('cover'), selected);
   const playing = !audio.paused;
-  byId('toggle').setAttribute('aria-label', playing ? 'مکث' : 'پخش');
-  byId('toggle').querySelector('use').setAttribute('href', playing ? '#i-pause' : '#i-play');
+  if (playerSheet) {
+    byId('playerTitle').textContent = selected.title;
+    byId('fullStatus').textContent = status;
+    setCover(byId('fullCover'), selected);
+  }
+  for (const button of document.querySelectorAll('#toggle, #fullToggle')) {
+    button.setAttribute('aria-label', playing ? 'مکث' : 'پخش');
+    button.querySelector('use').setAttribute('href', playing ? '#i-pause' : '#i-play');
+  }
   const livePlaying = playing && selected === live;
   byId('liveButton').querySelector('span').textContent = livePlaying ? 'مکث رادیو' : 'شنیدن رادیو';
   byId('liveButton').querySelector('use').setAttribute('href', livePlaying ? '#i-pause' : '#i-play');
@@ -94,7 +110,9 @@ function renderMusic() {
 }
 function showTab() {
   const hash = location.hash.slice(1);
-  if (['schedule','community','contact','install','about','more'].includes(hash)) {
+  const menuTargets = { schedule: 'schedule', community: 'more', more: 'more', install: 'install', competition: 'competition', 'song-request': 'song-request', about: 'about' };
+  const detail = Object.hasOwn(menuTargets, hash) && byId(menuTargets[hash]);
+  if (!detail && ['schedule','community','contact','install','about','more'].includes(hash)) {
     location.replace('studio.html#' + hash);
     return;
   }
@@ -105,7 +123,11 @@ function showTab() {
     if (a.hash === '#' + target) a.setAttribute('aria-current','page');
     else a.removeAttribute('aria-current');
   });
-  window.scrollTo(0, 0);
+  if (detail) {
+    if (detail.closest('.more')) byId('more').open = true;
+    detail.open = true;
+    detail.scrollIntoView({ block: 'start' });
+  } else window.scrollTo(0, 0);
 }
 window.addEventListener('hashchange', showTab);
 showTab();
@@ -123,8 +145,10 @@ loadJson('shows.json').then(data => {
   byId('recent').replaceChildren(...recordings.slice(0,2).map(r => card(r)));
   renderArchive();
   byId('archiveQuery').oninput = renderArchive;
+  if (byId('more')) renderRadioMenu(data);
 }).catch(() => {
   for (const id of ['recent','groups']) notice(byId(id), 'آرشیو بارگذاری نشد.');
+  if (byId('more')) byId('next').textContent = byId('contestStatus').textContent = 'اطلاعات بارگذاری نشد.';
 });
 loadJson('audius-catalog.json').then(data => {
   tracks = data.tracks.filter(t => t.publicStream).map(t => ({
