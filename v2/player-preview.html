@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>نمونهٔ پلیر | آوا و نوا</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap">
+<meta name="theme-color" content="#21141b">
+<style>
+  * { box-sizing: border-box; }
+  :root { color-scheme: dark; font: 16px/1.6 Vazirmatn,Tahoma,sans-serif; color:#fff6eb; }
+  body { margin:0; background:#120f12; min-height:100svh; display:grid; place-items:center; }
+  body::before { content:""; position:fixed; inset:0; z-index:-1; background:radial-gradient(ellipse at 55% 18%,#59312e 0,transparent 68%); }
+  main { width:min(100%,460px); padding:16px; }
+  button,summary,a { -webkit-tap-highlight-color:transparent; }
+  button,summary { font:inherit; color:inherit; cursor:pointer; }
+  button { border:0; }
+  .card { position:relative; background:linear-gradient(155deg,#432329,#26191d 50%,#191519 90%); border:1px solid #ffffff18; border-radius:26px; padding:18px clamp(18px,5vw,32px) 12px; box-shadow:0 24px 90px #08050965; }
+  .bar,.metadata,.foot,.brand,.archive,.icon,.mini-title { display:flex; align-items:center; }
+  .bar,.metadata,.foot { justify-content:space-between; gap:12px; }
+  .bar { margin-bottom:15px; }
+  .brand { gap:9px; font-size:.91rem; font-weight:700; }
+  .brand img { width:27px; height:27px; border-radius:50%; }
+  .icon { width:44px; height:44px; justify-content:center; background:transparent; border-radius:50%; }
+  .icon:hover,.icon:focus-visible { background:#ffffff12; }
+  svg { width:21px; height:21px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+  .cover { width:100%; display:block; aspect-ratio:1; height:auto; object-fit:cover; border-radius:13px; box-shadow:0 12px 26px #08030955; }
+  .metadata { margin:24px 0 17px; }
+  h1,p { margin:0; }
+  h1 { font-size:clamp(24px,6vw,32px); line-height:1.45; letter-spacing:-.7px; }
+  .meta,#stats { color:#cfbdba; font-size:.88rem; }
+  .status { display:flex; align-items:center; gap:7px; color:#ebc09b; font-size:.77rem; margin-bottom:4px; }
+  .status::before { content:""; width:6px; height:6px; border-radius:50%; background:currentColor; }
+  #play { width:62px; height:62px; flex:none; border-radius:50%; background:#ffddad; color:#2c1c19; display:grid; place-items:center; }
+  #play:hover { background:#ffebce; }
+  #play::before { content:""; border-block:10px solid transparent; border-left:16px solid currentColor; margin-left:4px; }
+  #play[aria-pressed=true]::before { width:15px; height:16px; margin:0; border:solid currentColor; border-width:0 5px; }
+  .foot { border-top:1px solid #ffffff20; padding-top:7px; color:#dbc9c6; }
+  .archive { gap:7px; min-height:44px; text-decoration:none; color:inherit; font-size:.85rem; }
+  summary { list-style:none; }
+  summary::-webkit-details-marker { display:none; }
+  .menu { position:absolute; z-index:2; top:65px; left:20px; padding:10px 14px; border:1px solid #61494c; border-radius:14px; background:#291f23; box-shadow:0 6px 18px #0006; }
+  #expand { background:transparent; padding:8px 0; min-height:44px; }
+  :focus-visible { outline:2px solid #ffdaa5; outline-offset:3px; }
+  #notice:not(:empty) { padding:7px 0; font-size:.84rem; }
+  .card.expanded,.card:fullscreen { position:fixed; inset:0; z-index:2; overflow:auto; border:0; border-radius:0; padding:16px max(18px,calc((100vw - 400px)/2)); align-content:center; }
+  .mini-title { display:none; }
+  .card.mini { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:12px; padding:12px 15px; border-radius:18px; }
+  .mini :is(.bar,.cover,.foot,.info) { display:none; }
+  .mini .metadata { margin:0; }
+  .mini #play { width:48px; height:48px; }
+  .mini-title { background:transparent; padding:0; text-align:start; gap:12px; }
+  .mini .mini-title { display:flex; }
+  .mini-title img { width:54px; height:54px; border-radius:8px; object-fit:cover; }
+  .mini-title small { display:block; color:#d8b598; }
+  @media(max-width:480px) { main { padding:12px; } }
+  @media(max-height:700px) and (min-width:481px) { main { max-width:370px; } }
+</style>
+<main>
+  <section class="card" aria-labelledby="title">
+    <header class="bar">
+      <button id="collapse" class="icon" aria-label="جمع کردن پلیر" title="جمع کردن پلیر"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg></button>
+      <div class="brand"><img src="../radio-neon-logo.webp" alt="">رادیو آوا و نوا</div>
+      <details>
+        <summary class="icon" aria-label="گزینه‌های بیشتر" title="بیشتر"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h.1m7.9 0h.1m7.9 0h.1" stroke-width="3.5"/></svg></summary>
+        <div class="menu"><button id="expand">تمام‌صفحه</button><p id="stats" role="status">آمار شنوندگان</p></div>
+      </details>
+    </header>
+    <button class="mini-title" id="restore" aria-label="باز کردن نمای کامل آوا و نوا با آرش"><img src="./gallery/player-tar.jpg" alt=""><span><strong>آوا و نوا با آرش</strong><small id="miniState">رادیو اینترنتی</small></span></button>
+    <img class="cover" src="./gallery/player-tar.jpg" width="800" height="800" alt="تار روی مخمل زرشکی در نور کهربایی">
+    <div class="metadata">
+      <div class="info"><p class="status" id="state" role="status">رادیو اینترنتی</p><h1 id="title">آوا و نوا با آرش</h1><p class="meta">موسیقی، شعر و آواز</p></div>
+      <button id="play" type="button" aria-label="شنیدن پخش زنده" aria-pressed="false"></button>
+    </div>
+    <footer class="foot">
+      <a class="archive" href="./#episodes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 11h16M4 16h6m4-2 6 3-6 3z"/></svg>آرشیو برنامه‌ها</a>
+      <button id="share" class="icon" aria-label="اشتراک‌گذاری" title="اشتراک‌گذاری"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3m-4 4 4-4 4 4M6 10H4v11h16V10h-2"/></svg></button>
+    </footer>
+    <p id="notice" role="status"></p>
+  </section>
+  <audio preload="none" playsinline></audio>
+</main>
+<script>
+  const audio = document.querySelector('audio');
+  const play = document.querySelector('#play');
+  const card = document.querySelector('.card');
+  const expand = document.querySelector('#expand');
+  const details = document.querySelector('details');
+  const state = document.querySelector('#state');
+  const collapse = document.querySelector('#collapse');
+  const restore = document.querySelector('#restore');
+  const miniState = document.querySelector('#miniState');
+  new MutationObserver(() => { miniState.textContent = state.textContent; }).observe(state, {childList:true});
+  collapse.onclick = async () => {
+    if (document.fullscreenElement) await document.exitFullscreen();
+    setExpanded(false);
+    details.open = false;
+    card.classList.add('mini');
+    restore.focus();
+  };
+  restore.onclick = () => {
+    card.classList.remove('mini');
+    collapse.focus();
+  };
+  function stop(message) {
+    audio.pause();
+    audio.removeAttribute('src');
+    audio.load();
+    play.setAttribute('aria-pressed', 'false');
+    play.setAttribute('aria-label', 'شنیدن پخش زنده');
+    state.textContent = message;
+  }
+  play.onclick = async () => {
+    if (audio.hasAttribute('src')) return stop('پخش متوقف شد');
+    audio.src = 'https://live.ibboabdoli.com/stream';
+    play.setAttribute('aria-pressed', 'true');
+    play.setAttribute('aria-label', 'توقف');
+    state.textContent = 'در حال اتصال…';
+    try { await audio.play(); } catch (error) {
+      if (error.name !== 'AbortError' && audio.hasAttribute('src')) stop('اتصال برقرار نشد؛ دوباره امتحان کن');
+    }
+  };
+  audio.onplaying = () => { state.textContent = 'در حال پخش'; };
+  audio.onwaiting = () => { if (audio.hasAttribute('src')) state.textContent = 'در حال دریافت صدا…'; };
+  audio.onended = () => stop('پخش پایان یافت');
+  audio.onerror = () => { if (audio.hasAttribute('src')) stop('پخش در دسترس نیست'); };
+  function setExpanded(active) {
+    card.classList.toggle('expanded', active);
+    expand.textContent = active ? 'خروج از تمام‌صفحه' : 'تمام‌صفحه';
+  }
+  expand.onclick = async () => {
+    if (document.fullscreenElement) return document.exitFullscreen();
+    if (card.classList.contains('expanded')) return setExpanded(false);
+    if (card.requestFullscreen) {
+      try { await card.requestFullscreen(); return; } catch {}
+    }
+    setExpanded(true);
+  };
+  document.onfullscreenchange = () => setExpanded(!!document.fullscreenElement);
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !document.fullscreenElement) setExpanded(false);
+  });
+  document.querySelector('#share').onclick = async () => {
+    const url = 'https://radio.ibboabdoli.com/v2/';
+    const notice = document.querySelector('#notice');
+    try {
+      if (navigator.share) await navigator.share({ title: 'رادیو آوا و نوا', url });
+      else { await navigator.clipboard.writeText(url); notice.textContent = 'لینک رادیو کپی شد.'; }
+    } catch (error) { if (error.name !== 'AbortError') notice.textContent = url; }
+  };
+  details.ontoggle = async () => {
+    if (!details.open) return;
+    const stats = document.querySelector('#stats');
+    stats.textContent = 'در حال دریافت آمار…';
+    try {
+      const response = await fetch('https://live.ibboabdoli.com/radio-stats.xsl', {cache: 'no-store', signal: AbortSignal.timeout(5000)});
+      if (!response.ok) throw Error();
+      const data = await response.json();
+      if (typeof data.live !== 'boolean' || !Number.isInteger(Number(data.listeners))) throw Error();
+      stats.textContent = data.live ? 'شنوندگان آنلاین: ' + Number(data.listeners).toLocaleString('fa-IR') : 'رادیو اکنون روی آنتن نیست.';
+    } catch { stats.textContent = 'آمار شنوندگان در دسترس نیست.'; }
+  };
+</script>
+</html>

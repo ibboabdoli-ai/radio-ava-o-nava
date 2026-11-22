@@ -75,17 +75,6 @@
   $('studioDockCover')?.addEventListener('error',event=>{
     if(event.target.getAttribute('src')!=='../radio-neon-logo.webp')event.target.src='../radio-neon-logo.webp';
   });
-  const recordingButtons=document.querySelectorAll('[data-studio-recording]');
-  for(const button of recordingButtons)button.addEventListener('click',()=>{
-    const i=Number(button.dataset.studioRecording);
-    const card=document.querySelectorAll('#recordingGrid .recording-card')[i];
-    if(card){
-      card.click();
-      const play=$('recordingPlay');
-      if(play&&!play.disabled)play.click();
-      else $('episodes')?.scrollIntoView({behavior:'smooth'});
-    }else $('episodes')?.scrollIntoView({behavior:'smooth'});
-  });
   const musicSearch=query=>{
     const input=$('audiusSearch');
     if(!input){$('music')?.scrollIntoView({behavior:'smooth'});return;}
@@ -105,15 +94,6 @@
     $('music')?.scrollIntoView({behavior:'smooth'});
     setTimeout(()=>$('audiusSearch')?.focus({preventScroll:true}),300);
   });
-  for(const item of document.querySelectorAll('.studio-feature-play,.studio-feature-mobile-play')){
-    item.addEventListener('click',event=>{
-      event.preventDefault();
-      const playing=!liveAudio.paused && liveAudio.readyState>=2;
-      if(!playing)$('livePlay')?.click();
-      else $('listen')?.scrollIntoView({behavior:'smooth'});
-      refreshDock();
-    });
-  }
   document.querySelectorAll('.studio-side-link').forEach(a=>a.addEventListener('click',()=>{
     document.querySelectorAll('.studio-side-link').forEach(n=>n.classList.toggle('active',n===a));
   }));
@@ -128,8 +108,6 @@
     },{rootMargin:'-18% 0px -62% 0px',threshold:0});
     observable.map($).filter(Boolean).forEach(element=>obs.observe(element));
   }
-  // The approved player stays visible as an application bar, even before first playback.
-  dock.classList.add('dock-active');
   setInterval(refreshDock,1000);
   refreshDock();
 })();

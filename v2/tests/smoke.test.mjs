@@ -7,10 +7,24 @@ import vm from 'node:vm';
 import {createHash} from 'node:crypto';
 const root=join(dirname(fileURLToPath(import.meta.url)),'..');
 const get=name=>readFileSync(join(root,name),'utf8');
-const html=get('index.html'),app=get('app.js'),sw=get('sw.js');
+const html=get('studio.html'),app=get('app.js'),sw=get('sw.js');
 const css=get('site.css'),audiusJs=get('audius.js');
 const audius=JSON.parse(get('audius-catalog.json'));
 const shows=JSON.parse(get('shows.json')),manifest=JSON.parse(get('manifest.webmanifest'));
+
+test('Public homepage serves the compact RTL radio and keeps the full studio reachable',()=>{
+ const page=get('index.html'), js=get('radio-preview.js');
+ new vm.Script(js);
+ assert.match(page,/<html lang="fa" dir="rtl">/);
+ assert.doesNotMatch(page,/noindex/);
+ for(const id of ['home','discover','archive','toggle','liveButton','audio']) assert.ok(page.includes('id="'+id+'"'),id);
+ for(const id of ['home','discover','archive']) assert.ok(page.includes('href="#'+id+'"'));
+ for(const file of ['radio-preview.js','radio-preview.css','gallery/player-tar.jpg','studio.html']){
+   assert.ok(page.includes(file) && sw.includes(file) && existsSync(join(root,file)),file);
+ }
+ for(const [,id] of js.matchAll(/byId\('([^']+)'\)/g)) assert.ok(page.includes('id="'+id+'"'),id);
+ for(const [,id] of page.matchAll(/href="studio\.html#([^"]+)"/g)) assert.ok(html.includes('id="'+id+'"'),id);
+});
 
 test('All radio assets exist and executable JS parses',()=>{
  for(const f of ['index.html','app.js','site.css','interaction.js','audius.js','mobile-premium.js','audius-catalog.json','shows.json','sw.js','manifest.webmanifest','manage.html'])
@@ -86,7 +100,7 @@ test('One unified accessible responsive design, no obsolete style layers',()=>{
     assert.equal(existsSync(join(root,oldFile)),false,oldFile);
   assert.match(html,/href="\.\/site\.css\?v=25"/);
   assert.equal((html.match(/<link rel="stylesheet" href="\.\//g)||[]).length,3);
-  assert.ok(html.includes('href="./studio.css?v=4"'));
+  assert.ok(html.includes('href="./studio.css?v=6"'));
   for(const oldFile of ['mobile.css','polish.css','mobile-premium.css','audius.css'])
     assert.equal(sw.includes(oldFile),false,oldFile);
   for(const text of ['.main-play::before','.rec-play::before','.audius-primary::before','.mobile-bottom-nav','@media(max-width:700px)','prefers-reduced-motion:reduce','.up-next','.audius-grid','.recording-grid','.install-step-card'])
@@ -129,7 +143,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-33/);
+  assert.match(sw,/ava-v2-static-36/);
   assert.match(sw,/install-guide\.js\?v=7/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -224,7 +238,7 @@ test('Installation guide HTML has two matching platform containers',()=>{
  assert.ok(install.includes('data-install-slider="ios"'));
  assert.ok(install.includes('data-install-slider="android"'));
  assert.equal((install.match(/class="install-platform-title"/g)||[]).length,2);
- assert.equal((install.match(/<\/details>/g)||[]).length,0);
+ assert.equal((install.match(/<details class="radio-disclosure"><summary><h3 class="install-platform-title">/g)||[]).length,2);
  assert.match(css,/max-height:65dvh/);
 });
 test('Music searches do not destroy an active playback queue',()=>{
@@ -414,7 +428,7 @@ test('Archive play and pause icons remain visible with explicit solid borders',(
 
 test('Both tutorial platform cards are siblings inside the desktop grid',()=>{
  const from=html.indexOf('<div class="install-detail-grid">');
- const to=html.indexOf('<p class="install-scroll-help">',from);
+ const to=html.indexOf('<dialog id="installImageDialog"',from);
  assert.ok(from>0 && to>from,'Guide content must have its own grid');
  const block=html.slice(from,to);
  const tags=block.match(/<\/?div\b[^>]*>|<p class="install-tip">/g)||[];
@@ -445,11 +459,11 @@ test('Approved responsive studio updates the original website without removing s
  for(const id of requiredIDs)assert.ok(html.includes('id="'+id+'"'),id);
  for(const item of ['class="hero studio-home container" id="home"','id="heroTitle">رادیو آوا و نوا',
   'موسیقی زنده، شعر و آواز با آرش','id="listenTitle">پخش زنده رادیو آوا و نوا با آرش',
-  'class="studio-feature-logo" src="../radio-neon-logo.webp"','src="./studio.js?v=3"'])
+  'class="studio-feature-logo" src="../radio-neon-logo.webp"','src="./studio.js?v=4"'])
   assert.ok(html.includes(item),item);
  for(const id of ['listen','schedule','music','episodes','community','install','about'])
   assert.ok(html.includes('id="'+id+'"'),'Preserved original section '+id);
- for(const token of ["$('livePlay')?.click()","$('recordingPlay')","$('audiusSearch')",
+ for(const token of ["$('audiusSearch')",
   "mode()==='recording'","setInterval(refreshDock,1000)"])
   assert.ok(studio.includes(token),'Studio controller maintains functional flow: '+token);
  assert.ok(app.includes("$('playerDock').classList.add('dock-active')"));
@@ -476,14 +490,12 @@ test('Ten gallery covers match the exact user-approved photographic art',()=>{
    assert.equal(binary.subarray(8,12).toString('ascii'),'WEBP');
    const hash=createHash('sha1').update(Buffer.concat([Buffer.from('blob '+binary.length),Buffer.from([0]),binary])).digest('hex');
    assert.equal(hash,sha,'Pixel-authenticated approved crop: '+name);
-   assert.ok(html.includes('src="./'+path+'"'),name);
+   if(name.startsWith('genre-')) assert.ok(html.includes('src="./'+path+'"'),name);
    assert.ok(sw.includes('./'+path),'PWA keeps correct artwork: '+name);
  }
- assert.equal((html.match(/data-studio-recording="[0-4]"/g)||[]).length,5);
+ assert.ok(app.includes('state.shows.recordings.slice(0, 3)'));
  assert.equal((html.match(/data-studio-genre="/g)||[]).length,5);
- assert.equal((html.match(/class="studio-cover-card studio-recording-tile"/g)||[]).length,5);
  assert.equal((html.match(/class="studio-cover-card studio-genre-tile"/g)||[]).length,5);
- assert.equal((html.match(/class="studio-cover-art"/g)||[]).length,5);
 });
 test('Desktop tablet and mobile reproduce the approved responsive navigation',()=>{
  const design=get('studio.css');
@@ -493,10 +505,10 @@ test('Desktop tablet and mobile reproduce the approved responsive navigation',()
  '.studio-mobile-bottom','.studio-player-dock'])
   assert.ok(design.includes(rule),'Expected responsive design rule: '+rule);
  assert.equal((html.match(/data-mobile-tab="/g)||[]).length,4);
- for(const id of ['home','episodes','music','listen'])assert.ok(html.includes('data-mobile-tab="'+id+'"'));
- assert.ok(sw.includes('ava-v2-static-33'));
- assert.ok(sw.includes('studio.css?v=4'));
- assert.ok(sw.includes('studio.js?v=3'));
+ for(const id of ['home','episodes','music','more'])assert.ok(html.includes('data-mobile-tab="'+id+'"'));
+ assert.ok(sw.includes('ava-v2-static-36'));
+ assert.ok(sw.includes('studio.css?v=6'));
+ assert.ok(sw.includes('studio.js?v=4'));
  assert.ok(!sw.includes('archive.ibboabdoli.com'),'No recorded audio pre-cache');
 });
 
@@ -512,7 +524,7 @@ test('Approved player, equalizer, iPhone volume and section order are integrated
  const community=html.indexOf('<section class="container section-block" id="community"');
  assert.ok(start>=0 && start<episodes && episodes<music && music<schedule && schedule<community);
  const sidebar=html.slice(html.indexOf('<nav class="studio-side-nav"'),html.indexOf('</nav>',html.indexOf('<nav class="studio-side-nav"')));
- const positions=['#home','#listen','#episodes','#music','#audiusGenres','#schedule','#community','#install','#about'].map(x=>sidebar.indexOf('href="'+x+'"'));
+ const positions=['#home','#episodes','#music','#schedule','#community','#install','#about'].map(x=>sidebar.indexOf('href="'+x+'"'));
  assert.ok(positions.every(x=>x>=0),'All navigation targets exist');
  assert.deepEqual([...positions].sort((a,b)=>a-b),positions,'Menu matches site order');
  assert.ok(html.includes('id="recordingShuffle"') && html.includes('id="recordingRepeat"'));
@@ -545,9 +557,9 @@ test('Approved full-screen music and live player uses existing audio sources wit
  for(const tag of ['liveAudio','recordingAudio','audiusAudio']){
    assert.equal((html.match(new RegExp('id="'+tag+'"','g'))||[]).length,1,'Single original audio element: '+tag);
  }
- assert.match(html,/expanded-player\.js\?v=3/);
+ assert.match(html,/expanded-player\.js\?v=4/);
  assert.match(html,/expanded-player\.css\?v=3/);
- assert.ok(sw.includes("./expanded-player.js?v=3"));
+ assert.ok(sw.includes("./expanded-player.js?v=4"));
  assert.ok(sw.includes("./expanded-player.css?v=3"));
  assert.ok(!js.includes("createElement('audio')"),'No duplicated audio engine');
  assert.ok(!js.includes("new Audio("),'No duplicated playback source');

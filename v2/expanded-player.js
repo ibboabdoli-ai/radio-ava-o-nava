@@ -177,8 +177,6 @@
  source.addEventListener('click',()=>close());
  const liveTrigger=$('livePlay');
  if(liveTrigger)liveTrigger.addEventListener('click',()=>open('live'));
- for(const link of document.querySelectorAll('.studio-feature-play,.studio-feature-mobile-play'))
-   link.addEventListener('click',()=>open('live'));
  for(const audio of [live,recording,music]){
    for(const event of ['timeupdate','durationchange','loadedmetadata','play','pause','playing','waiting','ended','error'])
      audio.addEventListener(event,sync);

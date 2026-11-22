@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#100e1c">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#151514">
 <meta name="description" content="رادیو آوا و نوا؛ پخش زنده موسیقی، آواز، شعر و دکلمه، آرشیو برنامه‌ها و مسابقات.">
 <link rel="canonical" href="https://radio.ibboabdoli.com/v2/">
 <meta name="robots" content="index,follow,max-image-preview:large">
@@ -22,235 +22,56 @@
 <link rel="icon" href="../radio-neon-logo.webp" type="image/webp">
 <link rel="apple-touch-icon" href="../radio-neon-logo.webp">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./site.css?v=25">
-<link rel="stylesheet" href="./studio.css?v=4">
-<link rel="stylesheet" href="./expanded-player.css?v=3">
-
-<script defer src="./app.js?v=15"></script><script defer src="./interaction.js?v=7"></script><script defer src="./mobile-premium.js?v=5"></script><script defer src="./audius.js?v=8"></script><script defer src="./install-guide.js?v=7"></script><script defer src="./studio.js?v=3"></script><script defer src="./expanded-player.js?v=3"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap">
+  <link rel="stylesheet" href="radio-preview.css">
+  <script src="radio-preview.js" defer></script>
 </head>
 <body>
-<a class="skip" href="#main">رفتن به محتوا</a>
-<div class="ambient ambient-one" aria-hidden="true"></div><div class="ambient ambient-two" aria-hidden="true"></div>
-<header class="site-header" id="top">
-  <div class="container header-inner">
-    <a class="brand" href="#top" aria-label="صفحه اصلی رادیو آوا و نوا">
-      <img src="../radio-neon-logo.webp" alt="" width="48" height="48">
-      <span><strong>آوا و نوا</strong><small lang="en" dir="ltr">RADIO AVA O NAVA</small></span>
-    </a>
-    <button class="header-share" id="headerShare" type="button" aria-label="اشتراک‌گذاری لینک رادیو" title="اشتراک‌گذاری رادیو"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 16V3m0 0L7.5 7.5M12 3l4.5 4.5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg></button>
-    <button class="menu-button" id="menuButton" type="button" aria-label="نمایش منو" aria-controls="navigation" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-    <button class="studio-header-search" id="studioHeaderSearch" type="button" aria-label="جست‌وجوی موسیقی"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19V6l12-3v13M9 10l12-3"/><ellipse cx="6" cy="19" rx="3" ry="2"/><ellipse cx="18" cy="16" rx="3" ry="2"/></svg></button>
-    <nav class="main-nav" id="navigation" aria-label="منوی اصلی">
-<a href="#home" class="current">خانه</a><a href="#listen">پخش زنده</a>
-<a href="#episodes">برنامه‌های ضبط‌شده</a><a href="#music">موسیقی</a><a href="#audiusGenres">سبک‌ها</a>
-<a href="#schedule">جدول برنامه‌ها</a><a href="#community">همراه ما</a>
-<a href="#install">نصب روی گوشی</a><a href="#about">درباره ما</a>
-</nav>
-    <a class="header-cta" href="#listen"><span class="live-led" aria-hidden="true"></span> شنیدن رادیو</a>
-  </div>
-</header>
-<aside class="studio-sidebar" id="studioSidebar" aria-label="دسترسی‌های رادیو">
-<a class="studio-side-brand" href="#home"><img src="../radio-neon-logo.webp" width="66" height="66" alt="لوگوی رادیو آوا و نوا"><strong>رادیو آوا و نوا</strong><small>RADIO AVA O NAVA</small></a>
-<nav class="studio-side-nav" aria-label="منوی دسکتاپ رادیو">
-<a href="#home" class="studio-side-link active"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>خانه</span></a>
-<a href="#listen" class="studio-side-link"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M7 7a7 7 0 0 0 0 10m10-10a7 7 0 0 1 0 10M4 4a11 11 0 0 0 0 16m16-16a11 11 0 0 1 0 16"/></svg><span>پخش زنده</span></a>
-<a href="#episodes" class="studio-side-link"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16m6-12h4m-4 4h4"/></svg><span>آرشیو برنامه‌ها</span></a>
-<a href="#music" class="studio-side-link"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19V6l12-3v13M9 10l12-3"/><ellipse cx="6" cy="19" rx="3" ry="2"/><ellipse cx="18" cy="16" rx="3" ry="2"/></svg><span>موسیقی</span></a>
-<a href="#audiusGenres" class="studio-side-link"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 8 8-5 8 5-8 5zM4 13l8 5 8-5M4 18l8 5 8-5"/></svg><span>سبک‌ها</span></a>
-<a href="#schedule" class="studio-side-link"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16m6-12h4m-4 4h4"/></svg><span>جدول برنامه‌ها</span></a>
-<a href="#community" class="studio-side-link"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M17 6a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 5v1"/></svg><span>همراه ما</span></a>
-<a href="#install" class="studio-side-link"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16m6-12h4m-4 4h4"/></svg><span>نصب روی گوشی</span></a>
-<a href="#about" class="studio-side-link"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-9v1"/></svg><span>درباره رادیو</span></a>
-</nav>
-<a class="studio-side-bottom" href="#install"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16m6-12h4m-4 4h4"/></svg> نصب روی گوشی</a>
-</aside>
-<main id="main">
-<section class="hero studio-home container" id="home" aria-labelledby="heroTitle">
-  <div class="studio-toolbar" role="search" aria-label="جست‌وجوی رادیو"><form id="studioSearchForm" class="studio-search-form"><button aria-label="شروع جست‌وجو" type="submit"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19V6l12-3v13M9 10l12-3"/><ellipse cx="6" cy="19" rx="3" ry="2"/><ellipse cx="18" cy="16" rx="3" ry="2"/></svg></button><input id="studioSearch" type="search" placeholder="جست‌وجو در موسیقی، برنامه‌ها و هنرمندان..." aria-label="جست‌وجوی موسیقی و هنرمندان"></form><span class="studio-toolbar-caption">موسیقی، شعر و آواز برای هر لحظه</span></div>
-  <div class="studio-feature">
-    <div class="studio-feature-waves" aria-hidden="true"><i style="--h:12px"></i><i style="--h:46px"></i><i style="--h:70px"></i><i style="--h:75px"></i><i style="--h:64px"></i><i style="--h:42px"></i><i style="--h:20px"></i><i style="--h:16px"></i><i style="--h:14px"></i><i style="--h:22px"></i><i style="--h:36px"></i><i style="--h:44px"></i><i style="--h:37px"></i><i style="--h:15px"></i><i style="--h:40px"></i><i style="--h:70px"></i><i style="--h:86px"></i><i style="--h:84px"></i><i style="--h:64px"></i><i style="--h:32px"></i><i style="--h:22px"></i><i style="--h:43px"></i><i style="--h:47px"></i><i style="--h:37px"></i><i style="--h:22px"></i><i style="--h:14px"></i><i style="--h:13px"></i><i style="--h:24px"></i><i style="--h:45px"></i><i style="--h:65px"></i><i style="--h:73px"></i><i style="--h:64px"></i><i style="--h:37px"></i><i style="--h:22px"></i><i style="--h:55px"></i><i style="--h:75px"></i><i style="--h:77px"></i><i style="--h:61px"></i><i style="--h:38px"></i><i style="--h:16px"></i><i style="--h:19px"></i><i style="--h:16px"></i><i style="--h:21px"></i><i style="--h:35px"></i><i style="--h:40px"></i><i style="--h:31px"></i></div>
-    <div class="studio-feature-art"><img class="studio-feature-logo" src="../radio-neon-logo.webp" alt="لوگوی رسمی رادیو آوا و نوا" width="240" height="240" fetchpriority="high"></div>
-    <div class="studio-feature-copy">
-      <span class="studio-onair"><i aria-hidden="true"></i> پخش زنده رادیو</span>
-      <h1 id="heroTitle">رادیو آوا و نوا</h1>
-      <p>موسیقی زنده، شعر و آواز با آرش</p>
-      <a class="studio-feature-play" href="#listen">گوش دادن به پخش زنده <span aria-hidden="true">▶</span></a>
-    </div>
-    <a class="studio-feature-mobile-play" href="#listen" aria-label="رفتن به پخش زنده رادیو آوا و نوا با آرش">▶</a>
-  </div>
-  <div class="studio-shelf" aria-labelledby="studioArchiveTitle">
-    <div class="studio-shelf-heading"><h2 id="studioArchiveTitle">آخرین برنامه‌های ضبط‌شده</h2><a href="#episodes">مشاهده همه <span aria-hidden="true">‹</span></a></div>
-    <div class="studio-rail studio-archive-rail" id="studioArchive"><button type="button" class="studio-cover-card studio-recording-tile" data-studio-recording="0" aria-label="انتخاب و پخش برنامه ۱۷ نوامبر ۲۰۲۶، ساعت ۰۷:۴۹">
-<span class="studio-cover-art"><img src="./gallery/recording-1.webp" loading="lazy" decoding="async" width="240" height="240" alt="تصویر هنری برنامه ۱۷ نوامبر ۲۰۲۶"><span class="studio-cover-meta">۰۷:۴۹</span></span>
-<strong>برنامه ۱۷ نوامبر ۲۰۲۶</strong></button>
-<button type="button" class="studio-cover-card studio-recording-tile" data-studio-recording="1" aria-label="انتخاب و پخش برنامه ۱۶ نوامبر ۲۰۲۶، ساعت ۱۸:۲۴">
-<span class="studio-cover-art"><img src="./gallery/recording-2.webp" loading="lazy" decoding="async" width="240" height="240" alt="تصویر هنری برنامه ۱۶ نوامبر ۲۰۲۶"><span class="studio-cover-meta">۱۸:۲۴</span></span>
-<strong>برنامه ۱۶ نوامبر ۲۰۲۶</strong></button>
-<button type="button" class="studio-cover-card studio-recording-tile" data-studio-recording="2" aria-label="انتخاب و پخش برنامه ۱۶ نوامبر ۲۰۲۶، ساعت ۰۷:۵۱">
-<span class="studio-cover-art"><img src="./gallery/recording-3.webp" loading="lazy" decoding="async" width="240" height="240" alt="تصویر هنری برنامه ۱۶ نوامبر ۲۰۲۶"><span class="studio-cover-meta">۰۷:۵۱</span></span>
-<strong>برنامه ۱۶ نوامبر ۲۰۲۶</strong></button>
-<button type="button" class="studio-cover-card studio-recording-tile" data-studio-recording="3" aria-label="انتخاب و پخش برنامه ۱۵ نوامبر ۲۰۲۶، ساعت ۱۸:۵۷">
-<span class="studio-cover-art"><img src="./gallery/recording-4.webp" loading="lazy" decoding="async" width="240" height="240" alt="تصویر هنری برنامه ۱۵ نوامبر ۲۰۲۶"><span class="studio-cover-meta">۱۸:۵۷</span></span>
-<strong>برنامه ۱۵ نوامبر ۲۰۲۶</strong></button>
-<button type="button" class="studio-cover-card studio-recording-tile" data-studio-recording="4" aria-label="انتخاب و پخش برنامه ۱۵ نوامبر ۲۰۲۶، ساعت ۰۹:۰۱">
-<span class="studio-cover-art"><img src="./gallery/recording-5.webp" loading="lazy" decoding="async" width="240" height="240" alt="تصویر هنری برنامه ۱۵ نوامبر ۲۰۲۶"><span class="studio-cover-meta">۰۹:۰۱</span></span>
-<strong>برنامه ۱۵ نوامبر ۲۰۲۶</strong></button></div>
-  </div>
-  <div class="studio-shelf studio-genre-shelf" id="studioGenres" aria-labelledby="studioGenresTitle">
-    <div class="studio-shelf-heading"><h2 id="studioGenresTitle">موسیقی‌های منتخب</h2><a href="#music">مشاهده همه <span aria-hidden="true">‹</span></a></div>
-    <div class="studio-rail studio-music-rail"><button class="studio-cover-card studio-genre-tile" type="button" data-studio-genre="سنتی" aria-label="جست‌وجوی موسیقی سنتی در آرشیو موسیقی"><img src="./gallery/genre-traditional.webp" width="240" height="240" loading="lazy" decoding="async" alt="تصویر هنری سبک موسیقی سنتی"><strong>موسیقی سنتی</strong></button>
-<button class="studio-cover-card studio-genre-tile" type="button" data-studio-genre="پاپ" aria-label="جست‌وجوی پاپ ایرانی در آرشیو موسیقی"><img src="./gallery/genre-pop.webp" width="240" height="240" loading="lazy" decoding="async" alt="تصویر هنری سبک پاپ ایرانی"><strong>پاپ ایرانی</strong></button>
-<button class="studio-cover-card studio-genre-tile" type="button" data-studio-genre="جاز" aria-label="جست‌وجوی جاز در آرشیو موسیقی"><img src="./gallery/genre-jazz.webp" width="240" height="240" loading="lazy" decoding="async" alt="تصویر هنری سبک جاز"><strong>جاز</strong></button>
-<button class="studio-cover-card studio-genre-tile" type="button" data-studio-genre="بی کلام" aria-label="جست‌وجوی بی‌کلام در آرشیو موسیقی"><img src="./gallery/genre-instrumental.webp" width="240" height="240" loading="lazy" decoding="async" alt="تصویر هنری سبک بی‌کلام"><strong>بی‌کلام</strong></button>
-<button class="studio-cover-card studio-genre-tile" type="button" data-studio-genre="الکترونیک" aria-label="جست‌وجوی الکترونیک در آرشیو موسیقی"><img src="./gallery/genre-electronic.webp" width="240" height="240" loading="lazy" decoding="async" alt="تصویر هنری سبک الکترونیک"><strong>الکترونیک</strong></button>
-</div>
-  </div>
-</section>
-<section class="container live-section" id="listen" aria-labelledby="listenTitle">
-  <div class="section-heading"><div><p class="kicker">LIVE RADIO</p><h2 id="listenTitle">پخش زنده رادیو آوا و نوا با آرش</h2></div><span id="serverBadge" class="live-pill" role="status">در حال بررسی وضعیت</span></div><p class="server-hint" id="serverHint" aria-live="polite">وضعیت سرور رادیو در حال بررسی است.</p>
-  <div class="live-layout">
-    <div class="live-panel">
-      <div class="live-info"><img class="station-art" src="../radio-neon-logo.webp" alt="لوگوی رادیو" width="104" height="104">
-        <div><div class="onair-label"><span class="live-led" aria-hidden="true"></span> رادیو آوا و نوا</div><h3 id="liveProgram">موسیقی، شعر و آواز</h3><p id="liveHost">هر شب کنار شما</p></div>
-      </div>
-      <div class="waveform" id="waveform" aria-hidden="true"><span style="--eq-h:61%;--eq-dur:0.62s;--eq-delay:0.00s"></span><span style="--eq-h:80%;--eq-dur:0.72s;--eq-delay:-0.17s"></span><span style="--eq-h:89%;--eq-dur:0.83s;--eq-delay:-0.35s"></span><span style="--eq-h:87%;--eq-dur:0.94s;--eq-delay:-0.52s"></span><span style="--eq-h:73%;--eq-dur:1.04s;--eq-delay:-0.69s"></span><span style="--eq-h:52%;--eq-dur:1.15s;--eq-delay:-0.86s"></span><span style="--eq-h:15%;--eq-dur:1.25s;--eq-delay:-1.04s"></span><span style="--eq-h:44%;--eq-dur:1.35s;--eq-delay:-1.21s"></span><span style="--eq-h:65%;--eq-dur:1.46s;--eq-delay:-1.38s"></span><span style="--eq-h:76%;--eq-dur:0.62s;--eq-delay:-1.56s"></span><span style="--eq-h:76%;--eq-dur:0.72s;--eq-delay:-0.13s"></span><span style="--eq-h:68%;--eq-dur:0.83s;--eq-delay:-0.30s"></span><span style="--eq-h:38%;--eq-dur:0.94s;--eq-delay:-0.48s"></span><span style="--eq-h:26%;--eq-dur:1.04s;--eq-delay:-0.65s"></span><span style="--eq-h:19%;--eq-dur:1.15s;--eq-delay:-0.82s"></span><span style="--eq-h:22%;--eq-dur:1.25s;--eq-delay:-0.99s"></span><span style="--eq-h:29%;--eq-dur:1.35s;--eq-delay:-1.17s"></span><span style="--eq-h:44%;--eq-dur:1.46s;--eq-delay:-1.34s"></span><span style="--eq-h:41%;--eq-dur:0.62s;--eq-delay:-1.51s"></span><span style="--eq-h:54%;--eq-dur:0.72s;--eq-delay:-0.09s"></span><span style="--eq-h:59%;--eq-dur:0.83s;--eq-delay:-0.26s"></span><span style="--eq-h:54%;--eq-dur:0.94s;--eq-delay:-0.43s"></span><span style="--eq-h:39%;--eq-dur:1.04s;--eq-delay:-0.61s"></span><span style="--eq-h:36%;--eq-dur:1.15s;--eq-delay:-0.78s"></span><span style="--eq-h:48%;--eq-dur:1.25s;--eq-delay:-0.95s"></span><span style="--eq-h:73%;--eq-dur:1.35s;--eq-delay:-1.13s"></span><span style="--eq-h:90%;--eq-dur:1.46s;--eq-delay:-1.30s"></span><span style="--eq-h:93%;--eq-dur:0.62s;--eq-delay:-1.47s"></span><span style="--eq-h:90%;--eq-dur:0.72s;--eq-delay:-0.04s"></span><span style="--eq-h:74%;--eq-dur:0.83s;--eq-delay:-0.22s"></span><span style="--eq-h:36%;--eq-dur:0.94s;--eq-delay:-0.39s"></span><span style="--eq-h:15%;--eq-dur:1.04s;--eq-delay:-0.56s"></span><span style="--eq-h:36%;--eq-dur:1.15s;--eq-delay:-0.74s"></span><span style="--eq-h:48%;--eq-dur:1.25s;--eq-delay:-0.91s"></span><span style="--eq-h:52%;--eq-dur:1.35s;--eq-delay:-1.08s"></span><span style="--eq-h:47%;--eq-dur:1.46s;--eq-delay:-1.25s"></span><span style="--eq-h:21%;--eq-dur:0.62s;--eq-delay:-1.43s"></span><span style="--eq-h:16%;--eq-dur:0.72s;--eq-delay:-0.00s"></span><span style="--eq-h:24%;--eq-dur:0.83s;--eq-delay:-0.17s"></span><span style="--eq-h:24%;--eq-dur:0.94s;--eq-delay:-0.35s"></span><span style="--eq-h:31%;--eq-dur:1.04s;--eq-delay:-0.52s"></span><span style="--eq-h:51%;--eq-dur:1.15s;--eq-delay:-0.69s"></span><span style="--eq-h:55%;--eq-dur:1.25s;--eq-delay:-0.87s"></span><span style="--eq-h:73%;--eq-dur:1.35s;--eq-delay:-1.04s"></span><span style="--eq-h:82%;--eq-dur:1.46s;--eq-delay:-1.21s"></span><span style="--eq-h:82%;--eq-dur:0.62s;--eq-delay:-1.39s"></span><span style="--eq-h:69%;--eq-dur:0.72s;--eq-delay:-1.56s"></span><span style="--eq-h:49%;--eq-dur:0.83s;--eq-delay:-0.13s"></span><span style="--eq-h:19%;--eq-dur:0.94s;--eq-delay:-0.30s"></span><span style="--eq-h:48%;--eq-dur:1.04s;--eq-delay:-0.48s"></span><span style="--eq-h:71%;--eq-dur:1.15s;--eq-delay:-0.65s"></span><span style="--eq-h:84%;--eq-dur:1.25s;--eq-delay:-0.82s"></span><span style="--eq-h:86%;--eq-dur:1.35s;--eq-delay:-1.00s"></span><span style="--eq-h:78%;--eq-dur:1.46s;--eq-delay:-1.17s"></span><span style="--eq-h:46%;--eq-dur:0.62s;--eq-delay:-1.34s"></span><span style="--eq-h:31%;--eq-dur:0.72s;--eq-delay:-1.51s"></span><span style="--eq-h:20%;--eq-dur:0.83s;--eq-delay:-0.09s"></span><span style="--eq-h:26%;--eq-dur:0.94s;--eq-delay:-0.26s"></span><span style="--eq-h:28%;--eq-dur:1.04s;--eq-delay:-0.43s"></span><span style="--eq-h:31%;--eq-dur:1.15s;--eq-delay:-0.61s"></span><span style="--eq-h:28%;--eq-dur:1.25s;--eq-delay:-0.78s"></span><span style="--eq-h:41%;--eq-dur:1.35s;--eq-delay:-0.95s"></span></div>
-      <div class="live-controls">
-        <button class="main-play" type="button" id="livePlay" aria-label="شروع پخش زنده"><span id="livePlayIcon" aria-hidden="true">▶</span></button>
-        <div class="control-copy"><strong id="liveAction">برای شنیدن آماده است</strong><small id="liveMessage" role="status" aria-live="polite">برای شروع، دکمه پخش را بزنید.</small></div>
-        <div class="volume-control"><label for="liveVolume">صدا</label><input id="liveVolume" type="range" min="0" max="100" value="80" aria-label="میزان صدا"><span id="liveVolumeValue">۸۰٪</span></div><span class="ios-native-volume-note">صدای گوشی را با دکمه‌های آن تنظیم کنید</span>
-      </div>
-      <div class="live-utility-actions"><button type="button" id="liveFullscreen" class="utility-button"><span class="utility-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/></svg></span> نمایش تمام‌صفحه</button><button type="button" id="liveCopy" class="utility-button"><span class="utility-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></span> کپی لینک رادیو</button><button type="button" id="liveShare" class="utility-button"><span class="utility-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 16V3m0 0L7 8m5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg></span> اشتراک‌گذاری</button></div><div class="live-stats"><div><small>وضعیت رادیو</small><strong id="stationState">نامشخص</strong></div><div><small>شنوندگان آنلاین</small><strong id="listenerCount">نامشخص</strong></div><div><small>زمان پخش</small><strong id="liveDuration">--:--:--</strong></div></div>
-    </div>
-    <aside class="up-next"><div class="next-icon" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><p class="kicker">UP NEXT</p><h3>برنامه بعدی</h3>
-      <strong id="nextShowTitle" class="next-show-title">رادیو آوا و نوا</strong>
-      <span id="nextShowDetails" class="next-show-details">موسیقی، شعر و آواز</span>
-      <strong id="nextShowDay">در حال محاسبه...</strong><p id="nextShowTime">در حال محاسبه ساعت شروع…</p><div class="countdown" id="nextCountdown" aria-live="off">--:--:--</div>
-      <div class="timezone-list"><div><span>ایران</span><strong id="clockIran">--:--</strong></div><div><span>سوئد</span><strong id="clockSweden">--:--</strong></div><div><span>انگلیس</span><strong id="clockUk">--:--</strong></div></div>
-      <a class="text-link" id="clubhouseLink" href="https://www.clubhouse.com/" target="_blank" rel="noopener noreferrer">ورود به کلاب‌هاوس <span aria-hidden="true">↗</span></a>
-    </aside>
-  </div>
-</section>
-<section class="container section-block" id="episodes" aria-labelledby="episodesTitle">
-  <div class="section-heading"><div><p class="kicker">RADIO REPLAYS</p><h2 id="episodesTitle">برنامه‌های ضبط‌شده</h2><p class="section-description">ضبط‌ها از جدید به قدیم مرتب شده‌اند. مدت هر برنامه پس از اولین انتخاب، در فهرست هم نمایش داده می‌شود.</p></div></div>
-  <div class="recording-layout"><div id="recordingGrid" class="recording-grid"></div>
-    <div class="recording-player"><div class="recording-cover"><img src="../radio-neon-logo.webp" alt="" width="112" height="112"></div><p class="kicker">در حال انتخاب</p><h3 id="recordingTitle">یک برنامه انتخاب کن</h3><p id="recordingMeta">آرشیو رادیو آوا و نوا</p><div class="seek-row" dir="ltr"><span id="recordingCurrent">00:00</span><input id="recordingSeek" type="range" min="0" max="1000" value="0" disabled aria-label="جابه‌جایی در برنامه"><span id="recordingTotal">--:--</span></div>
-      <div class="rec-controls approved-recording-controls">
- <button id="recordingShuffle" type="button" class="recording-extra-control" aria-label="پخش تصادفی برنامه" title="پخش تصادفی">⤨</button>
- <button id="recordingPrev" type="button" aria-label="برنامه قبلی" class="icon-button" disabled>⏮</button>
- <button id="recordingPlay" type="button" aria-label="ابتدا یک برنامه انتخاب کن" class="rec-play" disabled><span class="visually-hidden">پخش برنامه ضبط‌شده</span></button>
- <button id="recordingNext" type="button" aria-label="برنامه بعدی" class="icon-button" disabled>⏭</button>
- <button id="recordingRepeat" type="button" class="recording-extra-control" aria-label="تکرار برنامه" aria-pressed="false" title="تکرار برنامه">↻</button>
- </div><button type="button" id="recordingRetry" class="recording-retry" hidden>تلاش دوباره برای پخش</button><p class="help-text" id="recordingMessage" role="status" aria-live="polite">از فهرست، برنامه را انتخاب کن.</p></div>
-  </div>
-</section>
-<section class="container section-block audius-section" id="music" aria-labelledby="audiusTitle">
- <div class="section-heading"><div><p class="kicker">AVA O NAVA · PERSIAN MUSIC</p><h2 id="audiusTitle">آرشیو موسیقی فارسی</h2><p class="section-description">جست‌وجوی قطعات، خوانندگان و آلبوم‌های فارسی در آدیوس؛ با پلیر اختصاصی آوا و نوا.</p></div><span class="section-count" id="audiusCount">در حال بارگذاری</span></div>
- <div class="audius-discovery" aria-label="کشف موسیقی فارسی">
-   <form id="audiusSearchForm" class="audius-search-form" role="search">
-     <label class="audius-search-field" for="audiusSearch">جست‌وجوی موسیقی، آلبوم یا خواننده</label>
-     <div class="audius-search-box"><input id="audiusSearch" type="search" placeholder="مثلاً شجریان، گوگوش، سنتور..." autocomplete="off" maxlength="70"><button type="submit" id="audiusSearchButton">جست‌وجو</button></div>
-   </form>
-   <p class="audius-group-title">سبک‌های موسیقی</p><div class="audius-filter-list" id="audiusGenres" role="group" aria-label="دسته‌بندی موسیقی">
-     <button class="audius-filter active" type="button" data-audius-query="" aria-pressed="true">منتخب آوا و نوا</button>
-     <button class="audius-filter" type="button" data-audius-query="persian" aria-pressed="false">موسیقی فارسی</button>
-     <button class="audius-filter" type="button" data-audius-query="santour" aria-pressed="false">سنتور</button>
-     <button class="audius-filter" type="button" data-audius-query="shajarian" aria-pressed="false">سنتی و آواز</button>
-     <button class="audius-filter" type="button" data-audius-query="googoosh" aria-pressed="false">پاپ و قدیمی</button>
-     <button class="audius-filter" type="button" data-audius-query="persian rap" aria-pressed="false">رپ فارسی</button>
-     <button class="audius-filter" type="button" data-audius-query="setar" aria-pressed="false">بی‌کلام</button>
-   </div>
-   <div class="audius-content-tabs" role="group" aria-label="نوع محتوا"><button class="active" type="button" id="audiusTracksTab" aria-pressed="true">آهنگ‌ها</button><button type="button" id="audiusArtistsTab" aria-pressed="false">هنرمندان</button><button type="button" id="audiusAlbumsTab" aria-pressed="false">آلبوم‌ها</button></div>
- </div>
- <div class="audius-header-actions"><div class="audius-tags"><span>آدیوس</span><span>پخش اختصاصی</span></div><span class="audius-provider-name" aria-label="منبع پخش موسیقی">منبع پخش: Audius</span></div>
- <p id="audiusContext" class="audius-context" aria-live="polite">منتخب موسیقی ایرانی آوا و نوا</p>
- <div id="audiusGrid" class="audius-grid" aria-label="آرشیو موسیقی فارسی"></div>
- <div id="audiusAlbumGrid" class="audius-grid" aria-label="آلبوم‌های فارسی" hidden></div>
-  <div id="audiusArtistGrid" class="audius-grid audius-artist-grid" aria-label="هنرمندان در نتایج آرشیو" hidden></div>
- <p id="audiusEmpty" class="empty-state" hidden>نتیجه‌ای پیدا نشد. نام هنرمند یا سبک دیگری را جست‌وجو کن.</p>
- <button type="button" id="audiusLoadMore" class="audius-load-more" hidden>نمایش نتایج بیشتر</button>
- <div class="audius-player" id="audiusPlayer" hidden aria-label="موزیک پلیر آوا و نوا">
-   <div class="audius-playing-header"><img id="audiusCover" alt="کاور قطعه" src="../radio-neon-logo.webp" width="120" height="120" loading="lazy">
-     <div class="audius-playing-text"><p class="kicker">AVA O NAVA · NOW PLAYING</p><h3 id="audiusTitleNow">آماده شنیدن</h3><p id="audiusArtistNow">موسیقی ایرانی</p><span class="audius-source-attribution">موسیقی از Audius پخش می‌شود</span></div>
-   </div>
-   <div class="audius-seek-row" dir="ltr"><time id="audiusElapsed">0:00</time><input id="audiusSeek" type="range" min="0" max="1000" value="0" disabled aria-label="جابه‌جایی در قطعه"><time id="audiusTotal">--:--</time></div>
-   <div class="audius-controls"><button type="button" id="audiusPrevious" class="audius-skip" aria-label="آهنگ قبلی">❮❮</button><button type="button" id="audiusToggle" class="audius-primary" aria-label="پخش موسیقی">▶</button><button type="button" id="audiusNext" class="audius-skip" aria-label="آهنگ بعدی">❯❯</button><label class="audius-volume">صدا <input type="range" id="audiusVolume" min="0" max="100" value="80" aria-label="میزان صدا"></label></div>
-   <p class="audius-status" id="audiusStatus" role="status" aria-live="polite">برای شنیدن موسیقی یکی از قطعات را انتخاب کن.</p>
- </div>
- <p class="audius-note">این آرشیو نتایج موجود در آدیوس را نشان می‌دهد؛ شامل تمام موسیقی‌های منتشرشده در جهان نیست. دسترسی و پخش هر اثر به تنظیمات منبع بستگی دارد. فایل موسیقی روی سرور رادیو ذخیره نمی‌شود.</p>
- <audio id="audiusAudio" preload="none" playsinline></audio>
-</section>
-<section class="container section-block" id="schedule" aria-labelledby="scheduleTitle">
-  <div class="section-heading"><div><p class="kicker">OUR PROGRAMS</p><h2 id="scheduleTitle">جدول برنامه‌های هفتگی</h2><p class="section-description">زمان‌ها به‌صورت خودکار برای ایران، سوئد و انگلیس محاسبه می‌شوند.</p></div></div>
-  <div id="scheduleGrid" class="schedule-grid" aria-label="برنامه‌های هفتگی"></div>
-</section>
-<section class="container section-block" id="community" aria-labelledby="communityTitle">
-  <div class="section-heading"><div><p class="kicker">JOIN OUR COMMUNITY</p><h2 id="communityTitle">تو هم بخشی از این صدا هستی</h2><p class="section-description">با ما همراه شو، در مسابقه شرکت کن و از برنامه‌های بعدی باخبر باش.</p></div></div>
-  <div class="community-grid"><article class="community-card feature-card"><div class="community-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5m-4 0h8"/></svg></div><h3 id="contestTitle">مسابقه آوا و نوا</h3>
-      <p>آواز، شعرخوانی، دکلمه و سایر زمینه‌ها. برای ثبت‌نام، نام، نام کاربری کلاب‌هاوس و رشته مسابقه کافی است.</p>
-      <a id="contestLink" class="btn btn-gold community-action" target="_blank" rel="noopener noreferrer" href="#">باز کردن فرم ثبت‌نام ↗</a></article>
-    <article class="community-card" id="contact"><div class="community-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m22 2-7 20-4-9-9-4zM22 2 11 13"/></svg></div><h3>پیام و درخواست آهنگ</h3><p>برای درخواست آهنگ یا فرستادن پیام، تلگرام را باز کن و همان‌جا بنویس. نیازی به پر کردن فرم یا کپی‌کردن نیست.</p><a id="requestSongLink" class="btn btn-gold community-action telegram-request-link" target="_blank" rel="noopener noreferrer" href="https://t.me/+bSKXuElY13I3NWY0">نوشتن پیام در تلگرام ↗</a></article><article class="community-card"><div class="community-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="7" width="18" height="14" rx="3"/><path d="m6 7 13-4M7 12h5m-5 4h4"/><circle cx="17" cy="15" r="2"/></svg></div><h3>خانه ما در کلاب‌هاوس</h3><p>در گفت‌وگوها و برنامه‌های زنده همراه باش.</p><a id="houseLink" class="community-action" target="_blank" rel="noopener noreferrer" href="#">ورود به کلاب‌هاوس ↗</a></article>
-    <article class="community-card"><div class="community-icon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m22 2-7 20-4-9-9-4zM22 2 11 13"/></svg></div><h3>خبرهای رادیو</h3><p>از تلگرام و کانال واتساپ، برنامه‌های آینده را دنبال کن.</p><div class="social-actions"><a id="telegramLink" class="community-action" target="_blank" rel="noopener noreferrer" href="#">تلگرام ↗</a><a id="whatsappLink" class="community-action" target="_blank" rel="noopener noreferrer" href="#">واتساپ ↗</a></div></article></div>
-</section>
-<section class="container install-detail section-block" id="install" aria-labelledby="installTitle"><div class="section-heading"><div><p class="kicker">RADIO IN YOUR POCKET</p><h2 id="installTitle">رادیو آوا و نوا، همیشه همراهت</h2><p class="section-description">آیفون یا اندروید را انتخاب کن؛ هر راهنما چهار تصویر دارد که می‌توانی جداگانه بزرگ کنی.</p></div><button id="installButton" class="btn btn-gold" type="button" hidden>نصب مستقیم رادیو</button></div><div class="install-detail-grid"><div class="install-slider" data-install-slider="ios" aria-label="مراحل نصب آیفون و آیپد"><h3 class="install-platform-title">نصب روی آیفون و آیپد <span>Safari · چهار مرحله</span></h3><div class="install-step-grid" aria-live="off"><div class="install-step-card" data-step-active="true"><div class="install-step-copy"><span class="step-count">۱</span><div><strong>سایت رادیو را در سافاری باز کن</strong><p>برای نصب، صفحه رادیو را مستقیم در Safari باز کن.</p></div></div><button type="button" class="install-preview" data-install-image="../assets/ios-install-1.jpg" data-install-label="مرحله 1 نصب رادیو روی آیفون و آیپد" aria-label="بزرگ‌نمایی تصویر مرحله 1 نصب روی آیفون و آیپد"><img src="../assets/ios-install-1.jpg"  data-install-src="../assets/ios-install-1.jpg" alt="تصویر آموزشی مرحله 1 نصب رادیو روی آیفون و آیپد" width="360" height="710" loading="eager" decoding="async"><span class="install-preview-hint" aria-hidden="true">برای بزرگ‌نمایی لمس کن</span></button></div><div class="install-step-card" data-step-active="false" hidden><div class="install-step-copy"><span class="step-count">۲</span><div><strong>دکمه اشتراک‌گذاری را بزن</strong><p>علامت مربع با فلش رو به بالا را انتخاب کن.</p></div></div><button type="button" class="install-preview" data-install-image="../assets/ios-install-2.jpg" data-install-label="مرحله 2 نصب رادیو روی آیفون و آیپد" aria-label="بزرگ‌نمایی تصویر مرحله 2 نصب روی آیفون و آیپد"><img src="../assets/ios-install-2.jpg" data-install-src="../assets/ios-install-2.jpg" alt="تصویر آموزشی مرحله 2 نصب رادیو روی آیفون و آیپد" width="360" height="710" loading="lazy" decoding="async"><span class="install-preview-hint" aria-hidden="true">برای بزرگ‌نمایی لمس کن</span></button></div><div class="install-step-card" data-step-active="false" hidden><div class="install-step-copy"><span class="step-count">۳</span><div><strong>افزودن به صفحه اصلی را انتخاب کن</strong><p>گزینه Add to Home Screen را از فهرست انتخاب کن.</p></div></div><button type="button" class="install-preview" data-install-image="../assets/ios-install-3.jpg" data-install-label="مرحله 3 نصب رادیو روی آیفون و آیپد" aria-label="بزرگ‌نمایی تصویر مرحله 3 نصب روی آیفون و آیپد"><img src="../assets/ios-install-3.jpg" data-install-src="../assets/ios-install-3.jpg" alt="تصویر آموزشی مرحله 3 نصب رادیو روی آیفون و آیپد" width="360" height="710" loading="lazy" decoding="async"><span class="install-preview-hint" aria-hidden="true">برای بزرگ‌نمایی لمس کن</span></button></div><div class="install-step-card" data-step-active="false" hidden><div class="install-step-copy"><span class="step-count">۴</span><div><strong>نصب را تأیید کن</strong><p>گزینه Open as Web App را روشن بگذار و روی Add بزن.</p></div></div><button type="button" class="install-preview" data-install-image="../assets/ios-install-4.jpg" data-install-label="مرحله 4 نصب رادیو روی آیفون و آیپد" aria-label="بزرگ‌نمایی تصویر مرحله 4 نصب روی آیفون و آیپد"><img src="../assets/ios-install-4.jpg" data-install-src="../assets/ios-install-4.jpg" alt="تصویر آموزشی مرحله 4 نصب رادیو روی آیفون و آیپد" width="360" height="710" loading="lazy" decoding="async"><span class="install-preview-hint" aria-hidden="true">برای بزرگ‌نمایی لمس کن</span></button></div></div><div class="install-slider-controls"><button type="button" class="install-slider-arrow install-prev" aria-label="مرحله قبلی" disabled><span aria-hidden="true">›</span></button><span class="install-slider-status" aria-live="polite">مرحله ۱ از ۴</span><button type="button" class="install-slider-arrow install-next" aria-label="مرحله بعدی"><span aria-hidden="true">‹</span></button></div><div class="install-slider-dots" role="group" aria-label="انتخاب مرحله"><button type="button" class="install-slider-dot active" data-slide="0" aria-label="مرحله 1" aria-current="step"><span aria-hidden="true">۱</span></button><button type="button" class="install-slider-dot" data-slide="1" aria-label="مرحله 2" aria-current="false"><span aria-hidden="true">۲</span></button><button type="button" class="install-slider-dot" data-slide="2" aria-label="مرحله 3" aria-current="false"><span aria-hidden="true">۳</span></button><button type="button" class="install-slider-dot" data-slide="3" aria-label="مرحله 4" aria-current="false"><span aria-hidden="true">۴</span></button></div><p class="install-tip">اگر سایت در پیام‌رسان یا داخل کلاب هاس باز شده، ابتدا آن را در Safari باز کنید. تصاویر آموزشی هستند و اطلاعات شخصی واقعی ندارند.</p></div><div class="install-slider" data-install-slider="android" aria-label="مراحل نصب اندروید"><h3 class="install-platform-title">نصب روی اندروید <span>Chrome · چهار مرحله</span></h3><div class="install-step-grid" aria-live="off"><div class="install-step-card" data-step-active="true"><div class="install-step-copy"><span class="step-count">۱</span><div><strong>رادیو را در کروم باز کن</strong><p>صفحه رادیو را با مرورگر Chrome باز کن.</p></div></div><button type="button" class="install-preview" data-install-image="../assets/android-install-1.jpg" data-install-label="مرحله 1 نصب رادیو روی اندروید" aria-label="بزرگ‌نمایی تصویر مرحله 1 نصب روی اندروید"><img src="../assets/android-install-1.jpg"  data-install-src="../assets/android-install-1.jpg" alt="تصویر آموزشی مرحله 1 نصب رادیو روی اندروید" width="360" height="710" loading="eager" decoding="async"><span class="install-preview-hint" aria-hidden="true">برای بزرگ‌نمایی لمس کن</span></button></div><div class="install-step-card" data-step-active="false" hidden><div class="install-step-copy"><span class="step-count">۲</span><div><strong>منوی نصب را باز کن</strong><p>روی سه‌نقطه و گزینه Install app یا Add to Home Screen بزن.</p></div></div><button type="button" class="install-preview" data-install-image="../assets/android-install-2.jpg" data-install-label="مرحله 2 نصب رادیو روی اندروید" aria-label="بزرگ‌نمایی تصویر مرحله 2 نصب روی اندروید"><img src="../assets/android-install-2.jpg" data-install-src="../assets/android-install-2.jpg" alt="تصویر آموزشی مرحله 2 نصب رادیو روی اندروید" width="360" height="710" loading="lazy" decoding="async"><span class="install-preview-hint" aria-hidden="true">برای بزرگ‌نمایی لمس کن</span></button></div><div class="install-step-card" data-step-active="false" hidden><div class="install-step-copy"><span class="step-count">۳</span><div><strong>نصب را تأیید کن</strong><p>روی Install یا Add بزن.</p></div></div><button type="button" class="install-preview" data-install-image="../assets/android-install-3.jpg" data-install-label="مرحله 3 نصب رادیو روی اندروید" aria-label="بزرگ‌نمایی تصویر مرحله 3 نصب روی اندروید"><img src="../assets/android-install-3.jpg" data-install-src="../assets/android-install-3.jpg" alt="تصویر آموزشی مرحله 3 نصب رادیو روی اندروید" width="360" height="710" loading="lazy" decoding="async"><span class="install-preview-hint" aria-hidden="true">برای بزرگ‌نمایی لمس کن</span></button></div><div class="install-step-card" data-step-active="false" hidden><div class="install-step-copy"><span class="step-count">۴</span><div><strong>رادیو را از صفحه اصلی باز کن</strong><p>آیکون رادیو مانند یک برنامه روی گوشی نمایش داده می‌شود.</p></div></div><button type="button" class="install-preview" data-install-image="../assets/android-install-4.jpg" data-install-label="مرحله 4 نصب رادیو روی اندروید" aria-label="بزرگ‌نمایی تصویر مرحله 4 نصب روی اندروید"><img src="../assets/android-install-4.jpg" data-install-src="../assets/android-install-4.jpg" alt="تصویر آموزشی مرحله 4 نصب رادیو روی اندروید" width="360" height="710" loading="lazy" decoding="async"><span class="install-preview-hint" aria-hidden="true">برای بزرگ‌نمایی لمس کن</span></button></div></div><div class="install-slider-controls"><button type="button" class="install-slider-arrow install-prev" aria-label="مرحله قبلی" disabled><span aria-hidden="true">›</span></button><span class="install-slider-status" aria-live="polite">مرحله ۱ از ۴</span><button type="button" class="install-slider-arrow install-next" aria-label="مرحله بعدی"><span aria-hidden="true">‹</span></button></div><div class="install-slider-dots" role="group" aria-label="انتخاب مرحله"><button type="button" class="install-slider-dot active" data-slide="0" aria-label="مرحله 1" aria-current="step"><span aria-hidden="true">۱</span></button><button type="button" class="install-slider-dot" data-slide="1" aria-label="مرحله 2" aria-current="false"><span aria-hidden="true">۲</span></button><button type="button" class="install-slider-dot" data-slide="2" aria-label="مرحله 3" aria-current="false"><span aria-hidden="true">۳</span></button><button type="button" class="install-slider-dot" data-slide="3" aria-label="مرحله 4" aria-current="false"><span aria-hidden="true">۴</span></button></div><p class="install-tip">نام گزینه‌ها ممکن است با توجه به نسخه مرورگر و گوشی کمی متفاوت باشد. تصاویر آموزشی هستند و اطلاعات شخصی واقعی ندارند.</p></div></div><p class="install-scroll-help">برای رفتن به مرحله بعد، انگشتت را به چپ بکش یا دکمه بعدی را بزن. روی تصویر بزن تا بزرگ شود.</p><p class="install-bottom-note">برای شنیدن رادیو به اینترنت نیاز داری. پس از نصب، آیکون رادیو را از صفحه اصلی گوشی باز کن.</p><dialog id="installImageDialog" class="install-image-dialog" aria-labelledby="installDialogTitle"><div class="install-dialog-head"><strong id="installDialogTitle">راهنمای تصویری نصب</strong><button id="installDialogClose" class="install-dialog-close" type="button" aria-label="بستن تصویر">×</button></div><img id="installDialogImage" src="./icon.svg" alt="" width="360" height="710"></dialog></section><section class="container about-section section-block" id="about"><div class="about-mark"><img src="../radio-neon-logo.webp" alt="" width="85" height="85"></div><div><p class="kicker">ABOUT RADIO AVA O NAVA</p><h2>درباره رادیو آوا و نوا</h2><p>رادیو آوا و نوا جایی برای موسیقی زنده، شعر، آواز، دکلمه و گفت‌وگو کنار دوستان است. پخش زنده فقط هنگام برگزاری برنامه فعال می‌شود و آرشیو برنامه‌های ضبط‌شده در زمان‌های دیگر در دسترس است.</p><a href="https://www.ibboabdoli.com/" target="_blank" rel="noopener noreferrer">ساخته‌شده با علاقه · Ibboabdoli.com ↗</a></div></section>
-</main>
-<footer class="footer"><div class="container footer-content">
-  <div class="footer-intro"><a class="brand footer-brand" href="#top"><img src="../radio-neon-logo.webp" alt="" width="44" height="44"><span><strong>رادیو آوا و نوا</strong><small>موسیقی، شعر، آواز و دکلمه</small></span></a><p>هر شب برنامه‌ای برای شنیدن و با هم بودن؛ پخش زنده هنگام برگزاری روم و آرشیو برنامه‌ها در تمام ساعات.</p></div>
-  <nav class="footer-links" aria-label="پیوندهای پایین صفحه"><a href="#listen">پخش زنده</a><a href="#music">موسیقی</a><a href="#episodes">ضبط‌ها</a><a href="#schedule">برنامه‌ها</a><a href="#community">مسابقه</a><a href="#contact">ارتباط با ما</a><a href="#install">نصب اپ</a><a href="#about">درباره ما</a><a href="./privacy.html">حریم خصوصی</a></nav>
-  <p class="footer-copyright">© رادیو آوا و نوا · صدای شما، قصه ما</p>
-</div></footer>
-<nav class="mobile-bottom-nav studio-mobile-bottom" id="mobileBottomNav" aria-label="دسترسی سریع موبایل">
-<a class="mobile-tab active" href="#home" data-mobile-tab="home" aria-current="page"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>خانه</span></a>
-<a class="mobile-tab" href="#episodes" data-mobile-tab="episodes"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16m6-12h4m-4 4h4"/></svg><span>آرشیو</span></a>
-<a class="mobile-tab" href="#music" data-mobile-tab="music"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19V6l12-3v13M9 10l12-3"/><ellipse cx="6" cy="19" rx="3" ry="2"/><ellipse cx="18" cy="16" rx="3" ry="2"/></svg><span>موسیقی</span></a>
-<a class="mobile-tab" href="#listen" data-mobile-tab="listen"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M7 7a7 7 0 0 0 0 10m10-10a7 7 0 0 1 0 10M4 4a11 11 0 0 0 0 16m16-16a11 11 0 0 1 0 16"/></svg><span>پخش زنده</span></a></nav>
-<div class="player-dock studio-player-dock" id="playerDock" role="region" aria-label="پلیر ثابت رادیو">
-  <div class="dock-inner container">
-    <div class="studio-dock-meta"><button type="button" id="studioDockExpand" class="studio-dock-expand" aria-haspopup="dialog" aria-controls="expandedPlayerDialog" aria-label="باز کردن پلیر تمام‌صفحه"><img id="studioDockCover" src="../radio-neon-logo.webp" alt="کاور در حال پخش" width="52" height="52"><div class="dock-info"><strong id="dockTitle">رادیو آوا و نوا</strong><span id="dockSubtitle">آماده پخش</span></div><span class="studio-dock-chevron" aria-hidden="true">⌃</span></button></div>
-    <div class="studio-dock-center">
-      <div class="studio-dock-controls"><button type="button" id="studioDockPrev" aria-label="قبلی" disabled>⏮</button><button class="dock-button" id="dockPlay" aria-label="پخش زنده" type="button">▶</button><button type="button" id="studioDockNext" aria-label="بعدی" disabled>⏭</button></div>
-      <div class="studio-dock-timeline" dir="ltr"><span id="studioDockCurrent">00:00</span><input type="range" id="studioDockSeek" min="0" max="1000" value="0" disabled aria-label="جابه‌جایی زمان پخش"><span id="studioDockTotal">--:--</span></div>
-    </div>
-    <div class="studio-dock-tools"><label for="studioDockVolume" aria-label="تنظیم صدا"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M7 7a7 7 0 0 0 0 10m10-10a7 7 0 0 1 0 10M4 4a11 11 0 0 0 0 16m16-16a11 11 0 0 1 0 16"/></svg></label><input type="range" id="studioDockVolume" min="0" max="100" value="80" aria-label="تنظیم صدای پخش"><a class="dock-link" id="dockDetail" href="#listen">نمایش پلیر</a></div>
-  </div>
-</div>
-<dialog id="expandedPlayerDialog" class="expanded-player-dialog" aria-labelledby="expandedPlayerTitle" aria-modal="true">
-  <div class="expanded-player-shell">
-    <header class="expanded-player-top">
-      <button id="expandedPlayerClose" type="button" aria-label="بستن پلیر بزرگ" class="expanded-icon-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg></button>
-      <div class="expanded-player-location"><strong id="expandedPlayerKind">در حال پخش</strong><small>رادیو آوا و نوا</small></div>
-      <button id="expandedPlayerMore" class="expanded-icon-button" type="button" aria-label="اشتراک‌گذاری پخش"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m0 0L8 7m4-4 4 4M5 13v6h14v-6"/></svg></button>
-    </header>
-    <main class="expanded-player-body">
-      <div class="expanded-cover-frame"><img id="expandedPlayerCover" src="../radio-neon-logo.webp" alt="کاور برنامه یا موسیقی در حال پخش" width="520" height="520"></div>
-      <div class="expanded-track-details">
-        <div class="expanded-track-copy"><h2 id="expandedPlayerTitle">رادیو آوا و نوا</h2><p id="expandedPlayerArtist">موسیقی زنده، شعر و آواز با آرش</p></div>
-        <span id="expandedLiveBadge" class="expanded-live-badge" hidden><i aria-hidden="true"></i> پخش زنده</span>
-      </div>
-      <div id="expandedLiveWave" class="expanded-live-wave" aria-hidden="true" hidden><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-      <div id="expandedProgress" class="expanded-player-progress" dir="ltr">
-        <input type="range" id="expandedSeek" min="0" max="1000" value="0" disabled aria-label="جابه‌جایی زمان قطعه">
-        <div><time id="expandedElapsed">0:00</time><time id="expandedTotal">--:--</time></div>
-      </div>
-      <div class="expanded-transport">
-        <button id="expandedShuffle" type="button" class="expanded-transport-secondary" aria-label="پخش تصادفی" aria-pressed="false" hidden>⤨</button>
-        <button id="expandedPrev" type="button" class="expanded-transport-skip" aria-label="قبلی"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 5v14M19 6 10 12l9 6z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
-        <button id="expandedPlay" type="button" class="expanded-play-button" aria-label="شروع پخش">▶</button>
-        <button id="expandedNext" type="button" class="expanded-transport-skip" aria-label="بعدی"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 5v14M5 6l9 6-9 6z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
-        <button id="expandedRepeat" type="button" class="expanded-transport-secondary" aria-label="تکرار" aria-pressed="false" hidden>↻</button>
-      </div>
-      <div class="expanded-player-footer">
-        <a id="expandedDetails" href="#listen" class="expanded-footer-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18V7m7 11V4m8 14V10"/></svg><span id="expandedDetailsLabel">نمایش بخش</span></a>
-        <button id="expandedShare" class="expanded-footer-item" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m0 0L8 7m4-4 4 4M5 13v6h14v-6"/></svg><span>اشتراک‌گذاری</span></button>
-        <span id="expandedPlayerStatus" class="expanded-footer-status" role="status" aria-live="polite">آماده پخش</span>
-      </div>
+  <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-radio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M7.5 7.5a6.4 6.4 0 0 0 0 9m9-9a6.4 6.4 0 0 1 0 9M4.4 4.4a10.8 10.8 0 0 0 0 15.2M19.6 4.4a10.8 10.8 0 0 1 0 15.2"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10h-6v-6H9v6H3z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.8"/><path d="m15 15 5 5"/></symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v12h14V8m-10 4h6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M7 4a1 1 0 0 1 1.5-.86l13 8a1 1 0 0 1 0 1.72l-13 8A1 1 0 0 1 7 20z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M6 4h4v16H6zm8 0h4v16h-4z"/></symbol>
+  </svg>
+  <div class="shell">
+    <header><span class="mark"><svg><use href="#i-radio"/></svg></span><b>آوا و نوا</b></header>
+    <main>
+      <section id="home">
+        <div class="hero">
+          <div><span class="live"><i></i> رادیو زنده</span><h1>آوا و نوا<br><small>با آرش</small></h1>
+          <button class="listen" id="liveButton"><svg><use href="#i-play"/></svg><span>شنیدن رادیو</span></button></div>
+        </div>
+        <div class="heading"><h2>آخرین برنامه‌ها</h2><a href="#archive">همه ‹</a></div>
+        <div id="recent"></div>
+        <details><summary>دربارهٔ برنامه</summary><p>موسیقی زنده، شعر و آواز با آرش در رادیو آوا و نوا.</p></details>
+
+        <details class="station-links"><summary>بیشتر از رادیو</summary>
+          <a href="studio.html#schedule">جدول پخش</a>
+          <a href="studio.html#community">درخواست آهنگ و مسابقه</a>
+          <a href="studio.html#install">نصب روی گوشی</a>
+          <a href="studio.html">استودیوی کامل رادیو</a>
+        </details>
+      </section>
+      <section id="discover" hidden>
+        <h1>کشف موسیقی</h1>
+        <label class="search"><svg><use href="#i-search"/></svg><input type="search" id="query" placeholder="آهنگ یا هنرمند" aria-label="جست‌وجوی آهنگ یا هنرمند"></label>
+        <div id="filters" class="filters"></div><div id="music" class="tiles"></div>
+      </section>
+      <section id="archive" hidden>
+        <h1>آرشیو رادیو</h1>
+        <label class="search"><svg><use href="#i-search"/></svg><input type="search" id="archiveQuery" placeholder="جست‌وجوی برنامه یا تاریخ" aria-label="جست‌وجوی آرشیو"></label>
+        <div id="groups"></div>
+      </section>
     </main>
+    <footer><div class="mini">
+      <img id="cover" src="gallery/player-tar.jpg" alt="">
+      <div class="mini-copy"><strong id="now">رادیو آوا و نوا</strong><small id="state" aria-live="polite">پخش زنده</small></div>
+      <button id="toggle" aria-label="پخش"><svg><use href="#i-play"/></svg></button>
+    </div>
+    <nav aria-label="بخش‌های رادیو"><a href="#home" aria-current="page"><svg><use href="#i-home"/></svg>خانه</a><a href="#discover"><svg><use href="#i-search"/></svg>کشف موسیقی</a><a href="#archive"><svg><use href="#i-archive"/></svg>آرشیو</a></nav></footer>
   </div>
-</dialog>
-<audio id="liveAudio" preload="none" playsinline></audio>
-<audio id="recordingAudio" preload="none" playsinline></audio>
-<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <audio id="audio" preload="none"></audio>
 </body>
 </html>
