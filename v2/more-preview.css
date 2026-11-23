@@ -33,3 +33,10 @@ dialog .round { color: #241c14; background: #ffddab; border-radius: 50%; width: 
   dialog[open] { animation: rise .22s ease-out; }
   @keyframes rise { from { transform: translateY(55%); opacity: .4; } }
 }
+
+/* Program schedule: local timezone and accessible countdown. */
+.schedule-local-time { font-weight: 700; margin: 10px 0 4px !important; }
+.schedule-countdown { font-variant-numeric: tabular-nums; color: #f5d09a !important; font-weight: 700; margin: 4px 0 14px !important; }
+.timezone-label { display: block; font-size: .85rem; color: #d2c7b7; margin-bottom: 6px; }
+.timezone-select { width: 100%; max-width: 380px; min-height: 44px; border: 1px solid #ffffff35; border-radius: 10px; background: #302b25; color: #fff0d9; padding: 8px 12px; font: inherit; }
+.timezone-select option { background: #302b25; color: #fff0d9; }
