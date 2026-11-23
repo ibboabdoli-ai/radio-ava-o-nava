@@ -169,3 +169,32 @@ loadJson('audius-catalog.json').then(data => {
   byId('query').oninput = renderMusic;
   renderMusic();
 }).catch(() => notice(byId('music'), 'فهرست موسیقی بارگذاری نشد.'));
+
+// Listener count is fetched from Icecast; never display an invented count.
+(() => {
+  const badge = document.getElementById('liveListeners');
+  if (!badge) return;
+  const endpoint = 'https://live.ibboabdoli.com/status-json.xsl';
+  async function refreshListeners() {
+    if (document.hidden) return;
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      let response;
+      try { response = await fetch(endpoint, {cache:'no-store',signal:controller.signal}); }
+      finally { clearTimeout(timeout); }
+      if (!response.ok) throw new Error('Stats unavailable');
+      const data = await response.json();
+      const sources = data?.icestats?.source;
+      const entries = Array.isArray(sources) ? sources : sources ? [sources] : [];
+      const source = entries.find(s => { try { return new URL(s.listenurl).pathname === '/stream'; } catch { return s.mount === '/stream'; } });
+      if (!source) { badge.textContent = 'پخش زنده غیرفعال است'; return; }
+      const count = Number(source.listeners);
+      if (!Number.isSafeInteger(count) || count < 0) throw new Error('Invalid count');
+      badge.textContent = new Intl.NumberFormat('fa-IR').format(count) + ' شنونده آنلاین';
+    } catch { badge.textContent = 'آمار شنوندگان در دسترس نیست'; }
+  }
+  refreshListeners();
+  setInterval(refreshListeners, 45000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshListeners(); });
+})();
