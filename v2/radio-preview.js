@@ -184,11 +184,12 @@ loadJson('audius-catalog.json').then(data => {
     try {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 5000);
-      let response;
-      try { response = await fetch(live.stats, {cache:'no-store',mode:'cors',signal:controller.signal}); }
-      finally { clearTimeout(timeout); }
-      if (!response.ok) throw new Error('Stats unavailable');
-      const data = await response.json();
+      let data;
+      try {
+        const response = await fetch(live.stats, {cache:'no-store',mode:'cors',signal:controller.signal});
+        if (!response.ok) throw new Error('Stats unavailable');
+        data = await response.json();
+      } finally { clearTimeout(timeout); }
       if (typeof data?.live !== 'boolean' || !Number.isSafeInteger(data.listeners) || data.listeners < 0) throw new Error('Invalid public stats');
       if (!data.live) { badge.textContent = 'پخش زنده غیرفعال است'; return; }
       badge.textContent = new Intl.NumberFormat('fa-IR').format(data.listeners) + ' شنونده آنلاین';
