@@ -63,7 +63,7 @@ nav [aria-current] { color: #ffdb9f; }
   .shell { width: min(100% - 64px, 1200px); min-height: 100svh; border-inline: 1px solid #ffffff12; }
   header { padding: 24px 40px; font-size: 1.15rem; }
   main { padding: 10px 40px 180px; }
-  .hero { min-height: 340px; padding: 42px; background-position: center 42%; }
+  .shell .hero { min-height: 340px; padding: 42px; background-position: center 42%; }
   .hero h1 { font-size: 3.5rem; }
   .hero small { font-size: 1.6rem; }
   .heading { margin-top: 34px; }
@@ -77,7 +77,7 @@ nav [aria-current] { color: #ffdb9f; }
   footer { width: min(100% - 64px, 1200px); padding: 12px 40px 16px; background: linear-gradient(transparent,#151514 20%); }
   footer .mini { max-width: 100%; }
   nav { justify-content: center; gap: 80px; }
-  dialog { width: min(92vw, 650px); max-height: 88dvh; margin: auto; border: 1px solid #ffffff24; border-radius: 24px; padding: 24px 40px; }
-  dialog .art { width: min(100%, 35dvh, 340px); }
+  body dialog { width: min(92vw, 650px); max-height: 88dvh; margin: auto; border: 1px solid #ffffff24; border-radius: 24px; padding: 24px 40px; }
+  body dialog .art { width: min(100%, 35dvh, 340px); }
 }
 .live-listeners { display: block; width: fit-content; margin: 7px 0 11px; color: #f7d7a8; font-size: .82rem; }
