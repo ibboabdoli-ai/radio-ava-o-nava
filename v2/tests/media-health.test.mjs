@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const manifest=JSON.parse(readFileSync(new URL('../shows.json',import.meta.url),'utf8'));
-test('Five publicly accessible archived recordings respond to HEAD',async(t)=>{
-  assert.equal(manifest.recordings.length,5);
+test('All twelve publicly accessible archived recordings respond to HEAD',async(t)=>{
+  assert.equal(manifest.recordings.length,12);
   for(const recording of manifest.recordings){
     await t.test(recording.id,{timeout:20000},async()=>{
       const url=new URL(recording.src);
@@ -19,7 +19,7 @@ test('Five publicly accessible archived recordings respond to HEAD',async(t)=>{
   }
 });
 
-test('Diagnose byte-range support across all five archive recordings (issue #15)',async(t)=>{
+test('Diagnose byte-range support across all twelve archive recordings (issue #15)',async(t)=>{
  for(const item of manifest.recordings){
    await t.test(item.id,{timeout:18000},async()=>{
      const response=await fetch(item.src,{method:'GET',headers:{Range:'bytes=0-1'},signal:AbortSignal.timeout(14000)});
