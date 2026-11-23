@@ -106,9 +106,9 @@ test('Program and recordings are preserved',()=>{
  assert.deepEqual(shows.schedule.weekdays,[6,0,1,2,3]);
  assert.equal(shows.schedule.hour,22);
  assert.equal(shows.timezone,'Asia/Tehran');
- assert.equal(shows.recordings.length,5);
- assert.equal(shows.recordings[0].id,'recording-20261117-074916');
- assert.equal(shows.recordings[0].src,'https://archive.ibboabdoli.com/recordings/rec_20261117-074916.mp3');
+ assert.equal(shows.recordings.length,12);
+ assert.equal(shows.recordings[0].id,'recording-20261120-180647');
+ assert.equal(shows.recordings[0].src,'https://archive.ibboabdoli.com/recordings/rec_20261120-180647.mp3');
  for(const r of shows.recordings)assert.equal(new URL(r.src).hostname,'archive.ibboabdoli.com');
  assert.equal(new URL(shows.links.stream).hostname,'live.ibboabdoli.com');
  assert.equal(new URL(shows.links.contest).hostname,'docs.google.com');
@@ -256,8 +256,8 @@ test('Replay controls, live status and contest registration are safely connected
  assert.match(app,/state\.recordingIndex\+1<state\.shows\.recordings\.length/);
  assert.match(html,/href="\.\/privacy\.html"/);
  assert.ok(!html.includes('docs.google.com/spreadsheets/d/'),'Do not expose private registration sheet on the public site');
- assert.equal(shows.recordings.length,5);
- assert.equal(new Set(shows.recordings.map(recording=>recording.id)).size,5);
+ assert.equal(shows.recordings.length,12);
+ assert.equal(new Set(shows.recordings.map(recording=>recording.id)).size,12);
  for(const item of shows.recordings)assert.match(item.src,/^https:\/\/archive\.ibboabdoli\.com\/recordings\/[^/]+\.mp3$/);
 });
 test('Installation guide HTML has two matching platform containers',()=>{

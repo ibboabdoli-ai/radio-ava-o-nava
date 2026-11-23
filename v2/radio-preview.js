@@ -1,6 +1,6 @@
 const byId = id => document.getElementById(id);
 const audio = byId('audio');
-const live = { title: 'رادیو آوا و نوا', subtitle: 'پخش زنده', src: 'https://live.ibboabdoli.com/stream', image: 'gallery/player-tar.jpg' };
+const live = { title: 'رادیو آوا و نوا', subtitle: 'پخش زنده', src: 'https://live.ibboabdoli.com/stream', stats: 'https://live.ibboabdoli.com/radio-stats.xsl', image: 'gallery/player-tar.jpg' };
 let selected = live;
 let recordings = [];
 let tracks = [];
@@ -141,6 +141,10 @@ async function loadJson(file) {
 }
 loadJson('shows.json').then(data => {
   live.src = data.links.stream;
+  try {
+    const configuredStats = new URL(data.links.stats);
+    if (configuredStats.protocol === 'https:' && configuredStats.hostname === 'live.ibboabdoli.com' && configuredStats.pathname === '/radio-stats.xsl') live.stats = configuredStats.href;
+  } catch { /* Keep the vetted public stats endpoint. */ }
   recordings = data.recordings.map((r,i) => ({ ...r, subtitle: 'ساعت ' + r.time, image: 'gallery/recording-' + (i%5+1) + '.webp' }));
   byId('recent').replaceChildren(...recordings.slice(0,2).map(r => card(r)));
   renderArchive();
@@ -169,3 +173,29 @@ loadJson('audius-catalog.json').then(data => {
   byId('query').oninput = renderMusic;
   renderMusic();
 }).catch(() => notice(byId('music'), 'فهرست موسیقی بارگذاری نشد.'));
+
+// Listener count is fetched from Icecast; never display an invented count.
+(() => {
+  const badge = document.getElementById('liveListeners');
+  if (!badge) return;
+  // The scoped public stats endpoint is distinct from the blocked Icecast status-json endpoint.
+  async function refreshListeners() {
+    if (document.hidden) return;
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      let data;
+      try {
+        const response = await fetch(live.stats, {cache:'no-store',mode:'cors',signal:controller.signal});
+        if (!response.ok) throw new Error('Stats unavailable');
+        data = await response.json();
+      } finally { clearTimeout(timeout); }
+      if (typeof data?.live !== 'boolean' || !Number.isSafeInteger(data.listeners) || data.listeners < 0) throw new Error('Invalid public stats');
+      if (!data.live) { badge.textContent = 'پخش زنده غیرفعال است'; return; }
+      badge.textContent = new Intl.NumberFormat('fa-IR').format(data.listeners) + ' شنونده آنلاین';
+    } catch { badge.textContent = 'آمار شنوندگان در دسترس نیست'; }
+  }
+  void refreshListeners();
+  setInterval(() => { void refreshListeners(); }, 45000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) void refreshListeners(); });
+})();
