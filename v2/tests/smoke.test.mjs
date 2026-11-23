@@ -256,7 +256,7 @@ test('Replay controls, live status and contest registration are safely connected
  assert.match(app,/state\.recordingIndex\+1<state\.shows\.recordings\.length/);
  assert.match(html,/href="\.\/privacy\.html"/);
  assert.ok(!html.includes('docs.google.com/spreadsheets/d/'),'Do not expose private registration sheet on the public site');
- assert.equal(shows.recordings.length,5);
+ assert.equal(shows.recordings.length,12);
  assert.equal(new Set(shows.recordings.map(recording=>recording.id)).size,12);
  for(const item of shows.recordings)assert.match(item.src,/^https:\/\/archive\.ibboabdoli\.com\/recordings\/[^/]+\.mp3$/);
 });
