@@ -194,7 +194,7 @@ loadJson('audius-catalog.json').then(data => {
       badge.textContent = new Intl.NumberFormat('fa-IR').format(count) + ' شنونده آنلاین';
     } catch { badge.textContent = 'آمار شنوندگان در دسترس نیست'; }
   }
-  refreshListeners();
-  setInterval(refreshListeners, 45000);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshListeners(); });
+  void refreshListeners();
+  setInterval(() => { void refreshListeners(); }, 45000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) void refreshListeners(); });
 })();
