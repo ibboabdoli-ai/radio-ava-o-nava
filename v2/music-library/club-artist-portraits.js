@@ -1,0 +1,234 @@
+// Artist images are linked to their original public profile or photo record.
+export default {
+  "Afee": {
+    "artwork": true,
+    "image": "https://cdn4.telesco.pe/file/guMbUvdIltR1FczW45TmGnCxMAQMMeCOp56sCOUsWndofAKvp-ymKWaLmQ5KWBkuHBdZ3d6wXiEo85axubDHyqmnmMq0rfzUegfIWbgIkdP00gxb-l6Ok1AqGLUz-G9HUa-IxKiRwLSaWpCLSmK-UtxYFY67slTqMKrQbXZgT85heVd2OxpMHBVz3drVqRbPDcpDY4oil9xuQivdz0r0VmWEBYT94O4-XijdBH72NqqEOM0SOuRkXrXiNZxcnWWtl5aYcHxjfkA_Y2HLXj2hHFk9fyx9jEkDZHGvu_hlqWIJSfw5CexiiNwHgp8JwmN_WxKUcBdG0KNhfJTbrCRR3A.jpg",
+    "source": "https://t.me/afeeremix"
+  },
+  "Frédéric Chopin": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/915349b0a246cd0fac1c16f6963e43bf/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/8473"
+  },
+  "Heinrich SCHLUSNUS - Bariton, Sebastian PESCHKO - Piano": {
+    "image": "https://iiif.micr.io/HfQGI/full/^1024,538/0/default.webp",
+    "source": "https://www.rijksmuseum.nl/en/collection/object/Portret-van-de-bariton-Heinrich-Schlusnus-als-Rigoletto-in-de-opera-Rigoletto--9bbc27e37eafc485ce2d5fa2451079d6"
+  },
+  "HoliznaCC0": {
+    "artwork": true,
+    "image": "https://freemusicarchive.org/image/?file=album_image%2F8fbwBtv07nezpm8y3hvW1RhligQSCsNyzKZePS7l.png&width=290&height=290&type=album",
+    "source": "https://freemusicarchive.org/music/holiznacc0/winter-lofi/2-hour-delay-1/"
+  },
+  "Kevin MacLeod": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/3622be1b4bc3c1489f8ab4f81ecf66f5/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/982875"
+  },
+  "Maurizio Pollini": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/e169320819d7ce1442ca5d5306b94115/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/241841"
+  },
+  "Sami Beigi": {
+    "image": "https://sazbin.com/api/media/file/cover-557.webp",
+    "source": "https://sazbin.com/artist/ar-1uvxugv"
+  },
+  "آرتا": {
+    "image": "https://sazbin.com/api/media/file/artaa-1.jpg",
+    "source": "https://sazbin.com/artist/ar-1l65p27"
+  },
+  "آرمین زارعی": {
+    "image": "https://sazbin.com/api/media/file/photo-348.webp",
+    "source": "https://sazbin.com/artist/ar-jbdkno"
+  },
+  "ابی": {
+    "credit": "Arad Mojtahedi",
+    "image": "./assets/archive/ebi.jpg",
+    "license": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Ebi_Live_In_Montreal_03.jpg"
+  },
+  "اندی": {
+    "image": "https://andymusic.com/images/portrait-bio.webp",
+    "source": "https://andymusic.com/"
+  },
+  "بهزاد لیتو": {
+    "image": "https://sazbin.com/api/media/file/photo-276.webp",
+    "source": "https://sazbin.com/artist/ar-1xsgmx0-tpel"
+  },
+  "بیژن مرتضوی": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/e8b1e06a21e0e83cdf62646ec92c0cdd/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/128672"
+  },
+  "تتلو": {
+    "image": "https://sazbin.com/api/media/file/tataloo-w.webp",
+    "source": "https://sazbin.com/artist/tataloo"
+  },
+  "حبیب": {
+    "image": "https://sazbin.com/api/media/file/photo-70.webp",
+    "source": "https://sazbin.com/artist/ar-1tz1v2s"
+  },
+  "حمید غلامعلی": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/d640b808b059281c60b33b0a4e6e785b/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/4105239"
+  },
+  "حمیرا": {
+    "image": "https://sazbin.com/api/media/file/photo-227.webp",
+    "source": "https://sazbin.com/artist/ar-52oumd"
+  },
+  "داریوش": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/5555097c847bb2fa52e0badc484def07/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/4743682"
+  },
+  "رادیو آوا و نوا": {
+    "artwork": true,
+    "image": "../../radio-neon-logo.webp",
+    "source": "https://radio.ibboabdoli.com/v2/"
+  },
+  "راغب علامه": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/89f57e49eb91980df54fdfe67b1f5c5e/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/240998"
+  },
+  "رضا بهرام": {
+    "image": "https://sazbin.com/api/media/file/photo-328.webp",
+    "source": "https://sazbin.com/artist/ar-svmk1q"
+  },
+  "ساسی": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/601f9fb5628377fd4a469772a5962985/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/4616523"
+  },
+  "ستار": {
+    "image": "https://sazbin.com/api/media/file/sattar-w.webp",
+    "source": "https://sazbin.com/artist/sattar"
+  },
+  "سهراب پاکزاد": {
+    "image": "https://sazbin.com/api/media/file/photo-111.webp",
+    "source": "https://sazbin.com/artist/ar-1qhq1zl"
+  },
+  "سیامک عباسی": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/44fe7e15a5fdbbc54d97411fb9a32c44/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/1253362"
+  },
+  "سیاوش شمس": {
+    "image": "https://sazbin.com/api/media/file/photo-202.webp",
+    "source": "https://sazbin.com/artist/ar-1d0ftef"
+  },
+  "سیاوش قمیشی": {
+    "image": "https://sazbin.com/api/media/file/ghomayshi-w.webp",
+    "source": "https://sazbin.com/artist/ghomayshi"
+  },
+  "سیجل": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/0e74cd9bb0cf35a888abc43c469cabbe/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/5791793"
+  },
+  "شادمهر عقیلی": {
+    "image": "https://sazbin.com/api/media/file/shadmehr-w.webp",
+    "source": "https://sazbin.com/artist/shadmehr"
+  },
+  "شاهرخ": {
+    "image": "https://sazbin.com/api/media/file/photo-a940u9.webp",
+    "source": "https://sazbin.com/artist/ar-1t2jw7e"
+  },
+  "شاهین نجفی": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/e0375280ce8b2a4883e0406d31095731/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/504417"
+  },
+  "شاهین نجفی و عرفان": [
+    {
+      "image": "https://cdn-images.dzcdn.net/images/artist/e0375280ce8b2a4883e0406d31095731/250x250-000000-80-0-0.jpg",
+      "source": "https://www.deezer.com/artist/504417"
+    },
+    {
+      "image": "https://sazbin.com/api/media/file/cover-107.webp",
+      "source": "https://sazbin.com/artist/ar-1a5aomr"
+    }
+  ],
+  "عارف": {
+    "credit": "Dena Barmas / Persian Dutch Network · CC BY-SA 4.0",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/8/83/AREF_AREFKIA_-_Persian_pop_singer_-_Calgary_-_Oct_2016_%28cropped%29.jpg",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:AREF_AREFKIA_-_Persian_pop_singer_-_Calgary_-_Oct_2016_(cropped).jpg"
+  },
+  "علیرضا روزگار": {
+    "image": "https://sonalos.com/storage/images/variants/300/artists/alireza-roozegar-sonalos.jpg.webp?v=1789066938",
+    "source": "https://sonalos.com/artists/alireza-roozegar?tracks=2"
+  },
+  "فرامرز آصف": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/2af865934504066160a54455f40bf272/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/1360713"
+  },
+  "فرهاد": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/6dbee0ed22a08e35e75a3a25e705fdad/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/1252093"
+  },
+  "فرهاد جهانگیری": {
+    "image": "https://sazbin.com/api/media/file/cover-509.webp",
+    "source": "https://sazbin.com/artist/ar-1qg6bqk"
+  },
+  "مارتیک": {
+    "image": "https://sazbin.com/api/media/file/photo-241.webp",
+    "source": "https://sazbin.com/artist/ar-1bnqh15"
+  },
+  "مجید رضوی": {
+    "image": "https://sazbin.com/api/media/file/photo-31.webp",
+    "source": "https://sazbin.com/artist/ar-1y19p08"
+  },
+  "محسن یگانه": {
+    "image": "https://sazbin.com/api/media/file/mohsen-yeganeh-w.webp",
+    "source": "https://sazbin.com/artist/mohsen-yeganeh"
+  },
+  "محمد علیزاده": {
+    "image": "https://sazbin.com/api/media/file/photo-351.webp",
+    "source": "https://sazbin.com/artist/ar-1xx84bl"
+  },
+  "مرجان": {
+    "image": "https://upload.wikimedia.org/wikipedia/commons/4/43/%D9%85%D8%B1%D8%AC%D8%A7%D9%86_%DB%B2_%28cropped%29.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:%D9%85%D8%B1%D8%AC%D8%A7%D9%86_%DB%B2_%28cropped%29.jpg"
+  },
+  "مسعود بختیاری": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/4e87263e1579c78de2270da3b5954c94/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/6945463"
+  },
+  "معین": {
+    "image": "https://sazbin.com/api/media/file/moein-w.webp",
+    "source": "https://sazbin.com/artist/moein"
+  },
+  "مهدی جهانی": {
+    "image": "https://sazbin.com/api/media/file/cover-805.webp",
+    "source": "https://sazbin.com/artist/ar-1qn16y2"
+  },
+  "مهستی": {
+    "image": "https://sazbin.com/api/media/file/mahasti-w.webp",
+    "source": "https://sazbin.com/artist/mahasti"
+  },
+  "هایده": {
+    "image": "https://sazbin.com/api/media/file/hayedeh-w.webp",
+    "source": "https://sazbin.com/artist/hayedeh"
+  },
+  "همایون شجریان": {
+    "image": "https://sazbin.com/api/media/file/homayoun-shajarian-w.webp",
+    "source": "https://sazbin.com/artist/homayoun-shajarian"
+  },
+  "هنگامه": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/85ca274e79fb272843e4b3ddb130905f/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/1247509"
+  },
+  "کوروس": {
+    "image": "https://www.parstimes.com/musicians/kouros_shahmiri/01.jpg",
+    "source": "https://www.parstimes.com/musicians/kouros_shahmiri/"
+  },
+  "کوروش": {
+    "image": "https://cdn-images.dzcdn.net/images/artist/53f6b12590429159fa06ba74613620e0/250x250-000000-80-0-0.jpg",
+    "source": "https://www.deezer.com/artist/9021650"
+  },
+  "گلپا": {
+    "image": "https://sazbin.com/api/media/file/photo-494.webp",
+    "source": "https://sazbin.com/artist/ar-ilizat"
+  },
+  "گوگوش": {
+    "credit": "Bahman / Calliopejen / Kimse",
+    "image": "./assets/archive/googoosh.jpg",
+    "license": "https://creativecommons.org/licenses/by/2.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Googooshcrop.jpg"
+  },
+  "یاسین ترکی": {
+    "image": "https://sazbin.com/api/media/file/cover-n2s051.webp",
+    "source": "https://sazbin.com/artist/ar-tc40ch"
+  }
+};
