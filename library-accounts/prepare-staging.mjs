@@ -40,6 +40,17 @@ worker = replaceOnce(worker,before,
 await writeFile(workerPath,worker);
 
 const assets = join(stagingAssets,'v2');
+const playlistLink = '<a href="./music-library/account">پلی‌لیست‌های من</a>';
+const clubHome = join(assets,'radio-club.html');
+let club = await readFile(clubHome,'utf8');
+club = replaceOnce(club,'<a href="#leaders-title">جدول امتیازها</a><a href="#account">تنظیمات حساب</a>',
+  '<a href="#leaders-title">جدول امتیازها</a><a href="#account">تنظیمات حساب</a>' + playlistLink);
+club = replaceOnce(club,'<a href="#account">تنظیمات حساب</a><a href="#admin" id="club-menu-admin"',
+  '<a href="#account">تنظیمات حساب</a>' + playlistLink + '<a href="#admin" id="club-menu-admin"');
+await writeFile(clubHome,club);
+const clubProfile = join(assets,'club-profile.html');
+await writeFile(clubProfile,replaceOnce(await readFile(clubProfile,'utf8'),
+  '<div class="account-actions">','<div class="account-actions">\n      <a class="button" href="./music-library/account">پلی‌لیست‌های من</a>'));
 const archiveTarget = join(assets,'music-library');
 await cp(join(site,'music-library'), archiveTarget, {recursive:true});
 await cp(join(here,'ui'), archiveTarget, {recursive:true});

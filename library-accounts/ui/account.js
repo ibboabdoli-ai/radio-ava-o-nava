@@ -80,6 +80,8 @@ async function showPicker() {
   get('heading').textContent = 'افزودن به پلی‌لیست';
   get('list-title').textContent = 'انتخاب پلی‌لیست';
   get('create-submit').textContent = 'ساخت و افزودن';
+  get('new-playlist').append(get('create'));
+  show('new-playlist', true);
   show('picker', true);
   const {tracks} = await call(endpoint + 'playlist-catalog');
   pickedSong = tracks.find(track => track.id === song);
@@ -205,6 +207,7 @@ onForm('create', async fields => {
     return;
   }
   get('create').reset();
+  get('new-playlist').open = false;
   await showPlaylists();
   status('آهنگ به «' + name + '» اضافه شد.');
 });

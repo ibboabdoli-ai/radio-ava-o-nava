@@ -9,13 +9,16 @@
 <title>حساب من | رادیو آوا و نوا</title>
 <link rel="icon" href="../../radio-neon-logo.webp">
 <link rel="stylesheet" href="./club-archive.css?v=7">
-<link rel="stylesheet" href="./account.css?v=4">
-<script src="./account.js?v=3" type="module"></script>
+<link rel="stylesheet" href="./account.css?v=5">
+<script src="./account.js?v=4" type="module"></script>
 </head>
 <body>
 <header class="page-head">
   <a class="station" href="https://radio.ibboabdoli.com/v2/">آوا و نوا</a>
-  <a href="https://radio.ibboabdoli.com/v2/music-library/">بازگشت به آرشیو</a>
+  <nav class="account-nav" aria-label="مسیرهای رادیو">
+    <a href="https://radio.ibboabdoli.com/v2/music-library/">آرشیو آهنگ‌ها</a>
+    <a href="/v2/radio-club">باشگاه شنوندگان</a>
+  </nav>
 </header>
 <main>
   <h1 id="heading">حساب من</h1>
@@ -61,11 +64,14 @@
     <form id="create" class="account-panel">
       <label for="playlist-name">نام پلی‌لیست جدید</label>
       <div class="action-row">
-        <input id="playlist-name" name="name" maxlength="80" required>
+        <input id="playlist-name" name="name" maxlength="80" placeholder="مثلاً آهنگ‌های شب" autocomplete="off" required>
         <button class="primary" id="create-submit" type="submit">ساخت پلی‌لیست</button>
       </div>
     </form>
     <ul class="list" id="playlists"></ul>
+    <details id="new-playlist" hidden>
+      <summary>پلی‌لیست جدید</summary>
+    </details>
   </section>
 
   <section id="playlist" hidden>
