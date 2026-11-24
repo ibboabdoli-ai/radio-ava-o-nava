@@ -47,21 +47,15 @@ for (const asset of ['radio-navigation.css','radio-navigation.svg']) await cp(jo
 await cp(join(site,'gallery','player-tar.jpg'),join(assets,'gallery','player-tar.jpg'));
 const archiveIndex = join(archiveTarget,'index.html');
 let html = await readFile(archiveIndex,'utf8');
-html = replaceOnce(html,'<a class="library-artists" id="library-artists" href="./?view=artists">خواننده‌ها</a>',
-  '<div class="account-links"><a class="library-artists" id="library-artists" href="./?view=artists">خواننده‌ها</a><a class="library-artists" href="./account.html">حساب من</a></div>');
-html = replaceOnce(html,'<p id="player-status" role="status" hidden></p>',
-  '<a class="button" id="save-track" href="./account.html" hidden>ذخیره در پلی‌لیست</a><p id="player-status" role="status" hidden></p>');
+assert.match(html,/class="radio-account-link"/);
+assert.match(html,/id="save-track"/);
 assert.equal(html.split('href="../#home"').length,3);
 html = html.replaceAll('href="../#home"','href="https://radio.ibboabdoli.com/v2/"');
 html = replaceOnce(html,'href="../#archive"', 'href="https://radio.ibboabdoli.com/v2/#archive"');
 await writeFile(archiveIndex,html);
-const cssPath = join(archiveTarget,'club-archive.css');
-await writeFile(cssPath,(await readFile(cssPath,'utf8')) + '\n.account-links { display: flex; align-items: center; gap: .9rem; }\n#save-track { margin-block-start: .5rem; }\n');
 const jsPath = join(archiveTarget,'club-archive.js');
 let js = await readFile(jsPath,'utf8');
 js = replaceOnce(js,"const libraryApi='https://api-radio.ibboabdoli.com';","const libraryApi='';");
-js = replaceOnce(js,"  get('mini-title').textContent=get('now-title').textContent=track.title;",
-  "  get('mini-title').textContent=get('now-title').textContent=track.title;\n  const save=get('save-track');\n  save.href='./account.html?'+new URLSearchParams({song:track.id});\n  save.hidden=false;");
 await writeFile(jsPath,js);
 
 await cp(join(sourceBackend,'wrangler.staging.toml'), join(backend,'wrangler.staging.toml'));
