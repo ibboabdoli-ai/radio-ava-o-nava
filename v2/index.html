@@ -25,32 +25,26 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap">
   <link rel="stylesheet" href="radio-preview.css">
   <link rel="stylesheet" href="more-preview.css">
+  <link rel="stylesheet" href="radio-navigation.css">
   <script src="radio-menu.js" defer></script>
-  <script src="radio-preview.js" defer></script>
+  <script src="radio-preview.js?v=2" defer></script>
   <script src="phone-install.js" defer></script>
 </head>
 <body>
   <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <symbol id="i-radio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M7.5 7.5a6.4 6.4 0 0 0 0 9m9-9a6.4 6.4 0 0 1 0 9M4.4 4.4a10.8 10.8 0 0 0 0 15.2M19.6 4.4a10.8 10.8 0 0 1 0 15.2"/></symbol>
-    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10h-6v-6H9v6H3z"/></symbol>
     <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.8"/><path d="m15 15 5 5"/></symbol>
-    <symbol id="i-archive" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v12h14V8m-10 4h6"/></symbol>
     <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M7 4a1 1 0 0 1 1.5-.86l13 8a1 1 0 0 1 0 1.72l-13 8A1 1 0 0 1 7 20z"/></symbol>
     <symbol id="i-pause" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M6 4h4v16H6zm8 0h4v16h-4z"/></symbol>
   </svg>
   <div class="shell">
-    <header><span class="mark"><svg><use href="#i-radio"/></svg></span><b>آوا و نوا</b><a class="install-shortcut" id="installShortcut" href="#install">نصب اپ</a></header>
+    <header><a class="radio-brand" href="#home"><svg aria-hidden="true"><use href="#i-radio"/></svg>آوا و نوا</a><a class="install-shortcut" id="installShortcut" href="#install">نصب اپ</a></header>
     <main>
       <section id="home">
         <div class="hero">
           <div><span class="live"><i></i> رادیو زنده</span><span id="liveListeners" class="live-listeners" role="status" aria-live="polite">آمار شنوندگان در دسترس نیست</span><h1>آوا و نوا<br><small>با آرش</small></h1>
           <button class="listen" id="liveButton"><svg><use href="#i-play"/></svg><span>شنیدن رادیو</span></button></div>
         </div>
-        <a class="home-library" href="./music-library/">
-          <svg aria-hidden="true"><use href="#i-archive"/></svg>
-          <span><strong>آرشیو آهنگ‌ها</strong><small>خواننده‌ها، آلبوم‌ها و سبک‌ها</small></span>
-          <span class="home-library-arrow" aria-hidden="true">←</span>
-        </a>
         <div class="heading"><h2>آخرین برنامه‌ها</h2><a href="#archive">همه ‹</a></div>
         <div id="recent"></div>
         <details id="about"><summary>دربارهٔ برنامه</summary><p>موسیقی زنده، شعر و آواز با آرش در رادیو آوا و نوا.</p></details>
@@ -82,25 +76,25 @@
         </div>
       </details>
       </section>
-      <section id="discover" hidden>
-        <h1>کشف موسیقی</h1>
-        <div class="station-links"><a href="./music-library/">آرشیو آهنگ‌ها و خواننده‌ها ←</a></div>
-        <label class="search"><svg><use href="#i-search"/></svg><input type="search" id="query" placeholder="آهنگ یا هنرمند" aria-label="جست‌وجوی آهنگ یا هنرمند"></label>
-        <div id="filters" class="filters"></div><div id="music" class="tiles"></div>
-      </section>
       <section id="archive" hidden>
-        <h1>آرشیو رادیو</h1>
-        <div class="station-links"><a href="./music-library/">آرشیو آهنگ‌ها و خواننده‌ها ←</a></div>
-        <label class="search"><svg><use href="#i-search"/></svg><input type="search" id="archiveQuery" placeholder="جست‌وجوی برنامه یا تاریخ" aria-label="جست‌وجوی آرشیو"></label>
+        <h1>برنامه‌های ضبط‌شدهٔ رادیو</h1>
+        <label class="search"><svg><use href="#i-search"/></svg><input type="search" id="archiveQuery" placeholder="جست‌وجوی برنامه یا تاریخ" aria-label="جست‌وجوی برنامه‌های رادیو"></label>
         <div id="groups"></div>
       </section>
     </main>
-    <footer><div class="mini">
-      <button class="open-player" aria-haspopup="dialog" aria-controls="player" aria-label="باز کردن پلیر کامل"><img id="cover" src="gallery/player-tar.jpg" alt="">
-      <span class="mini-copy"><strong id="now">رادیو آوا و نوا</strong><small id="state" aria-live="polite">پخش زنده</small></span><span class="up" aria-hidden="true">⌃</span></button>
-      <button id="toggle" aria-label="پخش"><svg><use href="#i-play"/></svg></button>
-    </div>
-    <nav aria-label="بخش‌های رادیو"><a href="#home" aria-current="page"><svg><use href="#i-home"/></svg>خانه</a><a href="#discover"><svg><use href="#i-search"/></svg>کشف موسیقی</a><a href="#archive"><svg><use href="#i-archive"/></svg>آرشیو</a></nav></footer>
+    <footer class="radio-footer">
+      <div class="mini">
+        <button class="open-player" aria-haspopup="dialog" aria-controls="player" aria-label="باز کردن پلیر کامل"><img id="cover" src="gallery/player-tar.jpg" alt="">
+        <span class="mini-copy"><strong id="now">رادیو آوا و نوا</strong><small id="state" aria-live="polite">پخش زنده</small></span><span class="up" aria-hidden="true">⌃</span></button>
+        <button id="toggle" aria-label="پخش"><svg><use href="#i-play"/></svg></button>
+      </div>
+      <nav class="radio-nav" aria-label="بخش‌های رادیو">
+        <a href="#home" aria-current="page"><svg aria-hidden="true"><use href="./radio-navigation.svg#home"/></svg>خانه</a>
+        <a href="./music-library/?view=search"><svg aria-hidden="true"><use href="./radio-navigation.svg#search"/></svg>جست‌وجو</a>
+        <a href="./music-library/"><svg aria-hidden="true"><use href="./radio-navigation.svg#library"/></svg>آرشیو آهنگ‌ها</a>
+        <a href="#archive"><svg aria-hidden="true"><use href="./radio-navigation.svg#programs"/></svg>برنامه‌ها</a>
+      </nav>
+    </footer>
   </div>
   <dialog id="player" aria-labelledby="playerTitle">
     <form method="dialog"><button aria-label="بستن پلیر">⌄</button></form>
