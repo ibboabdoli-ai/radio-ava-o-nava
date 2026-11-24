@@ -66,5 +66,10 @@ await writeFile(jsPath,js);
 
 await cp(join(sourceBackend,'wrangler.staging.toml'), join(backend,'wrangler.staging.toml'));
 const config = join(backend,'wrangler.staging.toml');
-await writeFile(config, replaceOnce(await readFile(config,'utf8'),'[vars]', '[vars]\nLIBRARY_ACCOUNTS_ENABLED = "true"'));
+const originalConfig = await readFile(config,'utf8');
+const archiveBinding = '[[r2_buckets]]\nbinding = "MUSIC_ARCHIVE"\nbucket_name = "ava-radio-staging-music"\n\n';
+assert.match(originalConfig,/^name = "ava-radio-staging"$/m);
+assert.match(originalConfig,/^database_name = "ava-radio-staging"$/m);
+assert.doesNotMatch(originalConfig,/^\[\[r2_buckets\]\]/m,'Review existing archive binding before preparing a candidate.');
+await writeFile(config, replaceOnce(originalConfig,'[vars]',archiveBinding + '[vars]\nLIBRARY_ACCOUNTS_ENABLED = "true"'));
 console.log('Staging candidate prepared in ' + output);
