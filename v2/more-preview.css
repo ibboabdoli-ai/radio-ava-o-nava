@@ -28,6 +28,14 @@ dialog::backdrop { background: #000b; }
 dialog form button { min-width: 56px; min-height: 40px; font-size: 1.4rem; }
 .art { display: block; width: min(100%, 36dvh); margin: 6px auto 18px; aspect-ratio: 1; object-fit: cover; border-radius: 16px; }
 dialog p { color: #d2c1ab; margin: 4px 0 14px; }
+.program-timeline { width: min(100%, 440px); margin: 8px auto 16px; }
+.program-timeline[hidden] { display: none; }
+.program-timeline input {
+  display: block; box-sizing: border-box; width: 100%; min-height: 44px; margin: 0;
+  accent-color: #ffddab; cursor: pointer; direction: ltr;
+}
+.program-timeline input:focus-visible { outline: 2px solid #ffddab; outline-offset: 2px; }
+.program-times { display: flex; justify-content: space-between; color: #d2c1ab; font-size: .85rem; }
 dialog .round { color: #241c14; background: #ffddab; border-radius: 50%; width: 54px; height: 54px; }
 @media (prefers-reduced-motion: no-preference) {
   dialog[open] { animation: rise .22s ease-out; }

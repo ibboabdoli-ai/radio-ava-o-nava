@@ -5,6 +5,50 @@ let selected = live;
 let recordings = [];
 let playRequest = 0;
 const playerSheet = byId('player');
+const programTimeline = byId('programTimeline');
+const programSeek = byId('programSeek');
+let previewTime = null;
+const timeNumber = new Intl.NumberFormat('fa-IR', {useGrouping: false});
+const padTime = new Intl.NumberFormat('fa-IR', {minimumIntegerDigits: 2, useGrouping: false});
+
+function formatProgramTime(seconds) {
+  const whole = Math.floor(seconds);
+  const hours = Math.floor(whole / 3600);
+  const minutes = Math.floor(whole / 60);
+  return (hours ? timeNumber.format(hours) + ':' + padTime.format(minutes % 60) : timeNumber.format(minutes)) +
+    ':' + padTime.format(whole % 60);
+}
+
+function updateProgramTimeline() {
+  if (!programTimeline) return;
+  const duration = audio.duration;
+  const ready = selected !== live && !audio.error && Number.isFinite(duration) && duration > 0;
+  programTimeline.hidden = !ready;
+  if (!ready) return;
+  const position = Math.min(duration, previewTime ?? audio.currentTime);
+  programSeek.max = String(duration);
+  programSeek.value = String(position);
+  const elapsed = formatProgramTime(position);
+  byId('programElapsed').textContent = elapsed;
+  byId('programDuration').textContent = formatProgramTime(duration);
+  programSeek.setAttribute('aria-valuetext', elapsed);
+}
+
+if (programSeek) {
+  programSeek.addEventListener('input', () => {
+    previewTime = Number(programSeek.value);
+    updateProgramTimeline();
+  });
+  programSeek.addEventListener('change', () => {
+    const target = Number(programSeek.value);
+    previewTime = null;
+    if (!programTimeline.hidden) audio.currentTime = target;
+    updateProgramTimeline();
+  });
+  for (const event of ['loadedmetadata', 'durationchange', 'timeupdate', 'seeked', 'emptied', 'error']) {
+    audio.addEventListener(event, updateProgramTimeline);
+  }
+}
 
 if (playerSheet) {
   document.querySelector('.open-player').onclick = () => playerSheet.showModal();
@@ -39,8 +83,13 @@ async function play(item) {
     audio.pause();
     return;
   }
-  if (selected !== item || !audio.src || audio.error) audio.src = item.src;
+  const changingSource = selected !== item || !audio.src || audio.error;
   selected = item;
+  if (changingSource) {
+    previewTime = null;
+    if (programTimeline) programTimeline.hidden = true;
+    audio.src = item.src;
+  }
   updatePlayer('در حال اتصال…');
   try {
     await audio.play();

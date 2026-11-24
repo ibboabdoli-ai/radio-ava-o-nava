@@ -24,10 +24,10 @@
 <link rel="manifest" href="./manifest.webmanifest">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap">
   <link rel="stylesheet" href="radio-preview.css">
-  <link rel="stylesheet" href="more-preview.css">
+  <link rel="stylesheet" href="more-preview.css?v=2">
   <link rel="stylesheet" href="radio-navigation.css">
   <script src="radio-menu.js" defer></script>
-  <script src="radio-preview.js?v=2" defer></script>
+  <script src="radio-preview.js?v=3" defer></script>
   <script src="phone-install.js" defer></script>
 </head>
 <body>
@@ -100,6 +100,11 @@
     <form method="dialog"><button aria-label="بستن پلیر">⌄</button></form>
     <img class="art" id="fullCover" src="gallery/player-tar.jpg" alt="">
     <h2 id="playerTitle">رادیو آوا و نوا</h2><p id="fullStatus">پخش زنده</p>
+    <div class="program-timeline" id="programTimeline" hidden>
+      <input type="range" id="programSeek" min="0" max="0" step="0.1" value="0"
+        aria-label="زمان پخش برنامه">
+      <div class="program-times" dir="ltr"><span id="programElapsed">۰:۰۰</span><span id="programDuration">۰:۰۰</span></div>
+    </div>
     <button class="round" id="fullToggle" aria-label="پخش"><svg aria-hidden="true"><use href="#i-play"/></svg></button>
   </dialog>
   <audio id="audio" preload="none"></audio>
