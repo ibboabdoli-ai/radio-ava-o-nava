@@ -36,6 +36,10 @@ input:not([type="checkbox"]), select {
   border-radius: .65rem;
   font: inherit;
 }
+#add { grid-template-columns: minmax(0, 1fr); }
+#add .action-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+#song-query, #song { width: 100%; min-width: 0; }
+#song { text-overflow: ellipsis; }
 .check { display: inline-flex; align-items: center; min-height: 44px; gap: .5rem; }
 .list { padding: 0; list-style: none; }
 .list li { display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding-block: .4rem; border-bottom: 1px solid var(--edge); }
