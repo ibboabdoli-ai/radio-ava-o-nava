@@ -1,6 +1,7 @@
 const get=id=>document.getElementById(id);
 const query=get('query'),results=get('results'),status=get('catalog-status');
 const player=get('player'),audio=get('audio'),previous=get('previous'),next=get('next');
+const seek=get('seek'),playerToggle=get('player-toggle');
 const mini=get('mini-player'),miniToggle=get('mini-toggle'),playerStatus=get('player-status');
 const archivePath='/v2/music-library/';
 const libraryApi='https://api-radio.ibboabdoli.com';
@@ -114,6 +115,18 @@ function rememberPlayback(track){
     localStorage.setItem(historyKey,JSON.stringify(ids));
   }catch{/* The archive still plays when browser storage is unavailable. */}
 }
+function timeText(value){
+  const seconds=Math.floor(Number.isFinite(value)&&value>0?value:0);
+  return Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0');
+}
+function syncTimeline(){
+  const duration=Number.isFinite(audio.duration)?audio.duration:0;
+  seek.disabled=duration<=0;
+  seek.max=String(duration);
+  seek.value=String(Math.min(duration,audio.currentTime));
+  get('elapsed').textContent=timeText(audio.currentTime);
+  get('duration').textContent=timeText(duration);
+}
 function syncPlayer(){
   const current=playQueue[playIndex];
   for(const button of results.querySelectorAll('[data-track]')){
@@ -123,6 +136,9 @@ function syncPlayer(){
   next.disabled=playIndex<0 || playIndex===playQueue.length-1;
   miniToggle.textContent=audio.paused?'▶':'Ⅱ';
   miniToggle.setAttribute('aria-label',audio.paused?'ادامهٔ پخش':'توقف موقت پخش');
+  playerToggle.setAttribute('aria-label',miniToggle.getAttribute('aria-label'));
+  playerToggle.querySelector('[data-play-icon]').toggleAttribute('hidden',!audio.paused);
+  playerToggle.querySelector('[data-pause-icon]').toggleAttribute('hidden',audio.paused);
 }
 function play(name,queue,track){
   const index=track?queue.indexOf(track):0;
@@ -319,7 +335,17 @@ function startTrack(index){
   save.href=accountUrl.href;
   save.hidden=false;
   get('mini-artist').textContent=get('now-artist').textContent=artistOf(track);
-  get('player-art').className='player-art has-art art-'+trackArt(track);
+  const cover=get('player-art');
+  cover.className='player-art has-art art-'+trackArt(track);
+  cover.replaceChildren();
+  const image=portraitFiles.get(normalize(artistOf(track)))?.[0]?.image;
+  if(image){
+    const portraitImage=node('img');
+    portraitImage.alt='';
+    portraitImage.addEventListener('error',()=>portraitImage.remove(),{once:true});
+    portraitImage.src=image;
+    cover.append(portraitImage);
+  }
   get('queue-progress').textContent=queueName+' · '+count.format(index+1)+' از '+count.format(playQueue.length);
   const remaining=playQueue.slice(index+1);
   get('upcoming').hidden=!remaining.length;
@@ -338,10 +364,17 @@ next.addEventListener('click',()=>startTrack(playIndex+1));
 get('open-player').addEventListener('click',()=>{if(!player.open)player.showModal();});
 get('close-player').addEventListener('click',()=>player.close());
 player.addEventListener('close',()=>{if(view.page==='discover')render();});
-miniToggle.addEventListener('click',()=>{
+function togglePlayback(){
   if(audio.paused)void audio.play().catch(()=>{setPlayerStatus('پخش باز نشد. دوباره تلاش کن.');if(!player.open)player.showModal();});
   else audio.pause();
+}
+miniToggle.addEventListener('click',togglePlayback);
+playerToggle.addEventListener('click',togglePlayback);
+seek.addEventListener('input',()=>{
+  if(!seek.disabled)audio.currentTime=Number(seek.value);
+  syncTimeline();
 });
+for(const event of ['loadedmetadata','durationchange','timeupdate','emptied'])audio.addEventListener(event,syncTimeline);
 audio.addEventListener('ended',()=>{
   if(playIndex+1<playQueue.length)startTrack(playIndex+1);
   else setPlayerStatus('پایان فهرست پخش');
@@ -352,6 +385,7 @@ audio.addEventListener('playing',()=>{
   rememberPlayback(playQueue[playIndex]);
   syncPlayer();
 });
+audio.addEventListener('play',syncPlayer);
 audio.addEventListener('pause',syncPlayer);
 audio.addEventListener('error',()=>setPlayerStatus('فایل این آهنگ در دسترس نیست.'));
 query.addEventListener('input',()=>{
