@@ -52,7 +52,7 @@ html = replaceOnce(html,'<a class="library-artists" id="library-artists" href=".
 html = replaceOnce(html,'<p id="player-status" role="status" hidden></p>',
   '<a class="button" id="save-track" href="./account.html" hidden>ذخیره در پلی‌لیست</a><p id="player-status" role="status" hidden></p>');
 assert.equal(html.split('href="../#home"').length,3);
-html = html.replaceAll('href="../#home"','href="/club"');
+html = html.replaceAll('href="../#home"','href="https://radio.ibboabdoli.com/v2/"');
 html = replaceOnce(html,'href="../#archive"', 'href="https://radio.ibboabdoli.com/v2/#archive"');
 await writeFile(archiveIndex,html);
 const cssPath = join(archiveTarget,'club-archive.css');

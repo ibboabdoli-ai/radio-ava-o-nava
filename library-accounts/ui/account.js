@@ -6,6 +6,7 @@ const endpoint = '/api/library/';
 let identity, catalog, selectedPlaylist, queue = [], position = -1;
 
 const messages = {
+  invalid_credentials:'نام کاربری یا گذرواژه درست نیست.',
   invalid_clubhouse_code:'کد عضویت معتبر نیست یا منقضی شده.',
   invalid_name:'یک نام تا ۸۰ نویسه وارد کن.',
   invalid_playlist:'نام یا تنظیم نمایش پلی‌لیست معتبر نیست.',
@@ -58,7 +59,6 @@ function showSignIn(profile) {
   show('profile', Boolean(identity) && !requestedPlaylist);
   show('my-playlists', Boolean(identity) && !requestedPlaylist);
   show('google', profile.googleEnabled);
-  show('google-unavailable', !profile.googleEnabled);
   if (song && /^[a-f0-9-]{32,36}$/i.test(song)) {
     get('google').href = endpoint + 'auth/google?' + new URLSearchParams({song});
   }
@@ -94,7 +94,7 @@ async function showPlaylists() {
 }
 
 async function loadCatalog() {
-  catalog ??= (await call(endpoint + 'tracks')).tracks;
+  catalog ??= (await call(endpoint + 'playlist-catalog')).tracks;
   return catalog;
 }
 
@@ -169,16 +169,21 @@ function playCurrent() {
   audio.play().catch(() => status('این آهنگ باز نشد. دوباره بزن یا آهنگ بعدی را انتخاب کن.'));
 }
 
-onForm('club-sign-in', async fields => {
-  await call('/api/auth/clubhouse-code', 'POST', {code:fields.get('code')});
-  await call(endpoint + 'auth/logout','POST');
-  get('club-sign-in').reset();
+async function signInWithClub(formId, route, credentials) {
+  await call(route, 'POST', credentials);
+  get(formId).reset();
   const profile = await call(endpoint + 'profile');
   identity = profile.account;
-  if (!identity || identity.method !== 'club') throw new Error('ورود از باشگاه کامل نشد.');
+  if (!identity || identity.method !== 'club') throw new Error('برای پلی‌لیست با حساب شنوندهٔ باشگاه وارد شو.');
   showSignIn(profile);
   await showPlaylists();
-});
+}
+
+onForm('club-sign-in', fields => signInWithClub('club-sign-in','/api/auth/clubhouse-code',{code:fields.get('code')}));
+onForm('password-sign-in', fields => signInWithClub('password-sign-in','/api/auth/login',{
+  username:fields.get('username').trim(),
+  password:fields.get('password'),
+}));
 
 get('logout').onclick = action(get('logout'), async () => {
   if (identity.method === 'club') await call('/api/auth/logout', 'POST');

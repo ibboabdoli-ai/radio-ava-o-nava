@@ -1,8 +1,8 @@
 # Staging listener accounts
 
-The music library uses two independent sign-in methods. Club members continue using the existing membership code and listener session. Google users have an identity tied to Google's immutable subject identifier and a separate session. This does not create a club membership or grant access to club points, admin features, or the radio queue. Matching names or email addresses never link the two accounts.
+The music library uses two independent sign-in methods. Club members continue using the existing membership code or username and password. Existing listener sessions are recognized on the club host. Google users have an identity tied to Google's immutable subject identifier and a separate session. This does not create a club membership or grant access to club points, admin features, or the radio queue. Matching names or email addresses never link the two accounts.
 
-Playlists start private. Public playlists can be opened by link. The database holds the playlist's name, owner, privacy flag, and references to existing songs. No audio file is copied.
+Playlists start private. Public playlists can be opened by link. The database holds the playlist's name, owner, privacy flag, and references to existing songs. No audio file is copied. Playlist song selection and public playback only list tracks from the published catalog.
 
 ## Staging package
 

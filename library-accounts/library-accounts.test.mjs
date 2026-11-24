@@ -10,6 +10,7 @@ const clubA={id:'club-a',username:'ch:listener_a',role:'listener'};
 const clubB={id:'club-b',username:'ch:listener_b',role:'listener'};
 const track='a'.repeat(32);
 const secondTrack='b'.repeat(32);
+const unpublishedTrack='c'.repeat(32);
 
 function setup() {
   const sqlite=new DatabaseSync(':memory:');
@@ -19,6 +20,14 @@ function setup() {
   const insert=sqlite.prepare('INSERT INTO song_catalog VALUES(?,?,?,?,1)');
   insert.run(track,'همسفر','گوگوش','archive:audio/' + 'a'.repeat(64) + '.mp3');
   insert.run(secondTrack,'آشنایی','هایده','archive:audio/' + 'b'.repeat(64) + '.mp3');
+  insert.run(unpublishedTrack,'قطعهٔ آزمایشی','رادیو','archive:audio/' + 'c'.repeat(64) + '.mp3');
+  const fetcher=async url=>{
+    assert.equal(url,'https://api-radio.ibboabdoli.com/api/library/tracks');
+    return Response.json({tracks:[
+      {id:track,title:'همسفر',artist:'گوگوش'},
+      {id:secondTrack,title:'آشنایی',artist:'هایده'},
+    ]});
+  };
   const db={
     prepare(sql) {
       const stmt=sqlite.prepare(sql);
@@ -41,7 +50,7 @@ function setup() {
   const env={DB:db,ALLOWED_ORIGIN:origin,LIBRARY_ACCOUNTS_ENABLED:'true'};
   const request=(path,{user=null,method='GET',body,headers={},site=origin}={})=>libraryAccounts({
     req:new Request(site+'/api/library/'+path,{method,headers:{Origin:site,...headers},body:body&&JSON.stringify(body)}),
-    env,clubSession:async()=>user,readBody:req=>req.json(),h:{},
+    env,clubSession:async()=>user,readBody:req=>req.json(),h:{},fetcher,
     j:(data,status,headers)=>Response.json(data,{status,headers}),
   });
   return {env,db,request};
@@ -64,6 +73,9 @@ test('club and Google accounts have separate sessions; private playlists stay ow
   for(const song of [track,track,secondTrack]){
     assert.equal((await request(path+'/tracks/'+song,{user:clubA,method:'PUT'})).status,200);
   }
+  assert.equal((await request(path+'/tracks/'+unpublishedTrack,{user:clubA,method:'PUT'})).status,404);
+  const catalog=await request('playlist-catalog');
+  assert.deepEqual((await catalog.json()).tracks.map(song=>song.id),[track,secondTrack]);
   const privateList=await request(path,{user:clubA});
   assert.deepEqual((await privateList.json()).tracks.map(song=>song.id),[track,secondTrack]);
   assert.equal((await request(path,{user:clubA,method:'PATCH',headers:{Origin:'https://other.test'},body:{name:'نوشته',public:true}})).status,403);

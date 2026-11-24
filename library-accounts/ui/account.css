@@ -16,7 +16,9 @@ h2 { margin: 0 0 .5rem; }
   border-radius: 1rem;
 }
 #sign-in > a, #sign-in > small { justify-self: start; }
-#club-sign-in { display: grid; gap: .4rem; }
+#club-sign-in, #password-sign-in { display: grid; gap: .4rem; }
+#sign-in details summary { cursor: pointer; padding-block: .6rem; }
+#password-sign-in { margin-block: .6rem; }
 .profile { grid-template-columns: auto minmax(0,1fr) auto; align-items: center; }
 .profile img { border-radius: 50%; object-fit: cover; grid-column: 1; }
 .profile div { grid-column: 2; overflow-wrap: anywhere; }

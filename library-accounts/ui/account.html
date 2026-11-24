@@ -14,8 +14,8 @@
 </head>
 <body>
 <header class="page-head">
-  <a class="station" href="./">آوا و نوا</a>
-  <a href="./">بازگشت به آرشیو</a>
+  <a class="station" href="https://radio.ibboabdoli.com/v2/">آوا و نوا</a>
+  <a href="https://radio.ibboabdoli.com/v2/music-library/">بازگشت به آرشیو</a>
 </header>
 <main>
   <h1 id="heading">حساب من</h1>
@@ -24,14 +24,24 @@
   <section class="account-panel" id="sign-in" hidden>
     <h2>ورود یا ساخت حساب</h2>
     <a class="button primary" id="google" href="/api/library/auth/google" hidden>ورود با گوگل</a>
-    <small id="google-unavailable" hidden>ورود گوگل در نسخهٔ آزمایشی هنوز فعال نشده.</small>
     <form id="club-sign-in" autocomplete="off">
       <label for="club-code">کد عضویت باشگاه</label>
       <div class="action-row">
-        <input id="club-code" name="code" dir="ltr" maxlength="24" required autocomplete="off">
+        <input id="club-code" name="code" dir="ltr" maxlength="24" required autocomplete="one-time-code" autocapitalize="none" spellcheck="false">
         <button type="submit">ورود از باشگاه</button>
       </div>
     </form>
+    <details>
+      <summary>ورود با نام کاربری و گذرواژه</summary>
+      <form id="password-sign-in">
+        <label for="username">نام کاربری باشگاه</label>
+        <input id="username" name="username" dir="ltr" maxlength="40" autocomplete="username" required>
+        <label for="password">گذرواژه</label>
+        <input id="password" name="password" type="password" dir="ltr" maxlength="128" autocomplete="current-password" required>
+        <button type="submit">ورود با گذرواژه</button>
+      </form>
+      <a href="/v2/radio-club#recover-form">بازیابی حساب باشگاه</a>
+    </details>
     <a href="https://www.clubhouse.com/@ibboabdoli">اگر کد نداری، به «آوا و نوا» پیام «عضویت» بده.</a>
   </section>
 
