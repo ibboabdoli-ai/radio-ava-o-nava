@@ -29,6 +29,15 @@ test('Public homepage serves the compact RTL radio with inline station menu and 
  new vm.Script(get('radio-menu.js'));
 });
 
+test('The public music library is reachable directly from Home and from both browsing tabs',()=>{
+ const page=get('index.html');
+ for(const id of ['home','discover','archive']){
+   const section=page.match(new RegExp('<section id="'+id+'"[^>]*>([\\s\\S]*?)</section>'))?.[1];
+   assert.ok(section?.includes('href="./music-library/"'),id);
+ }
+ assert.ok(existsSync(join(root,'music-library','index.html')));
+});
+
 test('Install shortcut falls back to the guide, consumes each native prompt once, and hides after installation',async()=>{
  const elements=new Map(), listeners={}, location={hash:''};
  const getElementById=id=>{
