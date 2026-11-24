@@ -49,7 +49,7 @@ export async function verifyGoogleToken(idToken, audience, nonce, fetcher = fetc
       !Number.isInteger(claims.exp) || claims.exp <= now ||
       !Number.isInteger(claims.iat) || claims.iat > now + 60 || claims.iat > claims.exp) throw new Error('token_invalid');
 
-  const response = await fetcher(jwksEndpoint, {redirect:'error', signal:AbortSignal.timeout(8000)});
+  const response = await fetcher(jwksEndpoint, {redirect:'manual', signal:AbortSignal.timeout(8000)});
   if (!response.ok) throw new Error('google_unavailable');
   const {keys} = await response.json();
   const jwk = keys?.find(item => item.kid === header.kid && item.kty === 'RSA' && item.alg === 'RS256' && item.use === 'sig');
@@ -94,7 +94,7 @@ export async function finishGoogle(request, env, db, fetcher = fetch) {
     if (!googleEnabled(env) || ![state,nonce,verifier].every(value => tokenPattern.test(value)) ||
         state !== url.searchParams.get('state') || url.searchParams.has('error') || !code || code.length > 1024) throw new Error('flow_invalid');
     const response = await fetcher(tokenEndpoint, {
-      method:'POST', redirect:'error', signal:AbortSignal.timeout(8000),
+      method:'POST', redirect:'manual', signal:AbortSignal.timeout(8000),
       body:new URLSearchParams({code,client_id:env.LIBRARY_GOOGLE_CLIENT_ID,client_secret:env.LIBRARY_GOOGLE_CLIENT_SECRET,
         redirect_uri:callbackUri(url.origin),code_verifier:verifier,grant_type:'authorization_code'}),
     });

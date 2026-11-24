@@ -9,9 +9,15 @@ const accountPage = 'https://ava-radio-staging.ibbo-abdoli.workers.dev';
 const publishedCatalogUrl = 'https://api-radio.ibboabdoli.com/api/library/tracks';
 let catalogCache;
 
-async function publishedCatalog(fetcher) {
+async function publishedCatalog(env, fetcher) {
   if (catalogCache?.fetcher === fetcher && catalogCache.expires > Date.now()) return catalogCache.tracks;
-  const response = await fetcher(publishedCatalogUrl,{redirect:'error',signal:AbortSignal.timeout(8000)});
+  let response;
+  const request = new Request(publishedCatalogUrl,{redirect:'manual',signal:AbortSignal.timeout(8000)});
+  try {
+    response = env.LIBRARY_PUBLIC_CATALOG ? await env.LIBRARY_PUBLIC_CATALOG.fetch(request) : await fetcher(request);
+  } catch {
+    throw {status:503,code:'catalog_unavailable'};
+  }
   if (!response.ok) throw {status:503,code:'catalog_unavailable'};
   const {tracks} = await response.json();
   if (!Array.isArray(tracks)) throw {status:503,code:'catalog_unavailable'};
@@ -45,7 +51,7 @@ function namedPlaylist(body) {
   return name;
 }
 
-export async function libraryAccounts({req, env, clubSession, readBody, j, h, fetcher=fetch}) {
+export async function libraryAccounts({req, env, clubSession, readBody, j, h, fetcher=globalThis.fetch}) {
   const url = new URL(req.url);
   const path = url.pathname;
   const method = req.method;
@@ -61,7 +67,7 @@ export async function libraryAccounts({req, env, clubSession, readBody, j, h, fe
     return respond({ok:true},200,{'set-cookie':await clearGoogleSession(req,db)});
   }
   if (method === 'GET' && path === prefix + 'playlist-catalog') {
-    const tracks = await publishedCatalog(fetcher);
+    const tracks = await publishedCatalog(env,fetcher);
     return respond({tracks:[...tracks.values()]});
   }
   const account = await libraryProfile(req, db, clubSession);
@@ -80,7 +86,7 @@ export async function libraryAccounts({req, env, clubSession, readBody, j, h, fe
     if (!results.length) return respond(unavailable,404);
     const first = results[0];
     const songs = results.filter(row=>row.song_id);
-    const catalog = songs.length ? await publishedCatalog(fetcher) : new Map();
+    const catalog = songs.length ? await publishedCatalog(env,fetcher) : new Map();
     return respond({
       id:playlistId, name:first.name, public:Boolean(first.is_public), owned:first.account_id===account?.id,
       tracks:songs.map(row=>catalog.get(row.song_id) || {id:row.song_id,title:null,artist:null}),
@@ -116,7 +122,7 @@ export async function libraryAccounts({req, env, clubSession, readBody, j, h, fe
     return respond({ok:true});
   }
   if (songId && method === 'PUT') {
-    if (!(await publishedCatalog(fetcher)).has(songId)) return respond(unavailable,404);
+    if (!(await publishedCatalog(env,fetcher)).has(songId)) return respond(unavailable,404);
     const song = await db.prepare('SELECT source_url FROM song_catalog WHERE id=? AND active=1').bind(songId).first();
     if (!validArchiveSource.test(song?.source_url || '')) return respond(unavailable,404);
     await db.prepare(

@@ -6,6 +6,7 @@ const endpoint = '/api/library/';
 let identity, catalog, selectedPlaylist, queue = [], position = -1;
 
 const messages = {
+  catalog_unavailable:'فهرست آهنگ‌ها موقتاً باز نشد. دوباره تلاش کن.',
   invalid_credentials:'نام کاربری یا گذرواژه درست نیست.',
   invalid_clubhouse_code:'کد عضویت معتبر نیست یا منقضی شده.',
   invalid_name:'یک نام تا ۸۰ نویسه وارد کن.',

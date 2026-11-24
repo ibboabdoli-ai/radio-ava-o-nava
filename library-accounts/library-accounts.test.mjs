@@ -22,7 +22,7 @@ function setup() {
   insert.run(secondTrack,'آشنایی','هایده','archive:audio/' + 'b'.repeat(64) + '.mp3');
   insert.run(unpublishedTrack,'قطعهٔ آزمایشی','رادیو','archive:audio/' + 'c'.repeat(64) + '.mp3');
   const fetcher=async url=>{
-    assert.equal(url,'https://api-radio.ibboabdoli.com/api/library/tracks');
+    assert.equal(url.url,'https://api-radio.ibboabdoli.com/api/library/tracks');
     return Response.json({tracks:[
       {id:track,title:'همسفر',artist:'گوگوش'},
       {id:secondTrack,title:'آشنایی',artist:'هایده'},
