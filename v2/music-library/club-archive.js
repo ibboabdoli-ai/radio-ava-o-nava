@@ -1,3 +1,5 @@
+import {artistSearchText,indexArtistNames,matchesSearch as matches,searchTerms} from './artist-search.mjs?v=1';
+
 const get=id=>document.getElementById(id);
 const query=get('query'),results=get('results'),status=get('catalog-status');
 const player=get('player'),audio=get('audio'),previous=get('previous'),next=get('next');
@@ -18,14 +20,12 @@ const moodLists=new Map([
 const albumOrder=(a,b)=>(a.discNo??1)-(b.discNo??1)||(a.trackNo??1000)-(b.trackNo??1000)||collator.compare(a.title,b.title);
 const recentOrder=(a,b)=>(b.addedAt??0)-(a.addedAt??0)||collator.compare(a.title,b.title)||a.id.localeCompare(b.id);
 const styles=new Map(),artists=new Map(),allAlbums=[],byId=new Map();
-let tracks=[],view={},loaded=false,playQueue=[],playIndex=-1,queueName='';
+let tracks=[],view={},loaded=false,playQueue=[],playIndex=-1,queueName='',artistNames=new Map();
 const genreOf=track=>track.genre?.trim()||unknown;
 const artistOf=track=>track.artist?.trim()||'هنرمند نامشخص';
 const archiveUrl=(args={})=>archivePath+(Object.keys(args).length?'?'+new URLSearchParams(args):'');
 const artistUrl=(artist,options={})=>archiveUrl({artist,...options});
-const termsOf=text=>normalize(text).split(' ').filter(Boolean);
-const matches=(text,terms)=>terms.every(term=>normalize(text).includes(term));
-const searchable=track=>[track.title,artistOf(track),track.album].filter(Boolean).join(' ');
+const searchable=track=>[track.title,artistSearchText(artistOf(track)),track.album].filter(Boolean).join(' ');
 const numberOf=(n,what)=>count.format(n)+' '+what;
 
 function normalize(text){
@@ -245,9 +245,9 @@ function renderSearch(terms){
   const shown=pool.filter(track=>matches(searchable(track),terms));
   const result=[];
   if(terms.length&&!style&&!mood){
-    const matchingArtists=[...artists].filter(([,artist])=>matches(artist.name,terms)).slice(0,12);
+    const matchingArtists=[...artists].filter(([,artist])=>matches(artistSearchText(artist.name),terms)).slice(0,12);
     if(matchingArtists.length)result.push(section('خواننده‌ها',listOf(matchingArtists.map(artistCard),'artist-grid')));
-    const matchingAlbums=allAlbums.filter(album=>matches(album.name+' '+album.artistName,terms)).slice(0,12);
+    const matchingAlbums=allAlbums.filter(album=>matches(album.name+' '+artistSearchText(album.artistName),terms)).slice(0,12);
     if(matchingAlbums.length)result.push(section('آلبوم‌ها',albumCards(matchingAlbums)));
   }
   if(shown.length)result.push(trackGroup(style?view.genre:mood?.title||'آهنگ‌ها',shown,terms.length?shown:pool));
@@ -256,17 +256,17 @@ function renderSearch(terms){
 }
 function render(){
   if(!loaded)return;
-  const terms=termsOf(query.value);
+  const terms=searchTerms(query.value,artistNames);
   status.textContent='';
   let content;
   if(view.artist)content=renderArtist(terms);
   else if(view.page==='artists'){
-    const displayed=[...artists].filter(([,artist])=>matches(artist.name,terms))
+    const displayed=[...artists].filter(([,artist])=>matches(artistSearchText(artist.name),terms))
       .sort((a,b)=>collator.compare(a[1].name,b[1].name));
     content=displayed.length?[listOf(displayed.map(artistCard),'artist-grid')]:[];
     if(!content.length)status.textContent='خواننده‌ای پیدا نشد.';
   }else if(view.page==='albums'){
-    const displayed=allAlbums.filter(album=>matches(album.name+' '+album.artistName,terms));
+    const displayed=allAlbums.filter(album=>matches(album.name+' '+artistSearchText(album.artistName),terms));
     content=displayed.length?[albumCards(displayed)]:[];
     if(!content.length)status.textContent='آلبومی پیدا نشد.';
   }else if(view.page==='search')content=renderSearch(terms);
@@ -414,6 +414,7 @@ async function load(){
   if(!response.ok)throw new Error('Archive unavailable');
   const {tracks:items}=await response.json();
   tracks=items.sort(recentOrder);
+  artistNames=indexArtistNames(tracks.filter(track=>track.indexed).map(artistOf));
   for(const track of tracks){
     const style=genreOf(track);
     byId.set(track.id,track);
