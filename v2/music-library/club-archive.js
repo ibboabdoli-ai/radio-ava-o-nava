@@ -269,7 +269,7 @@ function setView({restoreQuery=false}={}){
   const details=artists.get(artist);
   const title=artist?(details?.name||'خواننده'):
     page==='search'?(view.genre||moodLists.get(view.mood)?.title||(view.all?'همهٔ آهنگ‌ها':'جست‌وجو')):
-      page==='artists'?'خواننده‌ها':page==='albums'?'آلبوم‌ها':'آرشیو موسیقی';
+      page==='artists'?'خواننده‌ها':page==='albums'?'آلبوم‌ها':'آرشیو آهنگ‌ها';
   const desc=artist&&details?numberOf(details.songs.length,'قطعه')+' · '+numberOf(details.albums.length,'آلبوم'):
     page==='discover'?'آهنگ‌ها، خواننده‌ها و آلبوم‌های آوا و نوا':
       view.mood&&page==='search'?'گزیده‌ای از آرشیو آوا و نوا':'';
@@ -279,15 +279,18 @@ function setView({restoreQuery=false}={}){
   get('archive-description').hidden=!desc;
   get('archive-head').dataset.view=page;
   get('search-bar').hidden=page==='discover';
-  get('hero-action').hidden=page!=='discover';
   get('hero-portrait').hidden=!details;
   get('hero-portrait').replaceChildren(...(details?[portrait(details)]:[]));
   setPhotoCredit(details);
   query.placeholder=page==='artists'&&!artist?'نام خواننده':page==='albums'?'نام آلبوم یا خواننده':'نام آهنگ، خواننده یا آلبوم';
-  for(const tab of document.querySelectorAll('.library-nav [data-page]')){
-    if(tab.dataset.page===(page==='albums'?'discover':page))tab.setAttribute('aria-current','page');
+  const activeSection=page==='search'&&!view.genre&&!view.mood&&!view.all?'search':'discover';
+  for(const tab of document.querySelectorAll('.radio-nav [data-page]')){
+    if(tab.dataset.page===activeSection)tab.setAttribute('aria-current','page');
     else tab.removeAttribute('aria-current');
   }
+  const artistsLink=get('library-artists');
+  if(page==='artists'&&!artist)artistsLink.setAttribute('aria-current','page');
+  else artistsLink.removeAttribute('aria-current');
   const songsTab=get('songs-link'),albumsTab=get('albums-link');
   get('artist-nav').hidden=!details;
   if(details){

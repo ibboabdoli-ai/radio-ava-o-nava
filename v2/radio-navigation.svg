@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10h-6v-6H9v6H3z"/></symbol>
+  <symbol id="search" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6.8"/><path d="m15 15 5 5"/></symbol>
+  <symbol id="library" viewBox="0 0 24 24"><path d="M4 14v-3a8 8 0 0 1 16 0v3"/><rect x="4" y="13" width="4" height="7" rx="1.5"/><rect x="16" y="13" width="4" height="7" rx="1.5"/></symbol>
+  <symbol id="programs" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v12h14V8m-10 4h6"/></symbol>
+</svg>

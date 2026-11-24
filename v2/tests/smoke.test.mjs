@@ -17,25 +17,37 @@ test('Public homepage serves the compact RTL radio with inline station menu and 
  new vm.Script(js);
  assert.match(page,/<html lang="fa" dir="rtl">/);
  assert.doesNotMatch(page,/noindex/);
- for(const id of ['home','discover','archive','toggle','liveButton','audio']) assert.ok(page.includes('id="'+id+'"'),id);
- for(const id of ['home','discover','archive']) assert.ok(page.includes('href="#'+id+'"'));
+ for(const id of ['home','archive','toggle','liveButton','audio']) assert.ok(page.includes('id="'+id+'"'),id);
+ for(const id of ['home','archive']) assert.ok(page.includes('href="#'+id+'"'));
  for(const file of ['radio-preview.js','radio-preview.css','gallery/player-tar.jpg','radio-menu.js','more-preview.css']){
    assert.ok(page.includes(file) && sw.includes(file) && existsSync(join(root,file)),file);
  }
  for(const [,id] of js.matchAll(/byId\('([^']+)'\)/g)) assert.ok(page.includes('id="'+id+'"'),id);
  assert.doesNotMatch(page,/href="studio\.html/);
+ assert.doesNotMatch(page,/id="discover"/);
+ assert.doesNotMatch(js,/audius-catalog\.json/);
+ assert.match(js,/location\.replace\('\.\/music-library\/\?view=search'\)/);
  assert.equal((page.match(/<audio\b/g)||[]).length,1);
  assert.equal((page.match(/name="radio-menu"/g)||[]).length,4);
  new vm.Script(get('radio-menu.js'));
 });
 
-test('The public music library is reachable directly from Home and from both browsing tabs',()=>{
- const page=get('index.html');
- for(const id of ['home','discover','archive']){
-   const section=page.match(new RegExp('<section id="'+id+'"[^>]*>([\\s\\S]*?)</section>'))?.[1];
-   assert.ok(section?.includes('href="./music-library/"'),id);
+test('Home and library share an ordered navigation with distinct destinations for songs and programmes',()=>{
+ const origin='https://radio.example/v2/';
+ const labels=['خانه','جست‌وجو','آرشیو آهنگ‌ها','برنامه‌ها'];
+ for(const [file,base,current] of [['index.html',origin,0],['music-library/index.html',origin+'music-library/',2]]){
+   const page=get(file);
+   const nav=page.match(/<nav class="radio-nav"[^>]*>([\s\S]*?)<\/nav>/)?.[1]||'';
+   const links=[...nav.matchAll(/<a (?:data-page="[^"]+" )?href="([^"]+)"([^>]*)>.*?<\/svg>([^<]+)<\/a>/g)];
+   assert.deepEqual(links.map(link=>link[3]),labels,file);
+   assert.deepEqual(links.map(link=>new URL(link[1],base).href),[origin+'#home',origin+'music-library/?view=search',origin+'music-library/',origin+'#archive'],file);
+   assert.deepEqual(links.map((link,index)=>link[2].includes('aria-current="page"')?index:-1).filter(index=>index>=0),[current],file);
+   assert.match(page,/class="radio-footer"/);
+   assert.match(page,/radio-navigation\.css/);
  }
- assert.ok(existsSync(join(root,'music-library','index.html')));
+ for(const file of ['radio-navigation.css','radio-navigation.svg']){
+   assert.ok(existsSync(join(root,file))&&sw.includes("'./"+file+"'"),file);
+ }
 });
 
 test('Install shortcut falls back to the guide, consumes each native prompt once, and hides after installation',async()=>{
@@ -179,7 +191,7 @@ test('iOS and Android install guide is compact and accessible',()=>{
   assert.match(css,/scroll-snap-type:x mandatory/);
   assert.match(css,/\.install-image-dialog::backdrop/);
   assert.match(css,/\.install-preview img\{[^}]*background:#12101b/);
-  assert.match(sw,/ava-v2-static-38/);
+  assert.match(sw,/ava-v2-static-\d+/);
   assert.match(sw,/install-guide\.js\?v=7/);
   for(const platform of ['ios','android']){
     for(let i=1;i<=4;i++){
@@ -542,7 +554,7 @@ test('Desktop tablet and mobile reproduce the approved responsive navigation',()
   assert.ok(design.includes(rule),'Expected responsive design rule: '+rule);
  assert.equal((html.match(/data-mobile-tab="/g)||[]).length,4);
  for(const id of ['home','episodes','music','more'])assert.ok(html.includes('data-mobile-tab="'+id+'"'));
- assert.ok(sw.includes('ava-v2-static-38'));
+ assert.match(sw,/ava-v2-static-\d+/);
  assert.ok(sw.includes('studio.css?v=6'));
  assert.ok(sw.includes('studio.js?v=4'));
  assert.ok(!sw.includes('archive.ibboabdoli.com'),'No recorded audio pre-cache');

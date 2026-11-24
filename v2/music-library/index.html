@@ -5,24 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#151514">
 <meta name="description" content="جست‌وجو و پخش آهنگ‌های آرشیو، آلبوم‌ها و صفحهٔ خواننده‌ها در رادیو آوا و نوا.">
-<title>آرشیو موسیقی | رادیو آوا و نوا</title>
+<title>آرشیو آهنگ‌ها | رادیو آوا و نوا</title>
 <link rel="icon" href="../../radio-neon-logo.webp">
-<link rel="stylesheet" href="./club-archive.css?v=5">
-<script src="./club-archive.js?v=5" type="module"></script>
+<link rel="stylesheet" href="./club-archive.css?v=6">
+<link rel="stylesheet" href="../radio-navigation.css">
+<script src="./club-archive.js?v=6" type="module"></script>
 </head>
 <body>
 <header class="page-head">
-  <a class="brand" href="./"><svg class="radio-mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M7.5 7.5a6.4 6.4 0 0 0 0 9m9-9a6.4 6.4 0 0 1 0 9M4.4 4.4a10.8 10.8 0 0 0 0 15.2M19.6 4.4a10.8 10.8 0 0 1 0 15.2"/></svg><span>آوا و نوا</span></a>
-  <a class="radio-link" href="https://radio.ibboabdoli.com/v2/">وب‌سایت رادیو <span aria-hidden="true">↗</span></a>
+  <a class="radio-brand" href="../#home"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M7.5 7.5a6.4 6.4 0 0 0 0 9m9-9a6.4 6.4 0 0 1 0 9M4.4 4.4a10.8 10.8 0 0 0 0 15.2M19.6 4.4a10.8 10.8 0 0 1 0 15.2"/></svg><span>آوا و نوا</span></a>
+  <a class="library-artists" id="library-artists" href="./?view=artists">خواننده‌ها</a>
 </header>
 <main id="main-content">
   <section class="archive-head" id="archive-head" aria-labelledby="archive-title">
     <div class="hero-copy">
       <div id="hero-portrait" class="hero-portrait" hidden></div>
       <div>
-        <h1 id="archive-title">آرشیو موسیقی</h1>
+        <h1 id="archive-title">آرشیو آهنگ‌ها</h1>
         <p id="archive-description">آهنگ‌ها، خواننده‌ها و آلبوم‌های آوا و نوا</p>
-        <a class="button primary hero-action" id="hero-action" href="./?view=search">کشف موسیقی <span aria-hidden="true">←</span></a>
       </div>
     </div>
   </section>
@@ -44,13 +44,6 @@
     </ul>
   </details>
 </main>
-<div class="mini-player" id="mini-player" hidden>
-  <button id="open-player" aria-controls="player" aria-haspopup="dialog" type="button">
-    <span class="ui-icon icon-discover" aria-hidden="true"></span>
-    <span><strong id="mini-title"></strong><small id="mini-artist"></small></span>
-  </button>
-  <button id="mini-toggle" type="button" aria-label="توقف موقت پخش">Ⅱ</button>
-</div>
 <dialog class="player" id="player" aria-labelledby="player-title">
   <div class="player-inner">
     <header class="player-header">
@@ -73,11 +66,20 @@
     </section>
   </div>
 </dialog>
-<nav class="library-nav" aria-label="ناوبری آرشیو">
-  <a data-page="discover" href="./"><span class="ui-icon icon-discover" aria-hidden="true"></span>آرشیو</a>
-  <a data-page="search" href="./?view=search"><span class="ui-icon icon-search" aria-hidden="true"></span>جست‌وجو</a>
-  <a data-page="artists" href="./?view=artists"><span class="ui-icon icon-artist" aria-hidden="true"></span>خواننده‌ها</a>
-  <a href="../"><span class="ui-icon icon-radio" aria-hidden="true"></span>خانهٔ رادیو</a>
-</nav>
+<footer class="radio-footer">
+  <div class="mini-player" id="mini-player" hidden>
+    <button id="open-player" aria-controls="player" aria-haspopup="dialog" type="button">
+      <span class="ui-icon icon-discover" aria-hidden="true"></span>
+      <span><strong id="mini-title"></strong><small id="mini-artist"></small></span>
+    </button>
+    <button id="mini-toggle" type="button" aria-label="توقف موقت پخش">Ⅱ</button>
+  </div>
+  <nav class="radio-nav" aria-label="بخش‌های رادیو">
+    <a href="../#home"><svg aria-hidden="true"><use href="../radio-navigation.svg#home"/></svg>خانه</a>
+    <a data-page="search" href="./?view=search"><svg aria-hidden="true"><use href="../radio-navigation.svg#search"/></svg>جست‌وجو</a>
+    <a data-page="discover" href="./" aria-current="page"><svg aria-hidden="true"><use href="../radio-navigation.svg#library"/></svg>آرشیو آهنگ‌ها</a>
+    <a href="../#archive"><svg aria-hidden="true"><use href="../radio-navigation.svg#programs"/></svg>برنامه‌ها</a>
+  </nav>
+</footer>
 </body>
 </html>
