@@ -47,7 +47,15 @@ club = replaceOnce(club,'<a href="#leaders-title">جدول امتیازها</a><
   '<a href="#leaders-title">جدول امتیازها</a><a href="#account">تنظیمات حساب</a>' + playlistLink);
 club = replaceOnce(club,'<a href="#account">تنظیمات حساب</a><a href="#admin" id="club-menu-admin"',
   '<a href="#account">تنظیمات حساب</a>' + playlistLink + '<a href="#admin" id="club-menu-admin"');
+club = replaceOnce(club,'<form id="music-search-form" role="search"><label for="search">جست‌وجوی آهنگ</label>',
+  '<form id="music-search-form" role="search"><div class="catalog-search-head"><label for="search">جست‌وجوی آهنگ</label>' + playlistLink + '</div>');
+club = replaceOnce(club,'./club-purple.css?v=7','./club-purple.css?v=8');
 await writeFile(clubHome,club);
+const clubStyles = join(assets,'club-purple.css');
+await writeFile(clubStyles,(await readFile(clubStyles,'utf8')) + String.raw`
+.catalog-search-head{display:flex;align-items:center;justify-content:space-between;gap:.65rem;flex-wrap:wrap}
+.catalog-search-head a{display:inline-flex;align-items:center;min-height:44px;color:#dcb5f4;font-size:.88rem;text-decoration:underline;text-underline-offset:.23em}
+`);
 const clubProfile = join(assets,'club-profile.html');
 await writeFile(clubProfile,replaceOnce(await readFile(clubProfile,'utf8'),
   '<div class="account-actions">','<div class="account-actions">\n      <a class="button" href="./music-library/account">پلی‌لیست‌های من</a>'));
