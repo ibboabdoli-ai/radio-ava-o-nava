@@ -313,6 +313,11 @@ function startTrack(index){
   playIndex=index;
   mini.hidden=false;
   get('mini-title').textContent=get('now-title').textContent=track.title;
+  const save=get('save-track');
+  const accountUrl=new URL(save.href);
+  accountUrl.searchParams.set('song',track.id);
+  save.href=accountUrl.href;
+  save.hidden=false;
   get('mini-artist').textContent=get('now-artist').textContent=artistOf(track);
   get('player-art').className='player-art has-art art-'+trackArt(track);
   get('queue-progress').textContent=queueName+' · '+count.format(index+1)+' از '+count.format(playQueue.length);

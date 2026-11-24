@@ -16,6 +16,25 @@
   stroke-linejoin: round;
 }
 .radio-brand svg { color: #eec588; }
+.radio-header-actions {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  margin-inline-start: auto;
+}
+.radio-account-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding-inline: .65rem;
+  border-radius: 1.4rem;
+  color: #ffdb9f;
+  font-size: .86rem;
+  white-space: nowrap;
+}
+.radio-account-link:hover { background: #292721; }
+.radio-save-track { margin-block-start: .6rem; }
 .radio-footer {
   position: fixed;
   z-index: 4;

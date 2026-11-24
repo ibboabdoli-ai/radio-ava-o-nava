@@ -50,6 +50,14 @@ test('Home and library share an ordered navigation with distinct destinations fo
  }
 });
 
+test('Home and the public archive link to the same existing club account host',()=>{
+ const target='https://ava-radio-staging.ibbo-abdoli.workers.dev/v2/music-library/account';
+ for(const file of ['index.html','music-library/index.html']){
+   assert.ok(get(file).includes('<a class="radio-account-link" href="'+target+'">حساب من</a>'),file);
+ }
+ assert.ok(get('music-library/index.html').includes('id="save-track" href="'+target+'"'));
+});
+
 test('Install shortcut falls back to the guide, consumes each native prompt once, and hides after installation',async()=>{
  const elements=new Map(), listeners={}, location={hash:''};
  const getElementById=id=>{
