@@ -8,9 +8,9 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>حساب من | رادیو آوا و نوا</title>
 <link rel="icon" href="../../radio-neon-logo.webp">
-<link rel="stylesheet" href="./club-archive.css?v=6">
-<link rel="stylesheet" href="./account.css?v=3">
-<script src="./account.js?v=2" type="module"></script>
+<link rel="stylesheet" href="./club-archive.css?v=7">
+<link rel="stylesheet" href="./account.css?v=4">
+<script src="./account.js?v=3" type="module"></script>
 </head>
 <body>
 <header class="page-head">
@@ -20,6 +20,11 @@
 <main>
   <h1 id="heading">حساب من</h1>
   <p class="state" id="state" role="status" aria-live="polite">در حال بارگذاری…</p>
+
+  <section class="account-panel picker-track" id="picker" hidden>
+    <p id="picker-track"></p>
+    <button id="close-picker" type="button">بازگشت به پخش</button>
+  </section>
 
   <section class="account-panel" id="sign-in" hidden>
     <h2>ورود یا ساخت حساب</h2>
@@ -52,13 +57,12 @@
   </section>
 
   <section id="my-playlists" hidden>
-    <h2>پلی‌لیست‌های من</h2>
-    <p id="song-picker-note" class="state" hidden></p>
+    <h2 id="list-title">پلی‌لیست‌های من</h2>
     <form id="create" class="account-panel">
       <label for="playlist-name">نام پلی‌لیست جدید</label>
       <div class="action-row">
         <input id="playlist-name" name="name" maxlength="80" required>
-        <button class="primary" type="submit">ساخت پلی‌لیست</button>
+        <button class="primary" id="create-submit" type="submit">ساخت پلی‌لیست</button>
       </div>
     </form>
     <ul class="list" id="playlists"></ul>
@@ -80,17 +84,10 @@
       <label id="share-url-label" for="share-url" hidden>لینک اشتراک‌گذاری</label>
       <input id="share-url" type="url" readonly dir="ltr" hidden>
     </form>
-    <form class="account-panel" id="add" hidden>
-      <label for="song-query">پیدا کردن آهنگ در آرشیو</label>
-      <input id="song-query" type="search" placeholder="نام آهنگ یا خواننده">
-      <div class="action-row">
-        <select id="song" name="song" required aria-label="آهنگ را انتخاب کن"></select>
-        <button type="submit">اضافه کردن</button>
-      </div>
-    </form>
     <div class="account-panel" id="player" hidden>
       <div class="action-row"><button id="play-all" class="primary" type="button">پخش فهرست</button><strong id="current"></strong></div>
       <audio controls preload="none" id="audio" aria-label="پخش آهنگ"></audio>
+      <a class="button" id="save-playing-track" href="./account.html" target="_blank" rel="noopener" hidden>افزودن به پلی‌لیست</a>
     </div>
     <ol id="tracks" class="list"></ol>
   </section>

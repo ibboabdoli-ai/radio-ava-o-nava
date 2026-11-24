@@ -3,6 +3,7 @@ import {clearGoogleSession, finishGoogle, googleEnabled, googleSession, startGoo
 const prefix = '/api/library/';
 const uuid = '[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}';
 const playlistRoute = new RegExp('^' + prefix + 'playlists/(' + uuid + ')(?:/tracks/(' + uuid + '|[a-f0-9]{32}))?$','i');
+const validSongId = new RegExp('^(?:' + uuid + '|[a-f0-9]{32})$','i');
 const validArchiveSource = /^archive:audio\/[a-f0-9]{64}\.(?:mp3|wav|ogg|m4a|flac)$/;
 const unavailable = {error:'not_found'};
 const codeLike = /^(?:[a-f0-9]{16}|(?:[a-f0-9]{4}-){3}[a-f0-9]{4})$/i;
@@ -44,6 +45,12 @@ async function libraryProfile(request, db, clubSession) {
     account = await db.prepare('SELECT id FROM library_accounts WHERE club_user_id=?').bind(club.id).first();
   }
   return account ? {...account, clubUserId:club.id, display_name:club.username.replace(/^ch:/, '@'), picture_url:null, method:'club'} : null;
+}
+
+async function isPlayableSong(env,fetcher,songId) {
+  if (typeof songId !== 'string' || !validSongId.test(songId) || !(await publishedCatalog(env,fetcher)).has(songId)) return false;
+  const song = await env.DB.prepare('SELECT source_url FROM song_catalog WHERE id=? AND active=1').bind(songId).first();
+  return validArchiveSource.test(song?.source_url || '');
 }
 
 function namedPlaylist(body) {
@@ -112,12 +119,21 @@ export async function libraryAccounts({req, env, clubSession, readBody, j, h, fe
     return respond({playlists:results});
   }
   if (path === prefix + 'playlists' && method === 'POST') {
-    const name = namedPlaylist(await readBody(req));
+    const body = await readBody(req);
+    const name = namedPlaylist(body);
     if (!name) return respond({error:'invalid_name'},400);
-    const created = await db.prepare(
-      'INSERT INTO library_playlists(id,account_id,name,created_at) SELECT ?,?,?,? WHERE (SELECT count(*) FROM library_playlists WHERE account_id=?)<100 RETURNING id'
-    ).bind(crypto.randomUUID(),account.id,name,Date.now(),account.id).first();
-    return created ? respond(created,201) : respond({error:'playlist_limit'},409);
+    const hasSong = Object.hasOwn(body,'songId');
+    if (hasSong && !await isPlayableSong(env,fetcher,body.songId)) return respond(unavailable,404);
+    const id = crypto.randomUUID();
+    const create = db.prepare(
+      'INSERT INTO library_playlists(id,account_id,name,created_at) SELECT ?,?,?,? WHERE (SELECT count(*) FROM library_playlists WHERE account_id=?)<100'
+    ).bind(id,account.id,name,Date.now(),account.id);
+    const result = hasSong ? (await db.batch([
+      create,
+      db.prepare('INSERT INTO library_playlist_tracks(playlist_id,song_id,position) SELECT id,?,1 FROM library_playlists WHERE id=? AND account_id=?')
+        .bind(body.songId,id,account.id),
+    ]))[0] : await create.run();
+    return result.meta.changes ? respond({id},201) : respond({error:'playlist_limit'},409);
   }
 
   if (!playlistId) return respond(unavailable,404);
@@ -135,9 +151,7 @@ export async function libraryAccounts({req, env, clubSession, readBody, j, h, fe
     return respond({ok:true});
   }
   if (songId && method === 'PUT') {
-    if (!(await publishedCatalog(env,fetcher)).has(songId)) return respond(unavailable,404);
-    const song = await db.prepare('SELECT source_url FROM song_catalog WHERE id=? AND active=1').bind(songId).first();
-    if (!validArchiveSource.test(song?.source_url || '')) return respond(unavailable,404);
+    if (!await isPlayableSong(env,fetcher,songId)) return respond(unavailable,404);
     await db.prepare(
       'INSERT INTO library_playlist_tracks(playlist_id,song_id,position) SELECT ?,?,COALESCE((SELECT max(position)+1 FROM library_playlist_tracks WHERE playlist_id=?),1) WHERE EXISTS(SELECT 1 FROM library_playlists WHERE id=? AND account_id=?) AND (SELECT count(*) FROM library_playlist_tracks WHERE playlist_id=?)<500 ON CONFLICT(playlist_id,song_id) DO NOTHING'
     ).bind(playlistId,songId,playlistId,playlistId,account.id,playlistId).run();

@@ -7,9 +7,9 @@
 <meta name="description" content="جست‌وجو و پخش آهنگ‌های آرشیو، آلبوم‌ها و صفحهٔ خواننده‌ها در رادیو آوا و نوا.">
 <title>آرشیو آهنگ‌ها | رادیو آوا و نوا</title>
 <link rel="icon" href="../../radio-neon-logo.webp">
-<link rel="stylesheet" href="./club-archive.css?v=6">
+<link rel="stylesheet" href="./club-archive.css?v=7">
 <link rel="stylesheet" href="../radio-navigation.css">
-<script src="./club-archive.js?v=7" type="module"></script>
+<script src="./club-archive.js?v=8" type="module"></script>
 </head>
 <body>
 <header class="page-head">
@@ -48,23 +48,36 @@
   <div class="player-inner">
     <header class="player-header">
       <h2 id="player-title">در حال پخش</h2>
-      <button id="close-player" type="button" aria-label="بستن پلیر" autofocus>✕</button>
+      <button id="close-player" type="button" aria-label="بستن پلیر" autofocus>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 9 7 7 7-7"/></svg>
+      </button>
     </header>
-    <div class="now">
-      <div id="player-art" class="player-art" aria-hidden="true"></div>
-      <div><strong id="now-title"></strong><span id="now-artist"></span><small id="queue-progress"></small></div>
+    <div id="player-art" class="player-art" aria-hidden="true"></div>
+    <div class="player-body">
+      <div class="now"><strong id="now-title"></strong><span id="now-artist"></span><small id="queue-progress"></small></div>
+      <div class="timeline" dir="ltr">
+        <input id="seek" type="range" min="0" max="0" step="0.1" value="0" aria-label="زمان پخش" disabled>
+        <div class="timeline-times"><span id="elapsed">0:00</span><span id="duration">0:00</span></div>
+      </div>
+      <div class="controls">
+        <button id="previous" type="button" aria-label="آهنگ قبلی" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h2v14H5zm14 0v14L8 12z"/></svg>
+        </button>
+        <button id="player-toggle" type="button" aria-label="ادامهٔ پخش">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path data-play-icon d="M8 4v16l13-8z"/><path data-pause-icon d="M7 5h4v14H7zm6 0h4v14h-4z" hidden/></svg>
+        </button>
+        <button id="next" type="button" aria-label="آهنگ بعدی" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5h2v14h-2zM5 5l11 7-11 7z"/></svg>
+        </button>
+      </div>
+      <a class="button radio-save-track" id="save-track" href="https://ava-radio-staging.ibbo-abdoli.workers.dev/v2/music-library/account" target="_blank" rel="noopener" hidden>افزودن به پلی‌لیست</a>
+      <p id="player-status" role="status" hidden></p>
+      <details class="upcoming" id="upcoming" hidden>
+        <summary>آهنگ‌های بعدی</summary>
+        <ol id="upcoming-tracks"></ol>
+      </details>
     </div>
-    <div class="controls">
-      <button id="previous" type="button">قبلی</button>
-      <audio id="audio" controls crossorigin="anonymous" preload="none" aria-label="پخش آهنگ آرشیو"></audio>
-      <button id="next" type="button">بعدی</button>
-    </div>
-    <a class="button radio-save-track" id="save-track" href="https://ava-radio-staging.ibbo-abdoli.workers.dev/v2/music-library/account" hidden>ذخیره در پلی‌لیست</a>
-    <p id="player-status" role="status" hidden></p>
-    <section class="upcoming" id="upcoming" aria-labelledby="upcoming-title" hidden>
-      <h3 id="upcoming-title">آهنگ‌های بعدی</h3>
-      <ol id="upcoming-tracks"></ol>
-    </section>
+    <audio id="audio" crossorigin="anonymous" preload="none" aria-label="پخش آهنگ آرشیو"></audio>
   </div>
 </dialog>
 <footer class="radio-footer">

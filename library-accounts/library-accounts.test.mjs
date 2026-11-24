@@ -85,6 +85,13 @@ test('club and Google accounts have separate sessions; private playlists stay ow
   assert.equal((await request(path+'/tracks/'+unpublishedTrack,{user:clubA,method:'PUT'})).status,404);
   const catalog=await request('playlist-catalog');
   assert.deepEqual((await catalog.json()).tracks.map(song=>song.id),[track,secondTrack]);
+  const fromPlaying=await request('playlists',{user:clubA,method:'POST',body:{name:'مستقیم از پلیر',songId:secondTrack}});
+  assert.equal(fromPlaying.status,201);
+  const picked=await request('playlists/'+(await fromPlaying.json()).id,{user:clubA});
+  assert.deepEqual((await picked.json()).tracks.map(song=>song.id),[secondTrack]);
+  const miss=await request('playlists',{user:clubA,method:'POST',body:{name:'قطعهٔ منتشرنشده',songId:unpublishedTrack}});
+  assert.equal(miss.status,404);
+  assert.equal((await (await request('playlists',{user:clubA})).json()).playlists.length,2);
   const privateList=await request(path,{user:clubA});
   assert.deepEqual((await privateList.json()).tracks.map(song=>song.id),[track,secondTrack]);
   assert.equal((await request(path,{user:clubA,method:'PATCH',headers:{Origin:'https://other.test'},body:{name:'نوشته',public:true}})).status,403);

@@ -1,9 +1,10 @@
 const get = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
 const song = params.get('song');
-const requestedPlaylist = params.get('playlist');
+const requestedPlaylist = song ? null : params.get('playlist');
+const archiveUrl = 'https://radio.ibboabdoli.com/v2/music-library/';
 const endpoint = '/api/library/';
-let identity, catalog, selectedPlaylist, queue = [], position = -1;
+let identity, pickedSong, selectedPlaylist, queue = [], position = -1;
 
 const messages = {
   code_is_not_playlist_name:'این شبیه کد ورود باشگاه است. یک نام برای پلی‌لیست انتخاب کن.',
@@ -22,7 +23,7 @@ const messages = {
 const status = message => { get('state').textContent = message; };
 const show = (id, yes) => { get(id).hidden = !yes; };
 const label = track => track.title ? track.title + (track.artist ? ' — ' + track.artist : '') : 'آهنگ در دسترس نیست';
-const trackPath = id => endpoint + 'playlists/' + encodeURIComponent(selectedPlaylist.id) + '/tracks/' + encodeURIComponent(id);
+const trackPath = (playlistId,id) => playlistPath(playlistId) + '/tracks/' + encodeURIComponent(id);
 const playlistPath = id => endpoint + 'playlists/' + encodeURIComponent(id);
 function pageUrl(id, keepSong = false) {
   const url = new URL('./account.html', location.href);
@@ -58,8 +59,8 @@ function onForm(id, work) {
 
 function showSignIn(profile) {
   show('sign-in', !identity && !requestedPlaylist);
-  show('profile', Boolean(identity) && !requestedPlaylist);
-  show('my-playlists', Boolean(identity) && !requestedPlaylist);
+  show('profile', Boolean(identity) && !requestedPlaylist && !song);
+  show('my-playlists', Boolean(identity) && !requestedPlaylist && (!song || Boolean(pickedSong)));
   show('google', profile.googleEnabled);
   if (song && /^[a-f0-9-]{32,36}$/i.test(song)) {
     get('google').href = endpoint + 'auth/google?' + new URLSearchParams({song});
@@ -75,46 +76,50 @@ function showSignIn(profile) {
   }
 }
 
-async function showPlaylists() {
-  const {playlists} = await call(endpoint + 'playlists');
-  const list = get('playlists');
-  list.replaceChildren(...playlists.map(item => {
-    const row = document.createElement('li');
+async function showPicker() {
+  get('heading').textContent = 'افزودن به پلی‌لیست';
+  get('list-title').textContent = 'انتخاب پلی‌لیست';
+  get('create-submit').textContent = 'ساخت و افزودن';
+  show('picker', true);
+  const {tracks} = await call(endpoint + 'playlist-catalog');
+  pickedSong = tracks.find(track => track.id === song);
+  get('picker-track').textContent = pickedSong ? label(pickedSong) : 'این آهنگ در آرشیو در دسترس نیست.';
+}
+
+function playlistRow(item) {
+  const row = document.createElement('li');
+  if (pickedSong) {
+    row.className = 'playlist-choice';
+    const name = document.createElement('span');
+    name.textContent = item.name;
+    const add = document.createElement('button');
+    add.type = 'button';
+    add.textContent = 'افزودن';
+    add.setAttribute('aria-label','افزودن به ' + item.name);
+    add.onclick = action(add, async () => {
+      await call(trackPath(item.id,pickedSong.id),'PUT');
+      add.textContent = 'افزوده شد';
+      status('آهنگ به «' + item.name + '» اضافه شد.');
+    });
+    row.append(name,add);
+  } else {
     const link = document.createElement('a');
-    link.href = pageUrl(item.id, true);
+    link.href = pageUrl(item.id);
     link.textContent = item.name;
     const privacy = document.createElement('small');
     privacy.textContent = item.public ? 'عمومی' : 'خصوصی';
     row.append(link,privacy);
-    return row;
-  }));
+  }
+  return row;
+}
+
+async function showPlaylists() {
+  const {playlists} = await call(endpoint + 'playlists');
+  get('playlists').replaceChildren(...playlists.map(playlistRow));
   if (!playlists.length) status('هنوز پلی‌لیستی نساخته‌ای.');
-  if (!song) return;
-  const track = (await loadCatalog()).find(track => track.id === song);
-  if (track) {
-    get('song-picker-note').textContent = 'برای ذخیرهٔ «' + track.title + '» یک پلی‌لیست انتخاب کن یا یکی بساز.';
-    show('song-picker-note', true);
-  }
 }
 
-async function loadCatalog() {
-  catalog ??= (await call(endpoint + 'playlist-catalog')).tracks;
-  return catalog;
-}
-
-function searchSongs() {
-  const match = get('song-query').value.trim().toLocaleLowerCase('fa');
-  const selected = get('song').value || song;
-  const items = catalog.filter(track => label(track).toLocaleLowerCase('fa').includes(match));
-  if (!match && selected && items.some(track => track.id === selected)) {
-    items.sort((a,b) => Number(b.id === selected) - Number(a.id === selected));
-  }
-  const empty = new Option('انتخاب آهنگ', '');
-  get('song').replaceChildren(empty, ...items.slice(0, 75).map(track => new Option(label(track), track.id)));
-  if (items.slice(0, 75).some(track => track.id === selected)) get('song').value = selected;
-}
-
-async function showPlaylist(id, initialize = false) {
+async function showPlaylist(id) {
   const playlist = selectedPlaylist = await call(playlistPath(id));
   document.title = playlist.name + ' | آوا و نوا';
   get('heading').textContent = playlist.owned ? 'پلی‌لیست من' : 'پلی‌لیست';
@@ -126,13 +131,8 @@ async function showPlaylist(id, initialize = false) {
   show('playlist-back', Boolean(identity));
   show('edit', playlist.owned);
   show('share', playlist.owned && playlist.public);
-  show('add', playlist.owned);
   show('player', playlist.tracks.some(track => track.title));
   get('tracks').replaceChildren(...playlist.tracks.map(track => renderTrack(track, playlist.owned)));
-  if (playlist.owned && initialize) {
-    await loadCatalog();
-    searchSongs();
-  }
 }
 
 function renderTrack(track, owned) {
@@ -150,7 +150,7 @@ function renderTrack(track, owned) {
     remove.textContent = 'برداشتن';
     remove.setAttribute('aria-label', 'برداشتن ' + label(track));
     remove.onclick = action(remove, async () => {
-      await call(trackPath(track.id), 'DELETE');
+      await call(trackPath(selectedPlaylist.id,track.id), 'DELETE');
       await showPlaylist(selectedPlaylist.id);
     });
     row.append(remove);
@@ -170,6 +170,8 @@ function playCurrent() {
   const audio = get('audio');
   get('current').textContent = label(track);
   audio.src = endpoint + 'audio/' + encodeURIComponent(track.id);
+  get('save-playing-track').href = './account.html?' + new URLSearchParams({song:track.id});
+  show('save-playing-track', true);
   audio.play().catch(() => status('این آهنگ باز نشد. دوباره بزن یا آهنگ بعدی را انتخاب کن.'));
 }
 
@@ -180,7 +182,7 @@ async function signInWithClub(formId, route, credentials) {
   identity = profile.account;
   if (!identity || identity.method !== 'club') throw new Error('برای پلی‌لیست با حساب شنوندهٔ باشگاه وارد شو.');
   showSignIn(profile);
-  await showPlaylists();
+  if (!song || pickedSong) await showPlaylists();
 }
 
 onForm('club-sign-in', fields => signInWithClub('club-sign-in','/api/auth/clubhouse-code',{code:fields.get('code')}));
@@ -196,8 +198,15 @@ get('logout').onclick = action(get('logout'), async () => {
 });
 
 onForm('create', async fields => {
-  const {id} = await call(endpoint + 'playlists', 'POST', {name:fields.get('name')});
-  location.assign(pageUrl(id,true));
+  const name = fields.get('name').trim();
+  const {id} = await call(endpoint + 'playlists', 'POST', {name,...(pickedSong ? {songId:pickedSong.id} : {})});
+  if (!pickedSong) {
+    location.assign(pageUrl(id));
+    return;
+  }
+  get('create').reset();
+  await showPlaylists();
+  status('آهنگ به «' + name + '» اضافه شد.');
 });
 
 onForm('edit', async fields => {
@@ -206,12 +215,6 @@ onForm('edit', async fields => {
   show('share-url', false);
   show('share-url-label', false);
   status('ذخیره شد.');
-});
-
-onForm('add', async fields => {
-  await call(trackPath(fields.get('song')), 'PUT');
-  await showPlaylist(selectedPlaylist.id);
-  status('آهنگ در پلی‌لیست است.');
 });
 
 get('delete').onclick = action(get('delete'), async () => {
@@ -229,7 +232,13 @@ get('share').onclick = action(get('share'), async () => {
   if (await navigator.clipboard.writeText(url).then(() => true, () => false)) status('لینک کپی شد.');
 });
 
-get('song-query').oninput = searchSongs;
+get('close-picker').onclick = () => {
+  window.close();
+  setTimeout(() => {
+    if (history.length > 1) history.back();
+    else location.assign(archiveUrl);
+  },0);
+};
 get('play-all').onclick = () => playList();
 get('audio').onended = () => {
   position += 1;
@@ -242,8 +251,9 @@ async function initialize() {
   const profile = await call(endpoint + 'profile');
   identity = profile.account;
   status(params.has('signin') ? 'ورود گوگل کامل نشد. دوباره تلاش کن.' : '');
+  if (song) await showPicker();
   showSignIn(profile);
-  if (requestedPlaylist) await showPlaylist(requestedPlaylist,true);
-  else if (identity) await showPlaylists();
+  if (requestedPlaylist) await showPlaylist(requestedPlaylist);
+  else if (identity && (!song || pickedSong)) await showPlaylists();
 }
 initialize().catch(error => status(error.message));
