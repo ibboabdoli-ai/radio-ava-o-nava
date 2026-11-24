@@ -36,7 +36,6 @@ a:hover,button:hover:not(:disabled){filter:brightness(1.14)}
 .icon-search{--icon:url("./assets/club-icons/magnifying-glass.svg")}
 .icon-artist{--icon:url("./assets/club-icons/users.svg")}
 .icon-radio{--icon:url("./assets/club-icons/pulse.svg")}
-.icon-settings{--icon:url("./assets/club-icons/gear-six.svg")}
 .archive-head{
  display:flex;align-items:center;min-height:265px;padding:clamp(1.1rem,5vw,3.4rem);
  border:1px solid #ffffff13;border-radius:1.45rem;
@@ -153,44 +152,6 @@ audio{height:46px;min-width:0;flex:1}
 .upcoming h3{color:#f8f5ee;font-size:1rem}
 .upcoming ol{margin-block:.35rem;padding-inline-start:1.65em;overflow-wrap:anywhere}
 .upcoming li{padding-block:.3rem}
-.account-page{max-width:900px}
-.account-shell{
- margin-block:1rem;display:grid;grid-template-columns:minmax(250px,1.2fr) minmax(200px,.8fr);
- grid-template-areas:"content visual";border-radius:1.5rem;border:1px solid #ffffff1f;overflow:hidden;background:var(--panel)
-}
-.account-visual{grid-area:visual;display:grid;place-items:center;min-height:160px;background:linear-gradient(#1a130777,#21170b0b),url("../gallery/player-tar.jpg") center 42%/cover}
-.account-visual img{border-radius:1.6rem;box-shadow:0 12px 48px #110d08ad}
-.account-content{grid-area:content;padding:clamp(1.1rem,4.5vw,2.7rem)}
-.account-content h1,.profile-identity h1{font-size:clamp(1.75rem,5vw,2.9rem)}
-.account-content>p{margin-block:.5rem 1rem}
-.account-content form{display:grid;gap:.48rem}
-.account-content input:not([type="checkbox"]){width:100%;min-height:48px;padding:.65rem .82rem;border-radius:.75rem;border:1px solid #ffffff29;background:#181817}
-.account-content form button{margin-block-start:.35rem}
-.account-content .check{display:flex;gap:.5rem;align-items:center;min-height:44px;color:var(--soft);font-size:.89rem}
-.check input{width:1rem;height:1rem;accent-color:#f0d0a0;flex:none}
-.join-hint,.recovery-link{font-size:.86rem;color:var(--soft)}
-.join-hint a,.recovery-link{text-decoration:underline;text-underline-offset:.2em;color:var(--accent)}
-.staff-login{border-top:1px solid var(--edge)}
-.staff-login form{margin-block:.45rem}
-.recovery-link{display:inline-block;padding-block:.45rem}
-.account-notice{color:var(--soft);padding:.75rem;border:1px solid var(--edge);border-radius:.75rem;background:var(--panel)}
-.account-notice.error{color:#ffd0bd;border-color:#b9747b8c}
-.profile-hero{display:flex;flex-wrap:wrap;align-items:center;gap:1rem;padding:clamp(1rem,4vw,2rem);
- border:1px solid #ffffff21;border-radius:1.25rem;background:linear-gradient(110deg,#302821,#242320 55%)}
-.profile-identity{flex:1;min-width:0}
-.profile-identity bdi{color:var(--soft);overflow-wrap:anywhere}
-.profile-avatar{position:relative;display:grid;place-items:center;width:clamp(4rem,16vw,5.5rem);height:auto;aspect-ratio:1;flex:none;overflow:hidden;
- border-radius:50%;border:2px solid #d3af7d82;color:#fff5e5;background:#38322d;font-size:2rem;font-weight:750}
-.profile-avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.profile-stats{margin-block:1rem;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem}
-.profile-stats>div{display:grid;gap:.3rem;padding:.8rem .85rem;border:1px solid var(--edge);border-radius:.9rem;background:var(--panel)}
-.profile-stats dt{font-size:.83rem;color:var(--soft)}
-.profile-stats dd{margin:0;font-weight:820;font-size:clamp(1.15rem,4vw,1.7rem);overflow-wrap:anywhere;color:#ffdb9f}
-.request-history{margin-block:1.7rem}
-.request-row{grid-template-columns:minmax(0,1fr) auto;padding:.75rem .9rem}
-.request-row>small{color:var(--soft);font-size:.78rem}
-.account-actions{display:flex;flex-wrap:wrap;gap:.55rem}
-#logout{margin-inline-start:auto}
 @media(min-width:1050px){
  .category-grid:has(li:nth-child(5):last-child){grid-template-columns:repeat(5,minmax(0,1fr))}
 }
@@ -214,12 +175,6 @@ audio{height:46px;min-width:0;flex:1}
  .track-grid .track-info strong{font-size:.88rem}
  .track-grid .track-artist{font-size:.75rem}
  .category{min-height:6.15rem}
- .account-shell{grid-template-columns:1fr;grid-template-areas:"visual" "content"}
- .account-visual{min-height:92px}
- .account-visual img{width:63px;height:63px;border-radius:.9rem}
- .profile-settings{width:100%}
- .profile-stats{gap:.4rem}
- .profile-stats>div{padding:.65rem .5rem}
  .player{inset:auto 0 0;width:100%;max-width:none;max-height:88dvh;margin:0;border-radius:1.25rem 1.25rem 0 0}
  .player-inner{padding-bottom:max(1rem,env(safe-area-inset-bottom))}
  .controls button{padding-inline:.45rem}

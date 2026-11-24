@@ -1,16 +1,14 @@
-import artistPortraits from './club-artist-portraits.js?v=5';
-
 const get=id=>document.getElementById(id);
 const query=get('query'),results=get('results'),status=get('catalog-status');
 const player=get('player'),audio=get('audio'),previous=get('previous'),next=get('next');
 const mini=get('mini-player'),miniToggle=get('mini-toggle'),playerStatus=get('player-status');
 const archivePath='/v2/music-library/';
-const libraryApi='https://api.radio.ibboabdoli.com';
+const libraryApi='https://api-radio.ibboabdoli.com';
 const historyKey='ava-nava.archive.recent.v1';
 const unknown='بدون سبک';
 const count=new Intl.NumberFormat('fa-IR');
 const collator=new Intl.Collator('fa',{sensitivity:'base',numeric:true});
-const portraitFiles=new Map(Object.entries(artistPortraits).map(([name,value])=>[normalize(name),Array.isArray(value)?value:[value]]));
+const portraitFiles=new Map();
 const genreArtwork=new Map([['پاپ','pop'],['سنتی','traditional'],['هیپ هاپ','hiphop'],['کلاسیک','classical'],['بلوز','blues']]);
 const moodLists=new Map([
   ['calm',{title:'آرامش',art:'chill',songs:[['هایده','ساغر هستی'],['حمیرا','دل خونه'],['مهستی','هزار بونه'],['داریوش','شام مهتاب'],['معین','بهانه']]}],
@@ -368,7 +366,9 @@ document.addEventListener('click',event=>{
 addEventListener('popstate',()=>setView({restoreQuery:true}));
 
 async function load(){
-  const response=await fetch(libraryApi+'/api/library/tracks');
+  const imageData=fetch('./club-artist-portraits.json').then(response=>response.ok?response.json():{}).catch(()=>({}));
+  const [response,portraits]=await Promise.all([fetch(libraryApi+'/api/library/tracks'),imageData]);
+  for(const [name,value] of Object.entries(portraits))portraitFiles.set(normalize(name),Array.isArray(value)?value:[value]);
   if(!response.ok)throw new Error('Archive unavailable');
   const {tracks:items}=await response.json();
   tracks=items.sort(recentOrder);

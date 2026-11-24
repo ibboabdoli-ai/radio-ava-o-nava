@@ -1,5 +1,4 @@
-// Artist images are linked to their original public profile or photo record.
-export default {
+{
   "Afee": {
     "artwork": true,
     "image": "https://cdn4.telesco.pe/file/guMbUvdIltR1FczW45TmGnCxMAQMMeCOp56sCOUsWndofAKvp-ymKWaLmQ5KWBkuHBdZ3d6wXiEo85axubDHyqmnmMq0rfzUegfIWbgIkdP00gxb-l6Ok1AqGLUz-G9HUa-IxKiRwLSaWpCLSmK-UtxYFY67slTqMKrQbXZgT85heVd2OxpMHBVz3drVqRbPDcpDY4oil9xuQivdz0r0VmWEBYT94O4-XijdBH72NqqEOM0SOuRkXrXiNZxcnWWtl5aYcHxjfkA_Y2HLXj2hHFk9fyx9jEkDZHGvu_hlqWIJSfw5CexiiNwHgp8JwmN_WxKUcBdG0KNhfJTbrCRR3A.jpg",
@@ -231,4 +230,4 @@ export default {
     "image": "https://sazbin.com/api/media/file/cover-n2s051.webp",
     "source": "https://sazbin.com/artist/ar-tc40ch"
   }
-};
+}
