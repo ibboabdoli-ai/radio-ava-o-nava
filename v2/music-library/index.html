@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#151514">
+<meta name="description" content="جست‌وجو و پخش آهنگ‌های آرشیو، آلبوم‌ها و صفحهٔ خواننده‌ها در رادیو آوا و نوا.">
+<title>آرشیو موسیقی | رادیو آوا و نوا</title>
+<link rel="icon" href="../../radio-neon-logo.webp">
+<link rel="stylesheet" href="./club-archive.css?v=5">
+<script src="./club-archive.js?v=5" type="module"></script>
+</head>
+<body>
+<header class="page-head">
+  <a class="brand" href="./"><svg class="radio-mark" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M7.5 7.5a6.4 6.4 0 0 0 0 9m9-9a6.4 6.4 0 0 1 0 9M4.4 4.4a10.8 10.8 0 0 0 0 15.2M19.6 4.4a10.8 10.8 0 0 1 0 15.2"/></svg><span>آوا و نوا</span></a>
+  <a class="radio-link" href="https://radio.ibboabdoli.com/v2/">وب‌سایت رادیو <span aria-hidden="true">↗</span></a>
+</header>
+<main id="main-content">
+  <section class="archive-head" id="archive-head" aria-labelledby="archive-title">
+    <div class="hero-copy">
+      <div id="hero-portrait" class="hero-portrait" hidden></div>
+      <div>
+        <h1 id="archive-title">آرشیو موسیقی</h1>
+        <p id="archive-description">آهنگ‌ها، خواننده‌ها و آلبوم‌های آوا و نوا</p>
+        <a class="button primary hero-action" id="hero-action" href="./?view=search">کشف موسیقی <span aria-hidden="true">←</span></a>
+      </div>
+    </div>
+  </section>
+  <p id="photo-source" class="artist-photo-source" hidden></p>
+  <div class="search-bar" id="search-bar" hidden>
+    <span class="ui-icon icon-search" aria-hidden="true"></span>
+    <input id="query" aria-label="جست‌وجو در آرشیو" type="search" maxlength="100" placeholder="نام آهنگ، خواننده یا آلبوم" autocomplete="off">
+  </div>
+  <nav class="artist-nav" id="artist-nav" aria-label="آرشیو خواننده" hidden>
+    <a id="songs-link">آهنگ‌ها</a><a id="albums-link">آلبوم‌ها</a>
+  </nav>
+  <p class="status" id="catalog-status" role="status">آرشیو در حال بارگذاری است…</p>
+  <div id="results"></div>
+  <details class="credit" id="credits" hidden>
+    <summary>اعتبار عکس خواننده‌ها</summary>
+    <ul><li>عکس‌ها از صفحهٔ اصلی یا صفحهٔ هنرمند در منبع آمده‌اند. اعتبار هر عکس در صفحهٔ همان خواننده درج شده است.</li>
+      <li>گوگوش · Bahman، برش Calliopejen و Kimse · <a href="https://commons.wikimedia.org/wiki/File:Googooshcrop.jpg">عکس اصلی</a> · <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a></li>
+      <li>ابی · Arad Mojtahedi، نمایش با برش دایره‌ای · <a href="https://commons.wikimedia.org/wiki/File:Ebi_Live_In_Montreal_03.jpg">عکس اصلی</a> · <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a></li>
+    </ul>
+  </details>
+</main>
+<div class="mini-player" id="mini-player" hidden>
+  <button id="open-player" aria-controls="player" aria-haspopup="dialog" type="button">
+    <span class="ui-icon icon-discover" aria-hidden="true"></span>
+    <span><strong id="mini-title"></strong><small id="mini-artist"></small></span>
+  </button>
+  <button id="mini-toggle" type="button" aria-label="توقف موقت پخش">Ⅱ</button>
+</div>
+<dialog class="player" id="player" aria-labelledby="player-title">
+  <div class="player-inner">
+    <header class="player-header">
+      <h2 id="player-title">در حال پخش</h2>
+      <button id="close-player" type="button" aria-label="بستن پلیر" autofocus>✕</button>
+    </header>
+    <div class="now">
+      <div id="player-art" class="player-art" aria-hidden="true"></div>
+      <div><strong id="now-title"></strong><span id="now-artist"></span><small id="queue-progress"></small></div>
+    </div>
+    <div class="controls">
+      <button id="previous" type="button">قبلی</button>
+      <audio id="audio" controls crossorigin="anonymous" preload="none" aria-label="پخش آهنگ آرشیو"></audio>
+      <button id="next" type="button">بعدی</button>
+    </div>
+    <p id="player-status" role="status" hidden></p>
+    <section class="upcoming" id="upcoming" aria-labelledby="upcoming-title" hidden>
+      <h3 id="upcoming-title">آهنگ‌های بعدی</h3>
+      <ol id="upcoming-tracks"></ol>
+    </section>
+  </div>
+</dialog>
+<nav class="library-nav" aria-label="ناوبری آرشیو">
+  <a data-page="discover" href="./"><span class="ui-icon icon-discover" aria-hidden="true"></span>آرشیو</a>
+  <a data-page="search" href="./?view=search"><span class="ui-icon icon-search" aria-hidden="true"></span>جست‌وجو</a>
+  <a data-page="artists" href="./?view=artists"><span class="ui-icon icon-artist" aria-hidden="true"></span>خواننده‌ها</a>
+  <a href="../"><span class="ui-icon icon-radio" aria-hidden="true"></span>خانهٔ رادیو</a>
+</nav>
+</body>
+</html>

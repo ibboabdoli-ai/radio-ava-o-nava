@@ -682,3 +682,14 @@ test('Expanded desktop player uses the complete width without touching the appro
  assert.ok(html.includes('expanded-player.css?v=3'));
  assert.ok(sw.includes('expanded-player.css?v=3'));
 });
+
+test('The public music library links to packaged assets and opts into cross-origin audio',()=>{
+ const page=get('music-library/index.html');
+ assert.match(get('index.html'),/href="\.\/music-library\/"/);
+ for(const name of ['club-archive.css','club-archive.js']){
+   assert.ok(page.includes('./'+name),name);
+   assert.ok(existsSync(join(root,'music-library',name)),name);
+ }
+ assert.match(page,/<audio[^>]*crossorigin="anonymous"/);
+ assert.ok(existsSync(join(root,'music-library','club-artist-portraits.json')));
+});
