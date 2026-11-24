@@ -5,6 +5,7 @@ const uuid = '[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}';
 const playlistRoute = new RegExp('^' + prefix + 'playlists/(' + uuid + ')(?:/tracks/(' + uuid + '|[a-f0-9]{32}))?$','i');
 const validArchiveSource = /^archive:audio\/[a-f0-9]{64}\.(?:mp3|wav|ogg|m4a|flac)$/;
 const unavailable = {error:'not_found'};
+const codeLike = /^(?:[a-f0-9]{16}|(?:[a-f0-9]{4}-){3}[a-f0-9]{4})$/i;
 const accountPage = 'https://ava-radio-staging.ibbo-abdoli.workers.dev';
 const publishedCatalogUrl = 'https://api-radio.ibboabdoli.com/api/library/tracks';
 let catalogCache;
@@ -42,12 +43,13 @@ async function libraryProfile(request, db, clubSession) {
       .bind(crypto.randomUUID(), club.id, club.username).run();
     account = await db.prepare('SELECT id FROM library_accounts WHERE club_user_id=?').bind(club.id).first();
   }
-  return account ? {...account, display_name:club.username.replace(/^ch:/, '@'), picture_url:null, method:'club'} : null;
+  return account ? {...account, clubUserId:club.id, display_name:club.username.replace(/^ch:/, '@'), picture_url:null, method:'club'} : null;
 }
 
 function namedPlaylist(body) {
   const name = typeof body.name === 'string' ? body.name.trim() : '';
   if (!name || name.length > 80 || /[\u0000-\u001f\u007f]/.test(name)) return null;
+  if (codeLike.test(name)) throw {status:400,code:'code_is_not_playlist_name'};
   return name;
 }
 
@@ -72,8 +74,17 @@ export async function libraryAccounts({req, env, clubSession, readBody, j, h, fe
   }
   const account = await libraryProfile(req, db, clubSession);
   if (method === 'GET' && path === prefix + 'profile') {
+    const verified = account?.clubUserId ? await db.prepare(
+      'SELECT clubhouse_username,display_name,avatar_url FROM staging_clubhouse_profiles WHERE user_id=?'
+    ).bind(account.clubUserId).first() : null;
+    const handle = verified ? '@' + verified.clubhouse_username : null;
     return respond({
-      account: account ? {name:account.display_name,picture:account.picture_url,method:account.method} : null,
+      account: account ? {
+        name:verified?.display_name || account.display_name,
+        picture:verified?.avatar_url?.startsWith('https://d14u0p1qkech25.cloudfront.net/') ? verified.avatar_url : account.picture_url,
+        ...(handle ? {handle} : {}),
+        method:account.method,
+      } : null,
       googleEnabled:googleEnabled(env),
     });
   }
@@ -85,10 +96,12 @@ export async function libraryAccounts({req, env, clubSession, readBody, j, h, fe
     ).bind(playlistId,account?.id ?? '').all();
     if (!results.length) return respond(unavailable,404);
     const first = results[0];
+    const owned = first.account_id===account?.id;
+    if (codeLike.test(first.name) && !owned) return respond(unavailable,404);
     const songs = results.filter(row=>row.song_id);
     const catalog = songs.length ? await publishedCatalog(env,fetcher) : new Map();
     return respond({
-      id:playlistId, name:first.name, public:Boolean(first.is_public), owned:first.account_id===account?.id,
+      id:playlistId, name:first.name, public:Boolean(first.is_public), owned,
       tracks:songs.map(row=>catalog.get(row.song_id) || {id:row.song_id,title:null,artist:null}),
     });
   }

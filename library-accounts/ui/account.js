@@ -6,6 +6,7 @@ const endpoint = '/api/library/';
 let identity, catalog, selectedPlaylist, queue = [], position = -1;
 
 const messages = {
+  code_is_not_playlist_name:'این شبیه کد ورود باشگاه است. یک نام برای پلی‌لیست انتخاب کن.',
   catalog_unavailable:'فهرست آهنگ‌ها موقتاً باز نشد. دوباره تلاش کن.',
   invalid_credentials:'نام کاربری یا گذرواژه درست نیست.',
   invalid_clubhouse_code:'کد عضویت معتبر نیست یا منقضی شده.',
@@ -65,6 +66,8 @@ function showSignIn(profile) {
   }
   if (!identity) return;
   get('display-name').textContent = identity.name;
+  get('profile-handle').textContent = identity.handle || '';
+  show('profile-handle', Boolean(identity.handle));
   get('signin-method').textContent = identity.method === 'club' ? 'ورود از باشگاه' : 'ورود با گوگل';
   if (identity.picture) {
     get('avatar').src = identity.picture;

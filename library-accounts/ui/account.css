@@ -22,7 +22,8 @@ h2 { margin: 0 0 .5rem; }
 .profile { grid-template-columns: auto minmax(0,1fr) auto; align-items: center; }
 .profile img { border-radius: 50%; object-fit: cover; grid-column: 1; }
 .profile div { grid-column: 2; overflow-wrap: anywhere; }
-.profile small { color: var(--soft); }
+.profile small, #profile-handle { display: block; color: var(--soft); }
+#profile-handle { text-align: start; font-size: .92rem; }
 .action-row { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
 .action-row input, .action-row select { flex: 1 1 12rem; min-width: 0; }
 input:not([type="checkbox"]), select {

@@ -14,9 +14,9 @@ const unpublishedTrack='c'.repeat(32);
 
 function setup() {
   const sqlite=new DatabaseSync(':memory:');
-  sqlite.exec('CREATE TABLE users(id TEXT PRIMARY KEY); CREATE TABLE song_catalog(id TEXT PRIMARY KEY,title TEXT,artist TEXT,source_url TEXT,active INTEGER);');
+  sqlite.exec('CREATE TABLE users(id TEXT PRIMARY KEY); CREATE TABLE staging_clubhouse_profiles(user_id TEXT PRIMARY KEY,clubhouse_username TEXT,display_name TEXT,avatar_url TEXT); CREATE TABLE song_catalog(id TEXT PRIMARY KEY,title TEXT,artist TEXT,source_url TEXT,active INTEGER);');
   sqlite.exec(readFileSync(new URL('./0021_library_accounts.sql',import.meta.url),'utf8'));
-  sqlite.exec("INSERT INTO users VALUES('club-a'),('club-b')");
+  sqlite.exec("INSERT INTO users VALUES('club-a'),('club-b'); INSERT INTO staging_clubhouse_profiles VALUES('club-a','listener_a','شنوندهٔ آزمایشی','');");
   const insert=sqlite.prepare('INSERT INTO song_catalog VALUES(?,?,?,?,1)');
   insert.run(track,'همسفر','گوگوش','archive:audio/' + 'a'.repeat(64) + '.mp3');
   insert.run(secondTrack,'آشنایی','هایده','archive:audio/' + 'b'.repeat(64) + '.mp3');
@@ -53,20 +53,29 @@ function setup() {
     env,clubSession:async()=>user,readBody:req=>req.json(),h:{},fetcher,
     j:(data,status,headers)=>Response.json(data,{status,headers}),
   });
-  return {env,db,request};
+  return {env,db,request,sqlite};
 }
 
 test('club and Google accounts have separate sessions; private playlists stay owner-only', async () => {
-  const {request}=setup();
+  const {request,sqlite}=setup();
   const guest=await request('profile');
   assert.deepEqual(await guest.json(),{account:null,googleEnabled:false});
   assert.equal((await request('playlists')).status,401);
   const loggedIn=await request('profile',{user:clubA});
-  assert.deepEqual((await loggedIn.json()).account,{name:'@listener_a',picture:null,method:'club'});
+  assert.deepEqual((await loggedIn.json()).account,{name:'شنوندهٔ آزمایشی',handle:'@listener_a',picture:null,method:'club'});
   const create=await request('playlists',{user:clubA,method:'POST',body:{name:'آهنگ‌های من'}});
   assert.equal(create.status,201);
   const {id}=await create.json();
   const path='playlists/'+id;
+  const pastedCode='ABCD-0123-ABCD-0123';
+  await assert.rejects(
+    request('playlists',{user:clubA,method:'POST',body:{name:pastedCode}}),
+    error=>error.code==='code_is_not_playlist_name'
+  );
+  sqlite.prepare('UPDATE library_playlists SET name=?,is_public=1 WHERE id=?').run(pastedCode,id);
+  assert.equal((await request(path)).status,404);
+  assert.equal((await request(path,{user:clubA})).status,200);
+  sqlite.prepare('UPDATE library_playlists SET name=?,is_public=0 WHERE id=?').run('آهنگ‌های من',id);
   assert.equal((await request(path,{user:clubB})).status,404);
   assert.equal((await request(path)).status,404);
   assert.equal((await request(path,{user:clubB,method:'DELETE'})).status,404);
