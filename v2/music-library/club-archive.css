@@ -126,20 +126,42 @@ input::placeholder{color:#b6b3ad}
 #mini-toggle{min-width:44px;padding-inline:.4rem}
 body:has(.mini-player:not([hidden])){padding-block-end:10rem}
 body:has(.player[open]){overflow:hidden}
-.player{position:fixed;inset:0;width:min(570px,calc(100% - 2rem));margin:auto;max-height:calc(100dvh - 2rem);overflow:auto;padding:0;color:inherit;background:#211e1a;border:1px solid #ffffff30;border-radius:1.4rem;box-shadow:0 25px 85px #080605b8}
-.player::backdrop{background:#090807c6}
-.player-inner{padding:clamp(1rem,4vw,1.7rem)}
-.player-header,.controls{display:flex;align-items:center;gap:.55rem;justify-content:space-between}
-.player-header button{min-width:44px}
-.now{display:flex;gap:.9rem;align-items:center;margin-block:1rem;padding:.85rem;background:#38322d;border:1px solid var(--edge);border-radius:1rem}
-.now>div:last-child{display:grid;min-width:0;overflow-wrap:anywhere}
-.now strong{font-size:clamp(1.25rem,5vw,1.8rem)}
-.now span,.now small{color:var(--soft)}
-.player-art{width:clamp(3.7rem,13vw,5.3rem);flex:none}
-audio{height:46px;min-width:0;flex:1}
-#player-status{color:#ffd0b8;margin-block:.4rem}
-.upcoming{margin-block-start:1rem}
-.upcoming h3{color:#f8f5ee;font-size:1rem}
+.player{
+ position:fixed;inset:0;width:min(820px,calc(100% - 2rem));margin:auto;max-height:calc(100dvh - 2rem);
+ overflow:auto;padding:0;color:inherit;background:linear-gradient(145deg,#35271d,#1c1916 64%,#151514);
+ border:1px solid #e8c18a38;border-radius:1.45rem;box-shadow:0 25px 85px #080605b8
+}
+.player::backdrop{background:#0e0b08cc}
+.player-inner{
+ display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;
+ gap:clamp(1rem,3vw,2rem);padding:clamp(1rem,4vw,2rem)
+}
+.player-header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:.75rem}
+.player-header h2{font-size:1rem;color:#e8c18a}
+.player-header button,.controls button{display:grid;place-items:center;min-width:44px;border-radius:50%;padding:0}
+.player-header svg,.controls svg{width:24px;height:24px;fill:currentColor}
+.player-header svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.player-art{
+ display:block;width:100%;aspect-ratio:1;min-width:0;overflow:hidden;
+ border-radius:1rem;box-shadow:0 14px 34px #0006
+}
+.player-art img{display:block;width:100%;height:100%;object-fit:cover}
+.player-body,.now{display:grid;min-width:0}
+.player-body{gap:.8rem}
+.now{gap:.15rem;overflow-wrap:anywhere}
+.now strong{font-size:clamp(1.5rem,6vw,2.15rem);line-height:1.3}
+.now span,.now small,.timeline-times{color:var(--soft)}
+.now small{font-size:.76rem}
+.timeline input{width:100%;margin:0;min-height:32px;accent-color:#ffdb9f}
+.timeline-times{display:flex;justify-content:space-between;font-size:.79rem;font-variant-numeric:tabular-nums}
+.controls{display:flex;align-items:center;justify-content:center;gap:clamp(.9rem,5vw,2rem);direction:ltr}
+.controls button{width:44px;height:44px}
+.controls #player-toggle{width:66px;height:66px;background:#ffe3b4;color:#211a12;border-color:#ffe3b4}
+.controls #player-toggle svg{width:29px;height:29px}
+.player .radio-save-track{justify-self:stretch;margin:0;border-color:#e8c18a52;color:#ffe3b4}
+.player #audio{display:none}
+#player-status{color:#ffd0b8}
+.upcoming summary{min-height:44px;line-height:44px;cursor:pointer;color:#d8c8b3}
 .upcoming ol{margin-block:.35rem;padding-inline-start:1.65em;overflow-wrap:anywhere}
 .upcoming li{padding-block:.3rem}
 @media(min-width:1050px){
@@ -159,7 +181,8 @@ audio{height:46px;min-width:0;flex:1}
  .track-grid .track-info strong{font-size:.88rem}
  .track-grid .track-artist{font-size:.75rem}
  .category{min-height:6.15rem}
- .player{inset:auto 0 0;width:100%;max-width:none;max-height:88dvh;margin:0;border-radius:1.25rem 1.25rem 0 0}
- .player-inner{padding-bottom:max(1rem,env(safe-area-inset-bottom))}
- .controls button{padding-inline:.45rem}
+ .player{width:100%;max-width:none;height:100%;max-height:100dvh;margin:0;border:0;border-radius:0}
+ .player-inner{grid-template-columns:minmax(0,1fr);gap:.8rem;padding: max(.65rem,env(safe-area-inset-top)) 1rem max(1rem,env(safe-area-inset-bottom))}
+ .player-art{width:min(100%,51dvh);justify-self:center}
+ .player-body{gap:.7rem}
 }
