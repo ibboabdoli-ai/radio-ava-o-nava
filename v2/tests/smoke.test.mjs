@@ -50,11 +50,16 @@ test('Home and library share an ordered navigation with distinct destinations fo
  }
 });
 
-test('Home and archive use the club profile, while saving a song opens playlists',()=>{
+test('Home and archive put the account menu in the upper-right without a duplicate account link',()=>{
  const target='https://bashgah.ibboabdoli.com/v2/club-profile';
  for(const file of ['index.html','music-library/index.html']){
-   assert.ok(get(file).includes('<a class="radio-account-link" href="'+target+'">حساب من</a>'),file);
+   const page=get(file);
+   assert.ok(page.includes('class="radio-user-menu" id="radio-user-menu"'),file);
+   assert.ok(page.includes('href="'+target+'">پروفایل من</a>'),file);
+   assert.ok(!page.includes('class="radio-account-link" href="'+target+'">حساب من</a>'),file);
+   assert.ok(page.includes('radio-account-menu.js'),file);
  }
+ assert.ok(get('radio-account-menu.js').includes('/api/radio-nav-profile'));
  assert.ok(get('music-library/index.html').includes('id="save-track" href="https://bashgah.ibboabdoli.com/v2/music-library/account"'));
  assert.ok(get('index.html').includes('href="https://bashgah.ibboabdoli.com/v2/radio-club">باشگاه</a>'));
 });
