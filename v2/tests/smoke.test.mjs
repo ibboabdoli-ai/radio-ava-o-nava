@@ -45,8 +45,8 @@ test('Home and library share an ordered navigation with distinct destinations fo
    assert.match(page,/class="radio-footer"/);
    assert.match(page,/radio-navigation\.css/);
  }
- for(const file of ['radio-navigation.css','radio-navigation.svg']){
-   assert.ok(existsSync(join(root,file))&&sw.includes("'./"+file+"'"),file);
+ for(const asset of ['radio-navigation.css?v=2','radio-navigation.svg']){
+   assert.ok(existsSync(join(root,asset.split('?')[0]))&&sw.includes("'./"+asset+"'"),asset);
  }
 });
 

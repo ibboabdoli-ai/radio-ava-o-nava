@@ -40,21 +40,15 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  overflow: hidden;
-  border: 1px solid #ffdb9f3d;
-  border-radius: 12px;
-  background: #0c0c0c;
+  border-radius: 50%;
 }
-.radio-club-link:hover { border-color: #ffdb9f9c; }
 .radio-club-link img {
   display: block;
   width: 42px;
   height: 42px;
-  border-radius: 0;
-  /* Keep the approved emblem; the full title is the link's accessible name. */
-  clip-path: inset(0 0 29% 0);
-  transform: translateY(3px);
+  border-radius: 50%;
 }
+.radio-club-link:hover img { filter: brightness(1.15); }
 .radio-save-track { margin-block-start: .6rem; }
 .radio-account-header {
   position: sticky;
