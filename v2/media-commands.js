@@ -1,22 +1,27 @@
 const verifiedTrackCovers = {
-  "8556ee96-a709-5922-8bbb-bcde34fae5b1": "https://www.alirezaghorbani.com/storage/single-tracks/1001-nights/alireza-ghorbani-1001-night.jpg",
-  "09583875-8819-5caf-8eb7-1cdb3dfab038": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/c6/79/cc/c679cc01-9474-655d-d748-5fd42fd147bc/cover.jpg/512x512bb.jpg"
+  '8556ee96-a709-5922-8bbb-bcde34fae5b1': 'ghorbani-1001-nights',
+  '09583875-8819-5caf-8eb7-1cdb3dfab038': 'talischi-darigh',
 };
 
 try {
   if (navigator.audioSession) navigator.audioSession.type = 'playback';
 } catch {}
 
-const radioFallbackArtwork = {
-  src: new URL('/radio-icon-512.png', location.href).href,
-  sizes: '512x512',
-  type: 'image/png',
-};
+function radioMediaThumbnail(name) {
+  return {
+    src: new URL('/v2/music-library/assets/now-playing/' + name + '.jpg', location.href).href,
+    sizes: '200x200',
+    type: 'image/jpeg',
+  };
+}
+
+const radioFallbackArtwork = radioMediaThumbnail('radio');
 
 function radioTrackArtwork(track, portrait) {
-  const preferred = verifiedTrackCovers[track.id] || portrait;
-  if (preferred) {
-    try { return [{ src: new URL(preferred, location.href).href }]; } catch {}
+  const cover = verifiedTrackCovers[track.id];
+  if (cover) return [radioMediaThumbnail(cover)];
+  if (portrait) {
+    try { return [{ src: new URL(portrait, location.href).href }]; } catch {}
   }
   return [radioFallbackArtwork];
 }
