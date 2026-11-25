@@ -7,18 +7,18 @@ try {
   if (navigator.audioSession) navigator.audioSession.type = 'playback';
 } catch {}
 
+const radioFallbackArtwork = {
+  src: new URL('/radio-icon-512.png', location.href).href,
+  sizes: '512x512',
+  type: 'image/png',
+};
+
 function radioTrackArtwork(track, portrait) {
-  const artwork = [];
-  for (const src of [verifiedTrackCovers[track.id], portrait]) {
-    if (!src) continue;
-    try { artwork.push({ src: new URL(src, location.href).href }); } catch {}
+  const preferred = verifiedTrackCovers[track.id] || portrait;
+  if (preferred) {
+    try { return [{ src: new URL(preferred, location.href).href }]; } catch {}
   }
-  artwork.push({
-    src: new URL('/radio-icon-512.png', location.href).href,
-    sizes: '512x512',
-    type: 'image/png',
-  });
-  return artwork;
+  return [radioFallbackArtwork];
 }
 
 function setQueueMediaSession(audio, metadata, { previous = null, next = null } = {}) {
@@ -26,7 +26,16 @@ function setQueueMediaSession(audio, metadata, { previous = null, next = null } 
   if (!session) return;
 
   if (typeof MediaMetadata === 'function') {
-    try { session.metadata = new MediaMetadata(metadata); } catch {}
+    try {
+      const media = new MediaMetadata(metadata);
+      session.metadata = media;
+      const artwork = metadata.artwork?.[0];
+      if (artwork && artwork !== radioFallbackArtwork) {
+        const probe = new Image();
+        probe.onerror = () => { if (session.metadata === media) media.artwork = [radioFallbackArtwork]; };
+        probe.src = artwork.src;
+      }
+    } catch {}
   }
   for (const [action, handler] of [
     ['play', () => { void audio.play().catch(() => {}); }],
