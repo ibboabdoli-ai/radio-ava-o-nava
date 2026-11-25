@@ -35,7 +35,7 @@ const archiveUrl=(args={})=>archivePath+(Object.keys(args).length?'?'+new URLSea
 const artistUrl=(artist,options={})=>archiveUrl({artist,...options});
 const termsOf=text=>normalize(text).split(' ').filter(Boolean);
 const matches=(text,terms)=>terms.every(term=>normalize(text).includes(term));
-const searchable=track=>[track.title,track.artist,artistOf(track),track.album].filter(Boolean).join(' ');
+const searchable=track=>[track.title,...(track.titleAliases??[]),track.artist,artistOf(track),track.album].filter(Boolean).join(' ');
 const artistMatches=(artist,terms)=>[artist.name,...artist.aliases].some(name=>matches(name,terms));
 const numberOf=(n,what)=>count.format(n)+' '+what;
 
