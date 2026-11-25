@@ -43,9 +43,19 @@
     "license": "https://creativecommons.org/licenses/by-sa/3.0/",
     "source": "https://commons.wikimedia.org/wiki/File:Ebi_Live_In_Montreal_03.jpg"
   },
+  "امیرحسین افتخاری": {
+    "image": "./assets/archive/amirhossein-eftekhari.jpg",
+    "source": "https://music.apple.com/us/artist/amirhossein-eftekhari/1170511891"
+  },
   "اندی": {
     "image": "https://andymusic.com/images/portrait-bio.webp",
     "source": "https://andymusic.com/"
+  },
+  "ایرج خواجه امیری": {
+    "credit": "Hossein Tahavori / Tasnim News Agency",
+    "image": "./assets/archive/iraj-khajeh-amiri.jpg",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Iraj.jpg"
   },
   "بهزاد لیتو": {
     "image": "https://sazbin.com/api/media/file/photo-276.webp",
@@ -59,9 +69,20 @@
     "image": "https://sazbin.com/api/media/file/tataloo-w.webp",
     "source": "https://sazbin.com/artist/tataloo"
   },
+  "حامد نیک‌پی": {
+    "credit": "Pouria Afkhami",
+    "image": "./assets/archive/hamed-nikpay.jpg",
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Hamed_Nikpey_Photo_by_Pouria_Afkhami_aka_pixoos_01.jpg"
+  },
   "حبیب": {
     "image": "https://sazbin.com/api/media/file/photo-70.webp",
     "source": "https://sazbin.com/artist/ar-1tz1v2s"
+  },
+  "حسن زیرک": {
+    "image": "./assets/archive/hassan-zirak.jpg",
+    "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Zirak.jpg"
   },
   "حمید غلامعلی": {
     "image": "https://cdn-images.dzcdn.net/images/artist/d640b808b059281c60b33b0a4e6e785b/250x250-000000-80-0-0.jpg",
@@ -74,6 +95,11 @@
   "داریوش": {
     "image": "https://cdn-images.dzcdn.net/images/artist/5555097c847bb2fa52e0badc484def07/250x250-000000-80-0-0.jpg",
     "source": "https://www.deezer.com/artist/4743682"
+  },
+  "دلکش": {
+    "image": "./assets/archive/delkash.jpg",
+    "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Delkesh.jpg"
   },
   "رادیو آوا و نوا": {
     "artwork": true,
@@ -138,6 +164,12 @@
       "source": "https://sazbin.com/artist/ar-1a5aomr"
     }
   ],
+  "شهرام ناظری": {
+    "credit": "Hamed Malekpour / Tasnim News Agency",
+    "image": "./assets/archive/shahram-nazeri.jpg",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Shahram_Nazeri_2017_02_%28cropped%29.jpg"
+  },
   "عارف": {
     "credit": "Dena Barmas / Persian Dutch Network · CC BY-SA 4.0",
     "image": "https://upload.wikimedia.org/wikipedia/commons/8/83/AREF_AREFKIA_-_Persian_pop_singer_-_Calgary_-_Oct_2016_%28cropped%29.jpg",
@@ -176,6 +208,12 @@
     "image": "https://sazbin.com/api/media/file/photo-351.webp",
     "source": "https://sazbin.com/artist/ar-1xx84bl"
   },
+  "محمدرضا شجریان": {
+    "credit": "Hamed Malekpour / Tasnim News Agency",
+    "image": "./assets/archive/mohammad-reza-shajarian.jpg",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Mohamdreza_Shajarian_1.jpg"
+  },
   "مرجان": {
     "image": "https://upload.wikimedia.org/wikipedia/commons/4/43/%D9%85%D8%B1%D8%AC%D8%A7%D9%86_%DB%B2_%28cropped%29.jpg",
     "source": "https://commons.wikimedia.org/wiki/File:%D9%85%D8%B1%D8%AC%D8%A7%D9%86_%DB%B2_%28cropped%29.jpg"
@@ -188,6 +226,12 @@
     "image": "https://sazbin.com/api/media/file/moein-w.webp",
     "source": "https://sazbin.com/artist/moein"
   },
+  "منوچهر سخایی": {
+    "credit": "مجلهٔ موزیک ایران",
+    "image": "./assets/archive/manouchehr-sakhaei.jpg",
+    "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Manouchehr_Sakhaei_1972.jpg"
+  },
   "مهدی جهانی": {
     "image": "https://sazbin.com/api/media/file/cover-805.webp",
     "source": "https://sazbin.com/artist/ar-1qn16y2"
@@ -195,6 +239,12 @@
   "مهستی": {
     "image": "https://sazbin.com/api/media/file/mahasti-w.webp",
     "source": "https://sazbin.com/artist/mahasti"
+  },
+  "ناصر رزازی": {
+    "credit": "Voice of America",
+    "image": "./assets/archive/nasser-razazi.jpg",
+    "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "source": "https://commons.wikimedia.org/wiki/File:Nasir_Rezaz%C3%AE_%28cropped%29.jpg"
   },
   "هایده": {
     "image": "https://sazbin.com/api/media/file/hayedeh-w.webp",
