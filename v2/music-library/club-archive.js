@@ -18,16 +18,18 @@ const artistAliases=new Map(Object.entries({
   'Hamed Nikpay':'حامد نیک‌پی',
 }).map(([alias,name])=>[normalize(alias),name]));
 const genreArtwork=new Map([
-  ['تلفیقی','fusion'],['بی کلام','instrumental'],['پاپ','pop'],['سنتی','traditional'],
+  ['تلفیقی','fusion'],['پاپ سنتی','fusion'],['بی کلام','instrumental'],['پاپ','pop'],['سنتی','traditional'],
   ['کردی','kurdish'],['محلی بختیاری','bakhtiari'],['فولک','folk'],
   ['هیپ هاپ','hiphop'],['کلاسیک','classical'],['بلوز','blues'],
 ]);
 const moodLists=new Map([
   ['calm',{title:'آرامش',art:'chill',songs:[['هایده','ساغر هستی'],['حمیرا','دل خونه'],['مهستی','هزار بونه'],['داریوش','شام مهتاب'],['معین','بهانه']]}],
+  ['party',{title:'مهمانی',art:'pop',songs:[]}],
   ['drive',{title:'در مسیر',art:'drive',songs:[['گوگوش','همسفر'],['ابی','پوست شیر'],['فرهاد','بوی عیدی'],['فرامرز آصف','کمر باریک'],['بیژن مرتضوی','برقص']]}],
 ]);
 const albumOrder=(a,b)=>(a.discNo??1)-(b.discNo??1)||(a.trackNo??1000)-(b.trackNo??1000)||collator.compare(a.title,b.title);
 const recentOrder=(a,b)=>(b.addedAt??0)-(a.addedAt??0)||collator.compare(a.title,b.title)||a.id.localeCompare(b.id);
+const playedOrder=(a,b)=>(b.lastPlayedAt||'').localeCompare(a.lastPlayedAt||'')||recentOrder(a,b);
 const styles=new Map(),artists=new Map(),allAlbums=[],byId=new Map();
 let tracks=[],view={},loaded=false,playQueue=[],playIndex=-1,queueName='';
 const genreOf=track=>track.genre?.trim()||unknown;
@@ -202,13 +204,13 @@ function categoryCard(title,href,image){
   return card;
 }
 function categorySections(){
-  const available=[...styles.keys()].filter(style=>style!==unknown&&style!=='آزمایشی');
+  const available=[...styles.keys()].filter(style=>![unknown,'آزمایشی','راهنما'].includes(style));
   const tiles=available.map(style=>categoryCard(style,archiveUrl({view:'search',genre:style}),genreArt(style)));
   const moods=[...moodLists].filter(([,mood])=>mood.tracks?.length)
     .map(([slug,mood])=>categoryCard(mood.title,archiveUrl({view:'search',mood:slug}),mood.art));
   const groups=[];
-  if(tiles.length)groups.push(section('سبک‌ها',listOf(tiles,'category-grid')));
-  if(moods.length)groups.push(section('حال‌وهوا',listOf(moods,'category-grid')));
+  if(tiles.length)groups.push(section('پلی‌لیست‌های سبک',listOf(tiles,'category-grid')));
+  if(moods.length)groups.push(section('پلی‌لیست‌های حال‌وهوا',listOf(moods,'category-grid')));
   return groups;
 }
 function albumCards(items){
@@ -480,6 +482,7 @@ async function load(){
     artist.aliases.add(track.artist);
     artist.songs.push(track);
   }
+  for(const style of styles.values()) style.sort(playedOrder);
   for(const [alias,name] of artistAliases)artists.get(artistKey(name))?.aliases.add(alias);
   for(const [artistKey,artist] of artists){
     const collections=new Map();
@@ -494,9 +497,11 @@ async function load(){
     allAlbums.push(...artist.albums);
   }
   allAlbums.sort((a,b)=>(b.updated??0)-(a.updated??0)||collator.compare(a.name,b.name));
-  for(const mood of moodLists.values()){
-    mood.tracks=mood.songs.map(([artist,title])=>
-      tracks.find(t=>artistKey(t.artist)===artistKey(artist)&&normalize(t.title)===normalize(title))).filter(Boolean);
+  for(const [id,mood] of moodLists){
+    const tagged=tracks.filter(track=>track.playlistMoods?.includes(id)).sort(playedOrder);
+    const saved=mood.songs.map(([artist,title])=>tracks.find(track=>
+      !Array.isArray(track.playlistMoods)&&artistKey(track.artist)===artistKey(artist)&&normalize(track.title)===normalize(title))).filter(Boolean);
+    mood.tracks=[...new Map([...tagged,...saved].map(track=>[track.id,track])).values()];
   }
   loaded=true;
   setView({restoreQuery:true});
