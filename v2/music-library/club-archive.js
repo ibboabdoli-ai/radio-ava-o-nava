@@ -17,7 +17,11 @@ const artistAliases=new Map(Object.entries({
   'حامد نیک پی':'حامد نیک‌پی',
   'Hamed Nikpay':'حامد نیک‌پی',
 }).map(([alias,name])=>[normalize(alias),name]));
-const genreArtwork=new Map([['پاپ','pop'],['سنتی','traditional'],['هیپ هاپ','hiphop'],['کلاسیک','classical'],['بلوز','blues']]);
+const genreArtwork=new Map([
+  ['تلفیقی','fusion'],['بی کلام','instrumental'],['پاپ','pop'],['سنتی','traditional'],
+  ['کردی','kurdish'],['محلی بختیاری','bakhtiari'],['فولک','folk'],
+  ['هیپ هاپ','hiphop'],['کلاسیک','classical'],['بلوز','blues'],
+]);
 const moodLists=new Map([
   ['calm',{title:'آرامش',art:'chill',songs:[['هایده','ساغر هستی'],['حمیرا','دل خونه'],['مهستی','هزار بونه'],['داریوش','شام مهتاب'],['معین','بهانه']]}],
   ['drive',{title:'در مسیر',art:'drive',songs:[['گوگوش','همسفر'],['ابی','پوست شیر'],['فرهاد','بوی عیدی'],['فرامرز آصف','کمر باریک'],['بیژن مرتضوی','برقص']]}],
@@ -72,9 +76,8 @@ function art(name,base=''){
   item.setAttribute('aria-hidden','true');
   return item;
 }
-function trackArt(track){
-  return genreArtwork.get(normalize(genreOf(track)))||'radio';
-}
+const genreArt=genre=>genreArtwork.get(normalize(genre))||'radio';
+const trackArt=track=>genreArt(genreOf(track));
 function photoImage(photo){
   const img=node('img');
   img.alt='';
@@ -200,7 +203,7 @@ function categoryCard(title,href,image){
 }
 function categorySections(){
   const available=[...styles.keys()].filter(style=>style!==unknown&&style!=='آزمایشی');
-  const tiles=available.map(style=>categoryCard(style,archiveUrl({view:'search',genre:style}),genreArtwork.get(normalize(style))));
+  const tiles=available.map(style=>categoryCard(style,archiveUrl({view:'search',genre:style}),genreArt(style)));
   const moods=[...moodLists].filter(([,mood])=>mood.tracks?.length)
     .map(([slug,mood])=>categoryCard(mood.title,archiveUrl({view:'search',mood:slug}),mood.art));
   const groups=[];

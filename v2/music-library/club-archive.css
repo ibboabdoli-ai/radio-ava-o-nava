@@ -87,7 +87,13 @@ input::placeholder{color:#b6b3ad}
 .has-art{background-color:#2d2922;background-position:center;background-size:cover;background-repeat:no-repeat}
 .art-pop{background-image:url("../gallery/genre-pop.webp")}
 .art-traditional{background-image:url("../gallery/genre-traditional.webp")}
+.art-instrumental{background-image:url("../gallery/genre-instrumental.webp");background-position:center 78%}
 .art-radio{background-image:url("../gallery/player-tar.jpg")}
+.art-fusion,.art-kurdish,.art-bakhtiari,.art-folk{background-image:url("./assets/archive/genre-covers.webp");background-size:200% 200%}
+.art-fusion{background-position:0 0}
+.art-kurdish{background-position:100% 0}
+.art-bakhtiari{background-position:0 100%}
+.art-folk{background-position:100% 100%}
 .art-hiphop,.art-classical,.art-blues,.art-chill,.art-drive{background-image:url("./assets/archive/collection-covers.webp");background-size:300% 200%;filter:saturate(.45) sepia(.25)}
 .art-hiphop{background-position:100% 0}
 .art-classical{background-position:0 100%}
