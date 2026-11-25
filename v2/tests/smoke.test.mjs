@@ -50,12 +50,13 @@ test('Home and library share an ordered navigation with distinct destinations fo
  }
 });
 
-test('Home and the public archive link to the same existing club account host',()=>{
- const target='https://ava-radio-staging.ibbo-abdoli.workers.dev/v2/music-library/account';
+test('Home and archive use the club profile, while saving a song opens playlists',()=>{
+ const target='https://bashgah.ibboabdoli.com/v2/club-profile';
  for(const file of ['index.html','music-library/index.html']){
    assert.ok(get(file).includes('<a class="radio-account-link" href="'+target+'">حساب من</a>'),file);
  }
- assert.ok(get('music-library/index.html').includes('id="save-track" href="'+target+'"'));
+ assert.ok(get('music-library/index.html').includes('id="save-track" href="https://bashgah.ibboabdoli.com/v2/music-library/account"'));
+ assert.ok(get('index.html').includes('href="https://bashgah.ibboabdoli.com/v2/radio-club">باشگاه</a>'));
 });
 
 test('Install shortcut falls back to the guide, consumes each native prompt once, and hides after installation',async()=>{
