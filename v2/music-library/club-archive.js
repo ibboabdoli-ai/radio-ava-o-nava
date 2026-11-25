@@ -177,7 +177,14 @@ function trackButton(track,playSelected,byline=artistOf(track)){
   details.append(node('strong',track.title),node('small',byline,'track-artist'));
   const symbol=node('span','▶','track-icon');
   symbol.setAttribute('aria-hidden','true');
-  button.append(art(trackArt(track),'track-art'),details,symbol);
+  const artwork=art(trackArt(track),'track-art');
+  const photo=photosOf(track.artist).find(photo=>!photo.artwork);
+  if(photo){
+    const img=photoImage(photo);
+    img.addEventListener('error',()=>img.remove(),{once:true});
+    artwork.append(img);
+  }
+  button.append(artwork,details,symbol);
   button.addEventListener('click',()=>playSelected(track));
   return button;
 }
@@ -318,7 +325,7 @@ function render(){
   }else if(view.page==='search')content=renderSearch(terms);
   else content=renderDiscover();
   results.replaceChildren(...content);
-  get('credits').hidden=Boolean(view.artist)||!results.querySelector('.avatar img');
+  get('credits').hidden=Boolean(view.artist)||!results.querySelector('.avatar img,.track-art img,.album-card img');
   syncPlayer();
 }
 function setView({restoreQuery=false}={}){

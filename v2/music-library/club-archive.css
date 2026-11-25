@@ -74,6 +74,7 @@ input::placeholder{color:#b6b3ad}
 .track-info{display:grid;min-width:0;overflow-wrap:anywhere;gap:.08rem;line-height:1.45}
 .track-info strong{font-size:.94rem;unicode-bidi:plaintext}
 .track-art,.player-art{aspect-ratio:1;border-radius:.55rem;isolation:isolate;overflow:hidden}
+.track-art>img{display:block;width:100%;height:100%;object-fit:cover}
 .track-artist,.track-icon,.upcoming{color:var(--soft);font-size:.83rem}
 .track-icon{display:grid;place-items:center;width:2rem;height:2rem;border-radius:50%;background:#d7af7522;color:#ffdb9f}
 .category-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
