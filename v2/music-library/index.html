@@ -9,12 +9,13 @@
 <link rel="icon" href="../../radio-neon-logo.webp">
 <link rel="stylesheet" href="./club-archive.css?v=7">
 <link rel="stylesheet" href="../radio-navigation.css">
+<script src="../radio-account-menu.js" defer></script>
 <script src="./club-archive.js?v=8" type="module"></script>
 </head>
 <body>
-<header class="page-head">
-  <a class="radio-brand" href="../#home"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2"/><path d="M7.5 7.5a6.4 6.4 0 0 0 0 9m9-9a6.4 6.4 0 0 1 0 9M4.4 4.4a10.8 10.8 0 0 0 0 15.2M19.6 4.4a10.8 10.8 0 0 1 0 15.2"/></svg><span>آوا و نوا</span></a>
-  <div class="radio-header-actions"><a class="library-artists" id="library-artists" href="./?view=artists">خواننده‌ها</a><a class="radio-account-link" href="https://bashgah.ibboabdoli.com/v2/club-profile">حساب من</a></div>
+<header class="page-head radio-account-header">
+  <details class="radio-user-menu" id="radio-user-menu"><summary aria-label="حساب من"><span class="radio-user-avatar"><img id="radio-user-photo" alt="" referrerpolicy="no-referrer" hidden><svg class="radio-user-default" aria-hidden="true"><use href="../radio-navigation.svg#account"/></svg><span class="radio-user-initial" hidden></span></span><span class="radio-user-caption">حساب من</span></summary><div class="radio-user-panel"><div class="radio-user-identity"><span class="radio-user-panel-avatar"><img id="radio-panel-photo" alt="" referrerpolicy="no-referrer" hidden><svg class="radio-user-default" aria-hidden="true"><use href="../radio-navigation.svg#account"/></svg><span class="radio-user-initial" hidden></span></span><span><strong id="radio-user-name">حساب من</strong><small id="radio-user-subtitle">در حال بررسی حساب…</small></span></div><nav id="radio-user-links" aria-label="گزینه‌های حساب" hidden><a href="https://bashgah.ibboabdoli.com/v2/club-profile">پروفایل من</a><a href="https://bashgah.ibboabdoli.com/v2/radio-club#account">تنظیمات حساب</a><a href="../#install">نصب اپ</a><button id="radio-user-logout" type="button">خروج از حساب</button></nav><a class="radio-user-login" id="radio-user-login" href="https://bashgah.ibboabdoli.com/v2/club-login" hidden>ورود به حساب</a><p id="radio-user-error" role="status" hidden></p></div></details>
+  <div class="radio-header-actions"><a class="library-artists" id="library-artists" href="./?view=artists">خواننده‌ها</a></div>
 </header>
 <main id="main-content">
   <section class="archive-head" id="archive-head" aria-labelledby="archive-title">

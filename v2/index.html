@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="radio-preview.css">
   <link rel="stylesheet" href="more-preview.css">
   <link rel="stylesheet" href="radio-navigation.css">
+  <script src="radio-account-menu.js" defer></script>
   <script src="radio-menu.js" defer></script>
   <script src="radio-preview.js?v=2" defer></script>
   <script src="phone-install.js" defer></script>
@@ -38,7 +39,7 @@
     <symbol id="i-pause" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M6 4h4v16H6zm8 0h4v16h-4z"/></symbol>
   </svg>
   <div class="shell">
-    <header class="radio-home-header"><a class="radio-brand" href="#home"><svg aria-hidden="true"><use href="#i-radio"/></svg>آوا و نوا</a><div class="radio-header-actions"><a class="radio-account-link radio-club-link" href="https://bashgah.ibboabdoli.com/v2/radio-club">باشگاه</a><a class="radio-account-link" href="https://bashgah.ibboabdoli.com/v2/club-profile">حساب من</a><a class="install-shortcut" id="installShortcut" href="#install">نصب اپ</a></div></header>
+    <header class="radio-home-header radio-account-header"><details class="radio-user-menu" id="radio-user-menu"><summary aria-label="حساب من"><span class="radio-user-avatar"><img id="radio-user-photo" alt="" referrerpolicy="no-referrer" hidden><svg class="radio-user-default" aria-hidden="true"><use href="./radio-navigation.svg#account"/></svg><span class="radio-user-initial" hidden></span></span><span class="radio-user-caption">حساب من</span></summary><div class="radio-user-panel"><div class="radio-user-identity"><span class="radio-user-panel-avatar"><img id="radio-panel-photo" alt="" referrerpolicy="no-referrer" hidden><svg class="radio-user-default" aria-hidden="true"><use href="./radio-navigation.svg#account"/></svg><span class="radio-user-initial" hidden></span></span><span><strong id="radio-user-name">حساب من</strong><small id="radio-user-subtitle">در حال بررسی حساب…</small></span></div><nav id="radio-user-links" aria-label="گزینه‌های حساب" hidden><a href="https://bashgah.ibboabdoli.com/v2/club-profile">پروفایل من</a><a href="https://bashgah.ibboabdoli.com/v2/radio-club#account">تنظیمات حساب</a><a href="./#install">نصب اپ</a><button id="radio-user-logout" type="button">خروج از حساب</button></nav><a class="radio-user-login" id="radio-user-login" href="https://bashgah.ibboabdoli.com/v2/club-login" hidden>ورود به حساب</a><p id="radio-user-error" role="status" hidden></p></div></details><div class="radio-header-actions"><a class="radio-account-link radio-club-link" href="https://bashgah.ibboabdoli.com/v2/radio-club">باشگاه</a><a class="install-shortcut" id="installShortcut" href="#install">نصب اپ</a></div></header>
     <main>
       <section id="home">
         <div class="hero">
