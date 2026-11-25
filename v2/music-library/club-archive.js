@@ -267,10 +267,19 @@ function renderArtist(terms){
   if(!view.album){
     const unassigned=artist.songs.filter(track=>!track.album);
     const found=unassigned.filter(track=>matches(searchable(track),terms));
-    if(found.length)groups.push(trackGroup('آهنگ‌های بدون نام آلبوم',found,found,()=>artist.name));
+    if(found.length)groups.push(trackGroup('آهنگ‌های بدون نام آلبوم',found,unassigned,()=>artist.name));
   }
   if(!groups.length)status.textContent=terms.length?'آلبومی با این جست‌وجو پیدا نشد.':'برای این خواننده آلبومی در این بخش ثبت نشده است.';
   return groups;
+}
+function searchQueue(shown,context){
+  if(shown.length!==1)return shown;
+  const [track]=shown;
+  const artist=artists.get(artistKey(track.artist));
+  const album=artist?.albums.find(collection=>collection.songs.includes(track));
+  const related=[context,album?.songs,artist?.songs,styles.get(track.genre?.trim())]
+    .find(group=>group?.length>1);
+  return related?[track,...related.filter(item=>item!==track)]:shown;
 }
 function renderSearch(terms){
   const style=styles.get(view.genre),mood=moodLists.get(view.mood);
@@ -284,7 +293,8 @@ function renderSearch(terms){
     const matchingAlbums=allAlbums.filter(album=>matches(album.name+' '+album.artistName,terms)).slice(0,12);
     if(matchingAlbums.length)result.push(section('آلبوم‌ها',albumCards(matchingAlbums)));
   }
-  if(shown.length)result.push(trackGroup(style?view.genre:mood?.title||'آهنگ‌ها',shown,terms.length?shown:pool));
+  if(shown.length)result.push(trackGroup(style?view.genre:mood?.title||'آهنگ‌ها',shown,
+    terms.length?searchQueue(shown,style||mood?.tracks):pool));
   if(!result.length)status.textContent='آهنگی با این جست‌وجو پیدا نشد.';
   return result;
 }
@@ -387,6 +397,10 @@ function startTrack(index){
   list.replaceChildren(...remaining.map(item=>node('li',item.title+' — '+artistOf(item))));
   setPlayerStatus('');
   audio.src=libraryApi+'/api/library/audio/'+encodeURIComponent(track.id);
+  setQueueMediaSession(audio,{title:track.title,artist:artistOf(track),album:track.album||queueName},{
+    previous:playIndex>0?()=>startTrack(playIndex-1):null,
+    next:playIndex+1<playQueue.length?()=>startTrack(playIndex+1):null,
+  });
   void audio.play().catch(error=>{
     if(playQueue[playIndex]===track&&error.name!=='AbortError')setPlayerStatus('پخش باز نشد. دوباره تلاش کن.');
   });
