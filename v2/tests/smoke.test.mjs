@@ -61,7 +61,8 @@ test('Home and archive put the account menu in the upper-right without a duplica
  }
  assert.ok(get('radio-account-menu.js').includes('/api/radio-nav-profile'));
  assert.ok(get('music-library/index.html').includes('id="save-track" href="https://bashgah.ibboabdoli.com/v2/music-library/account"'));
- assert.ok(get('index.html').includes('href="https://bashgah.ibboabdoli.com/v2/radio-club">باشگاه</a>'));
+ assert.match(get('index.html'), /<a class="radio-club-link" href="https:\/\/bashgah\.ibboabdoli\.com\/v2\/radio-club" aria-label="باشگاه شنوندگان"[^>]*>\s*<img src="\.\/gallery\/club-logo-144\.png"/);
+ assert.ok(existsSync(join(root,'gallery/club-logo-144.png')));
 });
 
 test('Install shortcut falls back to the guide, consumes each native prompt once, and hides after installation',async()=>{
