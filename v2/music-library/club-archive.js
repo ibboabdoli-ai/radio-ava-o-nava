@@ -397,7 +397,10 @@ function startTrack(index){
   list.replaceChildren(...remaining.map(item=>node('li',item.title+' — '+artistOf(item))));
   setPlayerStatus('');
   audio.src=libraryApi+'/api/library/audio/'+encodeURIComponent(track.id);
-  setQueueMediaSession(audio,{title:track.title,artist:artistOf(track),album:track.album||queueName},{
+  setQueueMediaSession(audio,{
+    title:track.title,artist:artistOf(track),album:track.album||queueName,
+    artwork:radioTrackArtwork(track,photo?.image),
+  },{
     previous:playIndex>0?()=>startTrack(playIndex-1):null,
     next:playIndex+1<playQueue.length?()=>startTrack(playIndex+1):null,
   });
