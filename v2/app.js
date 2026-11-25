@@ -228,12 +228,15 @@
   if(isIOS){$('liveVolume').disabled=true;setText('liveVolumeValue','با دکمه گوشی');}else{
     liveAudio.volume=.8;$('liveVolume').addEventListener('input',e=>{const val=Number(e.target.value);liveAudio.volume=val/100;setText('liveVolumeValue',fa(val)+'٪');});
   }
-  function setMediaSession(title,artist,play,pause){
-    if(!('mediaSession' in navigator)||!('MediaMetadata' in window))return;
+  function setMediaSession(title,artist,play,pause,previous=null,next=null){
+    const session=navigator.mediaSession;
+    if(!session)return;
     try{
-      navigator.mediaSession.metadata=new MediaMetadata({title,artist,album:'Radio Ava o Nava',artwork:[{src:new URL('../radio-neon-logo.webp',location.href).href,sizes:'512x512',type:'image/webp'}]});
-      navigator.mediaSession.setActionHandler('play',play);navigator.mediaSession.setActionHandler('pause',pause);
+      if(typeof MediaMetadata==='function')session.metadata=new MediaMetadata({title,artist,album:'Radio Ava o Nava',artwork:[{src:new URL('../radio-neon-logo.webp',location.href).href,sizes:'512x512',type:'image/webp'}]});
     }catch{/* Browser does not support requested media controls. */}
+    for(const [action,handler] of [['play',play],['pause',pause],['previoustrack',previous],['nexttrack',next]]){
+      try{session.setActionHandler(action,handler);}catch{}
+    }
   }
   function durationFor(track){
     const cached=recordingDurations.get(track.id);
@@ -314,7 +317,15 @@
   });
   $('recordingRetry').addEventListener('click',()=>{if(state.recordingIndex>=0)chooseRecording(state.recordingIndex,true);});
   $('recordingSeek').addEventListener('input',e=>{if(Number.isFinite(recAudio.duration)&&recAudio.duration>0)recAudio.currentTime=Number(e.target.value)/1000*recAudio.duration;});
-  recAudio.addEventListener('play',()=>{suspendOtherModes('recording');setText('recordingPlay','Ⅱ');$('recordingPlay').classList.add('is-playing');const item=state.shows.recordings[state.recordingIndex];setDock(item.title,'در حال پخش آرشیو',true,'#episodes');setMediaSession(item.title,'آرشیو آوا و نوا',()=>recAudio.play(),()=>recAudio.pause());});
+  recAudio.addEventListener('play',()=>{
+    suspendOtherModes('recording');setText('recordingPlay','Ⅱ');$('recordingPlay').classList.add('is-playing');
+    const index=state.recordingIndex;
+    const item=state.shows.recordings[index];
+    setDock(item.title,'در حال پخش آرشیو',true,'#episodes');
+    setMediaSession(item.title,'آرشیو آوا و نوا',()=>recAudio.play().catch(()=>{}),()=>recAudio.pause(),
+      index>0?()=>chooseRecording(state.recordingIndex-1,true):null,
+      index+1<state.shows.recordings.length?()=>chooseRecording(state.recordingIndex+1,true):null);
+  });
   recAudio.addEventListener('pause',()=>{setText('recordingPlay','▶');$('recordingPlay').classList.remove('is-playing');if(state.mode==='recording'){const it=state.shows.recordings[state.recordingIndex];if(it)setDock(it.title,'مکث شده',false,'#episodes');}});
   let saveAt=0;
   recAudio.addEventListener('timeupdate',()=>{

@@ -48,7 +48,24 @@ async function play(item) {
     if (request === playRequest) updatePlayer('پخش در دسترس نیست · تلاش دوباره');
   }
 }
+audio.addEventListener('play', () => {
+  const index = recordings.indexOf(selected);
+  setQueueMediaSession(audio, {
+    title: selected.title,
+    artist: 'رادیو آوا و نوا',
+    artwork: [{ src: new URL(selected.image, location.href).href }],
+  }, {
+    previous: index > 0 ? () => playRecordingByOffset(-1) : null,
+    next: index >= 0 && index + 1 < recordings.length ? () => playRecordingByOffset(1) : null,
+  });
+});
+function playRecordingByOffset(offset) {
+  const index = recordings.indexOf(selected);
+  const recording = index < 0 ? null : recordings[index + offset];
+  if (recording) void play(recording);
+}
 audio.addEventListener('playing', () => updatePlayer(selected.subtitle));
+audio.addEventListener('ended', () => playRecordingByOffset(1));
 audio.addEventListener('pause', () => { if (audio.paused && !audio.error) updatePlayer('متوقف'); });
 audio.addEventListener('error', () => updatePlayer('پخش در دسترس نیست · تلاش دوباره'));
 byId('liveButton').onclick = () => play(live);
